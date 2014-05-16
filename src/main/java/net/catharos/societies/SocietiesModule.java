@@ -4,6 +4,7 @@ import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import net.catharos.lib.database.Database;
 import net.catharos.lib.shank.service.AbstractServiceModule;
+import net.catharos.societies.commands.CommandModule;
 import net.catharos.societies.database.DatabaseModule;
 import net.catharos.societies.group.SocietyModule;
 import net.catharos.societies.member.MemberModule;
@@ -24,6 +25,8 @@ public class SocietiesModule extends AbstractServiceModule {
 
         install(new DatabaseModule("localhost", "catharos", "root", "", Database.DEFAULT_PORT));
         bind(SocietiesQueries.class);
+
+        install(new CommandModule());
 
         install(new SocietyModule());
         install(new MemberModule());
