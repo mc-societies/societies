@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.0.0.xsd">
+    <!-- Configure the database connection here -->
+    <jdbc>
+        <driver>com.mysql.jdbc.Driver</driver>
+        <url>jdbc:mysql://localhost:3306/societies</url>
+        <user>root</user>
+    </jdbc>
+
+    <generator>
+        <!-- The default code generator. You can override this one, to generate your own code style
+             Defaults to org.jooq.util.JavaGenerator -->
+        <name>org.jooq.util.JavaGenerator</name>
+
+        <!-- These properties can be added to the generate element: -->
+        <generate>
+            <!-- Primary key / foreign key relations should be generated and used.
+                 This is a prerequisite for various advanced features.
+                 Defaults to true -->
+            <relations>true</relations>
+
+            <!-- Generate instance fields in your tables, as opposed to static
+                 fields. This simplifies aliasing.
+                 Defaults to true -->
+            <instanceFields>true</instanceFields>
+
+            <!-- Generate the javax.annotation.Generated annotation to indicate
+                 jOOQ version used for source code.
+                 Defaults to true -->
+            <generatedAnnotation>true</generatedAnnotation>
+
+            <!-- Generate jOOQ Record classes for type-safe querying. You can
+                 turn this off, if you don't need "skill records" for CRUD
+                 Defaults to true -->
+            <records>true</records>
+
+            <!-- Generate POJOs in addition to Record classes for usage of the
+                 ResultQuery.fetchInto(Class) API
+                 Defaults to false -->
+            <pojos>false</pojos>
+
+            <!-- Generate immutable POJOs for usage of the ResultQuery.fetchInto(Class) API
+                 This overrides any value setLong in <pojos/>
+                 Defaults to false -->
+            <immutablePojos>false</immutablePojos>
+
+            <!-- Generate interfaces that will be implemented by records and/or pojos.
+                 You can also use these interfaces in Record.into(Class<?>) and similar
+                 methods, to let jOOQ return proxy objects for them.
+                 Defaults to false -->
+            <interfaces>false</interfaces>
+
+            <!-- Generate DAOs in addition to POJO classes
+                 Defaults to false -->
+            <daos>false</daos>
+
+            <!-- Annotate POJOs and Records with JPA annotations for increased
+                 compatibility and better integration with JPA/Hibernate, etc
+                 Defaults to false -->
+            <jpaAnnotations>false</jpaAnnotations>
+
+            <!-- Annotate POJOs and Records with JSR-303 validation annotations
+                 Defaults to false -->
+            <validationAnnotations>false</validationAnnotations>
+
+            <!-- Allow to turn off the generation of global object references, which include
+
+                 - Tables.java
+                 - Sequences.java
+                 - UDTs.java
+
+                 Turning off the generation of the above files may be necessary for very
+                 large schemas, which exceed the amount of allowed constants in a class's
+                 constant pool (64k) or, whose static initialiser would exceed 64k of
+                 byte code
+
+                 Defaults to true -->
+            <globalObjectReferences>true</globalObjectReferences>
+        </generate>
+
+        <!-- The naming strategy used for class and field names.
+       You may override this with your custom naming strategy. Some examples follow
+       Defaults to org.jooq.util.DefaultGeneratorStrategy -->
+        <strategy>
+            <name>org.jooq.util.DefaultGeneratorStrategy</name>
+        </strategy>
+
+        <database>
+            <!-- The database type. The format here is:
+                 org.util.[database].[database]Database -->
+            <name>org.jooq.util.mysql.MySQLDatabase</name>
+
+            <!-- The database schema (or in the absence of schema support, in your RDBMS this
+                 can be the owner, coreCharacter, database name) to be generated -->
+            <inputSchema>societies</inputSchema>
+
+
+            <!-- Generate java.sql.Timestamp fields for DATE columns. This is
+                particularly useful for Oracle databases.
+                Defaults to false -->
+            <dateAsTimestamp>false</dateAsTimestamp>
+
+            <!-- Generate jOOU data types for your unsigned data types, which are
+               not natively supported in Java.
+               Defaults to true -->
+            <unsignedTypes>true</unsignedTypes>
+
+            <!-- All elements that are generated from your schema
+                 (M Java regular expression. Use the pipe to separate several expressions)
+                 Watch out for case-sensitivity. Depending on your database, this might be important! -->
+            <includes>.*</includes>
+
+            <!-- All elements that are excluded from your schema
+                 (M Java regular expression. Use the pipe to separate several expressions).
+                 Excludes match before includes -->
+            <excludes></excludes>
+        </database>
+
+        <target>
+            <!-- The destination package of your generated classes (within the destination directory) -->
+            <packageName>net.catharos.societies.database.layout</packageName>
+
+            <!-- The destination directory of your generated classes -->
+            <directory>src/main/java/</directory>
+        </target>
+    </generator>
+</configuration>
