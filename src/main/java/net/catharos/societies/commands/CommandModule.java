@@ -11,9 +11,7 @@ import net.catharos.lib.core.command.reflect.instance.factory.InjectorInstanceFa
 import net.catharos.lib.core.command.reflect.instance.factory.InstanceFactory;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderProvider;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
+import net.catharos.societies.member.LoadingMemberCache;
 
 /**
  * Represents a CommandModule
@@ -34,19 +32,7 @@ public class CommandModule extends net.catharos.lib.shank.AbstractModule {
             }
         });
 
-        bind(SenderProvider.class).toInstance(new SenderProvider() {
-            @Nullable
-            @Override
-            public Sender getSender(String name) {
-                return null;
-            }
-
-            @Nullable
-            @Override
-            public Sender getSender(UUID uuid) {
-                return null;
-            }
-        });
+        bind(SenderProvider.class).to(LoadingMemberCache.class);
 
         bind(InstanceFactory.class).to(InjectorInstanceFactory.class);
 

@@ -1,9 +1,9 @@
 package net.catharos.societies.member;
 
 import com.google.inject.Inject;
-import net.catharos.groups.DefaultMember;
-import net.catharos.groups.Member;
 import net.catharos.groups.MemberCache;
+import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.core.command.sender.SenderProvider;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.SocietiesQueries;
@@ -11,6 +11,7 @@ import net.catharos.societies.cache.Cache;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jooq.Result;
 import org.jooq.Select;
 
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Represents a MemberCache
  */
-public class LoadingMemberCache extends Cache<Member> implements MemberCache {
+public class LoadingMemberCache extends Cache<SocietyMember> implements MemberCache, SenderProvider {
 
     public static final int MAX_CACHED = 250;
 
@@ -37,12 +38,12 @@ public class LoadingMemberCache extends Cache<Member> implements MemberCache {
     }
 
     @Override
-    public Member getMember(UUID uuid) {
+    public SocietyMember getMember(UUID uuid) {
         return get(uuid);
     }
 
     @Override
-    public Member getMember(String name) {
+    public SocietyMember getMember(String name) {
         Player player = playerProvider.getPlayer(name);
 
         if (player == null) {
@@ -53,7 +54,7 @@ public class LoadingMemberCache extends Cache<Member> implements MemberCache {
     }
 
     @Override
-    public Member load(@NotNull UUID uuid) throws Exception {
+    public SocietyMember load(@NotNull UUID uuid) throws Exception {
         // Select record from database
         Select<MembersRecord> query = queries.getQuery(SocietiesQueries.SELECT_MEMBER);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
@@ -76,6 +77,18 @@ public class LoadingMemberCache extends Cache<Member> implements MemberCache {
         // create core account object
         MembersRecord record = result.get(0);
 
-        return new DefaultMember(UUIDGen.toUUID(record.getUuid()));
+        return new SocietyMember(UUIDGen.toUUID(record.getUuid()));
+    }
+
+    @Nullable
+    @Override
+    public Sender getSender(String name) {
+        return getMember(name);
+    }
+
+    @Nullable
+    @Override
+    public Sender getSender(UUID uuid) {
+        return getMember(uuid);
     }
 }
