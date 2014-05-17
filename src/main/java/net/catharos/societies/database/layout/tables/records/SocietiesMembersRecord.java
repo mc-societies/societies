@@ -11,33 +11,33 @@ package net.catharos.societies.database.layout.tables.records;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SocietiesMembersRecord extends org.jooq.impl.UpdatableRecordImpl<net.catharos.societies.database.layout.tables.records.SocietiesMembersRecord> implements org.jooq.Record2<byte[], byte[]> {
 
-	private static final long serialVersionUID = 410404971;
+	private static final long serialVersionUID = -29733887;
 
 	/**
-	 * Setter for <code>societies.societies_members.societies_uuid</code>. 
+	 * Setter for <code>societies.societies_members.society</code>. 
 	 */
-	public void setSocietiesUuid(byte[] value) {
+	public void setSociety(byte[] value) {
 		setValue(0, value);
 	}
 
 	/**
-	 * Getter for <code>societies.societies_members.societies_uuid</code>. 
+	 * Getter for <code>societies.societies_members.society</code>. 
 	 */
-	public byte[] getSocietiesUuid() {
+	public byte[] getSociety() {
 		return (byte[]) getValue(0);
 	}
 
 	/**
-	 * Setter for <code>societies.societies_members.members_uuid</code>. 
+	 * Setter for <code>societies.societies_members.member</code>. 
 	 */
-	public void setMembersUuid(byte[] value) {
+	public void setMember(byte[] value) {
 		setValue(1, value);
 	}
 
 	/**
-	 * Getter for <code>societies.societies_members.members_uuid</code>. 
+	 * Getter for <code>societies.societies_members.member</code>. 
 	 */
-	public byte[] getMembersUuid() {
+	public byte[] getMember() {
 		return (byte[]) getValue(1);
 	}
 
@@ -78,7 +78,7 @@ public class SocietiesMembersRecord extends org.jooq.impl.UpdatableRecordImpl<ne
 	 */
 	@Override
 	public org.jooq.Field<byte[]> field1() {
-		return net.catharos.societies.database.layout.tables.SocietiesMembers.SOCIETIES_MEMBERS.SOCIETIES_UUID;
+		return net.catharos.societies.database.layout.tables.SocietiesMembers.SOCIETIES_MEMBERS.SOCIETY;
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class SocietiesMembersRecord extends org.jooq.impl.UpdatableRecordImpl<ne
 	 */
 	@Override
 	public org.jooq.Field<byte[]> field2() {
-		return net.catharos.societies.database.layout.tables.SocietiesMembers.SOCIETIES_MEMBERS.MEMBERS_UUID;
+		return net.catharos.societies.database.layout.tables.SocietiesMembers.SOCIETIES_MEMBERS.MEMBER;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class SocietiesMembersRecord extends org.jooq.impl.UpdatableRecordImpl<ne
 	 */
 	@Override
 	public byte[] value1() {
-		return getSocietiesUuid();
+		return getSociety();
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class SocietiesMembersRecord extends org.jooq.impl.UpdatableRecordImpl<ne
 	 */
 	@Override
 	public byte[] value2() {
-		return getMembersUuid();
+		return getMember();
 	}
 
 	// -------------------------------------------------------------------------
@@ -119,10 +119,10 @@ public class SocietiesMembersRecord extends org.jooq.impl.UpdatableRecordImpl<ne
 	/**
 	 * Create a detached, initialised SocietiesMembersRecord
 	 */
-	public SocietiesMembersRecord(byte[] societiesUuid, byte[] membersUuid) {
+	public SocietiesMembersRecord(byte[] society, byte[] member) {
 		super(net.catharos.societies.database.layout.tables.SocietiesMembers.SOCIETIES_MEMBERS);
 
-		setValue(0, societiesUuid);
-		setValue(1, membersUuid);
+		setValue(0, society);
+		setValue(1, member);
 	}
 }

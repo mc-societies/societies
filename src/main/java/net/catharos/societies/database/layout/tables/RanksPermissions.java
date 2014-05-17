@@ -11,7 +11,7 @@ package net.catharos.societies.database.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RanksPermissions extends org.jooq.impl.TableImpl<net.catharos.societies.database.layout.tables.records.RanksPermissionsRecord> {
 
-	private static final long serialVersionUID = 1869609129;
+	private static final long serialVersionUID = -946120649;
 
 	/**
 	 * The singleton instance of <code>societies.ranks_permissions</code>
@@ -34,7 +34,7 @@ public class RanksPermissions extends org.jooq.impl.TableImpl<net.catharos.socie
 	/**
 	 * The column <code>societies.ranks_permissions.permission</code>. 
 	 */
-	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.RanksPermissionsRecord, byte[]> PERMISSION = createField("permission", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
+	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.RanksPermissionsRecord, java.lang.Integer> PERMISSION = createField("permission", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this);
 
 	/**
 	 * Create a <code>societies.ranks_permissions</code> table reference
@@ -71,7 +71,7 @@ public class RanksPermissions extends org.jooq.impl.TableImpl<net.catharos.socie
 	 */
 	@Override
 	public java.util.List<org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.RanksPermissionsRecord, ?>> getReferences() {
-		return java.util.Arrays.<org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.RanksPermissionsRecord, ?>>asList(net.catharos.societies.database.layout.Keys.FK_RANKS_HAS_PERMISSIONS_RANKS1, net.catharos.societies.database.layout.Keys.FK_RANKS_HAS_PERMISSIONS_PERMISSIONS1);
+		return java.util.Arrays.<org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.RanksPermissionsRecord, ?>>asList(net.catharos.societies.database.layout.Keys.FK_RANKS_HAS_PERMISSIONS_RANKS1);
 	}
 
 	/**

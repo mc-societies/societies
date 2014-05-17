@@ -11,7 +11,7 @@ package net.catharos.societies.database.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SocietiesRanks extends org.jooq.impl.TableImpl<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord> {
 
-	private static final long serialVersionUID = -283680721;
+	private static final long serialVersionUID = -422142706;
 
 	/**
 	 * The singleton instance of <code>societies.societies_ranks</code>
@@ -27,14 +27,14 @@ public class SocietiesRanks extends org.jooq.impl.TableImpl<net.catharos.societi
 	}
 
 	/**
-	 * The column <code>societies.societies_ranks.societies</code>. 
+	 * The column <code>societies.societies_ranks.society</code>. 
 	 */
-	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord, byte[]> SOCIETIES = createField("societies", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
+	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord, byte[]> SOCIETY = createField("society", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
 
 	/**
-	 * The column <code>societies.societies_ranks.ranks</code>. 
+	 * The column <code>societies.societies_ranks.rank</code>. 
 	 */
-	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord, byte[]> RANKS = createField("ranks", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
+	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord, byte[]> RANK = createField("rank", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
 
 	/**
 	 * Create a <code>societies.societies_ranks</code> table reference
@@ -71,7 +71,7 @@ public class SocietiesRanks extends org.jooq.impl.TableImpl<net.catharos.societi
 	 */
 	@Override
 	public java.util.List<org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord, ?>> getReferences() {
-		return java.util.Arrays.<org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord, ?>>asList(net.catharos.societies.database.layout.Keys.FK_SOCIETIES_HAS_RANKS_SOCIETIES1, net.catharos.societies.database.layout.Keys.FK_SOCIETIES_HAS_RANKS_RANKS1);
+		return java.util.Arrays.<org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord, ?>>asList(net.catharos.societies.database.layout.Keys.FK_SOCIETIES_HAS_RANKS_SOCIETIES2, net.catharos.societies.database.layout.Keys.FK_SOCIETIES_HAS_RANKS_RANKS2);
 	}
 
 	/**

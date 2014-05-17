@@ -11,7 +11,7 @@ package net.catharos.societies.database.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MembersRanks extends org.jooq.impl.TableImpl<net.catharos.societies.database.layout.tables.records.MembersRanksRecord> {
 
-	private static final long serialVersionUID = 1237202829;
+	private static final long serialVersionUID = 432338331;
 
 	/**
 	 * The singleton instance of <code>societies.members_ranks</code>
@@ -27,14 +27,14 @@ public class MembersRanks extends org.jooq.impl.TableImpl<net.catharos.societies
 	}
 
 	/**
-	 * The column <code>societies.members_ranks.members_uuid</code>. 
+	 * The column <code>societies.members_ranks.member</code>. 
 	 */
-	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.MembersRanksRecord, byte[]> MEMBERS_UUID = createField("members_uuid", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
+	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.MembersRanksRecord, byte[]> MEMBER = createField("member", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
 
 	/**
-	 * The column <code>societies.members_ranks.ranks_uuid</code>. 
+	 * The column <code>societies.members_ranks.rank</code>. 
 	 */
-	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.MembersRanksRecord, byte[]> RANKS_UUID = createField("ranks_uuid", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
+	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.MembersRanksRecord, byte[]> RANK = createField("rank", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
 
 	/**
 	 * Create a <code>societies.members_ranks</code> table reference

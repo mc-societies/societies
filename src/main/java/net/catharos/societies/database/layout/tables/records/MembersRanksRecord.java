@@ -11,33 +11,33 @@ package net.catharos.societies.database.layout.tables.records;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MembersRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.catharos.societies.database.layout.tables.records.MembersRanksRecord> implements org.jooq.Record2<byte[], byte[]> {
 
-	private static final long serialVersionUID = -174808199;
+	private static final long serialVersionUID = 716646463;
 
 	/**
-	 * Setter for <code>societies.members_ranks.members_uuid</code>. 
+	 * Setter for <code>societies.members_ranks.member</code>. 
 	 */
-	public void setMembersUuid(byte[] value) {
+	public void setMember(byte[] value) {
 		setValue(0, value);
 	}
 
 	/**
-	 * Getter for <code>societies.members_ranks.members_uuid</code>. 
+	 * Getter for <code>societies.members_ranks.member</code>. 
 	 */
-	public byte[] getMembersUuid() {
+	public byte[] getMember() {
 		return (byte[]) getValue(0);
 	}
 
 	/**
-	 * Setter for <code>societies.members_ranks.ranks_uuid</code>. 
+	 * Setter for <code>societies.members_ranks.rank</code>. 
 	 */
-	public void setRanksUuid(byte[] value) {
+	public void setRank(byte[] value) {
 		setValue(1, value);
 	}
 
 	/**
-	 * Getter for <code>societies.members_ranks.ranks_uuid</code>. 
+	 * Getter for <code>societies.members_ranks.rank</code>. 
 	 */
-	public byte[] getRanksUuid() {
+	public byte[] getRank() {
 		return (byte[]) getValue(1);
 	}
 
@@ -78,7 +78,7 @@ public class MembersRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.ca
 	 */
 	@Override
 	public org.jooq.Field<byte[]> field1() {
-		return net.catharos.societies.database.layout.tables.MembersRanks.MEMBERS_RANKS.MEMBERS_UUID;
+		return net.catharos.societies.database.layout.tables.MembersRanks.MEMBERS_RANKS.MEMBER;
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class MembersRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.ca
 	 */
 	@Override
 	public org.jooq.Field<byte[]> field2() {
-		return net.catharos.societies.database.layout.tables.MembersRanks.MEMBERS_RANKS.RANKS_UUID;
+		return net.catharos.societies.database.layout.tables.MembersRanks.MEMBERS_RANKS.RANK;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class MembersRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.ca
 	 */
 	@Override
 	public byte[] value1() {
-		return getMembersUuid();
+		return getMember();
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class MembersRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.ca
 	 */
 	@Override
 	public byte[] value2() {
-		return getRanksUuid();
+		return getRank();
 	}
 
 	// -------------------------------------------------------------------------
@@ -119,10 +119,10 @@ public class MembersRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.ca
 	/**
 	 * Create a detached, initialised MembersRanksRecord
 	 */
-	public MembersRanksRecord(byte[] membersUuid, byte[] ranksUuid) {
+	public MembersRanksRecord(byte[] member, byte[] rank) {
 		super(net.catharos.societies.database.layout.tables.MembersRanks.MEMBERS_RANKS);
 
-		setValue(0, membersUuid);
-		setValue(1, ranksUuid);
+		setValue(0, member);
+		setValue(1, rank);
 	}
 }

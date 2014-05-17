@@ -11,33 +11,33 @@ package net.catharos.societies.database.layout.tables.records;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SocietiesRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord> implements org.jooq.Record2<byte[], byte[]> {
 
-	private static final long serialVersionUID = 2091656697;
+	private static final long serialVersionUID = -308240411;
 
 	/**
-	 * Setter for <code>societies.societies_ranks.societies</code>. 
+	 * Setter for <code>societies.societies_ranks.society</code>. 
 	 */
-	public void setSocieties(byte[] value) {
+	public void setSociety(byte[] value) {
 		setValue(0, value);
 	}
 
 	/**
-	 * Getter for <code>societies.societies_ranks.societies</code>. 
+	 * Getter for <code>societies.societies_ranks.society</code>. 
 	 */
-	public byte[] getSocieties() {
+	public byte[] getSociety() {
 		return (byte[]) getValue(0);
 	}
 
 	/**
-	 * Setter for <code>societies.societies_ranks.ranks</code>. 
+	 * Setter for <code>societies.societies_ranks.rank</code>. 
 	 */
-	public void setRanks(byte[] value) {
+	public void setRank(byte[] value) {
 		setValue(1, value);
 	}
 
 	/**
-	 * Getter for <code>societies.societies_ranks.ranks</code>. 
+	 * Getter for <code>societies.societies_ranks.rank</code>. 
 	 */
-	public byte[] getRanks() {
+	public byte[] getRank() {
 		return (byte[]) getValue(1);
 	}
 
@@ -78,7 +78,7 @@ public class SocietiesRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.
 	 */
 	@Override
 	public org.jooq.Field<byte[]> field1() {
-		return net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS.SOCIETIES;
+		return net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS.SOCIETY;
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class SocietiesRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.
 	 */
 	@Override
 	public org.jooq.Field<byte[]> field2() {
-		return net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS.RANKS;
+		return net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS.RANK;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class SocietiesRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.
 	 */
 	@Override
 	public byte[] value1() {
-		return getSocieties();
+		return getSociety();
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class SocietiesRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.
 	 */
 	@Override
 	public byte[] value2() {
-		return getRanks();
+		return getRank();
 	}
 
 	// -------------------------------------------------------------------------
@@ -119,10 +119,10 @@ public class SocietiesRanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.
 	/**
 	 * Create a detached, initialised SocietiesRanksRecord
 	 */
-	public SocietiesRanksRecord(byte[] societies, byte[] ranks) {
+	public SocietiesRanksRecord(byte[] society, byte[] rank) {
 		super(net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS);
 
-		setValue(0, societies);
-		setValue(1, ranks);
+		setValue(0, society);
+		setValue(1, rank);
 	}
 }

@@ -11,7 +11,7 @@ package net.catharos.societies.database.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SocietiesMembers extends org.jooq.impl.TableImpl<net.catharos.societies.database.layout.tables.records.SocietiesMembersRecord> {
 
-	private static final long serialVersionUID = -964953700;
+	private static final long serialVersionUID = 885614571;
 
 	/**
 	 * The singleton instance of <code>societies.societies_members</code>
@@ -27,14 +27,14 @@ public class SocietiesMembers extends org.jooq.impl.TableImpl<net.catharos.socie
 	}
 
 	/**
-	 * The column <code>societies.societies_members.societies_uuid</code>. 
+	 * The column <code>societies.societies_members.society</code>. 
 	 */
-	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.SocietiesMembersRecord, byte[]> SOCIETIES_UUID = createField("societies_uuid", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
+	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.SocietiesMembersRecord, byte[]> SOCIETY = createField("society", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
 
 	/**
-	 * The column <code>societies.societies_members.members_uuid</code>. 
+	 * The column <code>societies.societies_members.member</code>. 
 	 */
-	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.SocietiesMembersRecord, byte[]> MEMBERS_UUID = createField("members_uuid", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
+	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.SocietiesMembersRecord, byte[]> MEMBER = createField("member", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this);
 
 	/**
 	 * Create a <code>societies.societies_members</code> table reference

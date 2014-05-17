@@ -11,7 +11,7 @@ package net.catharos.societies.database.layout;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Societies extends org.jooq.impl.SchemaImpl {
 
-	private static final long serialVersionUID = 1087749801;
+	private static final long serialVersionUID = 1259187198;
 
 	/**
 	 * The singleton instance of <code>societies</code>
@@ -36,7 +36,6 @@ public class Societies extends org.jooq.impl.SchemaImpl {
 		return java.util.Arrays.<org.jooq.Table<?>>asList(
 			net.catharos.societies.database.layout.tables.Members.MEMBERS,
 			net.catharos.societies.database.layout.tables.MembersRanks.MEMBERS_RANKS,
-			net.catharos.societies.database.layout.tables.Permissions.PERMISSIONS,
 			net.catharos.societies.database.layout.tables.Ranks.RANKS,
 			net.catharos.societies.database.layout.tables.RanksPermissions.RANKS_PERMISSIONS,
 			net.catharos.societies.database.layout.tables.Relations.RELATIONS,
