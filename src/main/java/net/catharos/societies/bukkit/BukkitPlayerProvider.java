@@ -1,6 +1,6 @@
 package net.catharos.societies.bukkit;
 
-import net.catharos.societies.member.PlayerProvider;
+import net.catharos.societies.PlayerProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

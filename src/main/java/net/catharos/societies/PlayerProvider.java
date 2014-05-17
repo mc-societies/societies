@@ -1,4 +1,4 @@
-package net.catharos.societies.member;
+package net.catharos.societies;
 
 import java.util.UUID;
 

@@ -2,12 +2,9 @@ package net.catharos.societies.launcher;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
-import net.catharos.lib.core.command.reflect.instance.ReflectionFactory;
-import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.commands.ClanCommand;
-import net.catharos.societies.commands.CommandModule;
+import net.catharos.groups.Group;
+import net.catharos.societies.SocietiesModule;
+import net.catharos.societies.SocietiesQueries;
 
 /**
  * Represents a SocietiesMain
@@ -15,11 +12,10 @@ import net.catharos.societies.commands.CommandModule;
 public class SocietiesMain {
 
     public static void main(String[] args) {
-        Injector injector = Guice.createInjector(new CommandModule());
+        Injector injector = Guice.createInjector(new SocietiesModule());
 
-        ReflectionFactory<Sender> instance = injector
-                .getInstance(Key.get(new TypeLiteral<ReflectionFactory<Sender>>() {}));
+        Group group = injector.getInstance(Group.class);
 
-        instance.create(ClanCommand.class);
+        injector.getInstance(SocietiesQueries.class);
     }
 }

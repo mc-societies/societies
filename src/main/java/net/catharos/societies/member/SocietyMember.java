@@ -1,7 +1,10 @@
 package net.catharos.societies.member;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import net.catharos.groups.DefaultMember;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.societies.PlayerProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +16,8 @@ import java.util.UUID;
 public class SocietyMember extends DefaultMember implements Sender {
     private final PlayerProvider<Player> playerProvider;
 
-    public SocietyMember(UUID uuid, PlayerProvider<Player> playerProvider) {
+    @Inject
+    public SocietyMember(@Assisted UUID uuid, PlayerProvider<Player> playerProvider) {
         super(uuid);
         this.playerProvider = playerProvider;
     }

@@ -21,11 +21,11 @@ import static net.catharos.societies.database.layout.Tables.SOCIETIES;
 @Singleton
 public class SocietiesQueries extends QueryProvider {
 
-    public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY = new QueryKey<>();
+    public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY = new QueryKey<Select<SocietiesRecord>>();
 
-    public static final QueryKey<Select<MembersRecord>> SELECT_MEMBER = new QueryKey<>();
+    public static final QueryKey<Select<MembersRecord>> SELECT_MEMBER = new QueryKey<Select<MembersRecord>>();
 
-    public static final QueryKey<Select<Record1<byte[]>>> SELECT_MEMBER_RANKS = new QueryKey<>();
+    public static final QueryKey<Select<Record1<byte[]>>> SELECT_MEMBER_RANKS = new QueryKey<Select<Record1<byte[]>>>();
 
     public static final byte[] DEFAULT_UUID = new byte[0];
 

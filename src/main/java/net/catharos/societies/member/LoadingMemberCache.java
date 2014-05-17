@@ -6,6 +6,7 @@ import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderProvider;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
+import net.catharos.societies.PlayerProvider;
 import net.catharos.societies.SocietiesQueries;
 import net.catharos.societies.cache.Cache;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
@@ -29,12 +30,14 @@ public class LoadingMemberCache extends Cache<SocietyMember> implements MemberCa
 
     private final SocietiesQueries queries;
     private final PlayerProvider<Player> playerProvider;
+    private final MemberFactory factory;
 
     @Inject
-    public LoadingMemberCache(SocietiesQueries queries, PlayerProvider<Player> playerProvider) {
+    public LoadingMemberCache(SocietiesQueries queries, PlayerProvider<Player> playerProvider, MemberFactory factory) {
         super(MAX_CACHED, MEMBER_LIFE_TIME, TimeUnit.HOURS);
         this.queries = queries;
         this.playerProvider = playerProvider;
+        this.factory = factory;
     }
 
     @Override
@@ -77,7 +80,7 @@ public class LoadingMemberCache extends Cache<SocietyMember> implements MemberCa
         // create core account object
         MembersRecord record = result.get(0);
 
-        return new SocietyMember(UUIDGen.toUUID(record.getUuid()));
+        return factory.create(UUIDGen.toUUID(record.getUuid()));
     }
 
     @Nullable
