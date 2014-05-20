@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jooq.Result;
 import org.jooq.Select;
 
+import javax.inject.Provider;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -31,13 +32,15 @@ public class LoadingMemberCache extends Cache<SocietyMember> implements MemberCa
     private final SocietiesQueries queries;
     private final PlayerProvider<Player> playerProvider;
     private final MemberFactory factory;
+    private final Provider<SocietyMember> provider;
 
     @Inject
-    public LoadingMemberCache(SocietiesQueries queries, PlayerProvider<Player> playerProvider, MemberFactory factory) {
+    public LoadingMemberCache(SocietiesQueries queries, PlayerProvider<Player> playerProvider, MemberFactory factory, Provider<SocietyMember> provider) {
         super(MAX_CACHED, MEMBER_LIFE_TIME, TimeUnit.HOURS);
         this.queries = queries;
         this.playerProvider = playerProvider;
         this.factory = factory;
+        this.provider = provider;
     }
 
     @Override
@@ -72,7 +75,7 @@ public class LoadingMemberCache extends Cache<SocietyMember> implements MemberCa
         }
 
         if (result.isEmpty()) {
-            return null; //fixme create new member
+            return provider.get();
         } else if (result.size() > 1) {
             throw new MemberException(uuid, "There are more users with the same uuid?!");
         }

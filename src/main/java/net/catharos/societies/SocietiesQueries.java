@@ -11,9 +11,7 @@ import org.jooq.DSLContext;
 import org.jooq.Record1;
 import org.jooq.Select;
 
-import static net.catharos.societies.database.layout.Tables.MEMBERS;
-import static net.catharos.societies.database.layout.Tables.MEMBERS_RANKS;
-import static net.catharos.societies.database.layout.Tables.SOCIETIES;
+import static net.catharos.societies.database.layout.Tables.*;
 
 /**
  * Represents a SocietiesQueries
@@ -63,5 +61,14 @@ public class SocietiesQueries extends QueryProvider {
                         .where(MEMBERS_RANKS.MEMBER.equal(DEFAULT_UUID));
             }
         });
+
+//        builder(null, new QueryBuilder<Select<Record1<byte[]>>>() {
+//            @Override
+//            public Select<Record1<byte[]>> create(DSLContext context) {
+//                return context.
+//                        selectFrom(SOCIETIES)
+//                        .where(SOCIETIES.CREATED.lessThan(DSL.dateAdd(DSL.currentDate(), 5)));
+//            }
+//        });
     }
 }

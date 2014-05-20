@@ -11,7 +11,6 @@ import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.SocietiesQueries;
 import net.catharos.societies.cache.Cache;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
-import net.catharos.societies.member.MemberException;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.Result;
 import org.jooq.Select;
@@ -58,13 +57,13 @@ public class LoadingGroupCache extends Cache<Group> implements GroupCache {
         try {
             result = query.fetch();
         } catch (RuntimeException e) {
-            throw new MemberException(uuid, e, "Query failed to execute!");
+            throw new SocietyException(e, "Query failed to execute!");
         }
 
         if (result.isEmpty()) {
             return groupProvider.get();
         } else if (result.size() > 1) {
-            throw new MemberException(uuid, "There are more groups with the same uuid?!");
+            throw new SocietyException("There are more groups with the same uuid?!");
         }
 
         SocietiesRecord record = result.get(0);
