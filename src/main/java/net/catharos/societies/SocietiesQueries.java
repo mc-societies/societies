@@ -66,6 +66,7 @@ public class SocietiesQueries extends QueryProvider {
 //            @Override
 //            public Select<Record1<byte[]>> create(DSLContext context) {
 //                return context.
+//                        select
 //                        selectFrom(SOCIETIES)
 //                        .where(SOCIETIES.CREATED.lessThan(DSL.dateAdd(DSL.currentDate(), 5)));
 //            }

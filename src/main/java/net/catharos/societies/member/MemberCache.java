@@ -1,7 +1,7 @@
 package net.catharos.societies.member;
 
 import com.google.inject.Inject;
-import net.catharos.groups.MemberCache;
+import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderProvider;
 import net.catharos.lib.core.util.ByteUtil;
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Represents a MemberCache
  */
-public class LoadingMemberCache extends Cache<SocietyMember> implements MemberCache, SenderProvider {
+public class MemberCache extends Cache<SocietyMember> implements MemberProvider, SenderProvider {
 
     public static final int MAX_CACHED = 250;
 
@@ -35,7 +35,7 @@ public class LoadingMemberCache extends Cache<SocietyMember> implements MemberCa
     private final Provider<SocietyMember> provider;
 
     @Inject
-    public LoadingMemberCache(SocietiesQueries queries, PlayerProvider<Player> playerProvider, MemberFactory factory, Provider<SocietyMember> provider) {
+    public MemberCache(SocietiesQueries queries, PlayerProvider<Player> playerProvider, MemberFactory factory, Provider<SocietyMember> provider) {
         super(MAX_CACHED, MEMBER_LIFE_TIME, TimeUnit.HOURS);
         this.queries = queries;
         this.playerProvider = playerProvider;

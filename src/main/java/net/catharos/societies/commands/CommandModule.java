@@ -11,7 +11,7 @@ import net.catharos.lib.core.command.reflect.instance.factory.InjectorInstanceFa
 import net.catharos.lib.core.command.reflect.instance.factory.InstanceFactory;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderProvider;
-import net.catharos.societies.member.LoadingMemberCache;
+import net.catharos.societies.member.MemberCache;
 
 /**
  * Represents a CommandModule
@@ -32,7 +32,7 @@ public class CommandModule extends net.catharos.lib.shank.AbstractModule {
             }
         });
 
-        bind(SenderProvider.class).to(LoadingMemberCache.class);
+        bind(SenderProvider.class).to(MemberCache.class);
 
         bind(InstanceFactory.class).to(InjectorInstanceFactory.class);
 

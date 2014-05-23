@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import net.catharos.groups.Group;
-import net.catharos.groups.GroupCache;
+import net.catharos.groups.GroupProvider;
 import net.catharos.groups.GroupFactory;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * Represents a SocietyCache
  */
 @Singleton
-public class LoadingGroupCache extends Cache<Group> implements GroupCache {
+public class GroupCache extends Cache<Group> implements GroupProvider {
 
     public static final int MAX_CACHED = 50;
 
@@ -33,7 +33,7 @@ public class LoadingGroupCache extends Cache<Group> implements GroupCache {
     private final GroupFactory factory;
 
     @Inject
-    public LoadingGroupCache(SocietiesQueries queries, Provider<Group> groupProvider, GroupFactory factory) {
+    public GroupCache(SocietiesQueries queries, Provider<Group> groupProvider, GroupFactory factory) {
         super(MAX_CACHED, SOCIETY_LIFE_TIME, TimeUnit.HOURS);
         this.queries = queries;
         this.groupProvider = groupProvider;
@@ -68,6 +68,6 @@ public class LoadingGroupCache extends Cache<Group> implements GroupCache {
 
         SocietiesRecord record = result.get(0);
 
-        return factory.create(UUIDGen.toUUID(record.getUuid()));
+        return factory.create(UUIDGen.toUUID(record.getUuid()), record.getName());
     }
 }

@@ -4,15 +4,17 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
+import net.catharos.groups.Inactivatable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Represents a MemberCache
  */
-public abstract class Cache<V> extends CacheLoader<UUID, V> {
+public abstract class Cache<V extends Inactivatable> extends CacheLoader<UUID, V> {
 
     private final LoadingCache<UUID, V> cache;
 
@@ -31,4 +33,8 @@ public abstract class Cache<V> extends CacheLoader<UUID, V> {
 
     @Override
     public abstract V load(@NotNull UUID uuid) throws Exception;
+
+    public Map<UUID, V> asMap() {
+        return cache.asMap();
+    }
 }
