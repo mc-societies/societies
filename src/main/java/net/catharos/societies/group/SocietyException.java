@@ -1,11 +1,11 @@
 package net.catharos.societies.group;
 
-import net.catharos.lib.core.lang.ArgumentException;
+import net.catharos.lib.core.lang.ArgumentRuntimeException;
 
 /**
  * Represents a MemberLoadingException
  */
-public class SocietyException extends ArgumentException {
+public class SocietyException extends ArgumentRuntimeException {
 
     public SocietyException() {
     }

@@ -1,19 +1,12 @@
 package net.catharos.societies.group;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupProvider;
-import net.catharos.groups.GroupFactory;
-import net.catharos.lib.core.util.ByteUtil;
-import net.catharos.lib.core.uuid.UUIDGen;
-import net.catharos.societies.SocietiesQueries;
 import net.catharos.societies.cache.Cache;
-import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import org.jetbrains.annotations.NotNull;
-import org.jooq.Result;
-import org.jooq.Select;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -28,16 +21,12 @@ public class GroupCache extends Cache<Group> implements GroupProvider {
 
     public static final int SOCIETY_LIFE_TIME = 2;
 
-    private final SocietiesQueries queries;
-    private final Provider<Group> groupProvider;
-    private final GroupFactory factory;
+    private final GroupProvider sourceProvider;
 
     @Inject
-    public GroupCache(SocietiesQueries queries, Provider<Group> groupProvider, GroupFactory factory) {
+    public GroupCache(@Named("source-group-provider") GroupProvider sourceProvider) {
         super(MAX_CACHED, SOCIETY_LIFE_TIME, TimeUnit.HOURS);
-        this.queries = queries;
-        this.groupProvider = groupProvider;
-        this.factory = factory;
+        this.sourceProvider = sourceProvider;
     }
 
     @Override
@@ -46,28 +35,17 @@ public class GroupCache extends Cache<Group> implements GroupProvider {
     }
 
     @Override
+    public Group getGroup(String name) {
+        return null; //fixme add lookup by name
+    }
+
+    @Override
+    public Iterable<Group> getGroups() {
+        return asMap().values();
+    }
+
+    @Override
     public Group load(@NotNull UUID uuid) throws Exception {
-        // Select record from database
-        Select<SocietiesRecord> query = queries.getQuery(SocietiesQueries.SELECT_SOCIETY);
-        query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
-
-        // Check result
-        Result<SocietiesRecord> result;
-
-        try {
-            result = query.fetch();
-        } catch (RuntimeException e) {
-            throw new SocietyException(e, "Query failed to execute!");
-        }
-
-        if (result.isEmpty()) {
-            return groupProvider.get();
-        } else if (result.size() > 1) {
-            throw new SocietyException("There are more groups with the same uuid?!");
-        }
-
-        SocietiesRecord record = result.get(0);
-
-        return factory.create(UUIDGen.toUUID(record.getUuid()), record.getName());
+        return sourceProvider.getGroup(uuid);
     }
 }

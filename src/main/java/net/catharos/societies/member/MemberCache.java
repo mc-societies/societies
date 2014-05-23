@@ -1,46 +1,39 @@
 package net.catharos.societies.member;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderProvider;
-import net.catharos.lib.core.util.ByteUtil;
-import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.PlayerProvider;
-import net.catharos.societies.SocietiesQueries;
 import net.catharos.societies.cache.Cache;
-import net.catharos.societies.database.layout.tables.records.MembersRecord;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jooq.Result;
-import org.jooq.Select;
 
-import javax.inject.Provider;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Represents a MemberCache
  */
-public class MemberCache extends Cache<SocietyMember> implements MemberProvider, SenderProvider {
+@Singleton
+public class MemberCache extends Cache<SocietyMember> implements MemberProvider<SocietyMember>, SenderProvider {
 
     public static final int MAX_CACHED = 250;
 
     public static final int MEMBER_LIFE_TIME = 2;
 
-    private final SocietiesQueries queries;
+
     private final PlayerProvider<Player> playerProvider;
-    private final MemberFactory factory;
-    private final Provider<SocietyMember> provider;
+    private final MemberProvider<SocietyMember> sourceProvider;
 
     @Inject
-    public MemberCache(SocietiesQueries queries, PlayerProvider<Player> playerProvider, MemberFactory factory, Provider<SocietyMember> provider) {
+    public MemberCache(PlayerProvider<Player> playerProvider, @Named("source-member-provider") MemberProvider<SocietyMember> sourceProvider) {
         super(MAX_CACHED, MEMBER_LIFE_TIME, TimeUnit.HOURS);
-        this.queries = queries;
         this.playerProvider = playerProvider;
-        this.factory = factory;
-        this.provider = provider;
+        this.sourceProvider = sourceProvider;
     }
 
     @Override
@@ -59,31 +52,13 @@ public class MemberCache extends Cache<SocietyMember> implements MemberProvider,
         return getMember(player.getUniqueId());
     }
 
+    public Iterable<SocietyMember> getMembers() {
+        return asMap().values();
+    }
+
     @Override
     public SocietyMember load(@NotNull UUID uuid) throws Exception {
-        // Select record from database
-        Select<MembersRecord> query = queries.getQuery(SocietiesQueries.SELECT_MEMBER);
-        query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
-
-        // Check result
-        Result<MembersRecord> result;
-
-        try {
-            result = query.fetch();
-        } catch (RuntimeException e) {
-            throw new MemberException(uuid, e, "Query failed to execute!");
-        }
-
-        if (result.isEmpty()) {
-            return provider.get();
-        } else if (result.size() > 1) {
-            throw new MemberException(uuid, "There are more users with the same uuid?!");
-        }
-
-        // create core account object
-        MembersRecord record = result.get(0);
-
-        return factory.create(UUIDGen.toUUID(record.getUuid()));
+        return sourceProvider.getMember(uuid);
     }
 
     @Nullable
