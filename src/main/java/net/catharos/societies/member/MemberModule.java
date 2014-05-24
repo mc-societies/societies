@@ -1,8 +1,10 @@
 package net.catharos.societies.member;
 
+import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import net.catharos.groups.Member;
 import net.catharos.groups.MemberProvider;
+import net.catharos.lib.core.command.sender.SenderProvider;
 import net.catharos.lib.shank.AbstractModule;
 
 /**
@@ -16,6 +18,10 @@ public class MemberModule extends AbstractModule {
                 .implement(Member.class, SocietyMember.class)
                 .build(MemberFactory.class));
 
-        bind(MemberProvider.class).to(MemberCache.class);
+        bind(new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(LoadingMemberProvider.class);
+
+        bind(SenderProvider.class).to(SenderAdapter.class);
+
+        bind(MemberQueries.class);
     }
 }

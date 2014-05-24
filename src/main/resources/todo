@@ -11,3 +11,8 @@ Invite player
 Kick player
 
 Cancel requests
+
+
+Data sources:
+  * Only mysql
+  * Pre-load from any source and cache all data

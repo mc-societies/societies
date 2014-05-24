@@ -13,10 +13,14 @@ import net.catharos.lib.shank.AbstractModule;
 public class SocietyModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(GroupProvider.class).to(GroupCache.class);
+        bind(GroupProvider.class).to(LoadingGroupProvider.class);
 
         install(new FactoryModuleBuilder()
                 .implement(Group.class, DefaultGroup.class)
                 .build(GroupFactory.class));
+
+        bind(SocietyQueries.class);
+
+        bind(Group.class).to(DefaultGroup.class);
     }
 }

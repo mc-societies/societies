@@ -1,11 +1,10 @@
 package net.catharos.societies.member;
 
-import net.catharos.groups.Member;
+import com.google.inject.Inject;
 import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.PlayerProvider;
-import net.catharos.societies.SocietiesQueries;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
 import org.bukkit.entity.Player;
 import org.jooq.Result;
@@ -17,15 +16,16 @@ import java.util.UUID;
 /**
  * Represents a LoadingMemberProvider
  */
-public class LoadingMemberProvider implements MemberProvider {
+public class LoadingMemberProvider implements MemberProvider<SocietyMember> {
 
     private final PlayerProvider<Player> playerProvider;
-    private final SocietiesQueries queries;
+    private final MemberQueries queries;
     private final MemberFactory factory;
     private final Provider<SocietyMember> memberProvider;
 
+    @Inject
     public LoadingMemberProvider(PlayerProvider<Player> playerProvider,
-                                 SocietiesQueries queries,
+                                 MemberQueries queries,
                                  MemberFactory memberFactory,
                                  Provider<SocietyMember> memberProvider) {
         this.playerProvider = playerProvider;
@@ -35,8 +35,8 @@ public class LoadingMemberProvider implements MemberProvider {
     }
 
     @Override
-    public Member getMember(UUID uuid) {
-        Select<MembersRecord> query = queries.getQuery(SocietiesQueries.SELECT_MEMBER);
+    public SocietyMember getMember(UUID uuid) {
+        Select<MembersRecord> query = queries.getQuery(MemberQueries.SELECT_MEMBER_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
         // Check result
@@ -61,7 +61,7 @@ public class LoadingMemberProvider implements MemberProvider {
     }
 
     @Override
-    public Member getMember(String name) {
+    public SocietyMember getMember(String name) {
         Player player = playerProvider.getPlayer(name);
 
         if (player == null) {

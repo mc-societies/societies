@@ -29,10 +29,8 @@ public class SocietiesModule extends AbstractServiceModule {
         bind(Dictionary.class).toInstance(new DefaultDictionary(Locale.getDefault())); //fixme correct dictionary
 
         install(new DatabaseModule("localhost", "catharos", "root", "", Database.DEFAULT_PORT));
-        bind(SocietiesQueries.class);
 
         install(new CommandModule());
-
 
         bind(Thread.UncaughtExceptionHandler.class).toInstance(new Thread.UncaughtExceptionHandler() {
             @Override
