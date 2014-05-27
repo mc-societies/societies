@@ -1,4 +1,4 @@
-package net.catharos.societies.group;
+package net.catharos.societies.group.sql;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -9,24 +9,25 @@ import net.catharos.groups.GroupProvider;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
+import net.catharos.societies.group.SocietyException;
 import org.jooq.Result;
 import org.jooq.Select;
 
 import java.util.Set;
 import java.util.UUID;
 
-import static net.catharos.societies.group.SocietyQueries.*;
+import static net.catharos.societies.group.sql.SocietyQueries.*;
 
 /**
  * Represents a LoadingGroupProvider
  */
-public class LoadingGroupProvider implements GroupProvider {
+class SQLGroupProvider implements GroupProvider {
     private final SocietyQueries queries;
     private final Provider<Group> groupProvider;
     private final GroupFactory factory;
 
     @Inject
-    public LoadingGroupProvider(SocietyQueries queries, Provider<Group> groupProvider, GroupFactory factory) {
+    public SQLGroupProvider(SocietyQueries queries, Provider<Group> groupProvider, GroupFactory factory) {
         this.queries = queries;
         this.groupProvider = groupProvider;
         this.factory = factory;

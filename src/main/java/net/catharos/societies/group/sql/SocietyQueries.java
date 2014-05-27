@@ -1,4 +1,4 @@
-package net.catharos.societies.group;
+package net.catharos.societies.group.sql;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -15,7 +15,7 @@ import static net.catharos.societies.database.layout.Tables.SOCIETIES;
  * Represents a SocietiesQueries
  */
 @Singleton
-public class SocietyQueries extends QueryProvider {
+class SocietyQueries extends QueryProvider {
 
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETIES = QueryKey.create();
 

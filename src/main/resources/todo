@@ -1,18 +1,30 @@
 Commands:
 
-Group create
-Group leave
-Group list
+	Group create
+	Group leave
+	Group list
 
-View information about group
-List members of group
+	View information about group
+	List members of group
 
-Invite player
-Kick player
+	Invite player
+	Kick player
 
-Cancel requests
+	Cancel requests
+
+Supported databases:
+	* MySQL/hsqldb
+	* cqengine with json
+
+	Probably supported:
+		* OrientDB
+
+Storage:
+	* In database if it supports persistence
+	* JSON backups or data source for pre-loading
 
 
-Data sources:
-  * Only mysql
-  * Pre-load from any source and cache all data
+
+Group builder
+Concurrent inserting and updating groups & members
+Concurrent getting of groups and members

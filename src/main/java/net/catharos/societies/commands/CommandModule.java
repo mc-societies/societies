@@ -27,7 +27,7 @@ public class CommandModule extends net.catharos.lib.shank.AbstractModule {
         install(new FactoryModuleBuilder()
                 .build(new TypeLiteral<ReflectionFactory<Sender>>() {}));
 
-        bindNamed("help-executor", new TypeLiteral<Executor<Sender>>() {}).to(DefaultHelpExecutor.class);
+        bindNamed("help-executor", new TypeLiteral<Executor<Sender>>() {}).to(new TypeLiteral<DefaultHelpExecutor<Sender>>() {});
 
         bind(Delimiter.class).to(SpaceDelimiter.class);
 

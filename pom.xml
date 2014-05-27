@@ -63,12 +63,34 @@
             <version>17.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.cqengine</groupId>
+            <artifactId>cqengine</artifactId>
+            <version>1.2.7</version>
+        </dependency>
     </dependencies>
 
     <repositories>
         <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>oss.sonatype.org</id>
+            <name>OrientDB Maven2 Repository</name>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
     <build>

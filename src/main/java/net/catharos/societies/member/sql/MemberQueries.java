@@ -1,4 +1,4 @@
-package net.catharos.societies.member;
+package net.catharos.societies.member.sql;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -17,7 +17,7 @@ import static net.catharos.societies.database.layout.Tables.MEMBERS_RANKS;
  * Represents a SocietiesQueries
  */
 @Singleton
-public class MemberQueries extends QueryProvider {
+class MemberQueries extends QueryProvider {
 
     public static final QueryKey<Select<MembersRecord>> SELECT_MEMBER_BY_UUID = QueryKey.create();
 

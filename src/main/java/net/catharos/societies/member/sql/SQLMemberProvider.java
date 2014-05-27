@@ -1,4 +1,4 @@
-package net.catharos.societies.member;
+package net.catharos.societies.member.sql;
 
 import com.google.inject.Inject;
 import net.catharos.groups.MemberProvider;
@@ -6,6 +6,9 @@ import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.PlayerProvider;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
+import net.catharos.societies.member.MemberException;
+import net.catharos.societies.member.MemberFactory;
+import net.catharos.societies.member.SocietyMember;
 import org.bukkit.entity.Player;
 import org.jooq.Result;
 import org.jooq.Select;
@@ -16,7 +19,7 @@ import java.util.UUID;
 /**
  * Represents a LoadingMemberProvider
  */
-public class LoadingMemberProvider implements MemberProvider<SocietyMember> {
+class SQLMemberProvider implements MemberProvider<SocietyMember> {
 
     private final PlayerProvider<Player> playerProvider;
     private final MemberQueries queries;
@@ -24,10 +27,10 @@ public class LoadingMemberProvider implements MemberProvider<SocietyMember> {
     private final Provider<SocietyMember> memberProvider;
 
     @Inject
-    public LoadingMemberProvider(PlayerProvider<Player> playerProvider,
-                                 MemberQueries queries,
-                                 MemberFactory memberFactory,
-                                 Provider<SocietyMember> memberProvider) {
+    public SQLMemberProvider(PlayerProvider<Player> playerProvider,
+                             MemberQueries queries,
+                             MemberFactory memberFactory,
+                             Provider<SocietyMember> memberProvider) {
         this.playerProvider = playerProvider;
         this.queries = queries;
         this.factory = memberFactory;
