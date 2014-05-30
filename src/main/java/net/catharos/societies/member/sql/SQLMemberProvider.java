@@ -2,8 +2,8 @@ package net.catharos.societies.member.sql;
 
 import com.google.inject.Inject;
 import net.catharos.groups.MemberProvider;
+import net.catharos.lib.core.concurrent.Future;
 import net.catharos.lib.core.util.ByteUtil;
-import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.PlayerProvider;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
 import net.catharos.societies.member.MemberException;
@@ -15,6 +15,7 @@ import org.jooq.Select;
 
 import javax.inject.Provider;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Represents a LoadingMemberProvider
@@ -23,22 +24,25 @@ class SQLMemberProvider implements MemberProvider<SocietyMember> {
 
     private final PlayerProvider<Player> playerProvider;
     private final MemberQueries queries;
+    private final ExecutorService service;
     private final MemberFactory factory;
     private final Provider<SocietyMember> memberProvider;
 
     @Inject
     public SQLMemberProvider(PlayerProvider<Player> playerProvider,
                              MemberQueries queries,
+                             ExecutorService service,
                              MemberFactory memberFactory,
                              Provider<SocietyMember> memberProvider) {
         this.playerProvider = playerProvider;
         this.queries = queries;
+        this.service = service;
         this.factory = memberFactory;
         this.memberProvider = memberProvider;
     }
 
     @Override
-    public SocietyMember getMember(UUID uuid) {
+    public Future<SocietyMember> getMember(UUID uuid) {
         Select<MembersRecord> query = queries.getQuery(MemberQueries.SELECT_MEMBER_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
@@ -52,7 +56,7 @@ class SQLMemberProvider implements MemberProvider<SocietyMember> {
         }
 
         if (result.isEmpty()) {
-            return memberProvider.get();
+//            return memberProvider.get();
         } else if (result.size() > 1) {
             throw new MemberException(uuid, "There are more users with the same uuid?!");
         }
@@ -60,11 +64,12 @@ class SQLMemberProvider implements MemberProvider<SocietyMember> {
         // create core account object
         MembersRecord record = result.get(0);
 
-        return factory.create(UUIDGen.toUUID(record.getUuid()));
+//        return factory.create(UUIDGen.toUUID(record.getUuid()));
+        return null;
     }
 
     @Override
-    public SocietyMember getMember(String name) {
+    public Future<SocietyMember> getMember(String name) {
         Player player = playerProvider.getPlayer(name);
 
         if (player == null) {

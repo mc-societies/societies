@@ -23,8 +23,12 @@ Storage:
 	* In database if it supports persistence
 	* JSON backups or data source for pre-loading
 
+Text renderer
+	* Headings
+	* Separators
+	* Tables
+	* Tree like structure
+    * Accepts incoming data which is renderable
 
-
-Group builder
 Concurrent inserting and updating groups & members
 Concurrent getting of groups and members

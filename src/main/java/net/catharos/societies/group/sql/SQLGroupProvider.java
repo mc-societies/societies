@@ -6,6 +6,7 @@ import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupFactory;
 import net.catharos.groups.GroupProvider;
+import net.catharos.lib.core.concurrent.Future;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
@@ -34,25 +35,26 @@ class SQLGroupProvider implements GroupProvider {
     }
 
     @Override
-    public Group getGroup(UUID uuid) {
+    public Future<Group> getGroup(UUID uuid) {
         Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
         return evaluateSingle(query(query));
     }
 
-    private Group evaluateSingle(Result<SocietiesRecord> result) {
+    private Future<Group> evaluateSingle(Result<SocietiesRecord> result) {
 
         if (result.isEmpty()) {
-            return groupProvider.get();
+//            return groupProvider.get();
         } else if (result.size() > 1) {
             throw new SocietyException("There are more groups with the same uuid?!");
         }
 
-        return createGroup(result.get(0));
+//        return createGroup(result.get(0));
+        return null;
     }
 
-    private Set<Group> evaluate(Result<SocietiesRecord> result) {
+    private Future<Set<Group>> evaluate(Result<SocietiesRecord> result) {
 
         THashSet<Group> groups = new THashSet<Group>(result.size());
 
@@ -60,8 +62,10 @@ class SQLGroupProvider implements GroupProvider {
             groups.add(createGroup(record));
         }
 
-        return groups;
+//        return groups;
+    return null;
     }
+
 
     private Result<SocietiesRecord> query(Select<SocietiesRecord> query) {
         try {
@@ -76,7 +80,7 @@ class SQLGroupProvider implements GroupProvider {
     }
 
     @Override
-    public Set<Group> getGroup(String name) {
+    public Future<Set<Group>> getGroup(String name) {
         Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_NAME);
         query.bind(1, name);
 
@@ -84,7 +88,7 @@ class SQLGroupProvider implements GroupProvider {
     }
 
     @Override
-    public Set<Group> getGroups() {
+    public Future<Set<Group>> getGroups() {
         return evaluate(query(queries.getQuery(SELECT_SOCIETIES)));
     }
 }

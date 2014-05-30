@@ -6,8 +6,6 @@ import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderProvider;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
 /**
  * Represents a SenderAdapter
  */
@@ -21,12 +19,6 @@ public class SenderAdapter implements SenderProvider {
     @Nullable
     @Override
     public Sender getSender(String name) {
-        return memberProvider.getMember(name);
-    }
-
-    @Nullable
-    @Override
-    public Sender getSender(UUID uuid) {
-        return memberProvider.getMember(uuid);
+        return memberProvider.getMember(name).getNow();
     }
 }

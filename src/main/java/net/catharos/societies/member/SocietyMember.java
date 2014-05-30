@@ -39,6 +39,11 @@ public class SocietyMember extends DefaultMember implements Sender {
         player.sendMessage(message);
     }
 
+    @Override
+    public void send(StringBuilder message) {
+        send(message.toString());
+    }
+
     @Nullable
     public Player toPlayer() {
         return playerProvider.getPlayer(getUUID());

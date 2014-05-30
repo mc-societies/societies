@@ -68,6 +68,7 @@ public class SocietiesMain {
     }
 
     public static void main(String[] args) throws ParsingException, SQLException {
+
         long start, finish;
 //        ODatabaseDocumentTx db = new ODatabaseDocumentTx("plocal:/tmp/test");
 ////        db.create();
