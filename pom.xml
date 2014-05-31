@@ -78,6 +78,15 @@
 
     <repositories>
         <repository>
+            <id>frederik-schmitt</id>
+            <url>http://repo.frederik-schmitt.de/content/repositories/oss-releases</url>
+        </repository>
+        <repository>
+            <id>frederik-schmitt</id>
+            <url>http://repo.frederik-schmitt.de/content/repositories/oss-snapshots</url>
+        </repository>
+
+        <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
@@ -93,6 +102,7 @@
             </snapshots>
         </repository>
     </repositories>
+
     <build>
         <plugins>
             <plugin>
