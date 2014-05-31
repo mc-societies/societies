@@ -78,11 +78,11 @@
 
     <repositories>
         <repository>
-            <id>frederik-schmitt</id>
+            <id>frederik-schmitt-snapshots</id>
             <url>http://repo.frederik-schmitt.de/content/repositories/oss-releases</url>
         </repository>
         <repository>
-            <id>frederik-schmitt</id>
+            <id>frederik-schmitt-releases</id>
             <url>http://repo.frederik-schmitt.de/content/repositories/oss-snapshots</url>
         </repository>
 
