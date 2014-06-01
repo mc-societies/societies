@@ -2,6 +2,7 @@ package net.catharos.societies.member.sql;
 
 import com.google.inject.Inject;
 import net.catharos.groups.MemberProvider;
+import net.catharos.groups.MemberPublisher;
 import net.catharos.lib.core.concurrent.Future;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.societies.PlayerProvider;
@@ -20,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 /**
  * Represents a LoadingMemberProvider
  */
-class SQLMemberProvider implements MemberProvider<SocietyMember> {
+class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublisher<SocietyMember> {
 
     private final PlayerProvider<Player> playerProvider;
     private final MemberQueries queries;
@@ -29,11 +30,11 @@ class SQLMemberProvider implements MemberProvider<SocietyMember> {
     private final Provider<SocietyMember> memberProvider;
 
     @Inject
-    public SQLMemberProvider(PlayerProvider<Player> playerProvider,
-                             MemberQueries queries,
-                             ExecutorService service,
-                             MemberFactory memberFactory,
-                             Provider<SocietyMember> memberProvider) {
+    public SQLMemberController(PlayerProvider<Player> playerProvider,
+                               MemberQueries queries,
+                               ExecutorService service,
+                               MemberFactory memberFactory,
+                               Provider<SocietyMember> memberProvider) {
         this.playerProvider = playerProvider;
         this.queries = queries;
         this.service = service;
@@ -77,5 +78,10 @@ class SQLMemberProvider implements MemberProvider<SocietyMember> {
         }
 
         return getMember(player.getUniqueId());
+    }
+
+    @Override
+    public Future<SocietyMember> publish(SocietyMember member) {
+        return null;
     }
 }

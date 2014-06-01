@@ -14,6 +14,6 @@ public class MemberProviderModule extends AbstractModule {
     protected void configure() {
         bind(MemberQueries.class);
 
-        bind(new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(SQLMemberProvider.class);
+        bind(new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(SQLMemberController.class);
     }
 }

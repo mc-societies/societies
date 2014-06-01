@@ -12,6 +12,6 @@ public class GroupProviderModule extends AbstractModule {
     protected void configure() {
         bind(SocietyQueries.class);
 
-        bind(GroupProvider.class).to(SQLGroupProvider.class);
+        bind(GroupProvider.class).to(SQLGroupController.class);
     }
 }

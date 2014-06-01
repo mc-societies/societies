@@ -6,6 +6,7 @@ import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupFactory;
 import net.catharos.groups.GroupProvider;
+import net.catharos.groups.GroupPublisher;
 import net.catharos.lib.core.concurrent.Future;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
@@ -22,13 +23,13 @@ import static net.catharos.societies.group.sql.SocietyQueries.*;
 /**
  * Represents a LoadingGroupProvider
  */
-class SQLGroupProvider implements GroupProvider {
+class SQLGroupController implements GroupProvider, GroupPublisher {
     private final SocietyQueries queries;
     private final Provider<Group> groupProvider;
     private final GroupFactory factory;
 
     @Inject
-    public SQLGroupProvider(SocietyQueries queries, Provider<Group> groupProvider, GroupFactory factory) {
+    public SQLGroupController(SocietyQueries queries, Provider<Group> groupProvider, GroupFactory factory) {
         this.queries = queries;
         this.groupProvider = groupProvider;
         this.factory = factory;
@@ -90,5 +91,10 @@ class SQLGroupProvider implements GroupProvider {
     @Override
     public Future<Set<Group>> getGroups() {
         return evaluate(query(queries.getQuery(SELECT_SOCIETIES)));
+    }
+
+    @Override
+    public Future<Group> publish(Group group) {
+        return null;
     }
 }
