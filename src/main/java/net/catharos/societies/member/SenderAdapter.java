@@ -1,5 +1,6 @@
 package net.catharos.societies.member;
 
+import com.google.common.util.concurrent.Futures;
 import com.google.inject.Inject;
 import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.sender.Sender;
@@ -19,6 +20,6 @@ public class SenderAdapter implements SenderProvider {
     @Nullable
     @Override
     public Sender getSender(String name) {
-        return memberProvider.getMember(name).getNow();
+        return Futures.getUnchecked(memberProvider.getMember(name));
     }
 }

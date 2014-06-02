@@ -30,5 +30,4 @@ Text renderer
 	* Tree like structure
     * Accepts incoming data which is renderable
 
-Concurrent inserting and updating groups & members
-Concurrent getting of groups and members
+Concurrent member and group controlling

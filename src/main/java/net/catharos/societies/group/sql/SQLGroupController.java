@@ -1,13 +1,15 @@
 package net.catharos.societies.group.sql;
 
+import com.google.common.base.Function;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupFactory;
 import net.catharos.groups.GroupProvider;
 import net.catharos.groups.GroupPublisher;
-import net.catharos.lib.core.concurrent.Future;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
@@ -15,6 +17,7 @@ import net.catharos.societies.group.SocietyException;
 import org.jooq.Result;
 import org.jooq.Select;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,76 +28,92 @@ import static net.catharos.societies.group.sql.SocietyQueries.*;
  */
 class SQLGroupController implements GroupProvider, GroupPublisher {
     private final SocietyQueries queries;
-    private final Provider<Group> groupProvider;
+    private final ListeningExecutorService service;
     private final GroupFactory factory;
 
     @Inject
-    public SQLGroupController(SocietyQueries queries, Provider<Group> groupProvider, GroupFactory factory) {
+    public SQLGroupController(SocietyQueries queries, ListeningExecutorService service, GroupFactory factory) {
         this.queries = queries;
-        this.groupProvider = groupProvider;
+        this.service = service;
         this.factory = factory;
     }
 
     @Override
-    public Future<Group> getGroup(UUID uuid) {
+    public ListenableFuture<Group> getGroup(UUID uuid) {
         Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
-        return evaluateSingle(query(query));
+        return evaluateSingle(uuid, queries.query(service, query));
     }
 
-    private Future<Group> evaluateSingle(Result<SocietiesRecord> result) {
+    private ListenableFuture<Group> evaluateSingle(final UUID uuid, final ListenableFuture<Result<SocietiesRecord>> result) {
+        return Futures.transform(result, new Function<Result<SocietiesRecord>, Group>() {
 
-        if (result.isEmpty()) {
-//            return groupProvider.get();
-        } else if (result.size() > 1) {
-            throw new SocietyException("There are more groups with the same uuid?!");
-        }
+            @Nullable
+            @Override
+            public Group apply(@Nullable Result<SocietiesRecord> input) {
+                if (input == null) {
+                    return null;
+                }
 
-//        return createGroup(result.get(0));
-        return null;
+                if (input.isEmpty()) {
+                    return createGroup(uuid);
+                } else if (input.size() > 1) {
+                    throw new SocietyException("There are more groups with the same uuid?!");
+                }
+
+                return createGroup(input.get(0));
+            }
+        });
+
     }
 
-    private Future<Set<Group>> evaluate(Result<SocietiesRecord> result) {
+    private ListenableFuture<Set<Group>> evaluate(ListenableFuture<Result<SocietiesRecord>> result) {
+        return Futures.transform(result, new Function<Result<SocietiesRecord>, Set<Group>>() {
 
-        THashSet<Group> groups = new THashSet<Group>(result.size());
+            @Nullable
+            @Override
+            public Set<Group> apply(@Nullable Result<SocietiesRecord> input) {
+                if (input == null) {
+                    return null;
+                }
 
-        for (SocietiesRecord record : result) {
-            groups.add(createGroup(record));
-        }
+                THashSet<Group> groups = new THashSet<Group>(input.size());
 
-//        return groups;
-    return null;
-    }
+                for (SocietiesRecord record : input) {
+                    groups.add(createGroup(record));
+                }
 
-
-    private Result<SocietiesRecord> query(Select<SocietiesRecord> query) {
-        try {
-            return query.fetch();
-        } catch (RuntimeException e) {
-            throw new SocietyException(e, "Query failed to execute!");
-        }
+                return groups;
+            }
+        });
     }
 
     private Group createGroup(SocietiesRecord record) {
         return factory.create(UUIDGen.toUUID(record.getUuid()), record.getName());
     }
 
+    private Group createGroup(UUID uuid) {
+        return factory.create(uuid, null); //todo null name
+    }
+
     @Override
-    public Future<Set<Group>> getGroup(String name) {
+    public ListenableFuture<Set<Group>> getGroup(String name) {
         Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_NAME);
         query.bind(1, name);
 
-        return evaluate(query(query));
+        return evaluate(queries.query(service, query));
     }
 
     @Override
-    public Future<Set<Group>> getGroups() {
-        return evaluate(query(queries.getQuery(SELECT_SOCIETIES)));
+    public ListenableFuture<Set<Group>> getGroups() {
+        Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETIES);
+
+        return evaluate(queries.query(service, query));
     }
 
     @Override
-    public Future<Group> publish(Group group) {
+    public ListenableFuture<Group> publish(Group group) {
         return null;
     }
 }
