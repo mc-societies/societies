@@ -2,9 +2,10 @@ package net.catharos.societies.database;
 
 
 import net.catharos.lib.database.DSLProvider;
-import net.catharos.lib.database.Database;
+import net.catharos.lib.database.jbdc.RemoteDatabase;
 import net.catharos.lib.database.data.DataWorker;
 import net.catharos.lib.shank.AbstractModule;
+import org.jooq.SQLDialect;
 
 /**
  * Represents a DatabaseModule
@@ -28,14 +29,18 @@ public class DatabaseModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bindNamedString(Database.DB_HOST_KEY, host);
-        bindNamedInstance(Database.DB_PORT_KEY, int.class, port);
-        bindNamedString(Database.DB_DATABASE_KEY, database);
-        bindNamedString(Database.DB_USERNAME_KEY, username);
-        bindNamedString(Database.DB_PASSWORD_KEY, password);
+        bindNamedString(RemoteDatabase.DB_HOST_KEY, host);
+        bindNamedInstance(RemoteDatabase.DB_PORT_KEY, int.class, port);
+        bindNamedString(RemoteDatabase.DB_DATABASE_KEY, database);
+        bindNamedString(RemoteDatabase.DB_USERNAME_KEY, username);
+        bindNamedString(RemoteDatabase.DB_PASSWORD_KEY, password);
+
+        bindNamedString(RemoteDatabase.DB_DATASOURCE_CLASS, "com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+
+        bind(SQLDialect.class).toInstance(SQLDialect.MYSQL);
 
         bind(DataWorker.class);
 
-        bind(DSLProvider.class).to(Database.class);
+        bind(DSLProvider.class).to(RemoteDatabase.class);
     }
 }
