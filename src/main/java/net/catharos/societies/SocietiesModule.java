@@ -4,7 +4,6 @@ import com.google.inject.TypeLiteral;
 import net.catharos.lib.core.i18n.DefaultDictionary;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
-import net.catharos.lib.database.jbdc.RemoteDatabase;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.bukkit.BukkitPlayerProvider;
 import net.catharos.societies.commands.CommandModule;
@@ -28,7 +27,7 @@ public class SocietiesModule extends AbstractServiceModule {
         bind(UUID.class).toProvider(TimeUUIDProvider.class);
         bind(Dictionary.class).toInstance(new DefaultDictionary(Locale.getDefault())); //fixme correct dictionary
 
-        install(new DatabaseModule("localhost", "catharos", "root", "", RemoteDatabase.DEFAULT_PORT));
+        install(new DatabaseModule("localhost", "catharos", "root", "", 3306));
 
         install(new CommandModule());
 

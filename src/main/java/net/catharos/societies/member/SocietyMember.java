@@ -40,6 +40,11 @@ public class SocietyMember extends DefaultMember implements Sender {
     }
 
     @Override
+    public void send(String message, Object... args) {
+        send(String.format(message, args));
+    }
+
+    @Override
     public void send(StringBuilder message) {
         send(message.toString());
     }
