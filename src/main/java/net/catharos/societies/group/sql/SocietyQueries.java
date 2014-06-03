@@ -7,7 +7,9 @@ import net.catharos.lib.database.QueryKey;
 import net.catharos.lib.database.QueryProvider;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import org.jooq.DSLContext;
+import org.jooq.Insert;
 import org.jooq.Select;
+import org.jooq.impl.DSL;
 
 import static net.catharos.societies.database.layout.Tables.SOCIETIES;
 
@@ -22,6 +24,8 @@ class SocietyQueries extends QueryProvider {
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY_BY_UUID = QueryKey.create();
 
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY_BY_NAME = QueryKey.create();
+
+    public static final QueryKey<Insert<SocietiesRecord>> INSERT_SOCIETY = QueryKey.create();
 
     @Inject
     protected SocietyQueries(DSLProvider provider) {
@@ -58,6 +62,17 @@ class SocietyQueries extends QueryProvider {
             }
         });
 
+        builder(INSERT_SOCIETY, new QueryBuilder<Insert<SocietiesRecord>>() {
+            @Override
+            public Insert<SocietiesRecord> create(DSLContext context) {
+                return context
+                        .insertInto(SOCIETIES)
+                        .set(SOCIETIES.UUID, DEFAULT_BYTE_ARRAY)
+                        .set(SOCIETIES.NAME, DEFAULT_STRING)
+                        .set(SOCIETIES.TAG, DEFAULT_STRING)
+                        .set(SOCIETIES.LASTACTIVE, DSL.currentTimestamp());
+            }
+        });
 
     }
 }

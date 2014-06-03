@@ -2,10 +2,14 @@ package net.catharos.societies.database;
 
 
 import net.catharos.lib.database.DSLProvider;
-import net.catharos.lib.database.jbdc.RemoteDatabase;
 import net.catharos.lib.database.data.DataWorker;
+import net.catharos.lib.database.data.queue.DefaultQueue;
+import net.catharos.lib.database.data.queue.Queue;
+import net.catharos.lib.database.jbdc.RemoteDatabase;
 import net.catharos.lib.shank.AbstractModule;
 import org.jooq.SQLDialect;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents a DatabaseModule
@@ -40,6 +44,13 @@ public class DatabaseModule extends AbstractModule {
         bind(SQLDialect.class).toInstance(SQLDialect.MYSQL);
 
         bind(DataWorker.class);
+
+        bind(Queue.class).to(DefaultQueue.class);
+        bindNamedInstance("auto-flush-interval", long.class, 5000L);
+        bindNamedInstance("max-batch-idle", long.class, 5000L);
+        bindNamedInstance("queue-time-unit", TimeUnit.class, TimeUnit.MILLISECONDS);
+        bindNamedInstance("critical-batch-size", int.class, 100);
+
 
         bind(DSLProvider.class).to(RemoteDatabase.class);
     }

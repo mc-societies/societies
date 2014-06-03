@@ -14,12 +14,14 @@ import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
+import org.jooq.Insert;
 import org.jooq.Result;
 import org.jooq.Select;
 
 import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 import static net.catharos.societies.group.sql.SocietyQueries.*;
 
@@ -113,7 +115,21 @@ class SQLGroupController implements GroupProvider, GroupPublisher {
     }
 
     @Override
-    public ListenableFuture<Group> publish(Group group) {
-        return null;
+    public ListenableFuture<Group> publish(final Group group) {
+        return service.submit(new Callable<Group>() {
+            @Override
+            public Group call() throws Exception {
+                Insert<SocietiesRecord> query = queries.getQuery(SocietyQueries.INSERT_SOCIETY);
+
+                query.bind(1, UUIDGen.toByteArray(group.getUUID()));
+
+                query.bind(2, group.getName());
+                query.bind(3, group.getName()); //todo tag
+
+                query.execute();
+
+                return group;
+            }
+        });
     }
 }

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import javax.inject.Provider;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Represents a ClanCommand
@@ -49,7 +50,15 @@ public class SocietyCommand {
         @Override
         public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
             Group group = groupFactory.create(name);
-            publisher.publish(group);
+            ListenableFuture<Group> future = publisher.publish(group);
+
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
 
             sender.send("%s created!", name);
         }

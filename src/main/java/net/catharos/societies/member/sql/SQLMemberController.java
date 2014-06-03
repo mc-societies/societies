@@ -15,11 +15,13 @@ import net.catharos.societies.member.MemberException;
 import net.catharos.societies.member.MemberFactory;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.entity.Player;
+import org.jooq.Insert;
 import org.jooq.Result;
 import org.jooq.Select;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 /**
  * Represents a LoadingMemberProvider
@@ -83,7 +85,18 @@ class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublis
     }
 
     @Override
-    public ListenableFuture<SocietyMember> publish(SocietyMember member) {
-        return null;
+    public ListenableFuture<SocietyMember> publish(final SocietyMember member) {
+        return service.submit(new Callable<SocietyMember>() {
+            @Override
+            public SocietyMember call() throws Exception {
+                Insert<MembersRecord> query = queries.getQuery(MemberQueries.INSERT_MEMBER);
+
+                query.bind(1, UUIDGen.toByteArray(member.getUUID()));
+
+                query.execute();
+
+                return member;
+            }
+        });
     }
 }

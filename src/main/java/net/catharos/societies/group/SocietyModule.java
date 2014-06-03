@@ -17,7 +17,6 @@ public class SocietyModule extends AbstractModule {
                 .implement(Group.class, DefaultGroup.class)
                 .build(GroupFactory.class));
 
-
         bind(Group.class).to(DefaultGroup.class);
 
         install(new GroupProviderModule());

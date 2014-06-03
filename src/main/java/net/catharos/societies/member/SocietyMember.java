@@ -31,12 +31,13 @@ public class SocietyMember extends DefaultMember implements Sender {
 
     @Override
     public void send(String message) {
-        Player player = toPlayer();
-        if (player == null) {
-            return;
-        }
-
-        player.sendMessage(message);
+//        Player player = toPlayer();
+//        if (player == null) {
+//            return;
+//        }
+//
+//        player.sendMessage(message);
+        System.out.println(message);
     }
 
     @Override

@@ -6,9 +6,7 @@ import net.catharos.lib.database.DSLProvider;
 import net.catharos.lib.database.QueryKey;
 import net.catharos.lib.database.QueryProvider;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
-import org.jooq.DSLContext;
-import org.jooq.Record1;
-import org.jooq.Select;
+import org.jooq.*;
 
 import static net.catharos.societies.database.layout.Tables.MEMBERS;
 import static net.catharos.societies.database.layout.Tables.MEMBERS_RANKS;
@@ -22,6 +20,8 @@ class MemberQueries extends QueryProvider {
     public static final QueryKey<Select<MembersRecord>> SELECT_MEMBER_BY_UUID = QueryKey.create();
 
     public static final QueryKey<Select<Record1<byte[]>>> SELECT_MEMBER_RANKS = QueryKey.create();
+
+    public static final QueryKey<Insert<MembersRecord>> INSERT_MEMBER = QueryKey.create();
 
     @Inject
     protected MemberQueries(DSLProvider provider) {
@@ -46,6 +46,15 @@ class MemberQueries extends QueryProvider {
                 return context.
                         select(MEMBERS_RANKS.RANK).from(MEMBERS)
                         .where(MEMBERS_RANKS.MEMBER.equal(DEFAULT_UUID));
+            }
+        });
+
+        builder(INSERT_MEMBER, new QueryBuilder<Insert<MembersRecord>>() {
+            @Override
+            public Insert<MembersRecord> create(DSLContext context) {
+                return context
+                        .insertInto(MEMBERS)
+                        .set(MEMBERS.UUID, DEFAULT_BYTE_ARRAY);
             }
         });
     }

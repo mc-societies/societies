@@ -1,6 +1,8 @@
 package net.catharos.societies.group.sql;
 
+import com.google.inject.Key;
 import net.catharos.groups.GroupProvider;
+import net.catharos.groups.GroupPublisher;
 import net.catharos.lib.shank.AbstractModule;
 
 /**
@@ -12,6 +14,9 @@ public class GroupProviderModule extends AbstractModule {
     protected void configure() {
         bind(SocietyQueries.class);
 
-        bind(GroupProvider.class).to(SQLGroupController.class);
+        Key<SQLGroupController> controller = Key.get(SQLGroupController.class);
+
+        bind(GroupProvider.class).to(controller);
+        bind(GroupPublisher.class).to(controller);
     }
 }

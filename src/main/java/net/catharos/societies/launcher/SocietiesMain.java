@@ -1,5 +1,6 @@
 package net.catharos.societies.launcher;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -23,6 +24,7 @@ import net.catharos.societies.member.SocietyMember;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.googlecode.cqengine.query.QueryFactory.contains;
 
@@ -134,5 +136,15 @@ public class SocietiesMain {
 
         SocietyMember sender = injector.getInstance(SocietyMember.class);
         instance.parse(sender, "society create 5").execute();
+
+        try {
+            ListeningExecutorService service = injector.getInstance(ListeningExecutorService.class);
+
+
+
+            service.awaitTermination(1000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
