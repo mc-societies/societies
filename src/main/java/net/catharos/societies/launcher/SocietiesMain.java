@@ -24,7 +24,6 @@ import net.catharos.societies.member.SocietyMember;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static com.googlecode.cqengine.query.QueryFactory.contains;
 
@@ -112,7 +111,7 @@ public class SocietiesMain {
 
         Query<Car> query1 = contains(Car.NAME, "vic");
 
-         start = System.nanoTime();
+        start = System.nanoTime();
         for (int i = 0; i < 50000; i++) {
             cars.retrieve(query1);
         }
@@ -137,14 +136,13 @@ public class SocietiesMain {
         SocietyMember sender = injector.getInstance(SocietyMember.class);
         instance.parse(sender, "society create 5").execute();
 
-        try {
-            ListeningExecutorService service = injector.getInstance(ListeningExecutorService.class);
+        instance.parse(sender, "society list").execute();
+
+        ListeningExecutorService service = injector.getInstance(ListeningExecutorService.class);
 
 
+        service.shutdown();
 
-            service.awaitTermination(1000, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
 }

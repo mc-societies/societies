@@ -3,6 +3,13 @@ package net.catharos.societies;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.TypeLiteral;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.name.Names;
+import net.catharos.lib.core.command.format.DefaultFormatter;
+import net.catharos.lib.core.command.format.Formatter;
+import net.catharos.lib.core.command.format.MonospacedWidthProvider;
+import net.catharos.lib.core.command.format.WidthProvider;
+import net.catharos.lib.core.command.format.table.*;
 import net.catharos.lib.core.i18n.DefaultDictionary;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
@@ -47,19 +54,33 @@ public class SocietiesModule extends AbstractServiceModule {
         install(new SocietyModule());
         install(new MemberModule());
 
-        bind(ListeningExecutorService.class).toInstance(MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread thread = new Thread(r);
-
-                thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+        bind(ListeningExecutorService.class)
+                .toInstance(MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(new ThreadFactory() {
                     @Override
-                    public void uncaughtException(Thread t, Throwable e) {
-                        e.printStackTrace();
+                    public Thread newThread(Runnable r) {
+                        Thread thread = new Thread(r);
+
+                        thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+                            @Override
+                            public void uncaughtException(Thread t, Throwable e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        return thread;
                     }
-                });
-                return thread;
-            }
-        })));
+                })));
+
+        bind(Table.class).to(DefaultTable.class);
+        bind(WidthProvider.class).toInstance(new MonospacedWidthProvider(5));
+
+        install(new FactoryModuleBuilder()
+                .implement(Row.class, Names.named("default"), DefaultRow.class)
+                .implement(Row.class, Names.named("forward"), ForwardingRow.class)
+                .build(RowFactory.class));
+
+        bindNamedInstance("column-spacing", double.class, 12.0D);
+        bindNamedInstance("max-line-length", double.class, 315.0D);
+        bind(Formatter.class).to(DefaultFormatter.class);
+
     }
 }

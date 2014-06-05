@@ -71,6 +71,7 @@ public class SocietyCommand {
         private final Provider<Table> tableProvider;
         private final RowFactory rowFactory;
 
+        @Inject
         public SocietiesListCommand(GroupProvider groupProvider, Provider<Table> tableProvider, RowFactory rowFactory) {
             this.groupProvider = groupProvider;
             this.tableProvider = tableProvider;
@@ -78,7 +79,7 @@ public class SocietyCommand {
         }
 
         @Override
-        public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
+        public void execute(CommandContext<SocietyMember> ctx, final SocietyMember sender) {
             ListenableFuture<Set<Group>> future = groupProvider.getGroups();
 
             Futures.addCallback(future, new FutureCallback<Set<Group>>() {
@@ -93,6 +94,8 @@ public class SocietyCommand {
                     for (Group group : result) {
                         table.addRow(rowFactory.create(group));
                     }
+
+                    sender.send(table.render());
                 }
 
                 @Override

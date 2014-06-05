@@ -39,8 +39,7 @@ class SocietyQueries extends QueryProvider {
             @Override
             public Select<SocietiesRecord> create(DSLContext context) {
                 return context.
-                        selectFrom(SOCIETIES)
-                        .where(SOCIETIES.UUID.equal(DEFAULT_UUID));
+                        selectFrom(SOCIETIES);
             }
         });
 
