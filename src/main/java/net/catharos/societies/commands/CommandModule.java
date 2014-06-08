@@ -14,6 +14,7 @@ import net.catharos.lib.core.command.reflect.instance.factory.InstanceFactory;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.token.Delimiter;
 import net.catharos.lib.core.command.token.SpaceDelimiter;
+import net.catharos.societies.commands.society.SocietyCommand;
 
 /**
  * Represents a CommandModule
