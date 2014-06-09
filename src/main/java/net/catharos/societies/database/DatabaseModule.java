@@ -2,6 +2,7 @@ package net.catharos.societies.database;
 
 
 import net.catharos.lib.database.DSLProvider;
+import net.catharos.lib.database.Database;
 import net.catharos.lib.database.RemoteDatabase;
 import net.catharos.lib.database.data.DataWorker;
 import net.catharos.lib.database.data.queue.DefaultQueue;
@@ -59,6 +60,7 @@ public class DatabaseModule extends AbstractModule {
         bindNamedInstance("critical-batch-size", int.class, 100);
 
 
+        bind(Database.class).to(RemoteDatabase.class);
         bind(DSLProvider.class).to(RemoteDatabase.class);
     }
 }
