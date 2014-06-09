@@ -18,12 +18,15 @@ import net.catharos.lib.core.command.Commands;
 import net.catharos.lib.core.command.ParsingException;
 import net.catharos.lib.core.command.reflect.instance.CommandAnalyser;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.database.Database;
 import net.catharos.societies.SocietiesModule;
 import net.catharos.societies.member.SocietyMember;
 
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import static com.googlecode.cqengine.query.QueryFactory.contains;
 
@@ -68,7 +71,7 @@ public class SocietiesMain {
         };
     }
 
-    public static void main(String[] args) throws ParsingException, SQLException {
+    public static void main(String[] args) throws ParsingException, SQLException, ExecutionException, InterruptedException {
 
         long start, finish;
 //        ODatabaseDocumentTx db = new ODatabaseDocumentTx("plocal:/tmp/test");
@@ -128,21 +131,22 @@ public class SocietiesMain {
 //
 //        injector.getInstance(SocietiesQueries.class);
 
+        ListeningExecutorService service = injector.getInstance(ListeningExecutorService.class);
         injector.getInstance(Key.get(new TypeLiteral<CommandAnalyser<Sender>>() {}));
 
         Commands<Sender> instance = injector
                 .getInstance(Key.get(new TypeLiteral<Commands<Sender>>() {}, Names.named("global-command")));
 
         SocietyMember sender = injector.getInstance(SocietyMember.class);
-        instance.parse(sender, "society create 5").execute();
 
-        instance.parse(sender, "society list").execute();
+        instance.execute(sender, "society create 5").get();
+        instance.execute(sender, "society list").get();
+        instance.execute(sender, "society profile -target 5").get();
 
-        ListeningExecutorService service = injector.getInstance(ListeningExecutorService.class);
-
+        service.awaitTermination(1000, TimeUnit.MILLISECONDS);
 
         service.shutdown();
 
-
+        injector.getInstance(Database.class).close();
     }
 }

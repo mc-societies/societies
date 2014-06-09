@@ -132,4 +132,9 @@ class SQLGroupController implements GroupProvider, GroupPublisher {
             }
         });
     }
+
+    @Override
+    public ListenableFuture<Group> drop(Group group) {
+        return null;
+    }
 }

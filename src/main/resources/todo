@@ -1,33 +1,44 @@
 Commands:
-
 	Group create
 	Group leave
 	Group list
 
-	View information about group
-	List members of group
+	Profile group
 
 	Invite player
 	Kick player
-
 	Cancel requests
 
+	Rank create
+	Rank remove
+	Rank list
+
+	Relation create
+	Relation remove
+	Relation list
+
+
 Supported databases:
-	* MySQL/hsqldb
+	* MySQL
 	* cqengine with json
 
-	Probably supported:
-		* OrientDB
-
 Storage:
-	* In database if it supports persistence
-	* JSON backups or data source for pre-loading
+	* In database
+	* JSON backups
 
 Text renderer
 	* Headings
 	* Separators
 	* Tables
 	* Tree like structure
-    * Accepts incoming data which is renderable
 
-Concurrent member and group controlling
+History
+
+Statistics
+
+Translations
+
+Caching
+	* Pre-rendered listing output
+
+Generic concurrent commands

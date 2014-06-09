@@ -8,6 +8,7 @@ import net.catharos.societies.member.SocietyMember;
  * Represents a AbandonCommand
  */
 public class AbandonCommand implements Executor<SocietyMember> {
+
     @Override
     public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
 

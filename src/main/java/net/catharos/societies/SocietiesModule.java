@@ -24,7 +24,6 @@ import org.bukkit.entity.Player;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * Represents a SocietiesModule
@@ -55,20 +54,7 @@ public class SocietiesModule extends AbstractServiceModule {
         install(new MemberModule());
 
         bind(ListeningExecutorService.class)
-                .toInstance(MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(new ThreadFactory() {
-                    @Override
-                    public Thread newThread(Runnable r) {
-                        Thread thread = new Thread(r);
-
-                        thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-                            @Override
-                            public void uncaughtException(Thread t, Throwable e) {
-                                e.printStackTrace();
-                            }
-                        });
-                        return thread;
-                    }
-                })));
+                .toInstance(MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(2)));
 
         bind(Table.class).to(DefaultTable.class);
         bind(WidthProvider.class).toInstance(new MonospacedWidthProvider(5));
