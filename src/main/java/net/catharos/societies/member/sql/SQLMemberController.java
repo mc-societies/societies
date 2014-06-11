@@ -16,6 +16,7 @@ import net.catharos.societies.member.MemberFactory;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.entity.Player;
 import org.jooq.Insert;
+import org.jooq.Query;
 import org.jooq.Result;
 import org.jooq.Select;
 
@@ -96,6 +97,20 @@ class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublis
                 query.execute();
 
                 return member;
+            }
+        });
+    }
+
+    @Override
+    public ListenableFuture<?> drop(final SocietyMember member) {
+        return service.submit(new Runnable() {
+            @Override
+            public void run() {
+                Query query = queries.getQuery(MemberQueries.DROP_MEMBER_BY_UUID);
+
+                query.bind(1, UUIDGen.toByteArray(member.getUUID()));
+
+                query.execute();
             }
         });
     }

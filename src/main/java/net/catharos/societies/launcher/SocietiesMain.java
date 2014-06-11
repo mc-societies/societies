@@ -5,7 +5,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
-import com.google.inject.name.Names;
 import com.googlecode.cqengine.CQEngine;
 import com.googlecode.cqengine.IndexedCollection;
 import com.googlecode.cqengine.attribute.Attribute;
@@ -127,25 +126,36 @@ public class SocietiesMain {
 
         Injector injector = Guice.createInjector(new SocietiesModule());
 
-//        Group group = injector.getInstance(DefaultGroup.class);
-//
-//        injector.getInstance(SocietiesQueries.class);
-
         ListeningExecutorService service = injector.getInstance(ListeningExecutorService.class);
         injector.getInstance(Key.get(new TypeLiteral<CommandAnalyser<Sender>>() {}));
 
-        Commands<Sender> instance = injector
-                .getInstance(Key.get(new TypeLiteral<Commands<Sender>>() {}, Names.named("global-command")));
+        Commands<Sender> instance = injector.getInstance(Key.get(new TypeLiteral<Commands<Sender>>() {}));
 
         SocietyMember sender = injector.getInstance(SocietyMember.class);
 
-        instance.execute(sender, "society create 5").get();
-        instance.execute(sender, "society list").get();
-        instance.execute(sender, "society profile -target 5").get();
+//        instance.execute(sender, "society create 5").get();
+//        instance.execute(sender, "society list").get();
+//        instance.execute(sender, "society profile -target 5").get();
 
+        instance.execute(sender, "society list");
+
+//        for (int i = 0; i < 1000; i++) {
+//            instance.execute(parse);
+//        }
+//
+//        start = System.nanoTime();
+//        for (int i = 0; i < 10000; i++) {
+//            instance.execute(parse);
+//        }
+
+        instance.execute(sender, "tt");
+
+//
         service.awaitTermination(1000, TimeUnit.MILLISECONDS);
-
         service.shutdown();
+//        finish = System.nanoTime();
+//        System.out.printf("Check took %s!%n", (double)(finish - start) / 10000D);
+
 
         injector.getInstance(Database.class).close();
     }

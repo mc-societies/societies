@@ -23,6 +23,8 @@ class MemberQueries extends QueryProvider {
 
     public static final QueryKey<Insert<MembersRecord>> INSERT_MEMBER = QueryKey.create();
 
+    public static final QueryKey<Query> DROP_MEMBER_BY_UUID  = QueryKey.create();
+
     @Inject
     protected MemberQueries(DSLProvider provider) {
         super(provider);
@@ -55,6 +57,14 @@ class MemberQueries extends QueryProvider {
                 return context
                         .insertInto(MEMBERS)
                         .set(MEMBERS.UUID, DEFAULT_BYTE_ARRAY);
+            }
+        });
+
+        builder(DROP_MEMBER_BY_UUID, new QueryBuilder<Query>() {
+            @Override
+            public Query create(DSLContext context) {
+                return context
+                        .delete(MEMBERS).where(MEMBERS.UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });
     }

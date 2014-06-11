@@ -15,6 +15,7 @@ import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
 import org.jooq.Insert;
+import org.jooq.Query;
 import org.jooq.Result;
 import org.jooq.Select;
 
@@ -134,7 +135,16 @@ class SQLGroupController implements GroupProvider, GroupPublisher {
     }
 
     @Override
-    public ListenableFuture<Group> drop(Group group) {
-        return null;
+    public ListenableFuture<?> drop(final Group group) {
+        return service.submit(new Runnable() {
+            @Override
+            public void run() {
+                Query query = queries.getQuery(SocietyQueries.DROP_SOCIETY_BY_UUID);
+
+                query.bind(1, UUIDGen.toByteArray(group.getUUID()));
+
+                query.execute();
+            }
+        });
     }
 }
