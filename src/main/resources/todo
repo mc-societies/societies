@@ -1,13 +1,15 @@
 Commands:
-	Group create
-	Group leave
-	Group list
+	X Group create
+	Group drop
+	X Group list
 
-	Profile group
+	X Profile group
 
 	Invite player
+	Leave group
 	Kick player
 	Cancel requests
+
 
 	Rank create
 	Rank remove
