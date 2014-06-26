@@ -6,6 +6,8 @@ import com.google.inject.assistedinject.AssistedInject;
 import net.catharos.groups.DefaultMember;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.societies.PlayerProvider;
+import net.catharos.societies.request.Participant;
+import net.catharos.societies.request.Request;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +17,9 @@ import java.util.UUID;
 /**
  * Represents a SocietyMember
  */
-public class SocietyMember extends DefaultMember implements Sender {
+public class SocietyMember extends DefaultMember implements Sender, Participant {
+
+    private Request activeRequest;
     private final PlayerProvider<Player> playerProvider;
 
     @Inject
@@ -53,5 +57,23 @@ public class SocietyMember extends DefaultMember implements Sender {
     @Nullable
     public Player toPlayer() {
         return playerProvider.getPlayer(getUUID());
+    }
+
+    @Nullable
+    @Override
+    public Request getActiveRequest() {
+        return activeRequest;
+    }
+
+    @Override
+    public void setActiveRequest(Request activeRequest) {
+        this.activeRequest = activeRequest;
+    }
+
+    @Override
+    public boolean clearRequest() {
+        boolean value = activeRequest != null;
+        activeRequest = null;
+        return value;
     }
 }

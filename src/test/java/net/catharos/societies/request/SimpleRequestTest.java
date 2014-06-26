@@ -18,7 +18,7 @@ public class SimpleRequestTest {
 
 
     @Test
-    public void testVoting() throws ExecutionException, InterruptedException {
+    public void testVoting() throws ExecutionException, InterruptedException, RequestFailedException {
         Involved involved = new Involved() {
             @Override
             public boolean isInvolved(Participant participant) {
@@ -38,10 +38,10 @@ public class SimpleRequestTest {
         request.vote(elements[0], SimpleRequest.Choices.ACCEPT);
         request.vote(elements[1], SimpleRequest.Choices.ACCEPT);
         request.vote(elements[2], SimpleRequest.Choices.ACCEPT);
-        request.vote(elements[3], SimpleRequest.Choices.ACCEPT);
+        request.vote(elements[3], SimpleRequest.Choices.DENY);
 
         Assert.assertTrue(!request.isPending());
 
-        System.out.println(request.result().get());
+        System.out.println(request.result().get().getChoice());
     }
 }

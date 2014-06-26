@@ -9,4 +9,8 @@ public interface Participant {
 
     @Nullable
     Request getActiveRequest();
+
+    void setActiveRequest(Request activeRequest);
+
+    boolean clearRequest();
 }

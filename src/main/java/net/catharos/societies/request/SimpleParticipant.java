@@ -17,7 +17,16 @@ public class SimpleParticipant implements Participant {
         return request;
     }
 
-    public void setRequest(Request request) {
+
+    @Override
+    public boolean clearRequest() {
+        boolean value = request != null;
+        request = null;
+        return value;
+    }
+
+    @Override
+    public void setActiveRequest(Request request) {
         this.request = request;
     }
 }

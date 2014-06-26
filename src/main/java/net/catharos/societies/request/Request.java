@@ -14,5 +14,5 @@ public interface Request extends Involved {
 
     DateTime getDateCreated();
 
-    ListenableFuture<Choice> result();
+    ListenableFuture<SimpleRequestResult> result();
 }
