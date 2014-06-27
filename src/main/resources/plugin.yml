@@ -1,0 +1,8 @@
+main: net.catharos.societies.launcher.SocietiesPlugin
+name: Societies
+version: 0.1
+depend: []
+authors:
+    - p000ison
+commands:
+  society:

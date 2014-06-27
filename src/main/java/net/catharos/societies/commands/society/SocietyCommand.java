@@ -2,6 +2,9 @@ package net.catharos.societies.commands.society;
 
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import net.catharos.societies.commands.society.vote.AbstainCommand;
+import net.catharos.societies.commands.society.vote.AcceptCommand;
+import net.catharos.societies.commands.society.vote.DenyCommand;
 
 /**
  * Represents a ClanCommand
@@ -12,7 +15,11 @@ import net.catharos.lib.core.command.reflect.instance.Children;
 //        AbandonCommand.class,
         ProfileCommand.class,
         ListCommand.class,
-//        InviteCommand.class,
+        InviteCommand.class,
+
+        AcceptCommand.class,
+        DenyCommand.class,
+        AbstainCommand.class
 
 //        RankCommand.class,
 //        RelationCommand.class

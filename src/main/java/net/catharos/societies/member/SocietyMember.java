@@ -43,6 +43,16 @@ public class SocietyMember extends DefaultMember implements Sender {
         System.out.println(message);
     }
 
+    public String getName() {
+        Player player = toPlayer();
+
+        if (player != null) {
+            return player.getName();
+        }
+
+        throw new RuntimeException("Player is not online!");
+    }
+
     @Override
     public void send(String message, Object... args) {
         send(String.format(message, args));

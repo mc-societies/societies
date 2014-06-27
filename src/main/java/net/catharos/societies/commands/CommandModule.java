@@ -13,14 +13,18 @@ import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.parser.ArgumentParser;
 import net.catharos.lib.core.command.parser.DefaultParserModule;
+import net.catharos.lib.core.command.parser.TargetParser;
 import net.catharos.lib.core.command.reflect.instance.CommandAnalyser;
 import net.catharos.lib.core.command.reflect.instance.ReflectionFactory;
 import net.catharos.lib.core.command.reflect.instance.factory.InjectorInstanceFactory;
 import net.catharos.lib.core.command.reflect.instance.factory.InstanceFactory;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.token.Delimiter;
+import net.catharos.lib.core.command.token.DelimiterTokenizer;
 import net.catharos.lib.core.command.token.SpaceDelimiter;
+import net.catharos.lib.core.command.token.Tokenizer;
 import net.catharos.societies.commands.society.SocietyCommand;
+import net.catharos.societies.member.SocietyMember;
 
 import java.util.Set;
 
@@ -46,10 +50,15 @@ public class CommandModule extends net.catharos.lib.shank.AbstractModule {
 
         bind(Delimiter.class).to(SpaceDelimiter.class);
 
+        bind(Tokenizer.class).to(DelimiterTokenizer.class);
+
         bind(InstanceFactory.class).to(InjectorInstanceFactory.class);
 
         bind(new TypeLiteral<ArgumentParser<Group>>() {}).to(GroupParser.class);
         parsers().addBinding(Group.class).to(GroupParser.class);
+
+//        bind(new TypeLiteral<ArgumentParser<SocietyMember>>() {}).to(TargetParser.class);
+        parsers().addBinding(SocietyMember.class).to(TargetParser.class);
 
         bindNamedInstance("sync-executor", ListeningExecutorService.class, sameThreadExecutor());
         bindNamedInstance("async-executor", ListeningExecutorService.class, listeningDecorator(newFixedThreadPool(2)));
