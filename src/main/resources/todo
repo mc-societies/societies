@@ -1,12 +1,20 @@
+Basic functionality:
+    Update groups and members
+
+Commands:
+    Catch sender incompatibilities (Cast exceptions)
+
+Translations
+
 Commands:
 	X Group create
-	Group drop
 	X Group list
 
 	X Profile group
 
-	Invite player
-	Leave group
+	X Invite player
+	X Join group
+	X Leave group
 	Kick player
 	Cancel requests
 
@@ -18,7 +26,6 @@ Commands:
 	Relation create
 	Relation remove
 	Relation list
-
 
 Supported databases:
 	* MySQL
@@ -34,13 +41,22 @@ Text renderer
 	* Tables
 	* Tree like structure
 
+
+
 History
 
 Statistics
-
-Translations
 
 Caching
 	* Pre-rendered listing output
 
 Generic concurrent commands
+
+Cosmetics:
+    Design of Setting and Relation?
+
+Document:
+    Commands
+    Request
+    Rank
+    Bukkit api in societies
