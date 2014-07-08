@@ -64,8 +64,8 @@ public class SocietiesPlugin extends JavaPlugin {
     public boolean onCommand(CommandSender sender, final Command command, String label, final String[] args) {
         try {
             if (sender instanceof Player) {
-                ListenableFuture<SocietyMember> future = memberProvider.getMember(((Player) sender).getUniqueId());
 
+                ListenableFuture<SocietyMember> future = memberProvider.getMember(((Player) sender).getUniqueId());
 
                 addCallback(future, new FutureCallback<SocietyMember>() {
                     @Override
@@ -84,15 +84,14 @@ public class SocietiesPlugin extends JavaPlugin {
                 });
 
 
+
             } else {
                 commands.execute(new SystemSender(), command.getName(), args);
             }
 
-
         } catch (ParsingException e) {
-            e.printStackTrace();
+            sender.sendMessage(e.getMessage());
         }
-
 
         return true;
     }

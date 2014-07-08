@@ -41,25 +41,37 @@ public class CommandModule extends net.catharos.lib.shank.AbstractModule {
 
     @Override
     protected void configure() {
+        // Parsers
         install(new DefaultParserModule());
 
-        install(new FactoryModuleBuilder().build(new TypeLiteral<ReflectionFactory<Sender>>() {}));
-
-        bindNamed("help-executor", new TypeLiteral<Executor<Sender>>() {})
-                .to(new TypeLiteral<DefaultHelpExecutor<Sender>>() {});
-
-        bind(Delimiter.class).to(SpaceDelimiter.class);
-
-        bind(Tokenizer.class).to(DelimiterTokenizer.class);
-
-        bind(InstanceFactory.class).to(InjectorInstanceFactory.class);
-
+        // Group parser
         bind(new TypeLiteral<ArgumentParser<Group>>() {}).to(GroupParser.class);
         parsers().addBinding(Group.class).to(GroupParser.class);
 
-//        bind(new TypeLiteral<ArgumentParser<SocietyMember>>() {}).to(TargetParser.class);
+        // Member parser
+        //        bind(new TypeLiteral<ArgumentParser<SocietyMember>>() {}).to(TargetParser.class);
         parsers().addBinding(SocietyMember.class).to(TargetParser.class);
 
+
+        // Exception handler
+        bindNamedInstance("command-exception-handler", Thread.UncaughtExceptionHandler.class, new CommandExceptionHandler());
+
+        // Help executor
+        bindNamed("help-executor", new TypeLiteral<Executor<Sender>>() {})
+                .to(new TypeLiteral<DefaultHelpExecutor<Sender>>() {});
+        bindNamed("group-help-executor", new TypeLiteral<Executor<Sender>>() {})
+                .to(new TypeLiteral<GroupHelpExecutor<Sender>>() {});
+
+        // Tokenizer
+        bind(Tokenizer.class).to(DelimiterTokenizer.class);
+        bind(Delimiter.class).to(SpaceDelimiter.class);
+
+
+        // Reflection api
+        install(new FactoryModuleBuilder().build(new TypeLiteral<ReflectionFactory<Sender>>() {}));
+        bind(InstanceFactory.class).to(InjectorInstanceFactory.class);
+
+        // Sync/Async command executors
         bindNamedInstance("sync-executor", ListeningExecutorService.class, sameThreadExecutor());
         bindNamedInstance("async-executor", ListeningExecutorService.class, listeningDecorator(newFixedThreadPool(2)));
     }
@@ -69,6 +81,7 @@ public class CommandModule extends net.catharos.lib.shank.AbstractModule {
     public Set<Command<Sender>> provideCommand(CommandAnalyser<Sender> analyser) {
         Set<Command<Sender>> commands = new THashSet<Command<Sender>>();
 
+        // Command declaration
         commands.add(analyser.analyse(SocietyCommand.class));
         commands.add(analyser.analyse(ThreadTestCommand.class));
 

@@ -1,7 +1,6 @@
 package net.catharos.societies;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
@@ -23,7 +22,9 @@ import org.bukkit.entity.Player;
 
 import java.util.Locale;
 import java.util.UUID;
-import java.util.concurrent.Executors;
+
+import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
+import static java.util.concurrent.Executors.newFixedThreadPool;
 
 /**
  * Represents a SocietiesModule
@@ -32,15 +33,30 @@ public class SocietiesModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
+
+        // Register service
         bindService().to(SocietiesService.class);
 
+        // UUID provider
         bind(UUID.class).toProvider(TimeUUIDProvider.class);
+
+        // Directory
         bind(Dictionary.class).toInstance(new DefaultDictionary(Locale.getDefault())); //fixme correct dictionary
 
+        // Database
         install(new DatabaseModule("localhost", "catharos", "root", "", 3306));
 
+        // Commands
         install(new CommandModule());
 
+        // Members
+        install(new MemberModule());
+
+        // Societies
+        install(new SocietyModule());
+
+
+        // Global stuff
         bind(Thread.UncaughtExceptionHandler.class).toInstance(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
@@ -48,14 +64,14 @@ public class SocietiesModule extends AbstractServiceModule {
             }
         });
 
+        // Player provider
         bind(new TypeLiteral<PlayerProvider<Player>>() {}).to(BukkitPlayerProvider.class);
 
-        install(new SocietyModule());
-        install(new MemberModule());
 
-        bind(ListeningExecutorService.class)
-                .toInstance(MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(2)));
+        // Executor service for heavy work
+        bind(ListeningExecutorService.class).toInstance(listeningDecorator(newFixedThreadPool(2)));
 
+        // Chat rendering
         bind(Table.class).to(DefaultTable.class);
         bind(WidthProvider.class).toInstance(new MonospacedWidthProvider(5));
 
@@ -67,6 +83,6 @@ public class SocietiesModule extends AbstractServiceModule {
         bindNamedInstance("column-spacing", double.class, 12.0D);
         bindNamedInstance("max-line-length", double.class, 315.0D);
         bind(Formatter.class).to(DefaultFormatter.class);
-
     }
+
 }

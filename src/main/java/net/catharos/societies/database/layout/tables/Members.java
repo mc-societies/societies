@@ -11,7 +11,7 @@ package net.catharos.societies.database.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Members extends org.jooq.impl.TableImpl<net.catharos.societies.database.layout.tables.records.MembersRecord> {
 
-	private static final long serialVersionUID = 83163089;
+	private static final long serialVersionUID = -1276146535;
 
 	/**
 	 * The singleton instance of <code>societies.members</code>
@@ -39,7 +39,12 @@ public class Members extends org.jooq.impl.TableImpl<net.catharos.societies.data
 	/**
 	 * The column <code>societies.members.state</code>.
 	 */
-	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.MembersRecord, java.lang.Short> STATE = createField("state", org.jooq.impl.SQLDataType.SMALLINT, this, "");
+	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.MembersRecord, java.lang.Short> STATE = createField("state", org.jooq.impl.SQLDataType.SMALLINT.defaulted(true), this, "");
+
+	/**
+	 * The column <code>societies.members.society</code>.
+	 */
+	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.MembersRecord, byte[]> SOCIETY = createField("society", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this, "");
 
 	/**
 	 * Create a <code>societies.members</code> table reference
@@ -77,6 +82,14 @@ public class Members extends org.jooq.impl.TableImpl<net.catharos.societies.data
 	@Override
 	public java.util.List<org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.MembersRecord>> getKeys() {
 		return java.util.Arrays.<org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.MembersRecord>>asList(net.catharos.societies.database.layout.Keys.KEY_MEMBERS_PRIMARY);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public java.util.List<org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.MembersRecord, ?>> getReferences() {
+		return java.util.Arrays.<org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.MembersRecord, ?>>asList(net.catharos.societies.database.layout.Keys.FK_MEMBERS_SOCIETIES1);
 	}
 
 	/**

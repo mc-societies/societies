@@ -3,6 +3,8 @@ Basic functionality:
 
 Commands:
     Catch sender incompatibilities (Cast exceptions)
+    Handle parsing exceptions
+
 
 Translations
 
@@ -36,11 +38,14 @@ Storage:
 	* JSON backups
 
 Text renderer
+	* Pad complete table x chars to the right
 	* Headings
 	* Separators
 	* Tables
 	* Tree like structure
 
+Commands:
+	Pre check sender class (Configuration over annotations)
 
 
 History
@@ -50,7 +55,7 @@ Statistics
 Caching
 	* Pre-rendered listing output
 
-Generic concurrent commands
+Guice factory to pools, setup UncaughtExceptionHandler
 
 Cosmetics:
     Design of Setting and Relation?

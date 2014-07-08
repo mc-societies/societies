@@ -19,7 +19,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
 /**
  * Represents a AbandonCommand
  */
-@Command(identifier = "join", description = "A default description!")
+@Command(identifier = "join", description = "A default description!", async = true)
 public class JoinCommand implements Executor<SocietyMember> {
 
     @Argument(name = "target", description = "")

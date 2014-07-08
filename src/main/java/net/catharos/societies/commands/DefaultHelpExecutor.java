@@ -1,12 +1,21 @@
 package net.catharos.societies.commands;
 
+import com.google.inject.Inject;
 import net.catharos.lib.core.command.*;
+import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.sender.Sender;
+
+import javax.inject.Provider;
 
 /**
  * Represents a DefaultHelpExecutor
  */
 class DefaultHelpExecutor<S extends Sender> implements Executor<S> {
+
+    private final Provider<Table> tableProvider;
+
+    @Inject
+    DefaultHelpExecutor(Provider<Table> tableProvider) {this.tableProvider = tableProvider;}
 
     private void displayHelp(S sender, GroupCommand<S> command) {
         for (Command<S> child : command.getChildren()) {
@@ -15,7 +24,30 @@ class DefaultHelpExecutor<S extends Sender> implements Executor<S> {
     }
 
     private void displayHelp(S sender, ExecutableCommand<S> command) {
-        sender.send(command.getIdentifier());
+        StringBuilder help = new StringBuilder();
+
+        help.append(command.getIdentifier());
+        help.append(" [OPTIONS] [ARGUMENTS]\n");
+
+        help.append("Options:\n");
+        help.append(arguments(command, true).render());
+
+        help.append("\nArguments:\n");
+        help.append(arguments(command, false).render());
+
+        sender.send(help);
+    }
+
+    private Table arguments(ExecutableCommand<S> command, boolean options) {
+        Table table = tableProvider.get();
+
+        for (Argument argument : command.getArguments()) {
+            if ((options && argument.isOption()) || (!options && !argument.isOption())) {
+                table.addRow(argument.getName(), argument.getDescription());
+            }
+        }
+
+        return table;
     }
 
     @Override

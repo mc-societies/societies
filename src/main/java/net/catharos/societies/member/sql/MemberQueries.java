@@ -21,9 +21,12 @@ class MemberQueries extends QueryProvider {
 
     public static final QueryKey<Select<Record1<byte[]>>> SELECT_MEMBER_RANKS = QueryKey.create();
 
+    public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER = QueryKey.create();
+
     public static final QueryKey<Insert<MembersRecord>> INSERT_MEMBER = QueryKey.create();
 
-    public static final QueryKey<Query> DROP_MEMBER_BY_UUID  = QueryKey.create();
+
+    public static final QueryKey<Query> DROP_MEMBER_BY_UUID = QueryKey.create();
 
     @Inject
     protected MemberQueries(DSLProvider provider) {
@@ -65,6 +68,15 @@ class MemberQueries extends QueryProvider {
             public Query create(DSLContext context) {
                 return context
                         .delete(MEMBERS).where(MEMBERS.UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(UPDATE_MEMBER, new QueryBuilder<Update<MembersRecord>>() {
+            @Override
+            public Update<MembersRecord> create(DSLContext context) {
+                return context.update(MEMBERS)
+                        .set(MEMBERS.SOCIETY, DEFAULT_BYTE_ARRAY)
+                        .where(MEMBERS.UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });
     }
