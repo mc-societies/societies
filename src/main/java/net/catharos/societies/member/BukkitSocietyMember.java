@@ -39,7 +39,6 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
         }
 
         player.sendMessage(message);
-        System.out.println(message);
     }
 
     @Override
