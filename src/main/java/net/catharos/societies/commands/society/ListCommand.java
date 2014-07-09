@@ -11,7 +11,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.lib.core.command.sender.Sender;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -22,7 +22,7 @@ import java.util.Set;
 * Represents a SocietiesListCommand
 */
 @Command(identifier = "list", description = "A default description!")
-public class ListCommand implements Executor<SocietyMember> {
+public class ListCommand implements Executor<Sender> {
 
     private final GroupProvider groupProvider;
     private final Provider<Table> tableProvider;
@@ -36,7 +36,7 @@ public class ListCommand implements Executor<SocietyMember> {
     }
 
     @Override
-    public void execute(CommandContext<SocietyMember> ctx, final SocietyMember sender) {
+    public void execute(CommandContext<Sender> ctx, final Sender sender) {
         ListenableFuture<Set<Group>> future = groupProvider.getGroups();
 
         Futures.addCallback(future, new FutureCallback<Set<Group>>() {

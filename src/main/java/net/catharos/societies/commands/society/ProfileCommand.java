@@ -28,6 +28,13 @@ public class ProfileCommand implements Executor<Sender> {
             return;
         }
 
-        sender.send("Profile: " + target.getName());
+        sender.send(target.getName());
+
+        sender.send("Members: ");
+
+        for (Member member : target.getMembers()) {
+            sender.send(member.getUUID().toString());
+        }
+
     }
 }

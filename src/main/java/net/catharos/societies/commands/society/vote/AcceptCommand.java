@@ -22,5 +22,6 @@ public class AcceptCommand implements Executor<SocietyMember> {
         }
 
         activeRequest.vote(sender, SimpleRequest.Choices.ACCEPT);
+        sender.send("You voted to accept!");
     }
 }

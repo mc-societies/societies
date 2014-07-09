@@ -10,12 +10,12 @@ import javax.inject.Provider;
 /**
  * Represents a DefaultHelpExecutor
  */
-class DefaultHelpExecutor<S extends Sender> implements Executor<S> {
+class HelpExecutor<S extends Sender> implements Executor<S> {
 
     private final Provider<Table> tableProvider;
 
     @Inject
-    DefaultHelpExecutor(Provider<Table> tableProvider) {this.tableProvider = tableProvider;}
+    HelpExecutor(Provider<Table> tableProvider) {this.tableProvider = tableProvider;}
 
     private void displayHelp(S sender, GroupCommand<S> command) {
         for (Command<S> child : command.getChildren()) {

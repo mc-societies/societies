@@ -18,6 +18,10 @@ public class BukkitPlayerProvider implements PlayerProvider<Player> {
 
     @Override
     public Player getPlayer(UUID uuid) {
-        return Bukkit.getPlayer(uuid);
+        try {
+            return Bukkit.getPlayer(uuid);
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Bukkit is not active!", e);
+        }
     }
 }

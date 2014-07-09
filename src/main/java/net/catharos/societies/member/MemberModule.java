@@ -1,7 +1,6 @@
 package net.catharos.societies.member;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import net.catharos.groups.Member;
 import net.catharos.lib.core.command.sender.SenderProvider;
 import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.member.sql.MemberProviderModule;
@@ -11,11 +10,15 @@ import net.catharos.societies.member.sql.MemberProviderModule;
  */
 public class MemberModule extends AbstractModule {
 
+    public static final Class<SystemSocietyMember> MEMBER_IMPLEMENTATION = SystemSocietyMember.class;
+
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(Member.class, SocietyMember.class)
+                .implement(SocietyMember.class, MEMBER_IMPLEMENTATION)
                 .build(MemberFactory.class));
+
+        bind(SocietyMember.class).to(MEMBER_IMPLEMENTATION);
 
         bind(SenderProvider.class).to(SenderAdapter.class);
 

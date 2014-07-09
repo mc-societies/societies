@@ -2,11 +2,10 @@ Basic functionality:
     Update groups and members
 
 Commands:
-    Catch sender incompatibilities (Cast exceptions)
-    Handle parsing exceptions
+    Pagination for command output
 
 
-Translations
+
 
 Commands:
 	X Group create
@@ -47,6 +46,7 @@ Text renderer
 Commands:
 	Pre check sender class (Configuration over annotations)
 
+Translations
 
 History
 

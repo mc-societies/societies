@@ -11,9 +11,8 @@ import net.catharos.lib.core.command.sender.Sender;
 @Command(identifier = "tt", async = false)
 public class ThreadTestCommand implements Executor<Sender> {
 
-
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {
-        System.out.println(Thread.currentThread());
+        sender.send("Curent thread: %s", Thread.currentThread());
     }
 }

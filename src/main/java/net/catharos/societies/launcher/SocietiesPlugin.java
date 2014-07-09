@@ -9,7 +9,6 @@ import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.Commands;
-import net.catharos.lib.core.command.ParsingException;
 import net.catharos.lib.core.command.SystemSender;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.database.Database;
@@ -62,36 +61,28 @@ public class SocietiesPlugin extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, final Command command, String label, final String[] args) {
-        try {
-            if (sender instanceof Player) {
 
-                ListenableFuture<SocietyMember> future = memberProvider.getMember(((Player) sender).getUniqueId());
+        if (sender instanceof Player) {
 
-                addCallback(future, new FutureCallback<SocietyMember>() {
-                    @Override
-                    public void onSuccess(@Nullable SocietyMember result) {
-                        try {
-                            commands.execute(result, command.getName(), args);
-                        } catch (ParsingException e) {
-                            e.printStackTrace();
-                        }
-                    }
+            ListenableFuture<SocietyMember> future = memberProvider.getMember(((Player) sender).getUniqueId());
 
-                    @Override
-                    public void onFailure(Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
+            addCallback(future, new FutureCallback<SocietyMember>() {
+                @Override
+                public void onSuccess(@Nullable SocietyMember result) {
+                    commands.execute(result, command.getName(), args);
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    t.printStackTrace();
+                }
+            });
 
 
-
-            } else {
-                commands.execute(new SystemSender(), command.getName(), args);
-            }
-
-        } catch (ParsingException e) {
-            sender.sendMessage(e.getMessage());
+        } else {
+            commands.execute(new SystemSender(), command.getName(), args);
         }
+
 
         return true;
     }

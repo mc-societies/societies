@@ -11,6 +11,8 @@ import net.catharos.groups.Group;
 import net.catharos.groups.command.GroupParser;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.Executor;
+import net.catharos.lib.core.command.GroupCommand;
+import net.catharos.lib.core.command.builder.GroupBuilder;
 import net.catharos.lib.core.command.parser.ArgumentParser;
 import net.catharos.lib.core.command.parser.DefaultParserModule;
 import net.catharos.lib.core.command.parser.TargetParser;
@@ -23,7 +25,11 @@ import net.catharos.lib.core.command.token.Delimiter;
 import net.catharos.lib.core.command.token.DelimiterTokenizer;
 import net.catharos.lib.core.command.token.SpaceDelimiter;
 import net.catharos.lib.core.command.token.Tokenizer;
-import net.catharos.societies.commands.society.SocietyCommand;
+import net.catharos.lib.shank.AbstractModule;
+import net.catharos.societies.commands.society.*;
+import net.catharos.societies.commands.society.vote.AbstainCommand;
+import net.catharos.societies.commands.society.vote.AcceptCommand;
+import net.catharos.societies.commands.society.vote.DenyCommand;
 import net.catharos.societies.member.SocietyMember;
 
 import java.util.Set;
@@ -37,7 +43,9 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
 /**
  * Represents a CommandModule
  */
-public class CommandModule extends net.catharos.lib.shank.AbstractModule {
+public class CommandModule extends AbstractModule {
+
+    public static final TypeLiteral<Executor<Sender>> EXECUTOR_TYPE = new TypeLiteral<Executor<Sender>>() {};
 
     @Override
     protected void configure() {
@@ -57,9 +65,9 @@ public class CommandModule extends net.catharos.lib.shank.AbstractModule {
         bindNamedInstance("command-exception-handler", Thread.UncaughtExceptionHandler.class, new CommandExceptionHandler());
 
         // Help executor
-        bindNamed("help-executor", new TypeLiteral<Executor<Sender>>() {})
-                .to(new TypeLiteral<DefaultHelpExecutor<Sender>>() {});
-        bindNamed("group-help-executor", new TypeLiteral<Executor<Sender>>() {})
+        bindNamed("help-executor", EXECUTOR_TYPE)
+                .to(new TypeLiteral<HelpExecutor<Sender>>() {});
+        bindNamed("group-help-executor", EXECUTOR_TYPE)
                 .to(new TypeLiteral<GroupHelpExecutor<Sender>>() {});
 
         // Tokenizer
@@ -78,11 +86,38 @@ public class CommandModule extends net.catharos.lib.shank.AbstractModule {
 
     @Provides
     @Named("commands")
-    public Set<Command<Sender>> provideCommand(CommandAnalyser<Sender> analyser) {
+    public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, CommandAnalyser<Sender> analyser) {
         Set<Command<Sender>> commands = new THashSet<Command<Sender>>();
 
-        // Command declaration
-        commands.add(analyser.analyse(SocietyCommand.class));
+        builder.identifier("society");
+        builder.description("Society command");
+        GroupCommand<Sender> society = builder.build();
+
+
+        Class<?>[] subCommands = {
+                CreateCommand.class,
+//        AbandonCommand.class,
+                ProfileCommand.class,
+                ListCommand.class,
+                InviteCommand.class,
+
+                JoinCommand.class,
+                LeaveCommand.class,
+
+                AcceptCommand.class,
+                DenyCommand.class,
+                AbstainCommand.class
+
+//        RankCommand.class,
+//        RelationCommand.class
+        };
+
+        for (Class<?> subCommand : subCommands) {
+            society.addChild(analyser.analyse(subCommand));
+        }
+
+        commands.add(society);
+
         commands.add(analyser.analyse(ThreadTestCommand.class));
 
         return commands;

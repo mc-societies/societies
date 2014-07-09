@@ -18,6 +18,9 @@ public class LeaveCommand implements Executor<SocietyMember> {
 
         if (group != null) {
             group.removeMember(sender);
+            sender.send("You left %s", group.getName());
         }
+
+        sender.send("You are in no group!");
     }
 }

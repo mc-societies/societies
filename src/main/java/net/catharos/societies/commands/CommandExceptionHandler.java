@@ -13,7 +13,6 @@ class CommandExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        //todo generalize exceptions
         if (!(e instanceof CommandException)) {
             return;
         }

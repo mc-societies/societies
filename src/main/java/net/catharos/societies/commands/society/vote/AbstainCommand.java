@@ -22,5 +22,6 @@ public class AbstainCommand implements Executor<SocietyMember> {
         }
 
         activeRequest.vote(sender, SimpleRequest.Choices.ABSTAIN);
+        sender.send("You voted to abstain!");
     }
 }

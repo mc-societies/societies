@@ -9,7 +9,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.lib.core.command.sender.Sender;
 
 import java.util.concurrent.ExecutionException;
 
@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 * Represents a CreateCommand
 */
 @Command(identifier = "create", description = "A default description!")
-public class CreateCommand implements Executor<SocietyMember> {
+public class CreateCommand implements Executor<Sender> {
 
 
     @Argument(name = "name", description = "The name of the new society")
@@ -33,7 +33,7 @@ public class CreateCommand implements Executor<SocietyMember> {
     }
 
     @Override
-    public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
+    public void execute(CommandContext<Sender> ctx, Sender sender) {
         Group group = groupFactory.create(name);
         ListenableFuture<Group> future = publisher.publish(group);
 
