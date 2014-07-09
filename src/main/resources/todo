@@ -4,8 +4,9 @@ Basic functionality:
 Commands:
     Pagination for command output
 
+Relocated class jars (guava)
 
-
+Store name in database
 
 Commands:
 	X Group create
@@ -48,10 +49,6 @@ Commands:
 
 Translations
 
-History
-
-Statistics
-
 Caching
 	* Pre-rendered listing output
 
@@ -65,3 +62,7 @@ Document:
     Request
     Rank
     Bukkit api in societies
+
+
+History
+Statistics

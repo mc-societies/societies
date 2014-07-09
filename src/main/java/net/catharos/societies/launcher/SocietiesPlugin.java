@@ -1,5 +1,6 @@
 package net.catharos.societies.launcher;
 
+
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -23,6 +24,7 @@ import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
+
 
 /**
  * Represents a Launcher

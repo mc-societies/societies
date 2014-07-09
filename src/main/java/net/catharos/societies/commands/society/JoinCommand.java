@@ -2,6 +2,7 @@ package net.catharos.societies.commands.society;
 
 import com.google.common.util.concurrent.FutureCallback;
 import net.catharos.groups.Group;
+import net.catharos.groups.Member;
 import net.catharos.groups.request.SetInvolved;
 import net.catharos.groups.request.SimpleRequest;
 import net.catharos.groups.request.SimpleRequestResult;
@@ -13,6 +14,8 @@ import net.catharos.societies.member.SocietyMember;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+
+import java.util.Set;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 
@@ -27,7 +30,13 @@ public class JoinCommand implements Executor<SocietyMember> {
 
     @Override
     public void execute(CommandContext<SocietyMember> ctx, final SocietyMember sender) {
-        SimpleRequest request = new SimpleRequest(new SetInvolved(target.getMembers("join")));
+        Set<Member> participants = target.getMembers("join");
+        SimpleRequest request = new SimpleRequest(new SetInvolved(participants));
+
+
+        for (Member participant : participants) {
+            participant.send("Request started!");
+        }
 
         sender.send("Request started!");
 
