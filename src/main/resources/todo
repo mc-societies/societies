@@ -8,6 +8,8 @@ Relocated class jars (guava)
 
 Store name in database
 
+Easier rank/setting permission checking
+
 Commands:
 	X Group create
 	X Group list
