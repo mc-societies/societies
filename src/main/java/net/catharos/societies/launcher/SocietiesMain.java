@@ -1,5 +1,6 @@
 package net.catharos.societies.launcher;
 
+import com.google.common.io.Files;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -24,7 +25,7 @@ public class SocietiesMain {
 
     public static void main(String[] args) throws ParsingException, SQLException, ExecutionException, InterruptedException {
 
-        Injector injector = Guice.createInjector(new SocietiesModule());
+        Injector injector = Guice.createInjector(new SocietiesModule(Files.createTempDir()));
 
         ListeningExecutorService service = injector.getInstance(ListeningExecutorService.class);
         injector.getInstance(Key.get(new TypeLiteral<CommandAnalyser<Sender>>() {}));

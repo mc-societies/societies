@@ -12,14 +12,23 @@ import net.catharos.lib.core.command.format.table.*;
 import net.catharos.lib.core.i18n.DefaultDictionary;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
+import net.catharos.lib.shank.config.ConfigModule;
+import net.catharos.lib.shank.config.JSONSource;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.bukkit.BukkitPlayerProvider;
 import net.catharos.societies.commands.CommandModule;
 import net.catharos.societies.database.DatabaseModule;
 import net.catharos.societies.group.SocietyModule;
+import net.catharos.societies.member.DynamicLocaleProvider;
+import net.catharos.societies.member.LocaleProvider;
 import net.catharos.societies.member.MemberModule;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -31,8 +40,18 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
  */
 public class SocietiesModule extends AbstractServiceModule {
 
+    private final File dataDirectory;
+
+    public SocietiesModule(File dataDirectory) {
+        this.dataDirectory = dataDirectory;
+    }
+
     @Override
     protected void configure() {
+        // Locale
+        bind(LocaleProvider.class).to(DynamicLocaleProvider.class);
+        bindNamed("default-locale", LocaleProvider.class).to(DynamicLocaleProvider.class);
+        bindNamedInstance("default-locale", Locale.class, Locale.US);
 
         // Register service
         bindService().to(SocietiesService.class);
@@ -55,6 +74,16 @@ public class SocietiesModule extends AbstractServiceModule {
         // Societies
         install(new SocietyModule());
 
+        // Configuration
+        try {
+            prepareDefaults(dataDirectory);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        install(new ConfigModule(new JSONSource(new File(dataDirectory, "config.json"))));
 
         // Global stuff
         bind(Thread.UncaughtExceptionHandler.class).toInstance(new Thread.UncaughtExceptionHandler() {
@@ -83,6 +112,15 @@ public class SocietiesModule extends AbstractServiceModule {
         bindNamedInstance("column-spacing", double.class, 12.0D);
         bindNamedInstance("max-line-length", double.class, 315.0D);
         bind(Formatter.class).to(DefaultFormatter.class);
+    }
+
+    private void prepareDefaults(File target) throws URISyntaxException, IOException {
+        URL defaults = getClass().getClassLoader().getResource("defaults/");
+
+        if (defaults != null) {
+            File file = new File(defaults.toURI());
+            FileUtils.copyDirectory(file, target);
+        }
     }
 
 }

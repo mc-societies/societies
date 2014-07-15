@@ -38,7 +38,7 @@ public class SocietiesPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        injector = Guice.createInjector(new SocietiesModule());
+        injector = Guice.createInjector(new SocietiesModule(getDataFolder()));
 
         commands = injector.getInstance(Key.get(new TypeLiteral<Commands<Sender>>() {}));
         memberProvider = injector.getInstance(Key.get(new TypeLiteral<MemberProvider<SocietyMember>>() {}));
