@@ -13,6 +13,8 @@ import net.catharos.lib.core.command.Commands;
 import net.catharos.lib.core.command.SystemSender;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.database.Database;
+import net.catharos.lib.shank.service.ServiceController;
+import net.catharos.lib.shank.service.lifecycle.Lifecycle;
 import net.catharos.societies.SocietiesModule;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.command.Command;
@@ -35,6 +37,14 @@ public class SocietiesPlugin extends JavaPlugin {
 
     private Commands<Sender> commands;
     private MemberProvider<SocietyMember> memberProvider;
+    private ServiceController serviceController;
+
+    @Override
+    public void onLoad() {
+        serviceController = injector.getInstance(ServiceController.class);
+
+        serviceController.invoke(Lifecycle.INITIALISING);
+    }
 
     @Override
     public void onEnable() {
@@ -42,10 +52,13 @@ public class SocietiesPlugin extends JavaPlugin {
 
         commands = injector.getInstance(Key.get(new TypeLiteral<Commands<Sender>>() {}));
         memberProvider = injector.getInstance(Key.get(new TypeLiteral<MemberProvider<SocietyMember>>() {}));
+
+        serviceController.invoke(Lifecycle.STARTING);
     }
 
     @Override
     public void onDisable() {
+        serviceController.invoke(Lifecycle.STOPPING);
         ListeningExecutorService service = injector.getInstance(ListeningExecutorService.class);
 
         try {

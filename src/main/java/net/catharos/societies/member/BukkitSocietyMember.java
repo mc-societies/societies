@@ -36,11 +36,11 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
     public BukkitSocietyMember(@Assisted UUID uuid,
                                PlayerProvider<Player> playerProvider,
                                LocaleProvider localeProvider,
-                               Dictionary<String> directory) {
+                               Dictionary<String> dictionary) {
         super(uuid);
         this.playerProvider = playerProvider;
         this.localeProvider = localeProvider;
-        this.directory = directory;
+        this.directory = dictionary;
     }
 
     @Override

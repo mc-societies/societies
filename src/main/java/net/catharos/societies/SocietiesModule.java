@@ -1,6 +1,7 @@
 package net.catharos.societies;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
@@ -11,6 +12,7 @@ import net.catharos.lib.core.command.format.WidthProvider;
 import net.catharos.lib.core.command.format.table.*;
 import net.catharos.lib.core.i18n.DefaultDictionary;
 import net.catharos.lib.core.i18n.Dictionary;
+import net.catharos.lib.core.i18n.MutableDictionary;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import net.catharos.lib.shank.config.ConfigModule;
 import net.catharos.lib.shank.config.JSONSource;
@@ -23,6 +25,8 @@ import net.catharos.societies.member.DynamicLocaleProvider;
 import net.catharos.societies.member.LocaleProvider;
 import net.catharos.societies.member.MemberModule;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -48,19 +52,36 @@ public class SocietiesModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
+        // Configuration
+        try {
+            prepareDefaults(dataDirectory);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Logging
+        bindNamed("service-logger", Logger.class).toInstance(LogManager.getLogger());
+
         // Locale
         bind(LocaleProvider.class).to(DynamicLocaleProvider.class);
         bindNamed("default-locale", LocaleProvider.class).to(DynamicLocaleProvider.class);
-        bindNamedInstance("default-locale", Locale.class, Locale.US);
+        bindNamedInstance("default-locale", Locale.class, Locale.GERMANY);
 
         // Register service
         bindService().to(SocietiesService.class);
+        bindService().to(DictionaryService.class);
 
         // UUID provider
         bind(UUID.class).toProvider(TimeUUIDProvider.class);
 
-        // Directory
-        bind(Dictionary.class).toInstance(new DefaultDictionary(Locale.getDefault())); //fixme correct dictionary
+        // Dictionary
+        bindNamedInstance("dictionary-directory", File.class, new File(dataDirectory, "languages"));
+        bind(new TypeLiteral<Dictionary<String>>() {}).to(new TypeLiteral<MutableDictionary<String>>() {});
+        bind(new TypeLiteral<MutableDictionary<String>>() {}).to(new TypeLiteral<DefaultDictionary<String>>() {})
+                .in(Singleton.class);
+
 
         // Database
         install(new DatabaseModule("localhost", "catharos", "root", "", 3306));
@@ -73,15 +94,6 @@ public class SocietiesModule extends AbstractServiceModule {
 
         // Societies
         install(new SocietyModule());
-
-        // Configuration
-        try {
-            prepareDefaults(dataDirectory);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         install(new ConfigModule(new JSONSource(new File(dataDirectory, "config.json"))));
 

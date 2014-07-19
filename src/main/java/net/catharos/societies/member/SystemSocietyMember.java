@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import net.catharos.groups.DefaultMember;
+import net.catharos.lib.core.i18n.Dictionary;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,11 +17,13 @@ import java.util.UUID;
 public class SystemSocietyMember extends DefaultMember implements SocietyMember {
 
     private final LocaleProvider localeProvider;
+    private final Dictionary<String> directory;
 
     @Inject
-    public SystemSocietyMember(Provider<UUID> uuid, @Named("default-locale") LocaleProvider localeProvider) {
+    public SystemSocietyMember(Provider<UUID> uuid, @Named("default-locale") LocaleProvider localeProvider, Dictionary<String> dictionary) {
         super(uuid.get());
         this.localeProvider = localeProvider;
+        this.directory = dictionary;
     }
 
     @Override
@@ -41,16 +44,16 @@ public class SystemSocietyMember extends DefaultMember implements SocietyMember 
 
     @Override
     public void send(String message) {
-        System.out.println(message);
+        System.out.println(directory.getTranslation(message));
     }
 
     @Override
     public void send(String message, Object... args) {
-        System.out.println(String.format(message, args));
+        System.out.println(String.format(directory.getTranslation(message), args));
     }
 
     @Override
     public void send(StringBuilder message) {
-        System.out.println(message);
+        System.out.println(directory.getTranslation(message.toString()));
     }
 }
