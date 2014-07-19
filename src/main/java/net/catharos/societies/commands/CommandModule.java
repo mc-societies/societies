@@ -3,7 +3,6 @@ package net.catharos.societies.commands;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.name.Named;
 import gnu.trove.set.hash.THashSet;
@@ -17,7 +16,6 @@ import net.catharos.lib.core.command.parser.ArgumentParser;
 import net.catharos.lib.core.command.parser.DefaultParserModule;
 import net.catharos.lib.core.command.parser.TargetParser;
 import net.catharos.lib.core.command.reflect.instance.CommandAnalyser;
-import net.catharos.lib.core.command.reflect.instance.ReflectionFactory;
 import net.catharos.lib.core.command.reflect.instance.factory.InjectorInstanceFactory;
 import net.catharos.lib.core.command.reflect.instance.factory.InstanceFactory;
 import net.catharos.lib.core.command.sender.Sender;
@@ -49,6 +47,8 @@ public class CommandModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bindNamedInstance("root-description", String.class, "Root");
+
         // Parsers
         install(new DefaultParserModule());
 
@@ -76,7 +76,6 @@ public class CommandModule extends AbstractModule {
 
 
         // Reflection api
-        install(new FactoryModuleBuilder().build(new TypeLiteral<ReflectionFactory<Sender>>() {}));
         bind(InstanceFactory.class).to(InjectorInstanceFactory.class);
 
         // Sync/Async command executors
@@ -118,7 +117,7 @@ public class CommandModule extends AbstractModule {
 
         commands.add(society);
 
-        commands.add(analyser.analyse(ThreadTestCommand.class));
+        commands.add(analyser.analyseExecutable(ThreadTestCommand.class));
 
         return commands;
     }

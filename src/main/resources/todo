@@ -47,6 +47,8 @@ Commands:
 
 Relocated class jars (guava)
 
+Use a LocaleWrapper to match locales and dictionaries or just use the language attributes
+
 Get player name from external source if player is offline and there is no "offline player data"
 
 X Translations
