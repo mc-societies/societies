@@ -1,12 +1,8 @@
-Basic functionality:
-    Update groups and members
-
 Commands:
     Pagination for command output
 
-Relocated class jars (guava)
-
-Store name in database
+Basic functionality:
+    Update groups and members
 
 Easier rank/setting permission checking
 
@@ -49,7 +45,11 @@ Text renderer
 Commands:
 	Pre check sender class (Configuration over annotations)
 
-Translations
+Relocated class jars (guava)
+
+Get player name from external source if player is offline and there is no "offline player data"
+
+X Translations
 
 Caching
 	* Pre-rendered listing output

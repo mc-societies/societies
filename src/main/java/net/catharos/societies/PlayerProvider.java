@@ -1,13 +1,19 @@
 package net.catharos.societies;
 
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+
 import java.util.UUID;
 
 /**
  * Represents a PlayerProvider
  */
-public interface PlayerProvider<P> {
+public interface PlayerProvider {
 
-    P getPlayer(String name);
+    Player getPlayer(String name);
 
-    P getPlayer(UUID uuid);
+    Player getPlayer(UUID uuid);
+
+    OfflinePlayer getOfflinePlayer(UUID uuid);
+
 }

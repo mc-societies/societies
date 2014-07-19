@@ -106,7 +106,7 @@ public class SocietiesModule extends AbstractServiceModule {
         });
 
         // Player provider
-        bind(new TypeLiteral<PlayerProvider<Player>>() {}).to(BukkitPlayerProvider.class);
+        bind(PlayerProvider.class).to(BukkitPlayerProvider.class);
 
 
         // Executor service for heavy work

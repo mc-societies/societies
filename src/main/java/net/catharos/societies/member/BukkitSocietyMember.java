@@ -7,6 +7,7 @@ import net.catharos.groups.DefaultMember;
 import net.catharos.groups.request.Request;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.PlayerProvider;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,13 +21,13 @@ import java.util.UUID;
 public class BukkitSocietyMember extends DefaultMember implements SocietyMember {
 
     private Request activeRequest;
-    private final PlayerProvider<Player> playerProvider;
+    private final PlayerProvider playerProvider;
     private final LocaleProvider localeProvider;
     private final Dictionary<String> directory;
 
     @Inject
     public BukkitSocietyMember(Provider<UUID> uuid,
-                               PlayerProvider<Player> playerProvider,
+                               PlayerProvider playerProvider,
                                LocaleProvider localeProvider,
                                Dictionary<String> directory) {
         this(uuid.get(), playerProvider, localeProvider, directory);
@@ -34,7 +35,7 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
 
     @AssistedInject
     public BukkitSocietyMember(@Assisted UUID uuid,
-                               PlayerProvider<Player> playerProvider,
+                               PlayerProvider playerProvider,
                                LocaleProvider localeProvider,
                                Dictionary<String> dictionary) {
         super(uuid);
@@ -61,6 +62,12 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
 
         if (player != null) {
             return player.getName();
+        }
+
+        OfflinePlayer offline = playerProvider.getOfflinePlayer(getUUID());
+
+        if (offline != null) {
+            return offline.getName();
         }
 
         throw new RuntimeException("Player is not online!");

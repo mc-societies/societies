@@ -27,13 +27,13 @@ import java.util.concurrent.Callable;
  */
 class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublisher<SocietyMember> {
 
-    private final PlayerProvider<Player> playerProvider;
+    private final PlayerProvider playerProvider;
     private final MemberQueries queries;
     private final ListeningExecutorService service;
     private final MemberFactory factory;
 
     @Inject
-    public SQLMemberController(PlayerProvider<Player> playerProvider,
+    public SQLMemberController(PlayerProvider playerProvider,
                                MemberQueries queries,
                                ListeningExecutorService service,
                                MemberFactory memberFactory) {

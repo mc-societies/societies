@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Represents a BukkitPlayerProvider
  */
-public class BukkitPlayerProvider implements PlayerProvider<Player> {
+public class BukkitPlayerProvider implements PlayerProvider {
 
     @Override
     public Player getPlayer(String name) {
