@@ -12,8 +12,11 @@ import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.Commands;
 import net.catharos.lib.core.command.SystemSender;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.core.logging.LoggingHelper;
 import net.catharos.lib.database.Database;
+import net.catharos.lib.shank.logging.LoggingModule;
 import net.catharos.lib.shank.service.ServiceController;
+import net.catharos.lib.shank.service.ServiceModule;
 import net.catharos.lib.shank.service.lifecycle.Lifecycle;
 import net.catharos.societies.SocietiesModule;
 import net.catharos.societies.member.SocietyMember;
@@ -23,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
@@ -41,6 +45,12 @@ public class SocietiesPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        File dir = getDataFolder();
+        injector = Guice.createInjector(
+                new ServiceModule(),
+                new LoggingModule(dir,LoggingHelper.createContext(SocietiesMain.class)),
+                new SocietiesModule(dir)
+        );
         serviceController = injector.getInstance(ServiceController.class);
 
         serviceController.invoke(Lifecycle.INITIALISING);
@@ -48,8 +58,6 @@ public class SocietiesPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        injector = Guice.createInjector(new SocietiesModule(getDataFolder()));
-
         commands = injector.getInstance(Key.get(new TypeLiteral<Commands<Sender>>() {}));
         memberProvider = injector.getInstance(Key.get(new TypeLiteral<MemberProvider<SocietyMember>>() {}));
 
@@ -64,6 +72,7 @@ public class SocietiesPlugin extends JavaPlugin {
         try {
             service.awaitTermination(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
+            // Nobody fucking cares!
             e.printStackTrace();
         }
 

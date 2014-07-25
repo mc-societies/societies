@@ -12,6 +12,8 @@ import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.GroupCommand;
 import net.catharos.lib.core.command.builder.GroupBuilder;
+import net.catharos.lib.core.command.format.pagination.DefaultPaginator;
+import net.catharos.lib.core.command.format.pagination.Paginator;
 import net.catharos.lib.core.command.parser.ArgumentParser;
 import net.catharos.lib.core.command.parser.DefaultParserModule;
 import net.catharos.lib.core.command.parser.TargetParser;
@@ -51,6 +53,10 @@ public class CommandModule extends AbstractModule {
 
         // Parsers
         install(new DefaultParserModule());
+
+        // Paginator
+        bind(Paginator.class).to(DefaultPaginator.class);
+        bindNamedInstance("entires-per-page", int.class, 9);
 
         // Group parser
         bind(new TypeLiteral<ArgumentParser<Group>>() {}).to(GroupParser.class);

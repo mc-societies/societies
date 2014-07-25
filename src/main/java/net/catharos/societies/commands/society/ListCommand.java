@@ -36,7 +36,7 @@ public class ListCommand implements Executor<Sender> {
     }
 
     @Override
-    public void execute(CommandContext<Sender> ctx, final Sender sender) {
+    public void execute(final CommandContext<Sender> ctx, final Sender sender) {
         ListenableFuture<Set<Group>> future = groupProvider.getGroups();
 
         Futures.addCallback(future, new FutureCallback<Set<Group>>() {
@@ -52,7 +52,7 @@ public class ListCommand implements Executor<Sender> {
                     table.addRow(rowFactory.create(group));
                 }
 
-                sender.send(table.render());
+                sender.send(table.render(ctx.getPage()));
             }
 
             @Override

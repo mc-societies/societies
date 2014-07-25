@@ -17,23 +17,23 @@ class HelpExecutor<S extends Sender> implements Executor<S> {
     @Inject
     HelpExecutor(Provider<Table> tableProvider) {this.tableProvider = tableProvider;}
 
-    private void displayHelp(S sender, GroupCommand<S> command) {
+    private void displayHelp(CommandContext<S> ctx, S sender, GroupCommand<S> command) {
         for (Command<S> child : command.getChildren()) {
-            displayHelp(sender, child);
+            displayHelp(ctx, sender, child);
         }
     }
 
-    private void displayHelp(S sender, ExecutableCommand<S> command) {
+    private void displayHelp(CommandContext<S> ctx, S sender, ExecutableCommand<S> command) {
         StringBuilder help = new StringBuilder();
 
         help.append(command.getIdentifier());
         help.append(" [OPTIONS] [ARGUMENTS]\n");
 
         help.append("Options:\n");
-        help.append(arguments(command, true).render());
+        help.append(arguments(command, true).render(ctx.getPage()));
 
         help.append("\nArguments:\n");
-        help.append(arguments(command, false).render());
+        help.append(arguments(command, false).render(ctx.getPage()));
 
         sender.send(help);
     }
@@ -53,14 +53,14 @@ class HelpExecutor<S extends Sender> implements Executor<S> {
     @Override
     public void execute(CommandContext<S> ctx, S sender) {
         Command<S> command = ctx.getCommand();
-        displayHelp(sender, command);
+        displayHelp(ctx, sender, command);
     }
 
-    private void displayHelp(S sender, Command<S> command) {
+    private void displayHelp(CommandContext<S> ctx, S sender, Command<S> command) {
         if (command instanceof GroupCommand) {
-            displayHelp(sender, (GroupCommand<S>) command);
+            displayHelp(ctx, sender, (GroupCommand<S>) command);
         } else {
-            displayHelp(sender, (ExecutableCommand<S>) command);
+            displayHelp(ctx, sender, (ExecutableCommand<S>) command);
         }
     }
 }

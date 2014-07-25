@@ -27,14 +27,18 @@ import net.catharos.societies.member.MemberModule;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
 import static java.util.concurrent.Executors.newFixedThreadPool;
@@ -84,7 +88,7 @@ public class SocietiesModule extends AbstractServiceModule {
 
 
         // Database
-        install(new DatabaseModule("localhost", "catharos", "root", "", 3306));
+        install(new DatabaseModule("localhost", "societies", "root", "", 3306));
 
         // Commands
         install(new CommandModule());
@@ -127,11 +131,49 @@ public class SocietiesModule extends AbstractServiceModule {
     }
 
     private void prepareDefaults(File target) throws URISyntaxException, IOException {
-        URL defaults = getClass().getClassLoader().getResource("defaults/");
+        extract("defaults", target);
+    }
 
-        if (defaults != null) {
-            File file = new File(defaults.toURI());
-            FileUtils.copyDirectory(file, target);
+    private void extract(String path, File target) throws IOException, URISyntaxException {
+        File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        int offset = path.length() + 1;
+
+        if (jarFile.isFile()) {
+            JarFile jar = new JarFile(jarFile);
+            Enumeration enumEntries = jar.entries();
+            while (enumEntries.hasMoreElements()) {
+                JarEntry entry = (JarEntry) enumEntries.nextElement();
+
+                String name = entry.getName();
+                if (!name.startsWith(path + "/") || name.length() <= offset) {
+                    continue;
+                }
+
+
+                File file = new File(target, name.substring(offset));
+                if (entry.isDirectory()) { // if its a directory, create it
+                    file.mkdirs();
+                    continue;
+                } else {
+                    file.createNewFile();
+                }
+
+                InputStream is = jar.getInputStream(entry); // get the input stream
+                FileOutputStream fos = new FileOutputStream(file);
+                while (is.available() > 0) {  // write contents of 'is' to 'fos'
+                    fos.write(is.read());
+                }
+                fos.close();
+                is.close();
+            }
+            jar.close();
+        } else {
+            URL url = getClass().getResource("/" + path);
+            if (url != null) {
+                File file = new File(url.toURI());
+
+                FileUtils.copyDirectory(file, target);
+            }
         }
     }
 
