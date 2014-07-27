@@ -10,7 +10,7 @@ import net.catharos.societies.member.SocietyMember;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "deny", description = "A default description!")
+@Command(identifier = "command.vote.deny")
 public class DenyCommand implements Executor<SocietyMember> {
 
     @Override
@@ -22,6 +22,6 @@ public class DenyCommand implements Executor<SocietyMember> {
         }
 
         activeRequest.vote(sender, SimpleRequest.Choices.DENY);
-        sender.send("You voted to deny!");
+        sender.send("member.voted.deny");
     }
 }

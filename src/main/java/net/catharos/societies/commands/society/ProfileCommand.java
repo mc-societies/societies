@@ -11,10 +11,10 @@ import net.catharos.lib.core.command.sender.Sender;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "profile", description = "A default description!")
+@Command(identifier = "command.profile")
 public class ProfileCommand implements Executor<Sender> {
 
-    @Option(name = "target")
+    @Option(name = "argument.society.target")
     Group target;
 
     @Override
@@ -24,13 +24,11 @@ public class ProfileCommand implements Executor<Sender> {
         }
 
         if (target == null) {
-            sender.send("Society not found!");
+            sender.send("target.society.not.found");
             return;
         }
 
         sender.send(target.getName());
-
-        sender.send("Members: ");
 
         for (Member member : target.getMembers()) {
             sender.send(member.getUUID().toString());

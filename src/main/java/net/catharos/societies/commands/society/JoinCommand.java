@@ -22,10 +22,11 @@ import static com.google.common.util.concurrent.Futures.addCallback;
 /**
  * Represents a AbandonCommand
  */
-@Command(identifier = "join", description = "A default description!", async = true)
+@Command(identifier = "command.join", async = true)
+//todo simplify requests
 public class JoinCommand implements Executor<SocietyMember> {
 
-    @Argument(name = "target", description = "")
+    @Argument(name = "argument.society.target")
     Group target;
 
     @Override

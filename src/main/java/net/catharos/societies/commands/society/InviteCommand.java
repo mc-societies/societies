@@ -19,10 +19,11 @@ import static com.google.common.util.concurrent.Futures.addCallback;
 /**
  * Represents a InviteCommand
  */
-@Command(identifier = "invite", description = "Invites an other player to your society!")
+@Command(identifier = "command.invite")
+//todo simplify requests
 public class InviteCommand implements Executor<SocietyMember> {
 
-    @Argument(name = "target", description = "The target member to invite")
+    @Argument(name = "argument.member.target")
     SocietyMember target;
 
     public static final String FAILED = "Invite failed! %s";

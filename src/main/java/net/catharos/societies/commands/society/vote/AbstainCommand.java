@@ -10,7 +10,7 @@ import net.catharos.societies.member.SocietyMember;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "abstain", description = "A default description!")
+@Command(identifier = "command.vote.abstain")
 public class AbstainCommand implements Executor<SocietyMember> {
 
     @Override
@@ -22,6 +22,6 @@ public class AbstainCommand implements Executor<SocietyMember> {
         }
 
         activeRequest.vote(sender, SimpleRequest.Choices.ABSTAIN);
-        sender.send("You voted to abstain!");
+        sender.send("member.voted.abstain");
     }
 }

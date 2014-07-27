@@ -1,5 +1,7 @@
 Easier rank/setting permission checking
 
+Command permissions (bukkit/rank permissions)
+
 Basic functionality:
     Update groups and members
     Members:

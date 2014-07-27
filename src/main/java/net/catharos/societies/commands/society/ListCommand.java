@@ -22,7 +22,7 @@ import java.util.Set;
 /**
 * Represents a SocietiesListCommand
 */
-@Command(identifier = "list", description = "A default description!")
+@Command(identifier = "command.list")
 public class ListCommand implements Executor<Sender> {
 
     private final GroupProvider groupProvider;
@@ -36,7 +36,7 @@ public class ListCommand implements Executor<Sender> {
         this.rowFactory = rowFactory;
     }
 
-    @Option(name = "page")
+    @Option(name = "argument.page")
     int page;
 
     @Override

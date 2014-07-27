@@ -10,7 +10,7 @@ import net.catharos.societies.member.SocietyMember;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "accept", description = "A default description!")
+@Command(identifier = "command.vote.accept")
 public class AcceptCommand implements Executor<SocietyMember> {
 
     @Override
@@ -22,6 +22,6 @@ public class AcceptCommand implements Executor<SocietyMember> {
         }
 
         activeRequest.vote(sender, SimpleRequest.Choices.ACCEPT);
-        sender.send("You voted to accept!");
+        sender.send("member.voted.accept");
     }
 }

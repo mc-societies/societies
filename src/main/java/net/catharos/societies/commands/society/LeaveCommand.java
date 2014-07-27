@@ -9,7 +9,7 @@ import net.catharos.societies.member.SocietyMember;
 /**
  * Represents a AbandonCommand
  */
-@Command(identifier = "leave", description = "A default description!")
+@Command(identifier = "command.leave")
 public class LeaveCommand implements Executor<SocietyMember> {
 
     @Override
@@ -21,6 +21,6 @@ public class LeaveCommand implements Executor<SocietyMember> {
             sender.send("You left %s", group.getName());
         }
 
-        sender.send("You are in no group!");
+        sender.send("society.not.found!");
     }
 }

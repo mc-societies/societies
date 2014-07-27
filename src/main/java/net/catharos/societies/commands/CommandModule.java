@@ -49,6 +49,7 @@ public class CommandModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bindNamedInstance("root-name", String.class, "Root");
         bindNamedInstance("root-description", String.class, "Root");
 
         // Parsers
@@ -104,7 +105,6 @@ public class CommandModule extends AbstractModule {
         Class<?>[] subCommands = {
                 CreateCommand.class,
                 RenameCommand.class,
-//        AbandonCommand.class,
                 ProfileCommand.class,
                 ListCommand.class,
                 InviteCommand.class,
@@ -115,9 +115,6 @@ public class CommandModule extends AbstractModule {
                 AcceptCommand.class,
                 DenyCommand.class,
                 AbstainCommand.class
-
-//        RankCommand.class,
-//        RelationCommand.class
         };
 
         for (Class<?> subCommand : subCommands) {
@@ -126,7 +123,7 @@ public class CommandModule extends AbstractModule {
 
         commands.add(society);
 
-        commands.add(analyser.analyseExecutable(ThreadTestCommand.class));
+        commands.add(analyser.analyse(ThreadTestCommand.class));
 
         return commands;
     }

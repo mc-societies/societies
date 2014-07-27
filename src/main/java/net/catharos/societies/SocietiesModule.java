@@ -127,7 +127,7 @@ public class SocietiesModule extends AbstractServiceModule {
     }
 
     private void extract(String path, File target) throws IOException, URISyntaxException {
-        File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        File jarFile = new File(SocietiesModule.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         int offset = path.length() + 1;
 
         if (jarFile.isFile()) {
@@ -160,7 +160,7 @@ public class SocietiesModule extends AbstractServiceModule {
             }
             jar.close();
         } else {
-            URL url = getClass().getResource("/" + path);
+            URL url = SocietiesModule.class.getResource("/" + path);
             if (url != null) {
                 File file = new File(url.toURI());
 

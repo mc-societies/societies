@@ -16,11 +16,11 @@ import java.util.concurrent.ExecutionException;
 /**
 * Represents a CreateCommand
 */
-@Command(identifier = "create", description = "A default description!")
+@Command(identifier = "command.create")
 public class CreateCommand implements Executor<Sender> {
 
 
-    @Argument(name = "name", description = "The name of the new society")
+    @Argument(name = "argument.society.name")
     protected String name;
 
     private final GroupFactory groupFactory;
@@ -45,6 +45,6 @@ public class CreateCommand implements Executor<Sender> {
             e.printStackTrace();
         }
 
-        sender.send("%s created!", name);
+        sender.send("society.created", name, name);
     }
 }

@@ -13,19 +13,28 @@ import net.catharos.societies.member.SocietyMember;
 /**
  * Represents a AbandonCommand
  */
-@Command(identifier = "rename", description = "A default description!", async = true)
+@Command(identifier = "command.rename", async = true)
 public class RenameCommand implements Executor<Sender> {
 
-    @Argument(name = "newName")
+    @Argument(name = "argument.society.name.new")
     String newName;
 
-    @Option(name = "target", description = "")
+    @Option(name = "argument.society.target")
     Group target;
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
-        if ((sender instanceof SocietyMember) && target == null) {
-            target = ((SocietyMember) sender).getGroup();
+        if ((sender instanceof SocietyMember)) {
+            if (target == null) {
+                target = ((SocietyMember) sender).getGroup();
+            } else {
+                sender.send("society.not.found");
+            }
+        }
+
+        if (target == null) {
+            sender.send("target.society.not.specified");
+            return;
         }
 
         target.setName(newName);
