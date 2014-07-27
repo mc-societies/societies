@@ -21,8 +21,6 @@ import net.catharos.societies.bukkit.BukkitPlayerProvider;
 import net.catharos.societies.commands.CommandModule;
 import net.catharos.societies.database.DatabaseModule;
 import net.catharos.societies.group.SocietyModule;
-import net.catharos.societies.member.DynamicLocaleProvider;
-import net.catharos.societies.member.LocaleProvider;
 import net.catharos.societies.member.MemberModule;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +33,6 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -67,11 +64,6 @@ public class SocietiesModule extends AbstractServiceModule {
 
         // Logging
         bindNamed("service-logger", Logger.class).toInstance(LogManager.getLogger());
-
-        // Locale
-        bind(LocaleProvider.class).to(DynamicLocaleProvider.class);
-        bindNamed("default-locale", LocaleProvider.class).to(DynamicLocaleProvider.class);
-        bindNamedInstance("default-locale", Locale.class, Locale.GERMANY);
 
         // Register service
         bindService().to(SocietiesService.class);
@@ -176,5 +168,4 @@ public class SocietiesModule extends AbstractServiceModule {
             }
         }
     }
-
 }

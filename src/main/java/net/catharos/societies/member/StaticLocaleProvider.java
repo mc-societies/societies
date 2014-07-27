@@ -8,7 +8,7 @@ import java.util.Locale;
 /**
  * Represents a StaticLocaleProvider
  */
-public class StaticLocaleProvider implements LocaleProvider {
+class StaticLocaleProvider implements LocaleProvider {
 
     private final Locale locale;
 

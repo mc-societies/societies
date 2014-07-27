@@ -3,7 +3,10 @@ package net.catharos.societies.member;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import com.google.inject.name.Named;
 import net.catharos.groups.DefaultMember;
+import net.catharos.groups.Member;
+import net.catharos.groups.publisher.Publisher;
 import net.catharos.groups.request.Request;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.PlayerProvider;
@@ -18,7 +21,7 @@ import java.util.UUID;
 /**
  * Represents a SocietyMember
  */
-public class BukkitSocietyMember extends DefaultMember implements SocietyMember {
+class BukkitSocietyMember extends DefaultMember implements SocietyMember {
 
     private Request activeRequest;
     private final PlayerProvider playerProvider;
@@ -29,16 +32,19 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
     public BukkitSocietyMember(Provider<UUID> uuid,
                                PlayerProvider playerProvider,
                                LocaleProvider localeProvider,
-                               Dictionary<String> directory) {
-        this(uuid.get(), playerProvider, localeProvider, directory);
+                               Dictionary<String> directory,
+                               @Named("society-publisher") Publisher<Member> societyPublisher) {
+        this(uuid.get(), playerProvider, localeProvider, directory, societyPublisher);
     }
 
     @AssistedInject
     public BukkitSocietyMember(@Assisted UUID uuid,
                                PlayerProvider playerProvider,
                                LocaleProvider localeProvider,
-                               Dictionary<String> dictionary) {
-        super(uuid);
+                               Dictionary<String> dictionary,
+                               @Named("society-publisher") Publisher<Member> societyPublisher
+    ) {
+        super(uuid, societyPublisher);
         this.playerProvider = playerProvider;
         this.localeProvider = localeProvider;
         this.directory = dictionary;

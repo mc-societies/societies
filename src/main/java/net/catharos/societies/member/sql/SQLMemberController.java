@@ -5,7 +5,6 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import net.catharos.groups.Group;
 import net.catharos.groups.MemberProvider;
 import net.catharos.groups.MemberPublisher;
 import net.catharos.lib.core.util.ByteUtil;
@@ -16,7 +15,10 @@ import net.catharos.societies.member.MemberException;
 import net.catharos.societies.member.MemberFactory;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.entity.Player;
-import org.jooq.*;
+import org.jooq.Insert;
+import org.jooq.Query;
+import org.jooq.Result;
+import org.jooq.Select;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -91,30 +93,6 @@ class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublis
                 Insert<MembersRecord> query = queries.getQuery(MemberQueries.INSERT_MEMBER);
 
                 query.bind(1, UUIDGen.toByteArray(member.getUUID()));
-
-                query.execute();
-
-                return member;
-            }
-        });
-    }
-
-    @Override
-    public ListenableFuture<SocietyMember> update(final SocietyMember member) {
-        return service.submit(new Callable<SocietyMember>() {
-            @Override
-            public SocietyMember call() throws Exception {
-                Update<MembersRecord> query = queries.getQuery(MemberQueries.UPDATE_MEMBER);
-
-                UUID uuid = null;
-
-                Group group = member.getGroup();
-                if (group != null) {
-                    uuid = group.getUUID();
-                }
-
-                query.bind(1, UUIDGen.toByteArray(uuid));
-                query.bind(2, UUIDGen.toByteArray(member.getUUID()));
 
                 query.execute();
 

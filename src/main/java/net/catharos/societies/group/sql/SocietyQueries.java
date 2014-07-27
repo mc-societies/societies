@@ -6,10 +6,7 @@ import net.catharos.lib.database.DSLProvider;
 import net.catharos.lib.database.QueryKey;
 import net.catharos.lib.database.QueryProvider;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
-import org.jooq.DSLContext;
-import org.jooq.Insert;
-import org.jooq.Query;
-import org.jooq.Select;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 
 import static net.catharos.societies.database.layout.Tables.SOCIETIES;
@@ -27,6 +24,10 @@ class SocietyQueries extends QueryProvider {
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY_BY_NAME = QueryKey.create();
 
     public static final QueryKey<Insert<SocietiesRecord>> INSERT_SOCIETY = QueryKey.create();
+
+    public static final QueryKey<Update<SocietiesRecord>> UPDATE_SOCIETY_NAME = QueryKey.create();
+
+    public static final QueryKey<Update<SocietiesRecord>> UPDATE_SOCIETY_LAST_ACTIVE = QueryKey.create();
 
     public static final QueryKey<Query> DROP_SOCIETY_BY_UUID = QueryKey.create();
 
@@ -81,6 +82,24 @@ class SocietyQueries extends QueryProvider {
             public Query create(DSLContext context) {
                 return context
                         .delete(SOCIETIES).where(SOCIETIES.UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(UPDATE_SOCIETY_NAME, new QueryBuilder<Update<SocietiesRecord>>() {
+            @Override
+            public Update<SocietiesRecord> create(DSLContext context) {
+                return context.update(SOCIETIES)
+                        .set(SOCIETIES.NAME, DEFAULT_STRING)
+                        .where(SOCIETIES.UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(UPDATE_SOCIETY_LAST_ACTIVE, new QueryBuilder<Update<SocietiesRecord>>() {
+            @Override
+            public Update<SocietiesRecord> create(DSLContext context) {
+                return context.update(SOCIETIES)
+                        .set(SOCIETIES.LASTACTIVE, DEFAULT_TIMESTAMP)
+                        .where(SOCIETIES.UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });
 

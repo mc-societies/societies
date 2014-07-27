@@ -11,6 +11,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Command;
+import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.sender.Sender;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +36,9 @@ public class ListCommand implements Executor<Sender> {
         this.rowFactory = rowFactory;
     }
 
+    @Option(name = "page")
+    int page;
+
     @Override
     public void execute(final CommandContext<Sender> ctx, final Sender sender) {
         ListenableFuture<Set<Group>> future = groupProvider.getGroups();
@@ -52,7 +56,7 @@ public class ListCommand implements Executor<Sender> {
                     table.addRow(rowFactory.create(group));
                 }
 
-                sender.send(table.render(ctx.getPage()));
+                sender.send(table.render(ctx.getName(), page));
             }
 
             @Override

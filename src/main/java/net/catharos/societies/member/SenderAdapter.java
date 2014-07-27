@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a SenderAdapter
  */
-public class SenderAdapter implements SenderProvider {
+class SenderAdapter implements SenderProvider {
 
     private final MemberProvider<SocietyMember> memberProvider;
 

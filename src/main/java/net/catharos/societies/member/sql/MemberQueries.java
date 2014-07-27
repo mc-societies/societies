@@ -21,10 +21,9 @@ class MemberQueries extends QueryProvider {
 
     public static final QueryKey<Select<Record1<byte[]>>> SELECT_MEMBER_RANKS = QueryKey.create();
 
-    public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER = QueryKey.create();
+    public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER_SOCIETY = QueryKey.create();
 
     public static final QueryKey<Insert<MembersRecord>> INSERT_MEMBER = QueryKey.create();
-
 
     public static final QueryKey<Query> DROP_MEMBER_BY_UUID = QueryKey.create();
 
@@ -71,7 +70,7 @@ class MemberQueries extends QueryProvider {
             }
         });
 
-        builder(UPDATE_MEMBER, new QueryBuilder<Update<MembersRecord>>() {
+        builder(UPDATE_MEMBER_SOCIETY, new QueryBuilder<Update<MembersRecord>>() {
             @Override
             public Update<MembersRecord> create(DSLContext context) {
                 return context.update(MEMBERS)

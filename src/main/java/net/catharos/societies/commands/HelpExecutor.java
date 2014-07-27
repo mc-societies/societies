@@ -30,10 +30,10 @@ class HelpExecutor<S extends Sender> implements Executor<S> {
         help.append(" [OPTIONS] [ARGUMENTS]\n");
 
         help.append("Options:\n");
-        help.append(arguments(command, true).render(ctx.getPage()));
+        help.append(arguments(command, true).render("help", ctx.getPage()));
 
         help.append("\nArguments:\n");
-        help.append(arguments(command, false).render(ctx.getPage()));
+        help.append(arguments(command, false).render("help", ctx.getPage()));
 
         sender.send(help);
     }

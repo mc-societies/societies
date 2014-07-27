@@ -55,6 +55,8 @@ public class CommandModule extends AbstractModule {
         install(new DefaultParserModule());
 
         // Paginator
+        bindNamedInstance("table-header", String.class, "Societies {3} - page {0}/{1} - {2} entries");
+        bindNamedInstance("padding", int.class, 2);
         bind(Paginator.class).to(DefaultPaginator.class);
         bindNamedInstance("entires-per-page", int.class, 9);
 
@@ -101,6 +103,7 @@ public class CommandModule extends AbstractModule {
 
         Class<?>[] subCommands = {
                 CreateCommand.class,
+                RenameCommand.class,
 //        AbandonCommand.class,
                 ProfileCommand.class,
                 ListCommand.class,

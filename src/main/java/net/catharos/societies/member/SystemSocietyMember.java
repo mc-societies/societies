@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import net.catharos.groups.DefaultMember;
+import net.catharos.groups.Member;
+import net.catharos.groups.publisher.Publisher;
 import net.catharos.lib.core.i18n.Dictionary;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -14,14 +16,17 @@ import java.util.UUID;
 /**
  * Represents a ConsoleSocietyMember
  */
-public class SystemSocietyMember extends DefaultMember implements SocietyMember {
+class SystemSocietyMember extends DefaultMember implements SocietyMember {
 
     private final LocaleProvider localeProvider;
     private final Dictionary<String> directory;
 
     @Inject
-    public SystemSocietyMember(Provider<UUID> uuid, @Named("default-locale") LocaleProvider localeProvider, Dictionary<String> dictionary) {
-        super(uuid.get());
+    public SystemSocietyMember(Provider<UUID> uuid,
+                               @Named("default-locale") LocaleProvider localeProvider,
+                               Dictionary<String> dictionary,
+                               @Named("society-publisher") Publisher<Member> societyPublisher) {
+        super(uuid.get(), societyPublisher);
         this.localeProvider = localeProvider;
         this.directory = dictionary;
     }

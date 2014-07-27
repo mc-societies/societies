@@ -5,6 +5,8 @@ import net.catharos.lib.core.command.sender.SenderProvider;
 import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.member.sql.MemberProviderModule;
 
+import java.util.Locale;
+
 /**
  * Represents a MemberModule
  */
@@ -23,5 +25,10 @@ public class MemberModule extends AbstractModule {
         bind(SenderProvider.class).to(SenderAdapter.class);
 
         install(new MemberProviderModule());
+
+        // Locale
+        bind(LocaleProvider.class).to(DynamicLocaleProvider.class);
+        bindNamed("default-locale", LocaleProvider.class).to(DynamicLocaleProvider.class);
+        bindNamedInstance("default-locale", Locale.class, Locale.GERMANY);
     }
 }

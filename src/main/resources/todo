@@ -1,10 +1,17 @@
-Commands:
-    Pagination for command output
+Easier rank/setting permission checking
 
 Basic functionality:
     Update groups and members
-
-Easier rank/setting permission checking
+    Members:
+    	- X group direct
+		- X ranks runtime
+	Group:
+		X - name d
+		X - last-active d
+		- relations r
+		- ranks r
+		(- parent)
+		(- subgroups)
 
 Commands:
 	X Group create
@@ -36,14 +43,15 @@ Storage:
 	* JSON backups
 
 Text renderer
-	* Pad complete table x chars to the right
-	* Headings
+	X Pad complete table x chars to the right
+	X Headings
 	* Separators
-	* Tables
+	X Tables
 	* Tree like structure
 
 Commands:
-	Pre check sender class (Configuration over annotations)
+X    Pagination for command output
+	 Pre check sender class (Configuration over annotations)
 
 Relocated class jars (guava)
 

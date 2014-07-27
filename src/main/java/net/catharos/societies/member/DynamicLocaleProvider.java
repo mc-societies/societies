@@ -9,7 +9,7 @@ import java.util.Locale;
 /**
  * Represents a DynamicLocaleProvider
  */
-public class DynamicLocaleProvider implements LocaleProvider {
+class DynamicLocaleProvider implements LocaleProvider {
 
     private final LocaleProvider localeProvider;
 
