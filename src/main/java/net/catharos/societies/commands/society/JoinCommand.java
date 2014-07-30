@@ -31,7 +31,7 @@ public class JoinCommand implements Executor<SocietyMember> {
 
     @Override
     public void execute(CommandContext<SocietyMember> ctx, final SocietyMember sender) {
-        Set<Member> participants = target.getMembers("join");
+        Set<Member> participants = target.getMembers(null); //fixme
         SimpleRequest request = new SimpleRequest(new SetInvolved(participants));
 
 

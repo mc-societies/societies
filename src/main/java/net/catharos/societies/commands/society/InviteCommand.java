@@ -5,6 +5,8 @@ import net.catharos.groups.Group;
 import net.catharos.groups.request.SimpleRequest;
 import net.catharos.groups.request.SimpleRequestResult;
 import net.catharos.groups.request.SingleInvolved;
+import net.catharos.groups.setting.Setting;
+import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
@@ -23,6 +25,8 @@ import static com.google.common.util.concurrent.Futures.addCallback;
 //todo simplify requests
 public class InviteCommand implements Executor<SocietyMember> {
 
+    public static final Setting INVITE_SETTING = new Setting(0, "invite");
+
     @Argument(name = "argument.member.target")
     SocietyMember target;
 
@@ -30,6 +34,10 @@ public class InviteCommand implements Executor<SocietyMember> {
 
     @Override
     public void execute(CommandContext<SocietyMember> ctx, final SocietyMember sender) {
+        if (sender.getGroup().get(INVITE_SETTING).booleanValue()) {
+
+        }
+
         SimpleRequest request = new SimpleRequest(new SingleInvolved(target));
         target.setActiveRequest(request);
 

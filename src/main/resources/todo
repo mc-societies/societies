@@ -1,6 +1,16 @@
-Easier rank/setting permission checking
+Settings serialisation:
+    * Setting by UUID
+	* Subject/Target by UUID
+	* SettingValue by binary
+	Targets:
+		- Ranks
+		- Groups (with relations)
 
 Command permissions (bukkit/rank permissions)
+
+Finish requests
+
+Publishers also for creating/dropping societies?
 
 Basic functionality:
     Update groups and members

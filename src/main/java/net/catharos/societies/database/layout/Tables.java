@@ -34,6 +34,11 @@ public class Tables {
 	public static final net.catharos.societies.database.layout.tables.RanksPermissions RANKS_PERMISSIONS = net.catharos.societies.database.layout.tables.RanksPermissions.RANKS_PERMISSIONS;
 
 	/**
+	 * The table societies.ranks_settings
+	 */
+	public static final net.catharos.societies.database.layout.tables.RanksSettings RANKS_SETTINGS = net.catharos.societies.database.layout.tables.RanksSettings.RANKS_SETTINGS;
+
+	/**
 	 * The table societies.relations
 	 */
 	public static final net.catharos.societies.database.layout.tables.Relations RELATIONS = net.catharos.societies.database.layout.tables.Relations.RELATIONS;
