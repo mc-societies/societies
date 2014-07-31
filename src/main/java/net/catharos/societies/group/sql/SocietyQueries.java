@@ -9,6 +9,7 @@ import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 
+import static net.catharos.societies.database.layout.Tables.MEMBERS;
 import static net.catharos.societies.database.layout.Tables.SOCIETIES;
 
 /**
@@ -18,6 +19,8 @@ import static net.catharos.societies.database.layout.Tables.SOCIETIES;
 class SocietyQueries extends QueryProvider {
 
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETIES = QueryKey.create();
+
+    public static final QueryKey<Select<Record1<byte[]>>> SELECT_SOCIETY_MEMBERS = QueryKey.create();
 
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY_BY_UUID = QueryKey.create();
 
@@ -47,6 +50,14 @@ class SocietyQueries extends QueryProvider {
             }
         });
 
+        builder(SELECT_SOCIETY_MEMBERS, new QueryBuilder<Select<Record1<byte[]>>>() {
+            @Override
+            public Select<Record1<byte[]>> create(DSLContext context) {
+                return context.select(MEMBERS.UUID).from(MEMBERS).where(MEMBERS.SOCIETY.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+
         builder(SELECT_SOCIETY_BY_UUID, new QueryBuilder<Select<SocietiesRecord>>() {
             @Override
             public Select<SocietiesRecord> create(DSLContext context) {
@@ -61,7 +72,7 @@ class SocietyQueries extends QueryProvider {
             public Select<SocietiesRecord> create(DSLContext context) {
                 return context.
                         selectFrom(SOCIETIES)
-                        .where(SOCIETIES.NAME.like(""));
+                        .where(SOCIETIES.NAME.like(DEFAULT_STRING));
             }
         });
 

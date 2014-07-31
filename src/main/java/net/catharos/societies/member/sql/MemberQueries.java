@@ -58,7 +58,8 @@ class MemberQueries extends QueryProvider {
             public Insert<MembersRecord> create(DSLContext context) {
                 return context
                         .insertInto(MEMBERS)
-                        .set(MEMBERS.UUID, DEFAULT_BYTE_ARRAY);
+                        .set(MEMBERS.UUID, DEFAULT_BYTE_ARRAY)
+                        .set(MEMBERS.SOCIETY, DEFAULT_BYTE_ARRAY);
             }
         });
 

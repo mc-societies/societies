@@ -6,23 +6,19 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
-import net.catharos.groups.Group;
-import net.catharos.groups.GroupFactory;
-import net.catharos.groups.GroupProvider;
-import net.catharos.groups.GroupPublisher;
+import net.catharos.groups.*;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
-import org.jooq.Insert;
-import org.jooq.Query;
-import org.jooq.Result;
-import org.jooq.Select;
+import net.catharos.societies.member.SocietyMember;
+import org.jooq.*;
 
 import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import static net.catharos.societies.group.sql.SocietyQueries.*;
 
@@ -33,12 +29,14 @@ class SQLGroupController implements GroupProvider, GroupPublisher {
     private final SocietyQueries queries;
     private final ListeningExecutorService service;
     private final GroupFactory factory;
+    private final MemberProvider<SocietyMember> memberController;
 
     @Inject
-    public SQLGroupController(SocietyQueries queries, ListeningExecutorService service, GroupFactory factory) {
+    public SQLGroupController(SocietyQueries queries, ListeningExecutorService service, GroupFactory factory, MemberProvider<SocietyMember> memberController) {
         this.queries = queries;
         this.service = service;
         this.factory = factory;
+        this.memberController = memberController;
     }
 
     @Override
@@ -65,7 +63,22 @@ class SQLGroupController implements GroupProvider, GroupPublisher {
                     throw new SocietyException("There are more groups with the same uuid?!");
                 }
 
-                return createGroup(input.get(0));
+                Group group = createGroup(input.get(0));
+
+                // Get members
+                Select<Record1<byte[]>> query = queries.getQuery(SocietyQueries.SELECT_SOCIETY_MEMBERS);
+
+                for (Record1<byte[]> member : query.fetch()) {
+                    try {
+                        group.addMember(memberController.getMember(UUIDGen.toUUID(member.value1())).get());
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                return group;
             }
         });
 

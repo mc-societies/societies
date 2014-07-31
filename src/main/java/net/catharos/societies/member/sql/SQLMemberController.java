@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
+import net.catharos.groups.GroupProvider;
 import net.catharos.groups.MemberProvider;
 import net.catharos.groups.MemberPublisher;
 import net.catharos.lib.core.util.ByteUtil;
@@ -23,26 +24,30 @@ import org.jooq.Select;
 import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Represents a LoadingMemberProvider
  */
-class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublisher<SocietyMember> {
+public class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublisher<SocietyMember> {
 
     private final PlayerProvider playerProvider;
     private final MemberQueries queries;
     private final ListeningExecutorService service;
     private final MemberFactory factory;
+    private final GroupProvider groupProvider;
 
     @Inject
     public SQLMemberController(PlayerProvider playerProvider,
                                MemberQueries queries,
                                ListeningExecutorService service,
-                               MemberFactory memberFactory) {
+                               MemberFactory memberFactory,
+                               GroupProvider groupProvider) {
         this.playerProvider = playerProvider;
         this.queries = queries;
         this.service = service;
         this.factory = memberFactory;
+        this.groupProvider = groupProvider;
     }
 
     @Override
@@ -69,7 +74,20 @@ class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublis
                 // create core account object
                 MembersRecord record = input.get(0);
 
-                return factory.create(UUIDGen.toUUID(record.getUuid()));
+                SocietyMember member = factory.create(UUIDGen.toUUID(record.getUuid()));
+
+                UUID uuid = UUIDGen.toUUID(record.getSociety());
+
+                // Get society
+                try {
+                    member.setGroup(groupProvider.getGroup(uuid).get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                return member;
             }
         });
     }
@@ -93,6 +111,13 @@ class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublis
                 Insert<MembersRecord> query = queries.getQuery(MemberQueries.INSERT_MEMBER);
 
                 query.bind(1, UUIDGen.toByteArray(member.getUUID()));
+
+                Object group = null;
+
+                if (member.getGroup() != null) {
+                    group = UUIDGen.toByteArray(member.getGroup().getUUID());
+                }
+                query.bind(2, group);
 
                 query.execute();
 

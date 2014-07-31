@@ -21,7 +21,7 @@ public class CreateCommand implements Executor<Sender> {
 
 
     @Argument(name = "argument.society.name")
-    protected String name;
+    String name;
 
     private final GroupFactory groupFactory;
     private final GroupPublisher publisher;
