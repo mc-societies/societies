@@ -14,16 +14,6 @@ Publishers also for creating/dropping societies?
 
 Basic functionality:
     Update groups and members
-    Members:
-    	- X group direct
-		- X ranks runtime
-	Group:
-		X - name d
-		X - last-active d
-		- relations r
-		- ranks r
-		(- parent)
-		(- subgroups)
 
 Commands:
 	X Group create

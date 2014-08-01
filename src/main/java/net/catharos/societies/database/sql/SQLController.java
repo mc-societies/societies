@@ -1,4 +1,4 @@
-package net.catharos.societies.sql;
+package net.catharos.societies.database.sql;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -26,7 +26,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import static net.catharos.societies.sql.SQLQueries.*;
+import static net.catharos.societies.database.sql.SQLQueries.*;
 
 /**
  * Represents a LoadingMemberProvider

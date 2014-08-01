@@ -1,4 +1,4 @@
-package net.catharos.societies.sql;
+package net.catharos.societies.database.sql;
 
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;

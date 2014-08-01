@@ -1,4 +1,4 @@
-package net.catharos.societies.sql;
+package net.catharos.societies.database.sql;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
