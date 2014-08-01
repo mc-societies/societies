@@ -1,11 +1,10 @@
-package net.catharos.societies.member.sql;
+package net.catharos.societies.sql;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
-import net.catharos.groups.publisher.Publisher;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
 import org.jooq.Update;
@@ -16,15 +15,11 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SocietyModifier
  */
-class SocietyPublisher implements Publisher<Member> {
-
-    private final ListeningExecutorService service;
-    private final MemberQueries queries;
+class SocietyPublisher extends AbstractPublisher<Member> {
 
     @Inject
-    public SocietyPublisher(ListeningExecutorService service, MemberQueries queries) {
-        this.service = service;
-        this.queries = queries;
+    public SocietyPublisher(ListeningExecutorService service, SQLQueries queries) {
+        super(service, queries);
     }
 
     @Override
@@ -32,7 +27,7 @@ class SocietyPublisher implements Publisher<Member> {
         return service.submit(new Callable<Member>() {
             @Override
             public Member call() throws Exception {
-                Update<MembersRecord> query = queries.getQuery(MemberQueries.UPDATE_MEMBER_SOCIETY);
+                Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_SOCIETY);
 
                 UUID uuid = null;
 

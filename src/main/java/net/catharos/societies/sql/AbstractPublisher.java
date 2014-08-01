@@ -1,17 +1,16 @@
-package net.catharos.societies.group.sql;
+package net.catharos.societies.sql;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import net.catharos.groups.Group;
 import net.catharos.groups.publisher.Publisher;
 
 /**
  * Represents a AbstractPublisher
  */
-abstract class AbstractPublisher implements Publisher<Group> {
+abstract class AbstractPublisher<T> implements Publisher<T> {
     protected final ListeningExecutorService service;
-    protected final SocietyQueries queries;
+    protected final SQLQueries queries;
 
-    public AbstractPublisher(ListeningExecutorService service, SocietyQueries queries) {
+    public AbstractPublisher(ListeningExecutorService service, SQLQueries queries) {
         this.service = service;
         this.queries = queries;
     }

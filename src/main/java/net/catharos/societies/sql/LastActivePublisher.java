@@ -1,4 +1,4 @@
-package net.catharos.societies.group.sql;
+package net.catharos.societies.sql;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -14,10 +14,10 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SocietyNameUpdater
  */
-class LastActivePublisher extends AbstractPublisher {
+class LastActivePublisher extends AbstractPublisher<Group> {
 
     @Inject
-    public LastActivePublisher(ListeningExecutorService service, SocietyQueries queries) {
+    public LastActivePublisher(ListeningExecutorService service, SQLQueries queries) {
         super(service, queries);
     }
 
@@ -26,7 +26,7 @@ class LastActivePublisher extends AbstractPublisher {
         return service.submit(new Callable<Group>() {
             @Override
             public Group call() throws Exception {
-                Update<SocietiesRecord> query = queries.getQuery(SocietyQueries.UPDATE_SOCIETY_LAST_ACTIVE);
+                Update<SocietiesRecord> query = queries.getQuery(SQLQueries.UPDATE_SOCIETY_LAST_ACTIVE);
 
                 query.bind(1, UUIDGen.toByteArray(group.getUUID()));
                 query.bind(2, new Timestamp(group.getLastActive().getMillis()));

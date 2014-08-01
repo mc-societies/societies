@@ -8,7 +8,6 @@ import net.catharos.groups.rank.DefaultRank;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
 import net.catharos.lib.shank.AbstractModule;
-import net.catharos.societies.group.sql.GroupProviderModule;
 
 /**
  * Represents a SocietyModule
@@ -26,7 +25,5 @@ public class SocietyModule extends AbstractModule {
                 .build(GroupFactory.class));
 
         bind(Group.class).to(DefaultGroup.class);
-
-        install(new GroupProviderModule());
     }
 }

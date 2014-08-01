@@ -17,6 +17,7 @@ import net.catharos.societies.commands.CommandModule;
 import net.catharos.societies.database.DatabaseModule;
 import net.catharos.societies.group.SocietyModule;
 import net.catharos.societies.member.MemberModule;
+import net.catharos.societies.sql.SQLModule;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -77,6 +78,8 @@ public class SocietiesModule extends AbstractServiceModule {
 
         // Societies
         install(new SocietyModule());
+
+        install(new SQLModule());
 
         // Dictionary
         install(new DictionaryModule(dataDirectory));
