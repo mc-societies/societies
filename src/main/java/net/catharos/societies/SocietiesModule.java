@@ -57,7 +57,7 @@ public class SocietiesModule extends AbstractServiceModule {
         bind(UUID.class).toProvider(TimeUUIDProvider.class);
 
         // Database
-        install(new DatabaseModule("localhost", "societies", "root", "", 3306));
+        install(new DatabaseModule());
 
         // Commands
         install(new CommandModule());
