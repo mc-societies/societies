@@ -94,6 +94,20 @@
             <version>1.2.7</version>
         </dependency>
     </dependencies>
+    
+    <distributionManagement>
+        <repository>
+            <id>frederik-schmitt</id>
+            <name>Releases</name>
+            <url>http://repo.frederik-schmitt.de/content/repositories/oss-releases</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>frederik-schmitt</id>
+            <name>Snapshots</name>
+            <url>http://repo.frederik-schmitt.de/content/repositories/oss-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <repositories>
 
