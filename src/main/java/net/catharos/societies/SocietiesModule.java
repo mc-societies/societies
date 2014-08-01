@@ -37,6 +37,7 @@ public class SocietiesModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
+        binder().disableCircularProxies();
         // Configuration
         try {
             JarUtils.extract("defaults", dataDirectory);

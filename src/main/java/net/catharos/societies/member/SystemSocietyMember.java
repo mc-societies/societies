@@ -25,7 +25,7 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
 
     @Inject
     public SystemSocietyMember(Provider<UUID> uuid,
-                               @Named("default-locale") LocaleProvider localeProvider,
+                               LocaleProvider localeProvider,
                                Dictionary<String> dictionary,
                                @Named("society-publisher") Publisher<Member> societyPublisher) {
         super(uuid.get(), societyPublisher);

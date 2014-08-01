@@ -15,7 +15,7 @@ class DynamicLocaleProvider implements LocaleProvider {
     private final LocaleProvider localeProvider;
 
     @Inject
-    public DynamicLocaleProvider(@Named("default-locale") LocaleProvider localeProvider) {this.localeProvider = localeProvider;}
+    public DynamicLocaleProvider(@Named("fallback-provider") LocaleProvider localeProvider) {this.localeProvider = localeProvider;}
 
     @Override
     public Locale provide(SocietyMember member) {
