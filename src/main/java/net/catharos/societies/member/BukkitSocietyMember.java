@@ -10,6 +10,7 @@ import net.catharos.groups.publisher.Publisher;
 import net.catharos.groups.request.Request;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.PlayerProvider;
+import net.catharos.societies.member.locale.LocaleProvider;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;

@@ -1,37 +1,26 @@
 package net.catharos.societies;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.name.Names;
-import net.catharos.lib.core.command.format.DefaultFormatter;
-import net.catharos.lib.core.command.format.Formatter;
-import net.catharos.lib.core.command.format.MonospacedWidthProvider;
-import net.catharos.lib.core.command.format.WidthProvider;
-import net.catharos.lib.core.command.format.table.*;
+import net.catharos.lib.core.util.JarUtils;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import net.catharos.lib.shank.config.ConfigModule;
 import net.catharos.lib.shank.config.JSONSource;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.bukkit.BukkitPlayerProvider;
 import net.catharos.societies.commands.CommandModule;
+import net.catharos.societies.commands.FormatModule;
 import net.catharos.societies.database.DatabaseModule;
+import net.catharos.societies.database.sql.SQLModule;
 import net.catharos.societies.group.SocietyModule;
 import net.catharos.societies.member.MemberModule;
-import net.catharos.societies.database.sql.SQLModule;
-import org.apache.commons.io.FileUtils;
+import net.catharos.societies.member.locale.LocaleModule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.UUID;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 
@@ -50,11 +39,11 @@ public class SocietiesModule extends AbstractServiceModule {
     protected void configure() {
         // Configuration
         try {
-            prepareDefaults(dataDirectory);
+            JarUtils.extract("defaults", dataDirectory);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+           throw new RuntimeException("Failed to create a URL of the code's source!", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to prepare resources!");
         }
 
         // Logging
@@ -75,6 +64,7 @@ public class SocietiesModule extends AbstractServiceModule {
 
         // Members
         install(new MemberModule());
+        install(new LocaleModule());
 
         // Societies
         install(new SocietyModule());
@@ -101,72 +91,7 @@ public class SocietiesModule extends AbstractServiceModule {
         bind(ListeningExecutorService.class).toInstance(sameThreadExecutor(/*newFixedThreadPool(2)*/));
 
         // Chat rendering
-        bind(Table.class).to(DefaultTable.class);
-        bind(WidthProvider.class).toInstance(new MonospacedWidthProvider(5));
-
-        install(new FactoryModuleBuilder()
-                .implement(Row.class, Names.named("default"), DefaultRow.class)
-                .implement(Row.class, Names.named("forward"), ForwardingRow.class)
-                .build(RowFactory.class));
-
-        bindNamedInstance("column-spacing", double.class, 12.0D);
-        bindNamedInstance("max-line-length", double.class, 315.0D);
-        bind(Formatter.class).to(DefaultFormatter.class);
+        install(new FormatModule());
     }
 
-    private void prepareDefaults(File target) throws URISyntaxException, IOException {
-        extract("defaults", target);
-    }
-
-    private void extract(String path, File target) throws IOException, URISyntaxException {
-        File jarFile = new File(SocietiesModule.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-        int offset = path.length() + 1;
-
-        if (jarFile.isFile()) {
-            JarFile jar = new JarFile(jarFile);
-            Enumeration enumEntries = jar.entries();
-            while (enumEntries.hasMoreElements()) {
-                JarEntry entry = (JarEntry) enumEntries.nextElement();
-
-                String name = entry.getName();
-                if (!name.startsWith(path + "/") || name.length() <= offset) {
-                    continue;
-                }
-
-                File file = new File(target, name.substring(offset));
-
-                if (file.exists()) {
-                    continue;
-                }
-
-                if (entry.isDirectory()) { // if its a directory, create it
-                    if (!file.mkdirs()) {
-                        throw new IOException("Failed to create directory!");
-                    }
-                    continue;
-                } else {
-                    file.getParentFile().mkdirs();
-                    if (!file.createNewFile()) {
-                        continue;
-                    }
-                }
-
-                InputStream is = jar.getInputStream(entry); // get the input stream
-                FileOutputStream fos = new FileOutputStream(file);
-                while (is.available() > 0) {  // write contents of 'is' to 'fos'
-                    fos.write(is.read());
-                }
-                fos.close();
-                is.close();
-            }
-            jar.close();
-        } else {
-            URL url = SocietiesModule.class.getResource("/" + path);
-            if (url != null) {
-                File file = new File(url.toURI());
-
-                FileUtils.copyDirectory(file, target);
-            }
-        }
-    }
 }

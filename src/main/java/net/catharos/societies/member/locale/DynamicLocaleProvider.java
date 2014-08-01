@@ -1,7 +1,8 @@
-package net.catharos.societies.member;
+package net.catharos.societies.member.locale;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import net.catharos.societies.member.SocietyMember;
 import org.bukkit.entity.Player;
 
 import java.util.Locale;

@@ -1,7 +1,8 @@
-package net.catharos.societies.member;
+package net.catharos.societies.member.locale;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import net.catharos.societies.member.SocietyMember;
 
 import java.util.Locale;
 
