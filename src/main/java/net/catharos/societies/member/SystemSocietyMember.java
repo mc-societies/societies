@@ -10,6 +10,7 @@ import net.catharos.lib.core.i18n.Dictionary;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -54,7 +55,7 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
 
     @Override
     public void send(String message, Object... args) {
-        System.out.println(String.format(directory.getTranslation(message), args));
+        System.out.println(MessageFormat.format(directory.getTranslation(message), args));
     }
 
     @Override

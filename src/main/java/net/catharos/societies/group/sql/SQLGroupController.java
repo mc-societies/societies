@@ -1,6 +1,7 @@
 package net.catharos.societies.group.sql;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -59,29 +60,36 @@ class SQLGroupController implements GroupProvider, GroupPublisher {
 
                 if (input.isEmpty()) {
                     return createGroup(uuid);
-                } else if (input.size() > 1) {
-                    throw new SocietyException("There are more groups with the same uuid?!");
                 }
 
-                Group group = createGroup(input.get(0));
+                SocietiesRecord record = Iterables.getOnlyElement(input);
 
-                // Get members
-                Select<Record1<byte[]>> query = queries.getQuery(SocietyQueries.SELECT_SOCIETY_MEMBERS);
-
-                for (Record1<byte[]> member : query.fetch()) {
-                    try {
-                        group.addMember(memberController.getMember(UUIDGen.toUUID(member.value1())).get());
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                return group;
+                return evaluateSingle(record);
             }
         });
 
+    }
+
+    private Group evaluateSingle(SocietiesRecord record) {
+        Group group = createGroup(record);
+
+        // Get members
+        Select<Record1<byte[]>> query = queries.getQuery(SocietyQueries.SELECT_SOCIETY_MEMBERS);
+
+        query.bind(1, record.getUuid());
+
+        for (Record1<byte[]> member : query.fetch()) {
+            try {
+                UUID memberUUID = UUIDGen.toUUID(member.value1());
+                group.addMember(memberController.getMember(memberUUID, group).get());
+            } catch (InterruptedException e) {
+                throw new SocietyException(e, "Failed to add member to group!");
+            } catch (ExecutionException e) {
+                throw new SocietyException(e, "Failed to add member to group!");
+            }
+        }
+
+        return group;
     }
 
     private ListenableFuture<Set<Group>> evaluate(ListenableFuture<Result<SocietiesRecord>> result) {
@@ -97,7 +105,7 @@ class SQLGroupController implements GroupProvider, GroupPublisher {
                 THashSet<Group> groups = new THashSet<Group>(input.size());
 
                 for (SocietiesRecord record : input) {
-                    groups.add(createGroup(record));
+                    groups.add(evaluateSingle(record));
                 }
 
                 return groups;

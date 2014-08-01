@@ -24,7 +24,7 @@ public class ProfileCommand implements Executor<Sender> {
         }
 
         if (target == null) {
-            sender.send("target.society.not.found");
+            sender.send("target.society.not.specified");
             return;
         }
 

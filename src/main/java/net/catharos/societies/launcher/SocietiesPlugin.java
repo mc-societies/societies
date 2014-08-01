@@ -9,6 +9,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import net.catharos.groups.MemberProvider;
+import net.catharos.groups.MemberPublisher;
 import net.catharos.lib.core.command.Commands;
 import net.catharos.lib.core.command.SystemSender;
 import net.catharos.lib.core.command.sender.Sender;
@@ -19,10 +20,14 @@ import net.catharos.lib.shank.service.ServiceController;
 import net.catharos.lib.shank.service.ServiceModule;
 import net.catharos.lib.shank.service.lifecycle.Lifecycle;
 import net.catharos.societies.SocietiesModule;
+import net.catharos.societies.member.MemberFactory;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
@@ -35,7 +40,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
 /**
  * Represents a Launcher
  */
-public class SocietiesPlugin extends JavaPlugin {
+public class SocietiesPlugin extends JavaPlugin implements Listener {
 
     private Injector injector;
 
@@ -58,6 +63,7 @@ public class SocietiesPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        getServer().getPluginManager().registerEvents(this, this);
         commands = injector.getInstance(Key.get(new TypeLiteral<Commands<Sender>>() {}));
         memberProvider = injector.getInstance(Key.get(new TypeLiteral<MemberProvider<SocietyMember>>() {}));
 
@@ -109,5 +115,16 @@ public class SocietiesPlugin extends JavaPlugin {
 
 
         return true;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerLoginEvent event) {
+        MemberPublisher<SocietyMember> publisher = injector
+                .getInstance(Key.get(new TypeLiteral<MemberPublisher<SocietyMember>>() {}));
+
+        MemberFactory memberFactory = injector
+                .getInstance(MemberFactory.class);
+
+        publisher.publish(memberFactory.create(event.getPlayer().getUniqueId()));
     }
 }

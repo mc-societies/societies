@@ -34,11 +34,9 @@ import net.catharos.societies.member.SocietyMember;
 
 import java.util.Set;
 
-import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static com.google.inject.name.Names.named;
-import static java.util.concurrent.Executors.newFixedThreadPool;
 
 /**
  * Represents a CommandModule
@@ -89,7 +87,7 @@ public class CommandModule extends AbstractModule {
 
         // Sync/Async command executors
         bindNamedInstance("sync-executor", ListeningExecutorService.class, sameThreadExecutor());
-        bindNamedInstance("async-executor", ListeningExecutorService.class, listeningDecorator(newFixedThreadPool(2)));
+        bindNamedInstance("async-executor", ListeningExecutorService.class, sameThreadExecutor()/*listeningDecorator(newFixedThreadPool(2))*/);
     }
 
     @Provides
@@ -108,6 +106,7 @@ public class CommandModule extends AbstractModule {
                 ProfileCommand.class,
                 ListCommand.class,
                 InviteCommand.class,
+                FastJoinCommand.class,
 
                 JoinCommand.class,
                 LeaveCommand.class,

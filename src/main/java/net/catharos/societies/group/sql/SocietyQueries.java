@@ -53,7 +53,9 @@ class SocietyQueries extends QueryProvider {
         builder(SELECT_SOCIETY_MEMBERS, new QueryBuilder<Select<Record1<byte[]>>>() {
             @Override
             public Select<Record1<byte[]>> create(DSLContext context) {
-                return context.select(MEMBERS.UUID).from(MEMBERS).where(MEMBERS.SOCIETY.equal(DEFAULT_BYTE_ARRAY));
+                return context.select(MEMBERS.UUID).
+                        from(MEMBERS).
+                        where(MEMBERS.SOCIETY.equal(DEFAULT_BYTE_ARRAY));
             }
         });
 

@@ -17,7 +17,7 @@ class GroupHelpExecutor<S extends Sender> implements Executor<S> {
             if (cmd instanceof ExecutableCommand) {
                 ExecutableCommand executableCommand = (ExecutableCommand) cmd;
 
-                sender.send(cmd.getIdentifier() + " " + executableCommand.getArguments());
+                sender.send(cmd.getIdentifier() + " " + executableCommand.getArgumentsAmount());
             } else {
                 sender.send(cmd.getIdentifier());
             }

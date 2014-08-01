@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
+import net.catharos.groups.Group;
 import net.catharos.groups.GroupProvider;
 import net.catharos.groups.MemberProvider;
 import net.catharos.groups.MemberPublisher;
@@ -29,7 +30,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Represents a LoadingMemberProvider
  */
-public class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublisher<SocietyMember> {
+class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublisher<SocietyMember> {
 
     private final PlayerProvider playerProvider;
     private final MemberQueries queries;
@@ -51,43 +52,63 @@ public class SQLMemberController implements MemberProvider<SocietyMember>, Membe
     }
 
     @Override
-    public ListenableFuture<SocietyMember> getMember(final UUID uuid) {
+    public ListenableFuture<SocietyMember> getMember(UUID uuid) {
+        return getMember(uuid, null);
+    }
+
+    private ListenableFuture<SocietyMember> prepare(UUID uuid, Function<Result<MembersRecord>, SocietyMember> transform) {
         Select<MembersRecord> query = queries.getQuery(MemberQueries.SELECT_MEMBER_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
         ListenableFuture<Result<MembersRecord>> future = queries.query(service, query);
 
-        return Futures.transform(future, new Function<Result<MembersRecord>, SocietyMember>() {
+        return Futures.transform(future, transform);
+    }
+
+    private SocietyMember evaluate(UUID uuid, Group group, Result<MembersRecord> input) {
+        if (input == null) {
+            return null;
+        }
+
+        if (input.isEmpty()) {
+            return factory.create(uuid);
+        } else if (input.size() > 1) {
+            throw new MemberException(uuid, "There are more users with the same uuid?!");
+        }
+
+        // create core account object
+        MembersRecord record = input.get(0);
+
+        SocietyMember member = factory.create(UUIDGen.toUUID(record.getUuid()));
+
+        byte[] rawSociety = record.getSociety();
+
+        if (rawSociety == null || rawSociety.length != UUIDGen.UUID_LENGTH) {
+            return member;
+        }
+
+        if (group == null) {
+            try {
+                member.setGroup(groupProvider.getGroup(UUIDGen.toUUID(rawSociety)).get());
+            } catch (InterruptedException e) {
+                throw new MemberException(uuid, e, "Failed to set group of member!");
+            } catch (ExecutionException e) {
+                throw new MemberException(uuid, e, "Failed to set group of member!");
+            }
+        } else {
+            member.setGroup(group);
+        }
+
+        return member;
+    }
+
+    @Override
+    public ListenableFuture<SocietyMember> getMember(final UUID uuid, final Group group) {
+        return prepare(uuid, new Function<Result<MembersRecord>, SocietyMember>() {
             @Nullable
             @Override
             public SocietyMember apply(@Nullable Result<MembersRecord> input) {
-                if (input == null) {
-                    return null;
-                }
-
-                if (input.isEmpty()) {
-                    return factory.create(uuid);
-                } else if (input.size() > 1) {
-                    throw new MemberException(uuid, "There are more users with the same uuid?!");
-                }
-
-                // create core account object
-                MembersRecord record = input.get(0);
-
-                SocietyMember member = factory.create(UUIDGen.toUUID(record.getUuid()));
-
-                UUID uuid = UUIDGen.toUUID(record.getSociety());
-
-                // Get society
-                try {
-                    member.setGroup(groupProvider.getGroup(uuid).get());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-
-                return member;
+                return evaluate(uuid, group, input);
             }
         });
     }

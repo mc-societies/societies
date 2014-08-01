@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Provider;
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -86,7 +87,7 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
 
     @Override
     public void send(String message, Object... args) {
-        send(String.format(message, args));
+        send(MessageFormat.format(message, args));
     }
 
     @Override

@@ -1,8 +1,6 @@
 package net.catharos.societies;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Singleton;
-import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import net.catharos.lib.core.command.format.DefaultFormatter;
@@ -10,9 +8,6 @@ import net.catharos.lib.core.command.format.Formatter;
 import net.catharos.lib.core.command.format.MonospacedWidthProvider;
 import net.catharos.lib.core.command.format.WidthProvider;
 import net.catharos.lib.core.command.format.table.*;
-import net.catharos.lib.core.i18n.DefaultDictionary;
-import net.catharos.lib.core.i18n.Dictionary;
-import net.catharos.lib.core.i18n.MutableDictionary;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import net.catharos.lib.shank.config.ConfigModule;
 import net.catharos.lib.shank.config.JSONSource;
@@ -37,8 +32,7 @@ import java.util.UUID;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 
 /**
  * Represents a SocietiesModule
@@ -72,13 +66,6 @@ public class SocietiesModule extends AbstractServiceModule {
         // UUID provider
         bind(UUID.class).toProvider(TimeUUIDProvider.class);
 
-        // Dictionary
-        bindNamedInstance("dictionary-directory", File.class, new File(dataDirectory, "languages"));
-        bind(new TypeLiteral<Dictionary<String>>() {}).to(new TypeLiteral<MutableDictionary<String>>() {});
-        bind(new TypeLiteral<MutableDictionary<String>>() {}).to(new TypeLiteral<DefaultDictionary<String>>() {})
-                .in(Singleton.class);
-
-
         // Database
         install(new DatabaseModule("localhost", "societies", "root", "", 3306));
 
@@ -90,6 +77,9 @@ public class SocietiesModule extends AbstractServiceModule {
 
         // Societies
         install(new SocietyModule());
+
+        // Dictionary
+        install(new DictionaryModule(dataDirectory));
 
         install(new ConfigModule(new JSONSource(new File(dataDirectory, "config.json"))));
 
@@ -104,9 +94,8 @@ public class SocietiesModule extends AbstractServiceModule {
         // Player provider
         bind(PlayerProvider.class).to(BukkitPlayerProvider.class);
 
-
         // Executor service for heavy work
-        bind(ListeningExecutorService.class).toInstance(listeningDecorator(newFixedThreadPool(2)));
+        bind(ListeningExecutorService.class).toInstance(sameThreadExecutor(/*newFixedThreadPool(2)*/));
 
         // Chat rendering
         bind(Table.class).to(DefaultTable.class);
@@ -141,13 +130,22 @@ public class SocietiesModule extends AbstractServiceModule {
                     continue;
                 }
 
-
                 File file = new File(target, name.substring(offset));
+
+                if (file.exists()) {
+                    continue;
+                }
+
                 if (entry.isDirectory()) { // if its a directory, create it
-                    file.mkdirs();
+                    if (!file.mkdirs()) {
+                        throw new IOException("Failed to create directory!");
+                    }
                     continue;
                 } else {
-                    file.createNewFile();
+                    file.getParentFile().mkdirs();
+                    if (!file.createNewFile()) {
+                        continue;
+                    }
                 }
 
                 InputStream is = jar.getInputStream(entry); // get the input stream

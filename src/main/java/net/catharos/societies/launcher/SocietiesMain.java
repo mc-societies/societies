@@ -68,9 +68,9 @@ public class SocietiesMain {
         GroupProvider groupProvider = injector
                 .getInstance(GroupProvider.class);
 
-        instance.execute(sender, "society command.create test");
+        instance.execute(sender, "society create test2");
 
-        ListenableFuture<Set<Group>> group = groupProvider.getGroup("test");
+        ListenableFuture<Set<Group>> group = groupProvider.getGroup("test2");
 
         Group onlyElement = Iterables.getOnlyElement(group.get());
         onlyElement.addMember(target);

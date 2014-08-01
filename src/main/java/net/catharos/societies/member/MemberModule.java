@@ -12,7 +12,7 @@ import java.util.Locale;
  */
 public class MemberModule extends AbstractModule {
 
-    public static final Class<SystemSocietyMember> MEMBER_IMPLEMENTATION = SystemSocietyMember.class;
+    public static final Class<? extends SocietyMember> MEMBER_IMPLEMENTATION = BukkitSocietyMember.class;
 
     @Override
     protected void configure() {
@@ -29,6 +29,6 @@ public class MemberModule extends AbstractModule {
         // Locale
         bind(LocaleProvider.class).to(DynamicLocaleProvider.class);
         bindNamed("default-locale", LocaleProvider.class).to(DynamicLocaleProvider.class);
-        bindNamedInstance("default-locale", Locale.class, Locale.GERMANY);
+        bindNamedInstance("default-locale", Locale.class, Locale.US);
     }
 }
