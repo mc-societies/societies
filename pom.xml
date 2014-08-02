@@ -97,13 +97,13 @@
     
     <distributionManagement>
         <repository>
-            <id>frederik-schmitt</id>
+            <id>frederik-schmitt-releases</id>
             <name>Releases</name>
             <url>http://repo.frederik-schmitt.de/content/repositories/oss-releases</url>
         </repository>
 
         <snapshotRepository>
-            <id>frederik-schmitt</id>
+            <id>frederik-schmitt-snapshots</id>
             <name>Snapshots</name>
             <url>http://repo.frederik-schmitt.de/content/repositories/oss-snapshots</url>
         </snapshotRepository>
