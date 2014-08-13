@@ -142,11 +142,8 @@
                         <configuration>
                             <relocations>
                                 <relocation>
-                                    <pattern>*</pattern>
-                                    <shadedPattern>net.catharos.societies.libs</shadedPattern>
-                                    <excludes>
-                                        <exclude>net.catharos.societies</exclude>
-                                    </excludes>
+                                    <pattern>com.google.guava</pattern>
+                                    <shadedPattern>net.catharos.societies.libs.guava</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
