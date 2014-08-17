@@ -4,13 +4,13 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.Group;
 import net.catharos.groups.command.GroupParser;
-import net.catharos.lib.core.command.Command;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.GroupCommand;
+import net.catharos.lib.core.command.*;
 import net.catharos.lib.core.command.builder.GroupBuilder;
 import net.catharos.lib.core.command.format.pagination.DefaultPaginator;
 import net.catharos.lib.core.command.format.pagination.Paginator;
@@ -88,6 +88,15 @@ public class CommandModule extends AbstractModule {
         // Sync/Async command executors
         bindNamedInstance("sync-executor", ListeningExecutorService.class, sameThreadExecutor());
         bindNamedInstance("async-executor", ListeningExecutorService.class, sameThreadExecutor()/*listeningDecorator(newFixedThreadPool(2))*/);
+
+
+        bind(new TypeLiteral<CommandPipeline<Sender>>() {}).to(new TypeLiteral<DefaultCommandPipeline<Sender>>() {});
+        beforePipeline().addBinding().toInstance(new Executor<Sender>() {
+            @Override
+            public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
+                sender.send(ctx.getCommand().getName() + "-----------");
+            }
+        });
     }
 
     @Provides
@@ -95,8 +104,10 @@ public class CommandModule extends AbstractModule {
     public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, CommandAnalyser<Sender> analyser) {
         Set<Command<Sender>> commands = new THashSet<Command<Sender>>();
 
-        builder.identifier("society");
-        builder.description("Society command");
+        builder.name("Societies")
+                .identifier("society")
+                .description("Society command");
+
         GroupCommand<Sender> society = builder.build();
 
 
@@ -133,5 +144,15 @@ public class CommandModule extends AbstractModule {
                 new TypeLiteral<ArgumentParser<?>>() {},
                 named("parsers")
         );
+    }
+
+    public Multibinder<Executor<Sender>> afterPipeline() {
+        return Multibinder
+                .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-after"));
+    }
+
+    public Multibinder<Executor<Sender>> beforePipeline() {
+        return Multibinder
+                .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-before"));
     }
 }
