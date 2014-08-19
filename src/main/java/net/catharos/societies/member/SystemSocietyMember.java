@@ -6,6 +6,7 @@ import com.google.inject.name.Named;
 import net.catharos.groups.DefaultMember;
 import net.catharos.groups.Member;
 import net.catharos.groups.publisher.Publisher;
+import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.member.locale.LocaleProvider;
 import org.bukkit.entity.Player;
@@ -62,5 +63,10 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
     @Override
     public void send(StringBuilder message) {
         System.out.println(directory.getTranslation(message.toString()));
+    }
+
+    @Override
+    public boolean hasPermission(Command command) {
+        return true;
     }
 }

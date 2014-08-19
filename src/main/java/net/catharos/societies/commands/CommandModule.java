@@ -21,6 +21,7 @@ import net.catharos.lib.core.command.reflect.instance.CommandAnalyser;
 import net.catharos.lib.core.command.reflect.instance.factory.InjectorInstanceFactory;
 import net.catharos.lib.core.command.reflect.instance.factory.InstanceFactory;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.core.command.step.PermissionStep;
 import net.catharos.lib.core.command.token.Delimiter;
 import net.catharos.lib.core.command.token.DelimiterTokenizer;
 import net.catharos.lib.core.command.token.SpaceDelimiter;
@@ -73,14 +74,13 @@ public class CommandModule extends AbstractModule {
 
         // Help executor
         bindNamed("help-executor", EXECUTOR_TYPE)
-                .to(new TypeLiteral<HelpExecutor<Sender>>() {});
+                .toProvider(new TypeLiteral<PipelinedProvider<Sender, HelpExecutor<Sender>>>(){});
         bindNamed("group-help-executor", EXECUTOR_TYPE)
-                .to(new TypeLiteral<GroupHelpExecutor<Sender>>() {});
+                .toProvider(new TypeLiteral<PipelinedProvider<Sender, GroupHelpExecutor<Sender>>>() {});
 
         // Tokenizer
         bind(Tokenizer.class).to(DelimiterTokenizer.class);
         bind(Delimiter.class).to(SpaceDelimiter.class);
-
 
         // Reflection api
         bind(InstanceFactory.class).to(InjectorInstanceFactory.class);
@@ -91,6 +91,7 @@ public class CommandModule extends AbstractModule {
 
 
         bind(new TypeLiteral<CommandPipeline<Sender>>() {}).to(new TypeLiteral<DefaultCommandPipeline<Sender>>() {});
+        beforePipeline().addBinding().to(new TypeLiteral<PermissionStep<Sender>>() {});
         beforePipeline().addBinding().toInstance(new Executor<Sender>() {
             @Override
             public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
@@ -133,7 +134,9 @@ public class CommandModule extends AbstractModule {
 
         commands.add(society);
 
-        commands.add(analyser.analyse(ThreadTestCommand.class));
+        Command<Sender> tt = analyser.analyse(ThreadTestCommand.class);
+        tt.setPermission("test.test");
+        commands.add(tt);
 
         return commands;
     }

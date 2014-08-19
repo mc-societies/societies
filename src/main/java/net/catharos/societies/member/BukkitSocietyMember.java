@@ -8,6 +8,7 @@ import net.catharos.groups.DefaultMember;
 import net.catharos.groups.Member;
 import net.catharos.groups.publisher.Publisher;
 import net.catharos.groups.request.Request;
+import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.PlayerProvider;
 import net.catharos.societies.member.locale.LocaleProvider;
@@ -94,6 +95,13 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
     @Override
     public void send(StringBuilder message) {
         send(message.toString());
+    }
+
+    @Override
+    public boolean hasPermission(Command command) {
+        Player player = toPlayer();
+
+        return player != null && (command.getPermission() == null || player.hasPermission(command.getPermission()));
     }
 
     @Override

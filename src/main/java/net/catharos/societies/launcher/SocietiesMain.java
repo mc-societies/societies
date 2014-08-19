@@ -73,6 +73,7 @@ public class SocietiesMain {
 //
 //        memberProvider.publish(target).get();
 
+        instance.execute(sender, "tt");
 
         service.awaitTermination(1000, TimeUnit.MILLISECONDS);
         service.shutdown();
