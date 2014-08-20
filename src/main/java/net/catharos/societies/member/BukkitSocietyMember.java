@@ -7,7 +7,6 @@ import com.google.inject.name.Named;
 import net.catharos.groups.DefaultMember;
 import net.catharos.groups.Member;
 import net.catharos.groups.publisher.Publisher;
-import net.catharos.groups.request.Request;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.PlayerProvider;
@@ -26,7 +25,6 @@ import java.util.UUID;
  */
 class BukkitSocietyMember extends DefaultMember implements SocietyMember {
 
-    private Request activeRequest;
     private final PlayerProvider playerProvider;
     private final LocaleProvider localeProvider;
     private final Dictionary<String> directory;

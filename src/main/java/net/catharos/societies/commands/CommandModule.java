@@ -156,6 +156,6 @@ public class CommandModule extends AbstractModule {
 
     public Multibinder<Executor<Sender>> beforePipeline() {
         return Multibinder
-                .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-before"));
+                .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-before")).permitDuplicates();
     }
 }

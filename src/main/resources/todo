@@ -6,8 +6,6 @@ Settings serialisation:
 		- Ranks
 		- Groups (with relations)
 
-Finish requests
-
 Publishers also for creating/dropping societies?
 
 Rank permissions
@@ -55,7 +53,7 @@ Commands:
 X    Pagination for command output
 	 Pre check sender class (Configuration over annotations)
 
-Relocated class jars (guava)
+Persistent requests
 
 Use a LocaleWrapper to match locales and dictionaries or just use the language attributes
 

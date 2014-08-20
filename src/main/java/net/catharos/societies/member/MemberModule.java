@@ -10,7 +10,7 @@ import net.catharos.societies.database.sql.SQLModule;
  */
 public class MemberModule extends AbstractModule {
 
-    public static final Class<? extends SocietyMember> MEMBER_IMPLEMENTATION = SystemSocietyMember.class;
+    public static final Class<? extends SocietyMember> MEMBER_IMPLEMENTATION = BukkitSocietyMember.class;
 
     @Override
     protected void configure() {

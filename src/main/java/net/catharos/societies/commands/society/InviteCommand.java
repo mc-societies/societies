@@ -3,6 +3,7 @@ package net.catharos.societies.commands.society;
 import com.google.common.util.concurrent.FutureCallback;
 import net.catharos.groups.Group;
 import net.catharos.groups.request.SimpleRequest;
+import net.catharos.groups.request.SimpleRequestMessenger;
 import net.catharos.groups.request.SimpleRequestResult;
 import net.catharos.groups.request.SingleInvolved;
 import net.catharos.groups.setting.Setting;
@@ -33,11 +34,8 @@ public class InviteCommand implements Executor<SocietyMember> {
 
     @Override
     public void execute(CommandContext<SocietyMember> ctx, final SocietyMember sender) {
-        SimpleRequest request = new SimpleRequest(new SingleInvolved(target));
-        target.setActiveRequest(request);
-
-        target.send("Request started!");
-        sender.send("Request started!");
+        SimpleRequest request = new SimpleRequest(new SimpleRequestMessenger(), new SingleInvolved(target));
+        request.start();
 
         addCallback(request.result(), new FutureCallback<SimpleRequestResult<SimpleRequest.Choices>>() {
             @Override

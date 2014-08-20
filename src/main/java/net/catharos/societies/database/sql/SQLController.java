@@ -117,7 +117,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
         Player player = playerProvider.getPlayer(name);
 
         if (player == null) {
-            return null;
+            return Futures.immediateCheckedFuture(null);
         }
 
         return getMember(player.getUniqueId());

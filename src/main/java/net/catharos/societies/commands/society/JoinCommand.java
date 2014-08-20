@@ -5,6 +5,7 @@ import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.request.SetInvolved;
 import net.catharos.groups.request.SimpleRequest;
+import net.catharos.groups.request.SimpleRequestMessenger;
 import net.catharos.groups.request.SimpleRequestResult;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
@@ -23,7 +24,6 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * Represents a AbandonCommand
  */
 @Command(identifier = "command.join", async = true)
-//todo simplify requests
 public class JoinCommand implements Executor<SocietyMember> {
 
     @Argument(name = "argument.society.target")
@@ -31,15 +31,9 @@ public class JoinCommand implements Executor<SocietyMember> {
 
     @Override
     public void execute(CommandContext<SocietyMember> ctx, final SocietyMember sender) {
-        Set<Member> participants = target.getMembers(null); //fixme
-        SimpleRequest request = new SimpleRequest(new SetInvolved(participants));
-
-
-        for (Member participant : participants) {
-            participant.send("Request started!");
-        }
-
-        sender.send("Request started!");
+        Set<Member> participants = target.getMembers(); //fixme
+        SimpleRequest request = new SimpleRequest(new SimpleRequestMessenger(), new SetInvolved(participants));
+        request.start();
 
         addCallback(request.result(), new FutureCallback<SimpleRequestResult<SimpleRequest.Choices>>() {
             @Override

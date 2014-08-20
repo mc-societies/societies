@@ -10,6 +10,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.societies.member.SocietyMember;
 
 import java.util.concurrent.ExecutionException;
 
@@ -43,6 +44,11 @@ public class CreateCommand implements Executor<Sender> {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        }
+
+
+        if (sender instanceof SocietyMember) {
+            group.addMember(((SocietyMember) sender));
         }
 
         sender.send("society.created", name, name);
