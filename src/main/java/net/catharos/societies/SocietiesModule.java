@@ -6,6 +6,7 @@ import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import net.catharos.lib.shank.config.ConfigModule;
 import net.catharos.lib.shank.config.JSONSource;
 import net.catharos.lib.shank.service.AbstractServiceModule;
+import net.catharos.societies.bukkit.BukkitNameProvider;
 import net.catharos.societies.bukkit.BukkitPlayerProvider;
 import net.catharos.societies.commands.CommandModule;
 import net.catharos.societies.commands.FormatModule;
@@ -93,6 +94,8 @@ public class SocietiesModule extends AbstractServiceModule {
 
         // Chat rendering
         install(new FormatModule());
+
+        bind(NameProvider.class).to(BukkitNameProvider.class);
     }
 
 }

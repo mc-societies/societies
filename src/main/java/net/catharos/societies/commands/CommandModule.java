@@ -27,6 +27,7 @@ import net.catharos.lib.core.command.token.DelimiterTokenizer;
 import net.catharos.lib.core.command.token.SpaceDelimiter;
 import net.catharos.lib.core.command.token.Tokenizer;
 import net.catharos.lib.shank.AbstractModule;
+import net.catharos.societies.bukkit.BukkitSystemSender;
 import net.catharos.societies.commands.society.*;
 import net.catharos.societies.commands.society.vote.AbstainCommand;
 import net.catharos.societies.commands.society.vote.AcceptCommand;
@@ -92,12 +93,9 @@ public class CommandModule extends AbstractModule {
 
         bind(new TypeLiteral<CommandPipeline<Sender>>() {}).to(new TypeLiteral<DefaultCommandPipeline<Sender>>() {});
         beforePipeline().addBinding().to(new TypeLiteral<PermissionStep<Sender>>() {});
-        beforePipeline().addBinding().toInstance(new Executor<Sender>() {
-            @Override
-            public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
-                sender.send(ctx.getCommand().getName() + "-----------");
-            }
-        });
+        beforePipeline().addBinding().to(PreCommandStep.class);
+
+        bindNamed("system-sender", Sender.class).to(BukkitSystemSender.class);
     }
 
     @Provides
@@ -116,11 +114,12 @@ public class CommandModule extends AbstractModule {
                 CreateCommand.class,
                 RenameCommand.class,
                 ProfileCommand.class,
+                RosterCommand.class,
                 ListCommand.class,
                 InviteCommand.class,
-                FastJoinCommand.class,
 
                 JoinCommand.class,
+                FastJoinCommand.class,
                 LeaveCommand.class,
 
                 AcceptCommand.class,
@@ -158,4 +157,5 @@ public class CommandModule extends AbstractModule {
         return Multibinder
                 .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-before")).permitDuplicates();
     }
+
 }

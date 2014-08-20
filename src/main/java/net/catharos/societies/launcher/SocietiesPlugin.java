@@ -8,10 +8,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 import net.catharos.groups.MemberProvider;
 import net.catharos.groups.MemberPublisher;
 import net.catharos.lib.core.command.Commands;
-import net.catharos.lib.core.command.SystemSender;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.logging.LoggingHelper;
 import net.catharos.lib.database.Database;
@@ -20,6 +20,7 @@ import net.catharos.lib.shank.service.ServiceController;
 import net.catharos.lib.shank.service.ServiceModule;
 import net.catharos.lib.shank.service.lifecycle.Lifecycle;
 import net.catharos.societies.SocietiesModule;
+import net.catharos.societies.bukkit.BukkitModule;
 import net.catharos.societies.member.MemberFactory;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.command.Command;
@@ -50,19 +51,26 @@ public class SocietiesPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onLoad() {
-        File dir = getDataFolder();
-        injector = Guice.createInjector(
-                new ServiceModule(),
-                new LoggingModule(dir,LoggingHelper.createContext(SocietiesMain.class)),
-                new SocietiesModule(dir)
-        );
-        serviceController = injector.getInstance(ServiceController.class);
-
-        serviceController.invoke(Lifecycle.INITIALISING);
+        //getServer() -> null
     }
 
     @Override
     public void onEnable() {
+
+        File dir = getDataFolder();
+        injector = Guice.createInjector(
+                new ServiceModule(),
+                new LoggingModule(dir, LoggingHelper.createContext(SocietiesMain.class)),
+                new SocietiesModule(dir),
+                new BukkitModule(getServer())
+        );
+        serviceController = injector.getInstance(ServiceController.class);
+
+        serviceController.invoke(Lifecycle.INITIALISING);
+
+
+
+
         getServer().getPluginManager().registerEvents(this, this);
         commands = injector.getInstance(Key.get(new TypeLiteral<Commands<Sender>>() {}));
         memberProvider = injector.getInstance(Key.get(new TypeLiteral<MemberProvider<SocietyMember>>() {}));
@@ -110,7 +118,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener {
 
 
         } else {
-            commands.execute(new SystemSender(), command.getName(), args);
+            commands.execute(injector.getInstance(Key.get(Sender.class, Names.named("system-sender"))), command.getName(), args);
         }
 
 
