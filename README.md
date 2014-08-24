@@ -1,3 +1,5 @@
+#Societies ![alt text](https://travis-ci.org/Catharos/Societies.svg)
+
 ## Motivation
 
 Societies is a revived version of the original [SimpleClans](http://dev.bukkit.org/bukkit-plugins/simpleclans/) and is targeted to support a wide range of minecraft servers.
