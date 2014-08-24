@@ -12,6 +12,7 @@ import net.catharos.societies.member.SocietyMember;
  * Represents a RelationCreateCommand
  */
 @Command(identifier = "command.relation.create", async = true)
+//todoCommands
 public class CreateCommand implements Executor<SocietyMember> {
 
     @Argument(name = "argument.society.target")

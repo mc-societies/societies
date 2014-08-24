@@ -5,19 +5,23 @@ Settings serialisation:
 	Targets:
 		- Ranks
 		- Groups (with relations)
+						1. Load settings for groups (relations)
+		               	2. Make ranks loadable
+		               	3. Load settings for ranks
 
-Publishers also for creating/dropping societies?
+
 
 Rank permissions
 
-Basic functionality:
-    Update groups and members
+Publishers also for creating/dropping societies?
 
 Commands:
 	X Group create
 	X Group list
+	Group rename (tag/name)
 
 	X Profile group
+	Member lookup
 
 	X Invite player
 	X Join group
@@ -26,14 +30,31 @@ Commands:
 	Cancel requests
 
 
-	Rank create
+	X Rank create
 	Rank remove
+	Rank assign
 	Rank list
 
 	Relation create
 	Relation remove
-	Relation list
+	Relation list (alliances/rivals)
 
+	Home set/teleport
+
+
+
+	trust/untrust
+	verify/unverify clan
+
+	ff allow/auto
+
+	group/member vitals
+
+	X group roster
+
+	BulletinBoard
+
+	Reload
 Supported databases:
 	* MySQL
 	* cqengine with json

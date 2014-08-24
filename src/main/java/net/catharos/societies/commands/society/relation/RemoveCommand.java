@@ -7,6 +7,7 @@ import net.catharos.societies.member.SocietyMember;
 /**
  * Represents a RelationCreateCommand
  */
+//todoCommands
 public class RemoveCommand implements Executor<SocietyMember> {
 
     @Override

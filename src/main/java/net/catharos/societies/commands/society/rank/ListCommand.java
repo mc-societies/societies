@@ -9,6 +9,7 @@ import net.catharos.societies.member.SocietyMember;
  * Represents a ListCommand
  */
 @Command(identifier = "list", description = "A default description!")
+//todoCommands
 public class ListCommand  implements Executor<SocietyMember> {
 
     @Override
