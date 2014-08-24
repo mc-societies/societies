@@ -8,7 +8,7 @@ import net.catharos.societies.member.SocietyMember;
 /**
  * Represents a RemoveCommand
  */
-@Command(identifier = "remove", description = "A default description!")
+@Command(identifier = "command.rank.remove")
 //todoCommands
 public class RemoveCommand  implements Executor<SocietyMember> {
 

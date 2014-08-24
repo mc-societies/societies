@@ -13,7 +13,7 @@ import net.catharos.societies.NameProvider;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "command.profile")
+@Command(identifier = "command.unverify")
 //todoCommands
 public class UnVerifyCommand implements Executor<Sender> {
 

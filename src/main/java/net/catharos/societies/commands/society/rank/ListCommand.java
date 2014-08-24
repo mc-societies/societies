@@ -8,7 +8,7 @@ import net.catharos.societies.member.SocietyMember;
 /**
  * Represents a ListCommand
  */
-@Command(identifier = "list", description = "A default description!")
+@Command(identifier = "command.rank.list")
 //todoCommands
 public class ListCommand  implements Executor<SocietyMember> {
 

@@ -239,11 +239,11 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
     }
 
     private Group createGroup(SocietiesRecord record) {
-        return groupFactory.create(UUIDGen.toUUID(record.getUuid()), record.getName());
+        return groupFactory.create(UUIDGen.toUUID(record.getUuid()), record.getName(), record.getTag());
     }
 
     private Group createGroup(UUID uuid) {
-        return groupFactory.create(uuid, null); //todo null name
+        return groupFactory.create(uuid, Group.NEW_GROUP_NAME, Group.NEW_GROUP_TAG);
     }
 
     @Override

@@ -8,7 +8,7 @@ import net.catharos.societies.member.SocietyMember;
 /**
  * Represents a AssignCommand
  */
-@Command(identifier = "assign", description = "A default description!")
+@Command(identifier = "command.rank.assign")
 //todoCommands
 public class AssignCommand  implements Executor<SocietyMember> {
 

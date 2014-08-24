@@ -24,6 +24,9 @@ public class CreateCommand implements Executor<Sender> {
     @Argument(name = "argument.society.name")
     String name;
 
+    @Argument(name = "argument.society.tag")
+    String tag;
+
     private final GroupFactory groupFactory;
     private final GroupPublisher publisher;
 
@@ -35,7 +38,7 @@ public class CreateCommand implements Executor<Sender> {
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {
-        Group group = groupFactory.create(name);
+        Group group = groupFactory.create(name, tag);
         ListenableFuture<Group> future = publisher.publish(group);
 
         try {

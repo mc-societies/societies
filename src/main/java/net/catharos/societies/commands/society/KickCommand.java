@@ -1,45 +1,34 @@
 package net.catharos.societies.commands.society;
 
+import net.catharos.groups.Group;
 import net.catharos.groups.Member;
-import net.catharos.groups.rank.Rank;
 import net.catharos.lib.core.command.CommandContext;
+import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
+import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Option;
-import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.societies.member.SocietyMember;
 
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "command.lookup")
-//todoCommands
-public class KickCommand implements Executor<Sender> {
+@Command(identifier = "command.kick")
+public class KickCommand implements Executor<SocietyMember> {
 
-    @Option(name = "argument.member.target")
+    @Argument(name = "argument.member.target")
     Member target;
 
-
     @Override
-    public void execute(CommandContext<Sender> ctx, Sender sender) {
-        if (target == null && sender instanceof Member) {
-            target = ((Member) sender);
-        }
+    public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) throws ExecuteException {
+        Group group = target.getGroup();
 
-        if (target == null) {
-            sender.send("target.member.not.specified");
+        if (group == null || !target.getGroup().equals(sender.getGroup())) {
+            sender.send("not.same.group", target.getName());
             return;
         }
 
-        sender.send("Name: " + target.getName());
-        sender.send("UUID: " + target.getUUID());
-        sender.send("Group: " + target.getGroup());
-        sender.send("Last Seen: ");
-        sender.send("Inactive: ");
-        sender.send("Join Date: ");
-        sender.send("Ranks:");
-        for (Rank rank : target.getRanks()) {
-            sender.send(" -" + rank.getName());
-        }
-
+        sender.send("you.kicked.member", target.getName());
+        target.send("kicked", group.getName());
+        group.removeMember(target);
     }
 }

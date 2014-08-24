@@ -18,9 +18,6 @@ public class CreateCommand implements Executor<SocietyMember> {
     @Argument(name = "argument.society.target")
     Group target;
 
-    @Argument(name = "argument.relation.name")
-    String name;
-
     private final RelationFactory factory;
 
     public CreateCommand(RelationFactory factory) {this.factory = factory;}

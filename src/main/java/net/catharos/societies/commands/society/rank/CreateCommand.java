@@ -14,7 +14,7 @@ import net.catharos.societies.member.SocietyMember;
 /**
  * Represents a CreateCommand
  */
-@Command(identifier = "create", description = "A default description!")
+@Command(identifier = "command.rank.create")
 public class CreateCommand implements Executor<SocietyMember> {
 
     @Argument(name = "name", description = "The name of the new rank")
