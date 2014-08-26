@@ -15,6 +15,7 @@ import net.catharos.societies.database.sql.SQLModule;
 import net.catharos.societies.group.SocietyModule;
 import net.catharos.societies.member.MemberModule;
 import net.catharos.societies.member.locale.LocaleModule;
+import net.catharos.societies.setting.SettingModule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,6 +48,8 @@ public class SocietiesModule extends AbstractServiceModule {
         } catch (IOException e) {
             throw new RuntimeException("Failed to prepare resources!");
         }
+
+        install(new SettingModule());
 
         // Logging
         bindNamed("service-logger", Logger.class).toInstance(LogManager.getLogger());
