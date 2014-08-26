@@ -31,6 +31,7 @@ public class Keys {
 	public static final org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.RelationsRecord> KEY_RELATIONS_PRIMARY = UniqueKeys0.KEY_RELATIONS_PRIMARY;
 	public static final org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.SocietiesRecord> KEY_SOCIETIES_PRIMARY = UniqueKeys0.KEY_SOCIETIES_PRIMARY;
 	public static final org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord> KEY_SOCIETIES_RANKS_PRIMARY = UniqueKeys0.KEY_SOCIETIES_RANKS_PRIMARY;
+	public static final org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.SocietiesSettingsRecord> KEY_SOCIETIES_SETTINGS_PRIMARY = UniqueKeys0.KEY_SOCIETIES_SETTINGS_PRIMARY;
 
 	// -------------------------------------------------------------------------
 	// FOREIGN KEY definitions
@@ -46,6 +47,8 @@ public class Keys {
 	public static final org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.RelationsRecord, net.catharos.societies.database.layout.tables.records.SocietiesRecord> FK_SOCIETIES_HAS_SOCIETIES_SOCIETIES2 = ForeignKeys0.FK_SOCIETIES_HAS_SOCIETIES_SOCIETIES2;
 	public static final org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord, net.catharos.societies.database.layout.tables.records.SocietiesRecord> FK_SOCIETIES_HAS_RANKS_SOCIETIES2 = ForeignKeys0.FK_SOCIETIES_HAS_RANKS_SOCIETIES2;
 	public static final org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord, net.catharos.societies.database.layout.tables.records.RanksRecord> FK_SOCIETIES_HAS_RANKS_RANKS2 = ForeignKeys0.FK_SOCIETIES_HAS_RANKS_RANKS2;
+	public static final org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.SocietiesSettingsRecord, net.catharos.societies.database.layout.tables.records.SocietiesRecord> FK_SOCIEITES_SETTINGS_SOCIETIES1 = ForeignKeys0.FK_SOCIEITES_SETTINGS_SOCIETIES1;
+	public static final org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.SocietiesSettingsRecord, net.catharos.societies.database.layout.tables.records.SocietiesRecord> FK_SOCIETIES_SETTINGS_SOCIETIES1 = ForeignKeys0.FK_SOCIETIES_SETTINGS_SOCIETIES1;
 
 	// -------------------------------------------------------------------------
 	// [#1459] distribute members to avoid static initialisers > 64kb
@@ -60,6 +63,7 @@ public class Keys {
 		public static final org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.RelationsRecord> KEY_RELATIONS_PRIMARY = createUniqueKey(net.catharos.societies.database.layout.tables.Relations.RELATIONS, net.catharos.societies.database.layout.tables.Relations.RELATIONS.SOCIETY, net.catharos.societies.database.layout.tables.Relations.RELATIONS.SOCIETY2);
 		public static final org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.SocietiesRecord> KEY_SOCIETIES_PRIMARY = createUniqueKey(net.catharos.societies.database.layout.tables.Societies.SOCIETIES, net.catharos.societies.database.layout.tables.Societies.SOCIETIES.UUID);
 		public static final org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord> KEY_SOCIETIES_RANKS_PRIMARY = createUniqueKey(net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS, net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS.SOCIETY, net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS.RANK);
+		public static final org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.SocietiesSettingsRecord> KEY_SOCIETIES_SETTINGS_PRIMARY = createUniqueKey(net.catharos.societies.database.layout.tables.SocietiesSettings.SOCIETIES_SETTINGS, net.catharos.societies.database.layout.tables.SocietiesSettings.SOCIETIES_SETTINGS.SUBJECT_UUID, net.catharos.societies.database.layout.tables.SocietiesSettings.SOCIETIES_SETTINGS.SETTING, net.catharos.societies.database.layout.tables.SocietiesSettings.SOCIETIES_SETTINGS.TARGET_UUID);
 	}
 
 	private static class ForeignKeys0 extends org.jooq.impl.AbstractKeys {
@@ -73,5 +77,7 @@ public class Keys {
 		public static final org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.RelationsRecord, net.catharos.societies.database.layout.tables.records.SocietiesRecord> FK_SOCIETIES_HAS_SOCIETIES_SOCIETIES2 = createForeignKey(net.catharos.societies.database.layout.Keys.KEY_SOCIETIES_PRIMARY, net.catharos.societies.database.layout.tables.Relations.RELATIONS, net.catharos.societies.database.layout.tables.Relations.RELATIONS.SOCIETY2);
 		public static final org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord, net.catharos.societies.database.layout.tables.records.SocietiesRecord> FK_SOCIETIES_HAS_RANKS_SOCIETIES2 = createForeignKey(net.catharos.societies.database.layout.Keys.KEY_SOCIETIES_PRIMARY, net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS, net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS.SOCIETY);
 		public static final org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.SocietiesRanksRecord, net.catharos.societies.database.layout.tables.records.RanksRecord> FK_SOCIETIES_HAS_RANKS_RANKS2 = createForeignKey(net.catharos.societies.database.layout.Keys.KEY_RANKS_PRIMARY, net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS, net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS.RANK);
+		public static final org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.SocietiesSettingsRecord, net.catharos.societies.database.layout.tables.records.SocietiesRecord> FK_SOCIEITES_SETTINGS_SOCIETIES1 = createForeignKey(net.catharos.societies.database.layout.Keys.KEY_SOCIETIES_PRIMARY, net.catharos.societies.database.layout.tables.SocietiesSettings.SOCIETIES_SETTINGS, net.catharos.societies.database.layout.tables.SocietiesSettings.SOCIETIES_SETTINGS.SUBJECT_UUID);
+		public static final org.jooq.ForeignKey<net.catharos.societies.database.layout.tables.records.SocietiesSettingsRecord, net.catharos.societies.database.layout.tables.records.SocietiesRecord> FK_SOCIETIES_SETTINGS_SOCIETIES1 = createForeignKey(net.catharos.societies.database.layout.Keys.KEY_SOCIETIES_PRIMARY, net.catharos.societies.database.layout.tables.SocietiesSettings.SOCIETIES_SETTINGS, net.catharos.societies.database.layout.tables.SocietiesSettings.SOCIETIES_SETTINGS.TARGET_UUID);
 	}
 }

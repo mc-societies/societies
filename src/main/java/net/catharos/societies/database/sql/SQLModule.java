@@ -19,7 +19,7 @@ public class SQLModule extends AbstractModule {
         Key<SQLController> controller = Key.get(SQLController.class);
 
 
-        bind(new TypeLiteral<MemberPublisher<SocietyMember>>() {}).to(controller);
+        bindNamed("group-publisher", new TypeLiteral<MemberPublisher<SocietyMember>>() {}).to(controller);
 
         bindNamed("forward", new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(controller);
         bind(new TypeLiteral<MemberProvider<SocietyMember>>() {})

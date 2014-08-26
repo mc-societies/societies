@@ -9,6 +9,7 @@ import net.catharos.societies.database.layout.tables.records.MembersRecord;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import org.jooq.*;
 import org.jooq.impl.DSL;
+import org.jooq.types.UShort;
 
 import static net.catharos.societies.database.layout.Tables.*;
 
@@ -33,6 +34,11 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Update<SocietiesRecord>> UPDATE_SOCIETY_LAST_ACTIVE = QueryKey.create();
 
     public static final QueryKey<Query> DROP_SOCIETY_BY_UUID = QueryKey.create();
+
+    public static final QueryKey<Select<Record1<byte[]>>> SELECT_SOCIETY_SETTING = QueryKey.create();
+
+    public static final QueryKey<Select<Record3<byte[], UShort, byte[]>>> SELECT_SOCIETY_SETTINGS = QueryKey.create();
+
 
     //================================================================================
     // Members
@@ -127,6 +133,27 @@ class SQLQueries extends QueryProvider {
                 return context.update(SOCIETIES)
                         .set(SOCIETIES.LASTACTIVE, DEFAULT_TIMESTAMP)
                         .where(SOCIETIES.UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(SELECT_SOCIETY_SETTING, new QueryBuilder<Select<Record1<byte[]>>>() {
+            @Override
+            public Select<Record1<byte[]>> create(DSLContext context) {
+                return context
+                        .select(SOCIETIES_SETTINGS.VALUE).from(SOCIETIES_SETTINGS)
+                        .where(SOCIETIES_SETTINGS.SUBJECT_UUID.equal(DEFAULT_BYTE_ARRAY))
+                        .and(SOCIETIES_SETTINGS.TARGET_UUID.equal(DEFAULT_BYTE_ARRAY))
+                        .and(SOCIETIES_SETTINGS.SETTING.equal(UShort.valueOf(-1)));
+            }
+        });
+
+        builder(SELECT_SOCIETY_SETTINGS, new QueryBuilder<Select<Record3<byte[], UShort, byte[]>>>() {
+            @Override
+            public Select<Record3<byte[], UShort, byte[]>> create(DSLContext context) {
+                return context
+                        .select(SOCIETIES_SETTINGS.TARGET_UUID, SOCIETIES_SETTINGS.SETTING, SOCIETIES_SETTINGS.VALUE)
+                        .from(SOCIETIES_SETTINGS)
+                        .where(SOCIETIES_SETTINGS.SUBJECT_UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });
 

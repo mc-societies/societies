@@ -8,6 +8,10 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.*;
+import net.catharos.groups.setting.Setting;
+import net.catharos.groups.setting.SettingProvider;
+import net.catharos.groups.setting.target.SimpleTarget;
+import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.PlayerProvider;
@@ -19,6 +23,7 @@ import net.catharos.societies.member.MemberFactory;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.entity.Player;
 import org.jooq.*;
+import org.jooq.types.UShort;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -38,17 +43,20 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
     private final ListeningExecutorService service;
     private final GroupFactory groupFactory;
     private final MemberFactory memberFactory;
+    private final SettingProvider settingProvider;
 
     @Inject
     public SQLController(PlayerProvider playerProvider,
                          SQLQueries queries,
                          ListeningExecutorService service,
-                         GroupFactory groupFactory, MemberFactory memberFactory) {
+                         GroupFactory groupFactory, MemberFactory memberFactory,
+                         SettingProvider settingProvider) {
         this.playerProvider = playerProvider;
         this.queries = queries;
         this.service = service;
         this.groupFactory = groupFactory;
         this.memberFactory = memberFactory;
+        this.settingProvider = settingProvider;
     }
 
     @Override
@@ -196,7 +204,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
     }
 
     private Group evaluateSingle(SocietiesRecord record) {
-        Group group = createGroup(record);
+        Group group = evaluateGroup(record);
 
         // Get members
         Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_SOCIETY_MEMBERS);
@@ -212,6 +220,33 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
             } catch (ExecutionException e) {
                 throw new SocietyException(e, "Failed to add member to group!");
             }
+        }
+
+        Select<Record3<byte[], UShort, byte[]>> settingsQuery = queries.getQuery(SQLQueries.SELECT_SOCIETY_SETTINGS);
+        query.bind(1, record.getUuid());
+
+        for (Record3<byte[], UShort, byte[]> settingRecord : settingsQuery.fetch()) {
+            int settingID = settingRecord.value2().intValue();
+
+            Setting setting = settingProvider.getSetting(settingID);
+
+            if (setting == null) {
+                //invalid setting
+                continue;
+            }
+
+            byte[] uuid = settingRecord.value1();
+            Target target;
+
+            if (uuid == null) {
+                target = Target.NO_TARGET;
+            } else {
+                target = new SimpleTarget(UUIDGen.toUUID(uuid));
+            }
+
+            Object value = setting.convert(settingRecord.value3());
+
+            group.set(setting, target, value);
         }
 
         return group;
@@ -238,7 +273,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
         });
     }
 
-    private Group createGroup(SocietiesRecord record) {
+    private Group evaluateGroup(SocietiesRecord record) {
         return groupFactory.create(UUIDGen.toUUID(record.getUuid()), record.getName(), record.getTag());
     }
 

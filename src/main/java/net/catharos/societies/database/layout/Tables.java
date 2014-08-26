@@ -52,4 +52,9 @@ public class Tables {
 	 * The table societies.societies_ranks
 	 */
 	public static final net.catharos.societies.database.layout.tables.SocietiesRanks SOCIETIES_RANKS = net.catharos.societies.database.layout.tables.SocietiesRanks.SOCIETIES_RANKS;
+
+	/**
+	 * The table societies.societies_settings
+	 */
+	public static final net.catharos.societies.database.layout.tables.SocietiesSettings SOCIETIES_SETTINGS = net.catharos.societies.database.layout.tables.SocietiesSettings.SOCIETIES_SETTINGS;
 }

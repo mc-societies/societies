@@ -11,7 +11,7 @@ package net.catharos.societies.database.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Members extends org.jooq.impl.TableImpl<net.catharos.societies.database.layout.tables.records.MembersRecord> {
 
-	private static final long serialVersionUID = -1276146535;
+	private static final long serialVersionUID = 408364858;
 
 	/**
 	 * The singleton instance of <code>societies.members</code>
@@ -44,7 +44,7 @@ public class Members extends org.jooq.impl.TableImpl<net.catharos.societies.data
 	/**
 	 * The column <code>societies.members.society</code>.
 	 */
-	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.MembersRecord, byte[]> SOCIETY = createField("society", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this, "");
+	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.MembersRecord, byte[]> SOCIETY = createField("society", org.jooq.impl.SQLDataType.VARBINARY.length(16), this, "");
 
 	/**
 	 * Create a <code>societies.members</code> table reference
