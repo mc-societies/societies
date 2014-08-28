@@ -12,7 +12,6 @@ import net.catharos.lib.core.command.sender.Sender;
  * Represents a SocietyProfile
  */
 @Command(identifier = "command.lookup")
-//todoCommands
 public class LookupCommand implements Executor<Sender> {
 
     @Option(name = "argument.member.target")

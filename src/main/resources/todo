@@ -5,9 +5,10 @@ Settings serialisation:
 	Targets:
 		- Ranks
 		- Groups (with relations)
-						1. Load settings for groups (relations)
+						1. Load settings for groups (relations) X
 		               	2. Make ranks loadable
 		               	3. Load settings for ranks
+		               	4. Publishers for settings
 
 
 

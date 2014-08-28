@@ -17,10 +17,10 @@ import net.catharos.societies.member.SocietyMember;
 @Command(identifier = "command.rank.create")
 public class CreateCommand implements Executor<SocietyMember> {
 
-    @Argument(name = "name", description = "The name of the new rank")
+    @Argument(name = "argument.rank.name", description = "The name of the new rank")
     String name;
 
-    @Option(name = "priority", description = "")
+    @Option(name = "argument.rank.priority")
     int priority = Rank.DEFAULT_PRIORITY;
 
     private final RankFactory rankFactory;
@@ -35,13 +35,13 @@ public class CreateCommand implements Executor<SocietyMember> {
         Group group = sender.getGroup();
 
         if (group == null) {
-            sender.send("No society");
+            sender.send("society.not.found");
             return;
         }
 
         Rank rank = rankFactory.create(name, priority);
         group.addRank(rank);
 
-        sender.send("Rank %s created!", name);
+        sender.send("rank.created", name);
     }
 }
