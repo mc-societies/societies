@@ -7,6 +7,7 @@ import net.catharos.lib.database.QueryKey;
 import net.catharos.lib.database.QueryProvider;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
+import net.catharos.societies.database.layout.tables.records.SocietiesSettingsRecord;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.types.UShort;
@@ -38,6 +39,8 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Select<Record1<byte[]>>> SELECT_SOCIETY_SETTING = QueryKey.create();
 
     public static final QueryKey<Select<Record3<byte[], UShort, byte[]>>> SELECT_SOCIETY_SETTINGS = QueryKey.create();
+
+    public static final QueryKey<Insert<SocietiesSettingsRecord>> INSERT_GROUP_SETTING = QueryKey.create();
 
 
     //================================================================================
@@ -143,7 +146,7 @@ class SQLQueries extends QueryProvider {
                         .select(SOCIETIES_SETTINGS.VALUE).from(SOCIETIES_SETTINGS)
                         .where(SOCIETIES_SETTINGS.SUBJECT_UUID.equal(DEFAULT_BYTE_ARRAY))
                         .and(SOCIETIES_SETTINGS.TARGET_UUID.equal(DEFAULT_BYTE_ARRAY))
-                        .and(SOCIETIES_SETTINGS.SETTING.equal(UShort.valueOf(-1)));
+                        .and(SOCIETIES_SETTINGS.SETTING.equal(UShort.valueOf(0)));
             }
         });
 
@@ -154,6 +157,20 @@ class SQLQueries extends QueryProvider {
                         .select(SOCIETIES_SETTINGS.TARGET_UUID, SOCIETIES_SETTINGS.SETTING, SOCIETIES_SETTINGS.VALUE)
                         .from(SOCIETIES_SETTINGS)
                         .where(SOCIETIES_SETTINGS.SUBJECT_UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(INSERT_GROUP_SETTING, new QueryBuilder<Insert<SocietiesSettingsRecord>>() {
+            @Override
+            public Insert<SocietiesSettingsRecord> create(DSLContext context) {
+                return context
+                        .insertInto(SOCIETIES_SETTINGS)
+                        .values(DEFAULT_BYTE_ARRAY, DEFAULT_BYTE_ARRAY, UShort.valueOf(0), DEFAULT_BYTE_ARRAY)
+                        .onDuplicateKeyUpdate()
+                        .set(SOCIETIES_SETTINGS.SUBJECT_UUID, DEFAULT_BYTE_ARRAY)
+                        .set(SOCIETIES_SETTINGS.TARGET_UUID, DEFAULT_BYTE_ARRAY)
+                        .set(SOCIETIES_SETTINGS.SETTING, UShort.valueOf(0))
+                        .set(SOCIETIES_SETTINGS.VALUE, DEFAULT_BYTE_ARRAY);
             }
         });
 

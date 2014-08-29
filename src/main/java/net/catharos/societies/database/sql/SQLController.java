@@ -223,7 +223,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
         }
 
         Select<Record3<byte[], UShort, byte[]>> settingsQuery = queries.getQuery(SQLQueries.SELECT_SOCIETY_SETTINGS);
-        query.bind(1, record.getUuid());
+        settingsQuery.bind(1, record.getUuid());
 
         for (Record3<byte[], UShort, byte[]> settingRecord : settingsQuery.fetch()) {
             int settingID = settingRecord.value2().intValue();
@@ -239,7 +239,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
             Target target;
 
             if (uuid == null) {
-                target = Target.NO_TARGET;
+                target = group;
             } else {
                 target = new SimpleTarget(UUIDGen.toUUID(uuid));
             }

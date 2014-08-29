@@ -9,6 +9,7 @@ import net.catharos.groups.MemberPublisher;
 import net.catharos.groups.publisher.LastActivePublisher;
 import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.groups.publisher.NamePublisher;
+import net.catharos.groups.publisher.SettingPublisher;
 import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.member.SocietyMember;
 
@@ -24,7 +25,7 @@ public class SQLModule extends AbstractModule {
         Key<SQLController> controller = Key.get(SQLController.class);
 
 
-        bindNamed("group-publisher", new TypeLiteral<MemberPublisher<SocietyMember>>() {}).to(controller);
+        bind(new TypeLiteral<MemberPublisher<SocietyMember>>() {}).to(controller);
 
         bindNamed("forward", new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(controller);
         bind(new TypeLiteral<MemberProvider<SocietyMember>>() {})
@@ -32,9 +33,11 @@ public class SQLModule extends AbstractModule {
 
         bind(GroupProvider.class).to(controller);
         bind(GroupPublisher.class).to(controller);
+        bind(GroupPublisher.class).to(controller);
 
         bind(MemberGroupPublisher.class).to(SQLMemberGroupPublisher.class);
         bind(NamePublisher.class).to(SQLNamePublisher.class);
         bind(LastActivePublisher.class).to(SQLLastActivePublisher.class);
+        bind(SettingPublisher.class).to(SQLSettingPublisher.class);
     }
 }

@@ -28,11 +28,16 @@ import net.catharos.lib.core.command.token.SpaceDelimiter;
 import net.catharos.lib.core.command.token.Tokenizer;
 import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.bukkit.BukkitSystemSender;
+import net.catharos.societies.bukkit.LocationParser;
 import net.catharos.societies.commands.society.*;
+import net.catharos.societies.commands.society.home.HomeCommand;
+import net.catharos.societies.commands.society.home.RemoveHomeCommand;
+import net.catharos.societies.commands.society.home.SetHomeCommand;
 import net.catharos.societies.commands.society.vote.AbstainCommand;
 import net.catharos.societies.commands.society.vote.AcceptCommand;
 import net.catharos.societies.commands.society.vote.DenyCommand;
 import net.catharos.societies.member.SocietyMember;
+import org.bukkit.Location;
 
 import java.util.Set;
 
@@ -64,6 +69,7 @@ public class CommandModule extends AbstractModule {
         // Group parser
         bind(new TypeLiteral<ArgumentParser<Group>>() {}).to(GroupParser.class);
         parsers().addBinding(Group.class).to(GroupParser.class);
+        parsers().addBinding(Location.class).to(LocationParser.class);
 
         // Member parser
         //        bind(new TypeLiteral<ArgumentParser<SocietyMember>>() {}).to(TargetParser.class);
@@ -124,7 +130,11 @@ public class CommandModule extends AbstractModule {
 
                 AcceptCommand.class,
                 DenyCommand.class,
-                AbstainCommand.class
+                AbstainCommand.class  ,
+
+                HomeCommand.class,
+                SetHomeCommand.class,
+                RemoveHomeCommand.class
         };
 
         for (Class<?> subCommand : subCommands) {
