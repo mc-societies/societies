@@ -1,7 +1,4 @@
-Make ranks loadable
-Load settings for ranks
-
-Handle disconnects
+Publish ranks and their settings
 
 Commands:
 	Automatically find optional arguments without specifying them (e.g. --target)

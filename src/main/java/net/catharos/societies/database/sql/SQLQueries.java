@@ -45,6 +45,8 @@ class SQLQueries extends QueryProvider {
 
     public static final QueryKey<Select<RanksRecord>> SELECT_GROUP_RANKS = QueryKey.create();
 
+    public static final QueryKey<Select<Record3<byte[], UShort, byte[]>>> SELECT_RANK_SETTINGS = QueryKey.create();
+
 
     //================================================================================
     // Members
@@ -168,6 +170,16 @@ class SQLQueries extends QueryProvider {
                         .select(SOCIETIES_SETTINGS.TARGET_UUID, SOCIETIES_SETTINGS.SETTING, SOCIETIES_SETTINGS.VALUE)
                         .from(SOCIETIES_SETTINGS)
                         .where(SOCIETIES_SETTINGS.SUBJECT_UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(SELECT_RANK_SETTINGS, new QueryBuilder<Select<Record3<byte[], UShort, byte[]>>>() {
+            @Override
+            public Select<Record3<byte[], UShort, byte[]>> create(DSLContext context) {
+                return context
+                        .select(RANKS_SETTINGS.TARGET_UUID, RANKS_SETTINGS.SETTING, RANKS_SETTINGS.VALUE)
+                        .from(RANKS_SETTINGS)
+                        .where(RANKS_SETTINGS.SUBJECT_UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });
 
