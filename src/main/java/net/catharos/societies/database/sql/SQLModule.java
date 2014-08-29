@@ -2,8 +2,13 @@ package net.catharos.societies.database.sql;
 
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
-import net.catharos.groups.*;
-import net.catharos.groups.publisher.Publisher;
+import net.catharos.groups.GroupProvider;
+import net.catharos.groups.GroupPublisher;
+import net.catharos.groups.MemberProvider;
+import net.catharos.groups.MemberPublisher;
+import net.catharos.groups.publisher.LastActivePublisher;
+import net.catharos.groups.publisher.MemberGroupPublisher;
+import net.catharos.groups.publisher.NamePublisher;
 import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.member.SocietyMember;
 
@@ -28,8 +33,8 @@ public class SQLModule extends AbstractModule {
         bind(GroupProvider.class).to(controller);
         bind(GroupPublisher.class).to(controller);
 
-        bindNamed("society-publisher", new TypeLiteral<Publisher<Member>>() {}).to(SocietyPublisher.class);
-        bindNamed("name-publisher", new TypeLiteral<Publisher<Group>>() {}).to(NamePublisher.class);
-        bindNamed("lastactive-publisher", new TypeLiteral<Publisher<Group>>() {}).to(LastActivePublisher.class);
+        bind(MemberGroupPublisher.class).to(SQLMemberGroupPublisher.class);
+        bind(NamePublisher.class).to(SQLNamePublisher.class);
+        bind(LastActivePublisher.class).to(SQLLastActivePublisher.class);
     }
 }

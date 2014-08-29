@@ -3,10 +3,8 @@ package net.catharos.societies.member;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import com.google.inject.name.Named;
 import net.catharos.groups.DefaultMember;
-import net.catharos.groups.Member;
-import net.catharos.groups.publisher.Publisher;
+import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.NameProvider;
@@ -35,7 +33,7 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                PlayerProvider playerProvider,
                                LocaleProvider localeProvider,
                                Dictionary<String> directory,
-                               @Named("society-publisher") Publisher<Member> societyPublisher, NameProvider nameProvider) {
+                               MemberGroupPublisher societyPublisher, NameProvider nameProvider) {
         this(uuid.get(), playerProvider, localeProvider, directory, societyPublisher, nameProvider);
     }
 
@@ -44,7 +42,7 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                PlayerProvider playerProvider,
                                LocaleProvider localeProvider,
                                Dictionary<String> dictionary,
-                               @Named("society-publisher") Publisher<Member> societyPublisher,
+                               MemberGroupPublisher societyPublisher,
                                NameProvider nameProvider) {
         super(uuid, societyPublisher);
         this.playerProvider = playerProvider;

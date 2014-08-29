@@ -1,12 +1,12 @@
 package net.catharos.societies.database.sql;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import net.catharos.groups.publisher.Publisher;
 
 /**
  * Represents a AbstractPublisher
  */
-abstract class AbstractPublisher<T> implements Publisher<T> {
+abstract class AbstractPublisher {
+
     protected final ListeningExecutorService service;
     protected final SQLQueries queries;
 

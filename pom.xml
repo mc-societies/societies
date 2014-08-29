@@ -81,6 +81,7 @@
             <artifactId>lib-database</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
     </dependencies>
 
     <distributionManagement>
@@ -140,7 +141,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar> 
+                            <minimizeJar>true</minimizeJar>
                             <artifactSet>
                                 <excludes>
                                     <exclude>org.bukkit:bukkit</exclude>
