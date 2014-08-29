@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Represents a SocietiesMain
  */
-public class SocietiesMain {
+public class SocietiesMain implements ReloadAction {
 
     public static void main(String[] args) throws ParsingException, SQLException, ExecutionException, InterruptedException {
 
@@ -79,5 +79,10 @@ public class SocietiesMain {
         service.shutdown();
 
         injector.getInstance(Database.class).close();
+    }
+
+    @Override
+    public void reload() {
+        throw new IllegalStateException("Not yet implemented");
     }
 }

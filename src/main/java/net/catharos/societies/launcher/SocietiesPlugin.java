@@ -41,7 +41,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
 /**
  * Represents a Launcher
  */
-public class SocietiesPlugin extends JavaPlugin implements Listener {
+public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadAction {
 
     private Injector injector;
 
@@ -134,5 +134,11 @@ public class SocietiesPlugin extends JavaPlugin implements Listener {
                 .getInstance(MemberFactory.class);
 
         publisher.publish(memberFactory.create(event.getPlayer().getUniqueId()));
+    }
+
+    @Override
+    public void reload() {
+        onDisable();
+        onEnable();
     }
 }

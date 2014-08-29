@@ -1,6 +1,7 @@
 package net.catharos.societies.commands.society.relation;
 
 import net.catharos.groups.Group;
+import net.catharos.groups.Relation;
 import net.catharos.groups.RelationFactory;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
@@ -23,6 +24,17 @@ public class CreateCommand implements Executor<SocietyMember> {
 
     @Override
     public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
-        factory.create(sender.getGroup(), target);
+        Group group = sender.getGroup();
+
+        if (group == null) {
+            sender.send("society.not.found");
+            return;
+        }
+
+        Relation relation = factory.create(group, target);
+
+        group.setRelation(relation);
+
+        sender.send("relation.created", target.getName());
     }
 }

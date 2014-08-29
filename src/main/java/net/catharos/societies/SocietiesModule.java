@@ -13,6 +13,8 @@ import net.catharos.societies.commands.FormatModule;
 import net.catharos.societies.database.DatabaseModule;
 import net.catharos.societies.database.sql.SQLModule;
 import net.catharos.societies.group.SocietyModule;
+import net.catharos.societies.launcher.ReloadAction;
+import net.catharos.societies.launcher.SocietiesPlugin;
 import net.catharos.societies.member.MemberModule;
 import net.catharos.societies.member.locale.LocaleModule;
 import net.catharos.societies.setting.SettingModule;
@@ -100,6 +102,8 @@ public class SocietiesModule extends AbstractServiceModule {
         install(new FormatModule());
 
         bind(NameProvider.class).to(BukkitNameProvider.class);
+
+        bind(ReloadAction.class).to(SocietiesPlugin.class);
     }
 
 }

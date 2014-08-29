@@ -8,7 +8,7 @@ Settings serialisation:
 						1. Load settings for groups (relations) X
 		               	2. Make ranks loadable
 		               	3. Load settings for ranks
-		               	4. Publishers for settings
+		               	4. Publishers for settings X
 
 
 
@@ -17,6 +17,7 @@ Rank permissions
 Publishers also for creating/dropping societies?
 
 Commands: Automatically find optional arguments without specifying them (e.g. --target)
+Commands: Make group commands also executable (executor settable)
 
 Commands:
 	X Group create
