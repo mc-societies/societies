@@ -8,6 +8,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.*;
+import net.catharos.groups.rank.Rank;
+import net.catharos.groups.rank.RankFactory;
 import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.SettingProvider;
 import net.catharos.groups.setting.target.SimpleTarget;
@@ -16,6 +18,7 @@ import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.PlayerProvider;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
+import net.catharos.societies.database.layout.tables.records.RanksRecord;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
 import net.catharos.societies.member.MemberException;
@@ -44,19 +47,22 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
     private final GroupFactory groupFactory;
     private final MemberFactory memberFactory;
     private final SettingProvider settingProvider;
+    private final RankFactory rankFactory;
 
     @Inject
     public SQLController(PlayerProvider playerProvider,
                          SQLQueries queries,
                          ListeningExecutorService service,
                          GroupFactory groupFactory, MemberFactory memberFactory,
-                         SettingProvider settingProvider) {
+                         SettingProvider settingProvider,
+                         RankFactory rankFactory) {
         this.playerProvider = playerProvider;
         this.queries = queries;
         this.service = service;
         this.groupFactory = groupFactory;
         this.memberFactory = memberFactory;
         this.settingProvider = settingProvider;
+        this.rankFactory = rankFactory;
     }
 
     @Override
@@ -84,12 +90,12 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
             throw new MemberException(uuid, "There are more users with the same uuid?!");
         }
 
-        // create core account object
         MembersRecord record = input.get(0);
 
         SocietyMember member = memberFactory.create(UUIDGen.toUUID(record.getUuid()));
         member.setState(record.getState());
 
+        // Load society
         byte[] rawSociety = record.getSociety();
 
         if (rawSociety == null || rawSociety.length != UUIDGen.UUID_LENGTH) {
@@ -106,6 +112,21 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
             }
         } else {
             member.setGroup(group);
+        }
+
+        if (group != null) {
+            //Load ranks
+            Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_RANKS);
+            query.bind(1, record.getUuid());
+
+            for (Record1<byte[]> rankRecord : query.fetch()) {
+                UUID rankUUID = UUIDGen.toUUID(rankRecord.value1());
+                Rank rank = group.getRank(rankUUID);
+
+                if (rank != null) {
+                    member.addRank(rank);
+                }
+            }
         }
 
         return member;
@@ -223,6 +244,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
             }
         }
 
+        //Load settings
         Select<Record3<byte[], UShort, byte[]>> settingsQuery = queries.getQuery(SQLQueries.SELECT_SOCIETY_SETTINGS);
         settingsQuery.bind(1, record.getUuid());
 
@@ -248,6 +270,15 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
             Object value = setting.convert(settingRecord.value3());
 
             group.set(setting, target, value);
+        }
+
+        //Load ranks
+        Select<RanksRecord> rankQuery = queries.getQuery(SQLQueries.SELECT_GROUP_RANKS);
+        rankQuery.bind(1, record.getUuid());
+
+        for (RanksRecord ranksRecord : rankQuery.fetch()) {
+            Rank rank = rankFactory.create(UUIDGen.toUUID(ranksRecord.getUuid()), ranksRecord.getName(), 0);
+            group.addRank(rank);
         }
 
         return group;
@@ -309,7 +340,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
                 query.bind(1, UUIDGen.toByteArray(group.getUUID()));
 
                 query.bind(2, group.getName());
-                query.bind(3, group.getName()); //todo tag
+                query.bind(3, group.getTag());
 
                 query.execute();
 

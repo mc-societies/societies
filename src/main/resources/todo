@@ -1,105 +1,38 @@
-Settings serialisation:
-    * Setting by UUID
-	* Subject/Target by UUID
-	* SettingValue by binary
-	Targets:
-		- Ranks
-		- Groups (with relations)
-						1. Load settings for groups (relations) X
-		               	2. Make ranks loadable
-		               	3. Load settings for ranks
-		               	4. Publishers for settings X
+Make ranks loadable
+Load settings for ranks
 
-
-
-Rank permissions
-
-Publishers also for creating/dropping societies?
-
-Commands: Automatically find optional arguments without specifying them (e.g. --target)
-Commands: Make group commands also executable (executor settable)
+Handle disconnects
 
 Commands:
-	X Group create
-	X Group list
-	Group rename (tag/name)
+	Automatically find optional arguments without specifying them (e.g. --target)
+	Make group commands also executable (executor settable)
+	Pre check sender class (Configuration over annotations)
 
-	X Profile group
-	Member lookup
-
-	X Invite player
-	X Join group
-	X Leave group
-	Kick player
+Commands:
 	Cancel requests
 
-
-	X Rank create
-	Rank remove
-	Rank assign
-	Rank list
-
-	Relation create
-	Relation remove
-	Relation list (alliances/rivals)
-
-	Home set/teleport
-
-
-
-	trust/untrust
-	verify/unverify clan
-
 	ff allow/auto
-
 	group/member vitals
-
-	X group roster
-
 	BulletinBoard
 
-	Reload
+
+
 Supported databases:
-	* MySQL
+	* MySQL X
 	* cqengine with json
 
 Storage:
 	* In database
 	* JSON backups
 
-Text renderer
-	X Pad complete table x chars to the right
-	X Headings
-	* Separators
-	X Tables
+Text renderer:
 	* Tree like structure
 
-Commands:
-X    Pagination for command output
-	 Pre check sender class (Configuration over annotations)
-
-Persistent requests
-
-Use a LocaleWrapper to match locales and dictionaries or just use the language attributes
-
-Get player name from external source if player is offline and there is no "offline player data"
-
-X Translations
-
+Cosmetics:
+	Publishers also for creating/dropping societies?
+	Get player name from external source if player is offline and there is no "offline player data"
 Caching
 	* Pre-rendered listing output
-
-Guice factory to pools, setup UncaughtExceptionHandler
-
-Cosmetics:
-    Design of Setting and Relation?
-
-Document:
-    Commands
-    Request
-    Rank
-    Bukkit api in societies
-
 
 History
 Statistics

@@ -6,6 +6,7 @@ import net.catharos.lib.database.DSLProvider;
 import net.catharos.lib.database.QueryKey;
 import net.catharos.lib.database.QueryProvider;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
+import net.catharos.societies.database.layout.tables.records.RanksRecord;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.database.layout.tables.records.SocietiesSettingsRecord;
 import org.jooq.*;
@@ -41,6 +42,8 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Select<Record3<byte[], UShort, byte[]>>> SELECT_SOCIETY_SETTINGS = QueryKey.create();
 
     public static final QueryKey<Insert<SocietiesSettingsRecord>> INSERT_GROUP_SETTING = QueryKey.create();
+
+    public static final QueryKey<Select<RanksRecord>> SELECT_GROUP_RANKS = QueryKey.create();
 
 
     //================================================================================
@@ -100,6 +103,14 @@ class SQLQueries extends QueryProvider {
                 return context.
                         selectFrom(SOCIETIES)
                         .where(SOCIETIES.NAME.like(DEFAULT_STRING));
+            }
+        });
+
+        builder(SELECT_GROUP_RANKS, new QueryBuilder<Select<RanksRecord>>() {
+            @Override
+            public Select<RanksRecord> create(DSLContext context) {
+                return context.selectFrom(RANKS)
+                        .where(SOCIETIES.UUID.equal(DEFAULT_UUID));
             }
         });
 

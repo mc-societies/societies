@@ -18,10 +18,9 @@ import java.util.UUID;
  * Represents a OnlineCacheMemberProvider
  */
 @Singleton
-class OnlineCacheMemberProvider<M extends Member> implements MemberProvider<M> {
+public class OnlineCacheMemberProvider<M extends Member> implements MemberProvider<M> {
 
-    //todo clean on player disconnect
-    private final THashMap<UUID, M> member = new THashMap<UUID, M>();
+    private final THashMap<UUID, M> members = new THashMap<UUID, M>();
 
     private final MemberProvider<M> forward;
     private final PlayerProvider provider;
@@ -31,7 +30,6 @@ class OnlineCacheMemberProvider<M extends Member> implements MemberProvider<M> {
         this.forward = forward;
         this.provider = provider;
     }
-
 
     @Override
     public ListenableFuture<M> getMember(UUID uuid) {
@@ -45,7 +43,7 @@ class OnlineCacheMemberProvider<M extends Member> implements MemberProvider<M> {
         ListenableFuture<M> future = null;
 
         if (player != null) {
-            M societyMember = member.get(uuid);
+            M societyMember = members.get(uuid);
 
             if (societyMember != null) {
                 return Futures.immediateFuture(societyMember);
@@ -57,7 +55,7 @@ class OnlineCacheMemberProvider<M extends Member> implements MemberProvider<M> {
             Futures.addCallback(future, new FutureCallback<M>() {
                 @Override
                 public void onSuccess(M result) {
-                    member.put(result.getUUID(), result);
+                    members.put(result.getUUID(), result);
                 }
 
                 @Override
@@ -78,5 +76,9 @@ class OnlineCacheMemberProvider<M extends Member> implements MemberProvider<M> {
     public ListenableFuture<M> getMember(String name) {
         Player player = provider.getPlayer(name);
         return handle(player, player.getUniqueId());
+    }
+
+    public void clear(UUID uuid) {
+        this.members.remove(uuid);
     }
 }

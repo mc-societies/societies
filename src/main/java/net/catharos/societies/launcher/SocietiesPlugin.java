@@ -21,6 +21,7 @@ import net.catharos.lib.shank.service.ServiceModule;
 import net.catharos.lib.shank.service.lifecycle.Lifecycle;
 import net.catharos.societies.SocietiesModule;
 import net.catharos.societies.bukkit.BukkitModule;
+import net.catharos.societies.database.sql.OnlineCacheMemberProvider;
 import net.catharos.societies.member.MemberFactory;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.command.Command;
@@ -29,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
@@ -67,8 +69,6 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
         serviceController = injector.getInstance(ServiceController.class);
 
         serviceController.invoke(Lifecycle.INITIALISING);
-
-
 
 
         getServer().getPluginManager().registerEvents(this, this);
@@ -118,7 +118,8 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
 
         } else {
-            commands.execute(injector.getInstance(Key.get(Sender.class, Names.named("system-sender"))), command.getName(), args);
+            commands.execute(injector.getInstance(Key.get(Sender.class, Names.named("system-sender"))), command
+                    .getName(), args);
         }
 
 
@@ -134,6 +135,12 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
                 .getInstance(MemberFactory.class);
 
         publisher.publish(memberFactory.create(event.getPlayer().getUniqueId()));
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        OnlineCacheMemberProvider cache = injector.getInstance(OnlineCacheMemberProvider.class);
+        cache.clear(event.getPlayer().getUniqueId());
     }
 
     @Override
