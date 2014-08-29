@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import net.catharos.groups.DefaultMember;
 import net.catharos.groups.publisher.MemberGroupPublisher;
+import net.catharos.groups.publisher.MemberStatePublisher;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.NameProvider;
@@ -33,8 +34,10 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                PlayerProvider playerProvider,
                                LocaleProvider localeProvider,
                                Dictionary<String> directory,
-                               MemberGroupPublisher societyPublisher, NameProvider nameProvider) {
-        this(uuid.get(), playerProvider, localeProvider, directory, societyPublisher, nameProvider);
+                               MemberGroupPublisher societyPublisher,
+                               NameProvider nameProvider,
+                               MemberStatePublisher memberStatePublisher) {
+        this(uuid.get(), playerProvider, localeProvider, directory, societyPublisher, nameProvider, memberStatePublisher);
     }
 
     @AssistedInject
@@ -43,8 +46,9 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                LocaleProvider localeProvider,
                                Dictionary<String> dictionary,
                                MemberGroupPublisher societyPublisher,
-                               NameProvider nameProvider) {
-        super(uuid, societyPublisher);
+                               NameProvider nameProvider,
+                               MemberStatePublisher memberStatePublisher) {
+        super(uuid, societyPublisher, memberStatePublisher);
         this.playerProvider = playerProvider;
         this.localeProvider = localeProvider;
         this.directory = dictionary;

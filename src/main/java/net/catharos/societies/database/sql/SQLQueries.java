@@ -32,11 +32,11 @@ class SQLQueries extends QueryProvider {
 
     public static final QueryKey<Update<SocietiesRecord>> UPDATE_SOCIETY_NAME = QueryKey.create();
 
+    public static final QueryKey<Update<SocietiesRecord>> UPDATE_SOCIETY_STATE = QueryKey.create();
+
     public static final QueryKey<Update<SocietiesRecord>> UPDATE_SOCIETY_LAST_ACTIVE = QueryKey.create();
 
     public static final QueryKey<Query> DROP_SOCIETY_BY_UUID = QueryKey.create();
-
-    public static final QueryKey<Select<Record1<byte[]>>> SELECT_SOCIETY_SETTING = QueryKey.create();
 
     public static final QueryKey<Select<Record3<byte[], UShort, byte[]>>> SELECT_SOCIETY_SETTINGS = QueryKey.create();
 
@@ -52,6 +52,8 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Select<Record1<byte[]>>> SELECT_MEMBER_RANKS = QueryKey.create();
 
     public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER_SOCIETY = QueryKey.create();
+
+    public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER_STATE = QueryKey.create();
 
     public static final QueryKey<Insert<MembersRecord>> INSERT_MEMBER = QueryKey.create();
 
@@ -130,23 +132,21 @@ class SQLQueries extends QueryProvider {
             }
         });
 
+        builder(UPDATE_SOCIETY_STATE, new QueryBuilder<Update<SocietiesRecord>>() {
+            @Override
+            public Update<SocietiesRecord> create(DSLContext context) {
+                return context.update(SOCIETIES)
+                        .set(SOCIETIES.STATE, Short.MAX_VALUE)
+                        .where(SOCIETIES.UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
         builder(UPDATE_SOCIETY_LAST_ACTIVE, new QueryBuilder<Update<SocietiesRecord>>() {
             @Override
             public Update<SocietiesRecord> create(DSLContext context) {
                 return context.update(SOCIETIES)
                         .set(SOCIETIES.LASTACTIVE, DEFAULT_TIMESTAMP)
                         .where(SOCIETIES.UUID.equal(DEFAULT_BYTE_ARRAY));
-            }
-        });
-
-        builder(SELECT_SOCIETY_SETTING, new QueryBuilder<Select<Record1<byte[]>>>() {
-            @Override
-            public Select<Record1<byte[]>> create(DSLContext context) {
-                return context
-                        .select(SOCIETIES_SETTINGS.VALUE).from(SOCIETIES_SETTINGS)
-                        .where(SOCIETIES_SETTINGS.SUBJECT_UUID.equal(DEFAULT_BYTE_ARRAY))
-                        .and(SOCIETIES_SETTINGS.TARGET_UUID.equal(DEFAULT_BYTE_ARRAY))
-                        .and(SOCIETIES_SETTINGS.SETTING.equal(UShort.valueOf(0)));
             }
         });
 
@@ -219,6 +219,15 @@ class SQLQueries extends QueryProvider {
             public Update<MembersRecord> create(DSLContext context) {
                 return context.update(MEMBERS)
                         .set(MEMBERS.SOCIETY, DEFAULT_BYTE_ARRAY)
+                        .where(MEMBERS.UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(UPDATE_MEMBER_STATE, new QueryBuilder<Update<MembersRecord>>() {
+            @Override
+            public Update<MembersRecord> create(DSLContext context) {
+                return context.update(MEMBERS)
+                        .set(MEMBERS.STATE, Short.MAX_VALUE)
                         .where(MEMBERS.UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });

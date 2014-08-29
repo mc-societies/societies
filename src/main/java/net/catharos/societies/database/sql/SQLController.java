@@ -88,6 +88,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
         MembersRecord record = input.get(0);
 
         SocietyMember member = memberFactory.create(UUIDGen.toUUID(record.getUuid()));
+        member.setState(record.getState());
 
         byte[] rawSociety = record.getSociety();
 
@@ -274,7 +275,9 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
     }
 
     private Group evaluateGroup(SocietiesRecord record) {
-        return groupFactory.create(UUIDGen.toUUID(record.getUuid()), record.getName(), record.getTag());
+        Group group = groupFactory.create(UUIDGen.toUUID(record.getUuid()), record.getName(), record.getTag());
+        group.setState(record.getState());
+        return group;
     }
 
     private Group createGroup(UUID uuid) {
