@@ -6,7 +6,7 @@ import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
 /**
  * Represents a SocietiesService
  */
-public class SocietiesService extends AbstractService {
+class SocietiesService extends AbstractService {
 
     @Override
     public void init(LifecycleContext context) throws Exception {

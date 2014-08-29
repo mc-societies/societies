@@ -18,7 +18,7 @@ import java.util.UUID;
  * Represents a OnlineCacheMemberProvider
  */
 @Singleton
-public class OnlineCacheMemberProvider<M extends Member> implements MemberProvider<M> {
+class OnlineCacheMemberProvider<M extends Member> implements MemberProvider<M> {
 
     //todo clean on player disconnect
     private final THashMap<UUID, M> member = new THashMap<UUID, M>();

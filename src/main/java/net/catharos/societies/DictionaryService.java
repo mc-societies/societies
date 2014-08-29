@@ -21,7 +21,7 @@ import java.util.Properties;
 /**
  * Represents a DictionaryService
  */
-public class DictionaryService extends AbstractService {
+ class DictionaryService extends AbstractService {
 
     private final MutableDictionary<String> dictionary;
     private final File directory;
