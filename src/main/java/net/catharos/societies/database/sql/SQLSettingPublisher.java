@@ -28,7 +28,7 @@ class SQLSettingPublisher extends AbstractPublisher implements SettingPublisher 
             service.submit(new Runnable() {
                 @Override
                 public void run() {
-                    Insert<SocietiesSettingsRecord> query = queries.getQuery(SQLQueries.INSERT_GROUP_SETTING);
+                    Insert<SocietiesSettingsRecord> query = queries.getQuery(SQLQueries.INSERT_SOCIETY_SETTING);
 
                     query.bind(1, UUIDGen.toByteArray(subject.getUUID()));
                     query.bind(2, UUIDGen.toByteArray(target.getUUID()));

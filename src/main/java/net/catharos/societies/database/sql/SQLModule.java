@@ -6,10 +6,7 @@ import net.catharos.groups.GroupProvider;
 import net.catharos.groups.GroupPublisher;
 import net.catharos.groups.MemberProvider;
 import net.catharos.groups.MemberPublisher;
-import net.catharos.groups.publisher.LastActivePublisher;
-import net.catharos.groups.publisher.MemberGroupPublisher;
-import net.catharos.groups.publisher.NamePublisher;
-import net.catharos.groups.publisher.SettingPublisher;
+import net.catharos.groups.publisher.*;
 import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.member.SocietyMember;
 
@@ -39,5 +36,11 @@ public class SQLModule extends AbstractModule {
         bind(NamePublisher.class).to(SQLNamePublisher.class);
         bind(LastActivePublisher.class).to(SQLLastActivePublisher.class);
         bind(SettingPublisher.class).to(SQLSettingPublisher.class);
+
+        Key<SQLRankPublisher> rankKey = Key.get(SQLRankPublisher.class);
+        bind(RankPublisher.class).to(rankKey);
+        bind(MemberRankPublisher.class).to(rankKey);
+        bind(RankDropPublisher.class).to(rankKey);
+        bind(GroupRankPublisher.class).to(rankKey);
     }
 }

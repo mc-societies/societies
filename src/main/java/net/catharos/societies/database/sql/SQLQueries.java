@@ -21,13 +21,17 @@ import static net.catharos.societies.database.layout.Tables.*;
 @Singleton
 class SQLQueries extends QueryProvider {
 
+    //================================================================================
+    // Groups
+    //================================================================================
+
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETIES = QueryKey.create();
 
-    public static final QueryKey<Select<Record1<byte[]>>> SELECT_SOCIETY_MEMBERS = QueryKey.create();
 
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY_BY_UUID = QueryKey.create();
 
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY_BY_NAME = QueryKey.create();
+
 
     public static final QueryKey<Insert<SocietiesRecord>> INSERT_SOCIETY = QueryKey.create();
 
@@ -39,13 +43,31 @@ class SQLQueries extends QueryProvider {
 
     public static final QueryKey<Query> DROP_SOCIETY_BY_UUID = QueryKey.create();
 
+
+    public static final QueryKey<Select<Record1<byte[]>>> SELECT_SOCIETY_MEMBERS = QueryKey.create();
+
+
     public static final QueryKey<Select<Record3<byte[], UShort, byte[]>>> SELECT_SOCIETY_SETTINGS = QueryKey.create();
 
-    public static final QueryKey<Insert<SocietiesSettingsRecord>> INSERT_GROUP_SETTING = QueryKey.create();
+    public static final QueryKey<Insert<SocietiesSettingsRecord>> INSERT_SOCIETY_SETTING = QueryKey.create();
+
 
     public static final QueryKey<Select<RanksRecord>> SELECT_GROUP_RANKS = QueryKey.create();
 
     public static final QueryKey<Select<Record3<byte[], UShort, byte[]>>> SELECT_RANK_SETTINGS = QueryKey.create();
+
+    public static final QueryKey<Insert> INSERT_SOCIETY_RANK = QueryKey.create();
+    public static final QueryKey<Query> DROP_SOCIETY_RANK = QueryKey.create();
+
+
+    //================================================================================
+    // Ranks
+    //================================================================================
+
+
+    public static final QueryKey<Insert<RanksRecord>> INSERT_RANK = QueryKey.create();
+
+    public static final QueryKey<Query> DROP_RANK = QueryKey.create();
 
 
     //================================================================================
@@ -54,15 +76,22 @@ class SQLQueries extends QueryProvider {
 
     public static final QueryKey<Select<MembersRecord>> SELECT_MEMBER_BY_UUID = QueryKey.create();
 
-    public static final QueryKey<Select<Record1<byte[]>>> SELECT_MEMBER_RANKS = QueryKey.create();
+
+    public static final QueryKey<Insert<MembersRecord>> INSERT_MEMBER = QueryKey.create();
 
     public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER_SOCIETY = QueryKey.create();
 
     public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER_STATE = QueryKey.create();
 
-    public static final QueryKey<Insert<MembersRecord>> INSERT_MEMBER = QueryKey.create();
-
     public static final QueryKey<Query> DROP_MEMBER_BY_UUID = QueryKey.create();
+
+
+    public static final QueryKey<Select<Record1<byte[]>>> SELECT_MEMBER_RANKS = QueryKey.create();
+
+    public static final QueryKey<Insert> INSERT_MEMBER_RANK = QueryKey.create();
+
+    public static final QueryKey<Query> DROP_MEMBER_RANK = QueryKey.create();
+
 
     @Inject
     protected SQLQueries(DSLProvider provider) {
@@ -71,6 +100,10 @@ class SQLQueries extends QueryProvider {
 
     @Override
     public void build() {
+
+        //================================================================================
+        // Groups
+        //================================================================================
 
         builder(SELECT_SOCIETIES, new QueryBuilder<Select<SocietiesRecord>>() {
             @Override
@@ -183,7 +216,7 @@ class SQLQueries extends QueryProvider {
             }
         });
 
-        builder(INSERT_GROUP_SETTING, new QueryBuilder<Insert<SocietiesSettingsRecord>>() {
+        builder(INSERT_SOCIETY_SETTING, new QueryBuilder<Insert<SocietiesSettingsRecord>>() {
             @Override
             public Insert<SocietiesSettingsRecord> create(DSLContext context) {
                 return context
@@ -194,6 +227,40 @@ class SQLQueries extends QueryProvider {
                         .set(SOCIETIES_SETTINGS.TARGET_UUID, DEFAULT_BYTE_ARRAY)
                         .set(SOCIETIES_SETTINGS.SETTING, UShort.valueOf(0))
                         .set(SOCIETIES_SETTINGS.VALUE, DEFAULT_BYTE_ARRAY);
+            }
+        });
+
+        builder(INSERT_SOCIETY_RANK, new QueryBuilder<Insert>() {
+            @Override
+            public Insert create(DSLContext context) {
+                return context.insertInto(SOCIETIES_RANKS)
+                        .values(DEFAULT_BYTE_ARRAY, DEFAULT_BYTE_ARRAY);
+            }
+        });
+
+        builder(DROP_SOCIETY_RANK, new QueryBuilder<Query>() {
+            @Override
+            public Query create(DSLContext context) {
+                return context.delete(SOCIETIES_RANKS).where(SOCIETIES_RANKS.RANK.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        //================================================================================
+        // Rank
+        //================================================================================
+
+        builder(INSERT_RANK, new QueryBuilder<Insert<RanksRecord>>() {
+            @Override
+            public Insert<RanksRecord> create(DSLContext context) {
+                return context.insertInto(RANKS)
+                        .values(DEFAULT_BYTE_ARRAY, DEFAULT_STRING);
+            }
+        });
+
+        builder(DROP_RANK, new QueryBuilder<Query>() {
+            @Override
+            public Query create(DSLContext context) {
+                return context.delete(RANKS).where(RANKS.UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });
 
@@ -252,6 +319,21 @@ class SQLQueries extends QueryProvider {
                 return context.update(MEMBERS)
                         .set(MEMBERS.STATE, Short.MAX_VALUE)
                         .where(MEMBERS.UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(INSERT_MEMBER_RANK, new QueryBuilder<Insert>() {
+            @Override
+            public Insert create(DSLContext context) {
+                return context.insertInto(MEMBERS_RANKS)
+                        .values(DEFAULT_BYTE_ARRAY, DEFAULT_BYTE_ARRAY);
+            }
+        });
+
+        builder(DROP_MEMBER_RANK, new QueryBuilder<Query>() {
+            @Override
+            public Query create(DSLContext context) {
+                return context.delete(MEMBERS_RANKS).where(MEMBERS_RANKS.RANK.equal(DEFAULT_BYTE_ARRAY));
             }
         });
 

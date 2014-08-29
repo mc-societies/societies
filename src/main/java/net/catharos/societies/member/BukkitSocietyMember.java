@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import net.catharos.groups.DefaultMember;
 import net.catharos.groups.publisher.MemberGroupPublisher;
+import net.catharos.groups.publisher.MemberRankPublisher;
 import net.catharos.groups.publisher.MemberStatePublisher;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.i18n.Dictionary;
@@ -36,8 +37,10 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                Dictionary<String> directory,
                                MemberGroupPublisher societyPublisher,
                                NameProvider nameProvider,
-                               MemberStatePublisher memberStatePublisher) {
-        this(uuid.get(), playerProvider, localeProvider, directory, societyPublisher, nameProvider, memberStatePublisher);
+                               MemberStatePublisher memberStatePublisher,
+                               MemberRankPublisher memberRankPublisher) {
+        this(uuid
+                .get(), playerProvider, localeProvider, directory, societyPublisher, nameProvider, memberStatePublisher, memberRankPublisher);
     }
 
     @AssistedInject
@@ -47,8 +50,9 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                Dictionary<String> dictionary,
                                MemberGroupPublisher societyPublisher,
                                NameProvider nameProvider,
-                               MemberStatePublisher memberStatePublisher) {
-        super(uuid, societyPublisher, memberStatePublisher);
+                               MemberStatePublisher memberStatePublisher,
+                               MemberRankPublisher memberRankPublisher) {
+        super(uuid, societyPublisher, memberStatePublisher, memberRankPublisher);
         this.playerProvider = playerProvider;
         this.localeProvider = localeProvider;
         this.directory = dictionary;

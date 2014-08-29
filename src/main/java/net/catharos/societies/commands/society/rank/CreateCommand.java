@@ -2,6 +2,7 @@ package net.catharos.societies.commands.society.rank;
 
 import com.google.inject.Inject;
 import net.catharos.groups.Group;
+import net.catharos.groups.publisher.RankPublisher;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
 import net.catharos.lib.core.command.CommandContext;
@@ -24,10 +25,12 @@ public class CreateCommand implements Executor<SocietyMember> {
     int priority = Rank.DEFAULT_PRIORITY;
 
     private final RankFactory rankFactory;
+    private final RankPublisher rankPublisher;
 
     @Inject
-    public CreateCommand(RankFactory rankFactory) {
+    public CreateCommand(RankFactory rankFactory, RankPublisher rankPublisher) {
         this.rankFactory = rankFactory;
+        this.rankPublisher = rankPublisher;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class CreateCommand implements Executor<SocietyMember> {
         }
 
         Rank rank = rankFactory.create(name, priority);
+        this.rankPublisher.publish(rank);
         group.addRank(rank);
 
         sender.send("rank.created", name);
