@@ -33,6 +33,8 @@ import net.catharos.societies.commands.society.*;
 import net.catharos.societies.commands.society.home.HomeCommand;
 import net.catharos.societies.commands.society.home.RemoveHomeCommand;
 import net.catharos.societies.commands.society.home.SetHomeCommand;
+import net.catharos.societies.commands.society.rank.AssignCommand;
+import net.catharos.societies.commands.society.rank.RemoveCommand;
 import net.catharos.societies.commands.society.vote.AbstainCommand;
 import net.catharos.societies.commands.society.vote.AcceptCommand;
 import net.catharos.societies.commands.society.vote.DenyCommand;
@@ -81,7 +83,7 @@ public class CommandModule extends AbstractModule {
 
         // Help executor
         bindNamed("help-executor", EXECUTOR_TYPE)
-                .toProvider(new TypeLiteral<PipelinedProvider<Sender, HelpExecutor<Sender>>>(){});
+                .toProvider(new TypeLiteral<PipelinedProvider<Sender, HelpExecutor<Sender>>>() {});
         bindNamed("group-help-executor", EXECUTOR_TYPE)
                 .toProvider(new TypeLiteral<PipelinedProvider<Sender, GroupHelpExecutor<Sender>>>() {});
 
@@ -130,12 +132,25 @@ public class CommandModule extends AbstractModule {
 
                 AcceptCommand.class,
                 DenyCommand.class,
-                AbstainCommand.class  ,
+                AbstainCommand.class,
 
                 HomeCommand.class,
                 SetHomeCommand.class,
-                RemoveHomeCommand.class
+                RemoveHomeCommand.class,
         };
+
+        builder.name("ranks")
+                .identifier("ranks")
+                .description("Ranks command");
+
+        GroupCommand<Sender> ranks = builder.build();
+
+        ranks.addChild(analyser.analyse(AssignCommand.class));
+        ranks.addChild(analyser.analyse(net.catharos.societies.commands.society.rank.CreateCommand.class));
+        ranks.addChild(analyser.analyse(RemoveCommand.class));
+        ranks.addChild(analyser.analyse(net.catharos.societies.commands.society.rank.ListCommand.class));
+
+        society.addChild(ranks);
 
         for (Class<?> subCommand : subCommands) {
             society.addChild(analyser.analyse(subCommand));
@@ -165,7 +180,8 @@ public class CommandModule extends AbstractModule {
 
     public Multibinder<Executor<Sender>> beforePipeline() {
         return Multibinder
-                .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-before")).permitDuplicates();
+                .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-before"))
+                .permitDuplicates();
     }
 
 }

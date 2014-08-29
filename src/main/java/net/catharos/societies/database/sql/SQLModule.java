@@ -37,6 +37,9 @@ public class SQLModule extends AbstractModule {
         bind(LastActivePublisher.class).to(SQLLastActivePublisher.class);
         bind(SettingPublisher.class).to(SQLSettingPublisher.class);
 
+        bind(GroupStatePublisher.class).to(SQLGroupStatePublisher.class);
+        bind(MemberStatePublisher.class).to(SQLMemberStatePublisher.class);
+
         Key<SQLRankPublisher> rankKey = Key.get(SQLRankPublisher.class);
         bind(RankPublisher.class).to(rankKey);
         bind(MemberRankPublisher.class).to(rankKey);

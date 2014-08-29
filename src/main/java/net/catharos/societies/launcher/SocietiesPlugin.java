@@ -139,7 +139,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        OnlineCacheMemberProvider cache = injector.getInstance(OnlineCacheMemberProvider.class);
+        OnlineCacheMemberProvider cache = injector.getInstance(Key.get(new TypeLiteral<OnlineCacheMemberProvider<SocietyMember>>() {}));
         cache.clear(event.getPlayer().getUniqueId());
     }
 

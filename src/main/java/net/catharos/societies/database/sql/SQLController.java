@@ -19,7 +19,6 @@ import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.PlayerProvider;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
-import net.catharos.societies.database.layout.tables.records.RanksRecord;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
 import net.catharos.societies.member.MemberException;
@@ -262,15 +261,15 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
         loadSettings(group, uuid, queries.getQuery(SQLQueries.SELECT_SOCIETY_SETTINGS));
 
         //Load ranks
-        Select<RanksRecord> rankQuery = queries.getQuery(SQLQueries.SELECT_GROUP_RANKS);
+        Select<Record2<byte[], String>> rankQuery = queries.getQuery(SQLQueries.SELECT_GROUP_RANKS);
         rankQuery.bind(1, uuid);
 
-        for (RanksRecord ranksRecord : rankQuery.fetch()) {
-            Rank rank = rankFactory.create(UUIDGen.toUUID(ranksRecord.getUuid()), ranksRecord.getName(), 0);
-            loadSettings(rank, ranksRecord.getUuid(), queries.getQuery(SQLQueries.SELECT_RANK_SETTINGS));
+
+        for (Record2<byte[], String> rankRecord : rankQuery.fetch()) {
+            Rank rank = rankFactory.create(UUIDGen.toUUID(rankRecord.value1()), rankRecord.value2(), 0);
+            loadSettings(rank, rankRecord.value1(), queries.getQuery(SQLQueries.SELECT_RANK_SETTINGS));
             group.addRank(rank);
         }
-
         return group;
     }
 

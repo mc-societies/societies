@@ -52,7 +52,7 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Insert<SocietiesSettingsRecord>> INSERT_SOCIETY_SETTING = QueryKey.create();
 
 
-    public static final QueryKey<Select<RanksRecord>> SELECT_GROUP_RANKS = QueryKey.create();
+    public static final QueryKey<Select<Record2<byte[], String>>> SELECT_GROUP_RANKS = QueryKey.create();
 
     public static final QueryKey<Select<Record3<byte[], UShort, byte[]>>> SELECT_RANK_SETTINGS = QueryKey.create();
 
@@ -141,11 +141,12 @@ class SQLQueries extends QueryProvider {
             }
         });
 
-        builder(SELECT_GROUP_RANKS, new QueryBuilder<Select<RanksRecord>>() {
+        builder(SELECT_GROUP_RANKS, new QueryBuilder<Select<Record2<byte[], String>>>() {
             @Override
-            public Select<RanksRecord> create(DSLContext context) {
-                return context.selectFrom(RANKS)
-                        .where(SOCIETIES.UUID.equal(DEFAULT_UUID));
+            public Select<Record2<byte[], String>> create(DSLContext context) {
+                return context.select(RANKS.UUID, RANKS.NAME).from(RANKS).leftOuterJoin(SOCIETIES_RANKS)
+                        .on(SOCIETIES_RANKS.SOCIETY.eq(RANKS.UUID))
+                        .and(SOCIETIES_RANKS.SOCIETY.eq(DEFAULT_BYTE_ARRAY));
             }
         });
 
@@ -281,7 +282,7 @@ class SQLQueries extends QueryProvider {
             @Override
             public Select<Record1<byte[]>> create(DSLContext context) {
                 return context.
-                        select(MEMBERS_RANKS.RANK).from(MEMBERS)
+                        select(MEMBERS_RANKS.RANK).from(MEMBERS_RANKS)
                         .where(MEMBERS_RANKS.MEMBER.equal(DEFAULT_UUID));
             }
         });

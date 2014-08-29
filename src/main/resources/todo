@@ -1,4 +1,6 @@
-Publish ranks and their settings
+Publish rank settings
+
+Put members/groups in a preparing state = addRank() doesn't publish
 
 Commands:
 	Automatically find optional arguments without specifying them (e.g. --target)
