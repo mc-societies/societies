@@ -3,6 +3,7 @@ notifications:
   email: false
 deploy:
   provider: releases
+  skip_cleanup: true
   api_key:
     secure: HSVpYd9Cy+d5Ux4CwEEx1tODUucZXyAhRU3xArLhTD12fo52AUuga7H4RYI8BrXFP0MdWjIM6aSyxP2geSYJ3Yn91knmXIfa49PsEiLm49ceWMXmN3ahgN7tUZRa4cJjK249GvHG+H8duQ8RqcRIAKSg4h6Qs/9aS3yLmdOxdMI=
   file: "/target/societies-1.0-SNAPSHOT.jar"
