@@ -22,7 +22,6 @@ import net.catharos.societies.database.layout.tables.records.MembersRecord;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
 import net.catharos.societies.member.MemberException;
-import net.catharos.groups.MemberFactory;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.entity.Player;
 import org.jooq.*;
@@ -40,6 +39,8 @@ import static net.catharos.societies.database.sql.SQLQueries.*;
  * Represents a LoadingMemberProvider
  */
 class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<SocietyMember>, GroupProvider, GroupPublisher {
+
+    public static final int PREPARE = 0xFBEFABE;
 
     private final PlayerProvider playerProvider;
     private final SQLQueries queries;
@@ -118,7 +119,8 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
         MembersRecord record = input.get(0);
 
         SocietyMember member = memberFactory.create(UUIDGen.toUUID(record.getUuid()));
-        member.setState(record.getState());
+        // Preparing
+        member.setState(PREPARE);
 
         // Load society
         byte[] rawSociety = record.getSociety();
@@ -153,6 +155,9 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
                 }
             }
         }
+
+        // Finished
+        member.setState(record.getState());
 
         return member;
     }
@@ -239,7 +244,8 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
     private Group evaluateSingleGroup(SocietiesRecord record) {
         byte[] uuid = record.getUuid();
         Group group = groupFactory.create(UUIDGen.toUUID(uuid), record.getName(), record.getTag());
-        group.setState(record.getState());
+        // Preparing
+        group.setState(PREPARE);
 
         // Load members
         Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_SOCIETY_MEMBERS);
@@ -266,11 +272,21 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
 
 
         for (Record2<byte[], String> rankRecord : rankQuery.fetch()) {
-            Rank rank = rankFactory.create(UUIDGen.toUUID(rankRecord.value1()), rankRecord.value2(), 0);
-            loadSettings(rank, rankRecord.value1(), queries.getQuery(SQLQueries.SELECT_RANK_SETTINGS));
+            Rank rank = loadRank(rankRecord);
             group.addRank(rank);
         }
+
+        // Finished
+        group.setState(record.getState());
         return group;
+    }
+
+    private Rank loadRank(Record2<byte[], String> rankRecord) {
+        Rank rank = rankFactory.create(UUIDGen.toUUID(rankRecord.value1()), rankRecord.value2(), 0);
+        rank.setState(PREPARE);
+        loadSettings(rank, rankRecord.value1(), queries.getQuery(SQLQueries.SELECT_RANK_SETTINGS));
+        rank.setState(0);
+        return rank;
     }
 
     private void loadSettings(Subject subject, byte[] uuid, Select<Record3<byte[], UShort, byte[]>> query) {

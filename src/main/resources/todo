@@ -1,7 +1,3 @@
-Publish rank settings
-
-Put members/groups in a preparing state = addRank() doesn't publish
-
 Commands:
 	Automatically find optional arguments without specifying them (e.g. --target)
 	Make group commands also executable (executor settable)
@@ -32,6 +28,7 @@ Text renderer:
 Cosmetics:
 	Publishers also for creating/dropping societies?
 	Get player name from external source if player is offline and there is no "offline player data"
+	Beautify states
 Caching
 	* Pre-rendered listing output
 
