@@ -12,8 +12,15 @@ import org.bukkit.ChatColor;
  */
 class PreCommandStep implements Executor<Sender> {
 
+    public static final String GRAY = ChatColor.GRAY.toString();
+    public static final String DARK_GRAY = ChatColor.DARK_GRAY.toString();
+
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
-        sender.send(ChatColor.GRAY + ctx.getCommand().getName() + ChatColor.DARK_GRAY + "  -------------------------------");
+        String message = GRAY + ctx.getCommand()
+                .getName() + DARK_GRAY + "  -------------------------------";
+
+        ctx.put("pre-length", message.length() - GRAY.length() - DARK_GRAY.length());
+        sender.send(message);
     }
 }
