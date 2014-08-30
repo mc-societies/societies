@@ -51,14 +51,12 @@ class GroupHelpExecutor<S extends Sender> implements Executor<S> {
 
         builder.append(command.getIdentifier());
         return builder;
-
     }
 
     private StringBuilder appendDesc(StringBuilder builder, Command<?> command) {
         builder.append(ChatColor.WHITE).append(" - ").append(command.getDescription());
         return builder;
     }
-
 
     private StringBuilder append(StringBuilder builder, ExecutableCommand<?> command, LinkedList<Command> pre) {
         append(builder, (Command<?>) command, pre);

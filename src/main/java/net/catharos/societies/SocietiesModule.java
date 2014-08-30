@@ -20,7 +20,6 @@ import net.catharos.societies.member.locale.LocaleModule;
 import net.catharos.societies.setting.SettingModule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class SocietiesModule extends AbstractServiceModule {
             throw new RuntimeException("Failed to prepare resources!");
         }
 
-        install(new SettingModule(Bukkit.getWorld("world")));
+        install(new SettingModule());
 
         // Logging
         bindNamed("service-logger", Logger.class).toInstance(LogManager.getLogger());

@@ -84,7 +84,12 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
 
     @Override
     public void send(String message, Object... args) {
-        send(MessageFormat.format(message, args));
+        Player player = toPlayer();
+        if (player == null) {
+            return;
+        }
+
+        player.sendMessage(MessageFormat.format(directory.getTranslation(message), args));
     }
 
     @Override

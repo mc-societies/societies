@@ -12,7 +12,6 @@ import org.bukkit.ChatColor;
  */
 class PreCommandStep implements Executor<Sender> {
 
-
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
         sender.send(ChatColor.GRAY + ctx.getCommand().getName() + ChatColor.DARK_GRAY + "  -------------------------------");

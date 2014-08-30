@@ -1,9 +1,15 @@
 package net.catharos.societies.bukkit;
 
+import com.google.inject.Inject;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ParsingException;
 import net.catharos.lib.core.command.parser.ArgumentParser;
+import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.societies.WorldProvider;
+import net.catharos.societies.member.SocietyMember;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -11,22 +17,67 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LocationParser implements ArgumentParser<Location> {
 
+    private final WorldProvider worldProvider;
+
+    @Inject
+    public LocationParser(WorldProvider worldProvider) {
+        this.worldProvider = worldProvider;
+    }
 
     @NotNull
     @Override
     public Location parse(String input, CommandContext<?> ctx) throws ParsingException {
-        String[] split = input.split(",");
+        String[] parts = input.split(",");
 
-        int[] coordinates = new int[3];
-
-        for (int i = 0, splitLength = split.length; i < splitLength; i++) {
-            String s = split[i];
-            String trim = s.trim();
-
-            int coord = Integer.parseInt(trim);
-            coordinates[i] = coord;
+        if (parts.length < 3) {
+            throw new ParsingException("Invalid location!", ctx);
         }
 
-        return new Location(null, coordinates[0], coordinates[1], coordinates[2]);
+        String worldName = null;
+        int start = 0;
+
+        if (parts.length == 4) {
+            worldName = parts[0];
+            start = 1;
+        }
+
+        double[] coordinates = new double[3];
+
+        for (int i = start, splitLength = parts.length; i < splitLength; i++) {
+            String part = parts[i].trim();
+
+            double coordinate;
+
+            try {
+                coordinate = Double.parseDouble(part);
+            } catch (NumberFormatException e) {
+                throw new ParsingException("Invalid location!", ctx);
+            }
+
+            coordinates[i] = coordinate;
+        }
+
+        World world = null;
+
+        if (worldName != null) {
+            world = worldProvider.getWorld(worldName);
+        }
+
+        if (world == null) {
+            Sender sender = ctx.getSender();
+
+            if (sender instanceof SocietyMember) {
+                Player player = ((SocietyMember) sender).toPlayer();
+
+                if (player != null) {
+                    world = player.getWorld();
+                }
+            } else {
+
+                world = worldProvider.getDefaultWorld();
+            }
+        }
+
+        return new Location(world, coordinates[0], coordinates[1], coordinates[2]);
     }
 }

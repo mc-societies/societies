@@ -11,7 +11,6 @@ import java.util.Locale;
  *
  */
 public interface SocietyMember extends Member, Sender {
-    String getName();
 
     Locale getLocale();
 

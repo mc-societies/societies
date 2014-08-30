@@ -33,8 +33,8 @@ import net.catharos.societies.commands.society.*;
 import net.catharos.societies.commands.society.home.HomeCommand;
 import net.catharos.societies.commands.society.home.RemoveHomeCommand;
 import net.catharos.societies.commands.society.home.SetHomeCommand;
-import net.catharos.societies.commands.society.rank.AssignCommand;
-import net.catharos.societies.commands.society.rank.RemoveCommand;
+import net.catharos.societies.commands.society.rank.RankCommand;
+import net.catharos.societies.commands.society.relation.RelationCommand;
 import net.catharos.societies.commands.society.vote.AbstainCommand;
 import net.catharos.societies.commands.society.vote.AcceptCommand;
 import net.catharos.societies.commands.society.vote.DenyCommand;
@@ -52,7 +52,33 @@ import static com.google.inject.name.Names.named;
  */
 public class CommandModule extends AbstractModule {
 
-    public static final TypeLiteral<Executor<Sender>> EXECUTOR_TYPE = new TypeLiteral<Executor<Sender>>() {};
+
+    private Class<?>[] commands = new Class<?>[]{
+            CreateCommand.class,
+            RenameCommand.class,
+            ProfileCommand.class,
+            RosterCommand.class,
+            ListCommand.class,
+            InviteCommand.class,
+
+            JoinCommand.class,
+            FastJoinCommand.class,
+            LeaveCommand.class,
+
+            AcceptCommand.class,
+            DenyCommand.class,
+            AbstainCommand.class,
+
+            HomeCommand.class,
+            SetHomeCommand.class,
+            RemoveHomeCommand.class,
+
+            RankCommand.class,
+            RelationCommand.class,
+            ThreadTestCommand.class
+    };
+
+    private static final TypeLiteral<Executor<Sender>> EXECUTOR_TYPE = new TypeLiteral<Executor<Sender>>() {};
 
     @Override
     protected void configure() {
@@ -117,50 +143,11 @@ public class CommandModule extends AbstractModule {
 
         GroupCommand<Sender> society = builder.build();
 
-
-        Class<?>[] subCommands = {
-                CreateCommand.class,
-                RenameCommand.class,
-                ProfileCommand.class,
-                RosterCommand.class,
-                ListCommand.class,
-                InviteCommand.class,
-
-                JoinCommand.class,
-                FastJoinCommand.class,
-                LeaveCommand.class,
-
-                AcceptCommand.class,
-                DenyCommand.class,
-                AbstainCommand.class,
-
-                HomeCommand.class,
-                SetHomeCommand.class,
-                RemoveHomeCommand.class,
-        };
-
-        builder.name("ranks")
-                .identifier("ranks")
-                .description("Ranks command");
-
-        GroupCommand<Sender> ranks = builder.build();
-
-        ranks.addChild(analyser.analyse(AssignCommand.class));
-        ranks.addChild(analyser.analyse(net.catharos.societies.commands.society.rank.CreateCommand.class));
-        ranks.addChild(analyser.analyse(RemoveCommand.class));
-        ranks.addChild(analyser.analyse(net.catharos.societies.commands.society.rank.ListCommand.class));
-
-        society.addChild(ranks);
-
-        for (Class<?> subCommand : subCommands) {
+        for (Class<?> subCommand : this.commands) {
             society.addChild(analyser.analyse(subCommand));
         }
 
         commands.add(society);
-
-        Command<Sender> tt = analyser.analyse(ThreadTestCommand.class);
-        tt.setPermission("test.test");
-        commands.add(tt);
 
         return commands;
     }

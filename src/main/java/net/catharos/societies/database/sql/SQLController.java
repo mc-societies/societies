@@ -22,7 +22,7 @@ import net.catharos.societies.database.layout.tables.records.MembersRecord;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
 import net.catharos.societies.member.MemberException;
-import net.catharos.societies.member.MemberFactory;
+import net.catharos.groups.MemberFactory;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.entity.Player;
 import org.jooq.*;
@@ -45,7 +45,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
     private final SQLQueries queries;
     private final ListeningExecutorService service;
     private final GroupFactory groupFactory;
-    private final MemberFactory memberFactory;
+    private final MemberFactory<SocietyMember> memberFactory;
     private final SettingProvider settingProvider;
     private final RankFactory rankFactory;
 
@@ -53,7 +53,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
     public SQLController(PlayerProvider playerProvider,
                          SQLQueries queries,
                          ListeningExecutorService service,
-                         GroupFactory groupFactory, MemberFactory memberFactory,
+                         GroupFactory groupFactory, MemberFactory<SocietyMember> memberFactory,
                          SettingProvider settingProvider,
                          RankFactory rankFactory) {
         this.playerProvider = playerProvider;

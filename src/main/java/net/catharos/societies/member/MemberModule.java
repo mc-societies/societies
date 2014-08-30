@@ -1,6 +1,7 @@
 package net.catharos.societies.member;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import net.catharos.groups.MemberFactory;
 import net.catharos.lib.core.command.sender.SenderProvider;
 import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.database.sql.SQLModule;

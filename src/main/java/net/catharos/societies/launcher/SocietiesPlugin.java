@@ -9,6 +9,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
+import net.catharos.groups.MemberFactory;
 import net.catharos.groups.MemberProvider;
 import net.catharos.groups.MemberPublisher;
 import net.catharos.lib.core.command.Commands;
@@ -22,7 +23,6 @@ import net.catharos.lib.shank.service.lifecycle.Lifecycle;
 import net.catharos.societies.SocietiesModule;
 import net.catharos.societies.bukkit.BukkitModule;
 import net.catharos.societies.database.sql.OnlineCacheMemberProvider;
-import net.catharos.societies.member.MemberFactory;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -131,15 +131,16 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
         MemberPublisher<SocietyMember> publisher = injector
                 .getInstance(Key.get(new TypeLiteral<MemberPublisher<SocietyMember>>() {}));
 
-        MemberFactory memberFactory = injector
-                .getInstance(MemberFactory.class);
+        MemberFactory<SocietyMember> memberFactory = injector
+                .getInstance(Key.get(new TypeLiteral<MemberFactory<SocietyMember>>() {}));
 
         publisher.publish(memberFactory.create(event.getPlayer().getUniqueId()));
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        OnlineCacheMemberProvider cache = injector.getInstance(Key.get(new TypeLiteral<OnlineCacheMemberProvider<SocietyMember>>() {}));
+        OnlineCacheMemberProvider cache = injector
+                .getInstance(Key.get(new TypeLiteral<OnlineCacheMemberProvider<SocietyMember>>() {}));
         cache.clear(event.getPlayer().getUniqueId());
     }
 

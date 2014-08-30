@@ -2,6 +2,7 @@ package net.catharos.societies.bukkit;
 
 import net.catharos.lib.shank.AbstractModule;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 
 /**
@@ -16,9 +17,9 @@ public class BukkitModule extends AbstractModule {
     }
 
     @Override
-
     protected void configure() {
         bind(Server.class).toInstance(server);
         bind(ConsoleCommandSender.class).toInstance(server.getConsoleSender());
+        bindNamed("default-world", World.class).toInstance(server.getWorlds().get(0));
     }
 }
