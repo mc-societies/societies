@@ -1,7 +1,6 @@
 Commands:
 	Automatically find optional arguments without specifying them (e.g. --target)
 	Make group commands also executable (executor settable)
-	Pre check sender class (Configuration over annotations)
 
 Commands:
 	Cancel requests
@@ -13,6 +12,8 @@ Commands:
 Better config handling
 
 
+
+Config: Pre check sender class
 
 Supported databases:
 	* MySQL X

@@ -10,7 +10,10 @@ import com.google.inject.name.Names;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.Group;
 import net.catharos.groups.command.GroupParser;
-import net.catharos.lib.core.command.*;
+import net.catharos.lib.core.command.Command;
+import net.catharos.lib.core.command.CommandPipeline;
+import net.catharos.lib.core.command.DefaultCommandPipeline;
+import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.builder.GroupBuilder;
 import net.catharos.lib.core.command.format.pagination.DefaultPaginator;
 import net.catharos.lib.core.command.format.pagination.Paginator;
@@ -29,15 +32,7 @@ import net.catharos.lib.core.command.token.Tokenizer;
 import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.bukkit.BukkitSystemSender;
 import net.catharos.societies.bukkit.LocationParser;
-import net.catharos.societies.commands.society.*;
-import net.catharos.societies.commands.society.home.HomeCommand;
-import net.catharos.societies.commands.society.home.RemoveHomeCommand;
-import net.catharos.societies.commands.society.home.SetHomeCommand;
-import net.catharos.societies.commands.society.rank.RankCommand;
-import net.catharos.societies.commands.society.relation.RelationCommand;
-import net.catharos.societies.commands.society.vote.AbstainCommand;
-import net.catharos.societies.commands.society.vote.AcceptCommand;
-import net.catharos.societies.commands.society.vote.DenyCommand;
+import net.catharos.societies.commands.society.SocietyCommand;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.Location;
 
@@ -51,32 +46,6 @@ import static com.google.inject.name.Names.named;
  * Represents a CommandModule
  */
 public class CommandModule extends AbstractModule {
-
-
-    private Class<?>[] commands = new Class<?>[]{
-            CreateCommand.class,
-            RenameCommand.class,
-            ProfileCommand.class,
-            RosterCommand.class,
-            ListCommand.class,
-            InviteCommand.class,
-
-            JoinCommand.class,
-            FastJoinCommand.class,
-            LeaveCommand.class,
-
-            AcceptCommand.class,
-            DenyCommand.class,
-            AbstainCommand.class,
-
-            HomeCommand.class,
-            SetHomeCommand.class,
-            RemoveHomeCommand.class,
-
-            RankCommand.class,
-            RelationCommand.class,
-            ThreadTestCommand.class
-    };
 
     private static final TypeLiteral<Executor<Sender>> EXECUTOR_TYPE = new TypeLiteral<Executor<Sender>>() {};
 
@@ -109,9 +78,9 @@ public class CommandModule extends AbstractModule {
 
         // Help executor
         bindNamed("help-executor", EXECUTOR_TYPE)
-                .toProvider(new TypeLiteral<PipelinedProvider<Sender, HelpExecutor<Sender>>>() {});
+                .to(new TypeLiteral<HelpExecutor<Sender>>() {});
         bindNamed("group-help-executor", EXECUTOR_TYPE)
-                .toProvider(new TypeLiteral<PipelinedProvider<Sender, GroupHelpExecutor<Sender>>>() {});
+                .to(new TypeLiteral<GroupHelpExecutor<Sender>>() {});
 
         // Tokenizer
         bind(Tokenizer.class).to(DelimiterTokenizer.class);
@@ -138,17 +107,19 @@ public class CommandModule extends AbstractModule {
     public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, CommandAnalyser<Sender> analyser) {
         Set<Command<Sender>> commands = new THashSet<Command<Sender>>();
 
-        builder.name("Societies")
-                .identifier("society")
-                .description("Society command");
+//        builder.name("Societies")
+//                .identifier("society")
+//                .description("Society command");
+//
+//        GroupCommand<Sender> society = builder.build();
+//
+//        for (Class<?> subCommand : this.commands) {
+//            society.addChild(analyser.analyse(subCommand));
+//        }
+//
+//        analyser.analyseOptions(society, builder.getExecutor().getClass());
 
-        GroupCommand<Sender> society = builder.build();
-
-        for (Class<?> subCommand : this.commands) {
-            society.addChild(analyser.analyse(subCommand));
-        }
-
-        commands.add(society);
+        commands.add(analyser.analyse(SocietyCommand.class));
 
         return commands;
     }

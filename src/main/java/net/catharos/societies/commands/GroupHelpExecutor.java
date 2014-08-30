@@ -1,9 +1,13 @@
 package net.catharos.societies.commands;
 
+import com.google.inject.Inject;
 import net.catharos.lib.core.command.*;
+import net.catharos.lib.core.command.format.table.Table;
+import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.sender.Sender;
 import org.bukkit.ChatColor;
 
+import javax.inject.Provider;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,16 +17,31 @@ import java.util.List;
  */
 class GroupHelpExecutor<S extends Sender> implements Executor<S> {
 
+    private final Provider<Table> tableProvider;
+
+    @Option(name = "argument.page")
+    int page;
+
+    @Inject
+    public GroupHelpExecutor(Provider<Table> tableProvider) {
+        this.tableProvider = tableProvider;
+    }
+
     @Override
     public void execute(CommandContext<S> ctx, S sender) {
         GroupCommand<S> command = (GroupCommand<S>) ctx.getCommand();
 
+        Table table = tableProvider.get();
+
         LinkedList<Command> pre = new LinkedList<Command>();
         pre.push(command);
-        execute(command, sender, pre);
+        execute(command, sender, pre, table);
+
+        String help = table.render("Help", page);
+        sender.send(help);
     }
 
-    public void execute(GroupCommand<S> command, S sender, LinkedList<Command> pre) {
+    public void execute(GroupCommand<S> command, S sender, LinkedList<Command> pre, Table table) {
 
         if (!command.getSenderClass().isInstance(sender)) {
             return;
@@ -41,15 +60,15 @@ class GroupHelpExecutor<S extends Sender> implements Executor<S> {
                 append(builder, executableCommand, pre);
                 appendDesc(builder, cmd);
 
-                sender.send(builder.toString());
+                table.addRow(builder);
             } else {
                 append(builder, cmd, pre);
                 appendDesc(builder, cmd);
 
-                sender.send(builder.toString());
+                table.addRow(builder);
 
                 pre.push(cmd);
-                execute(((GroupCommand<S>) cmd), sender, pre);
+                execute(((GroupCommand<S>) cmd), sender, pre, table);
                 pre.pop();
             }
         }
