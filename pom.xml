@@ -100,6 +100,11 @@
 
     <repositories>
         <repository>
+            <id>md5</id>
+            <url>http://repo.md-5.net/content/groups/public/</url>
+        </repository>
+
+        <repository>
             <id>frederik-schmitt-releases</id>
             <url>http://repo.frederik-schmitt.de/content/repositories/oss-releases</url>
         </repository>
