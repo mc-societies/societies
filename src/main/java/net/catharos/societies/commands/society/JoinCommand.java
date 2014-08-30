@@ -11,11 +11,10 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.lib.core.command.reflect.Sender;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-
 import java.util.Set;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
@@ -24,13 +23,14 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * Represents a AbandonCommand
  */
 @Command(identifier = "command.join", async = true)
-public class JoinCommand implements Executor<SocietyMember> {
+@Sender(sender = Member.class)
+public class JoinCommand implements Executor<Member> {
 
     @Argument(name = "argument.society.target")
     Group target;
 
     @Override
-    public void execute(CommandContext<SocietyMember> ctx, final SocietyMember sender) {
+    public void execute(CommandContext<Member> ctx, final Member sender) {
         Set<Member> participants = target.getMembers();
         SimpleRequest request = new SimpleRequest(new SimpleRequestMessenger(), new SetInvolved(participants));
         request.start();

@@ -4,6 +4,7 @@ import net.catharos.lib.core.command.*;
 import net.catharos.lib.core.command.sender.Sender;
 import org.bukkit.ChatColor;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,31 +23,43 @@ class GroupHelpExecutor<S extends Sender> implements Executor<S> {
     }
 
     public void execute(GroupCommand<S> command, S sender, LinkedList<Command> pre) {
+
+        if (!command.getSenderClass().isInstance(sender)) {
+            return;
+        }
+
         for (Command<S> cmd : command.getChildren()) {
+
+            if (!cmd.getSenderClass().isInstance(sender)) {
+                continue;
+            }
+
             StringBuilder builder = new StringBuilder();
             if (cmd instanceof ExecutableCommand) {
                 ExecutableCommand executableCommand = (ExecutableCommand) cmd;
 
                 append(builder, executableCommand, pre);
                 appendDesc(builder, cmd);
+
+                sender.send(builder.toString());
             } else {
                 append(builder, cmd, pre);
                 appendDesc(builder, cmd);
+
+                sender.send(builder.toString());
+
                 pre.push(cmd);
                 execute(((GroupCommand<S>) cmd), sender, pre);
                 pre.pop();
             }
-
-            sender.send(builder.toString());
         }
     }
 
     private StringBuilder append(StringBuilder builder, Command<?> command, LinkedList<Command> pre) {
         builder.append(ChatColor.AQUA).append("  /");
 
-
-        for (Command cmd : pre) {
-            builder.append(cmd.getIdentifier()).append(' ');
+        for (Iterator<Command> it = pre.descendingIterator(); it.hasNext(); ) {
+            builder.append(it.next().getIdentifier()).append(' ');
         }
 
         builder.append(command.getIdentifier());

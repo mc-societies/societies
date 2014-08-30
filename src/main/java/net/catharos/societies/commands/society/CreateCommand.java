@@ -54,6 +54,6 @@ public class CreateCommand implements Executor<Sender> {
             group.addMember(((SocietyMember) sender));
         }
 
-        sender.send("society.created", name, name);
+        sender.send("society.created", name, tag);
     }
 }

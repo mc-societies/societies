@@ -33,7 +33,7 @@ class SQLStatePublisher extends AbstractPublisher implements GroupStatePublisher
 
     @Override
     public void publish(Member member, short state) {
-        Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_SOCIETY);
+        Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_STATE);
 
         query.bind(1, state);
         query.bind(2, UUIDGen.toByteArray(member.getUUID()));

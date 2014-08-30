@@ -40,7 +40,7 @@ import static net.catharos.societies.database.sql.SQLQueries.*;
  */
 class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<SocietyMember>, GroupProvider, GroupPublisher {
 
-    public static final int PREPARE = 0xFBEFABE;
+    public static final int PREPARE = DefaultGroup.PREPARE;
 
     private final PlayerProvider playerProvider;
     private final SQLQueries queries;
@@ -284,7 +284,9 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
     private Rank loadRank(Record2<byte[], String> rankRecord) {
         Rank rank = rankFactory.create(UUIDGen.toUUID(rankRecord.value1()), rankRecord.value2(), 0);
         rank.setState(PREPARE);
+
         loadSettings(rank, rankRecord.value1(), queries.getQuery(SQLQueries.SELECT_RANK_SETTINGS));
+
         rank.setState(0);
         return rank;
     }

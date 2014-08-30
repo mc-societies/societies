@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import javax.inject.Provider;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 /**
 * Represents a SocietiesListCommand
@@ -42,6 +43,14 @@ public class ListCommand implements Executor<Sender> {
     @Override
     public void execute(final CommandContext<Sender> ctx, final Sender sender) {
         ListenableFuture<Set<Group>> future = groupProvider.getGroups();
+
+        try {
+            Set<Group> groups = future.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         Futures.addCallback(future, new FutureCallback<Set<Group>>() {
             @Override

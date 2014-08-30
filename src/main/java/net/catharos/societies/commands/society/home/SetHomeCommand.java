@@ -9,6 +9,7 @@ import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
+import net.catharos.lib.core.command.reflect.Sender;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -17,6 +18,7 @@ import org.bukkit.entity.Player;
  * Represents a AbandonCommand
  */
 @Command(identifier = "command.home.set", async = true)
+@Sender(sender = SocietyMember.class)
 public class SetHomeCommand implements Executor<SocietyMember> {
 
     @Option(name = "argument.location")

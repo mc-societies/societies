@@ -128,6 +128,7 @@ public class CommandModule extends AbstractModule {
         bind(new TypeLiteral<CommandPipeline<Sender>>() {}).to(new TypeLiteral<DefaultCommandPipeline<Sender>>() {});
         beforePipeline().addBinding().to(new TypeLiteral<PermissionStep<Sender>>() {});
         beforePipeline().addBinding().to(PreCommandStep.class);
+        afterPipeline().addBinding().to(PostCommandStep.class);
 
         bindNamed("system-sender", Sender.class).to(BukkitSystemSender.class);
     }

@@ -5,6 +5,8 @@ import net.catharos.lib.core.command.SystemSender;
 import net.catharos.lib.core.i18n.Dictionary;
 import org.bukkit.command.ConsoleCommandSender;
 
+import java.text.MessageFormat;
+
 /**
  * Represents a BukkitSender
  */
@@ -22,5 +24,11 @@ public class BukkitSystemSender extends SystemSender {
     @Override
     public void send(String message) {
         sender.sendMessage(dictionary.getTranslation(message));
+    }
+
+
+    @Override
+    public void send(String message, Object... args) {
+        sender.sendMessage(MessageFormat.format(dictionary.getTranslation(message), args));
     }
 }
