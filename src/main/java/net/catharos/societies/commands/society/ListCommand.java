@@ -8,7 +8,6 @@ import net.catharos.groups.Group;
 import net.catharos.groups.GroupProvider;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
@@ -18,23 +17,20 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import javax.inject.Provider;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 /**
-* Represents a SocietiesListCommand
-*/
+ * Represents a SocietiesListCommand
+ */
 @Command(identifier = "command.list")
 public class ListCommand implements Executor<Sender> {
 
     private final GroupProvider groupProvider;
     private final Provider<Table> tableProvider;
-    private final RowFactory rowFactory;
 
     @Inject
-    public ListCommand(GroupProvider groupProvider, Provider<Table> tableProvider, RowFactory rowFactory) {
+    public ListCommand(GroupProvider groupProvider, Provider<Table> tableProvider) {
         this.groupProvider = groupProvider;
         this.tableProvider = tableProvider;
-        this.rowFactory = rowFactory;
     }
 
     @Option(name = "argument.page")
@@ -43,14 +39,6 @@ public class ListCommand implements Executor<Sender> {
     @Override
     public void execute(final CommandContext<Sender> ctx, final Sender sender) {
         ListenableFuture<Set<Group>> future = groupProvider.getGroups();
-
-        try {
-            Set<Group> groups = future.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
 
         Futures.addCallback(future, new FutureCallback<Set<Group>>() {
             @Override
@@ -62,7 +50,7 @@ public class ListCommand implements Executor<Sender> {
                 Table table = tableProvider.get();
 
                 for (Group group : result) {
-                    table.addRow(rowFactory.create(group));
+                    table.addForwardingRow(group);
                 }
 
                 sender.send(table.render(ctx.getName(), page));

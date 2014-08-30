@@ -8,12 +8,14 @@ import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
+import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.societies.member.SocietyMember;
 
+import javax.inject.Provider;
 import java.util.Collection;
 
 /**
@@ -95,6 +97,16 @@ public class RankCommand {
     @Command(identifier = "command.rank.list")
     public static class ListCommand implements Executor<Member> {
 
+        private final Provider<Table> tableProvider;
+
+        @Option(name = "argument.page")
+        int page;
+
+        @Inject
+        public ListCommand(Provider<Table> tableProvider) {
+            this.tableProvider = tableProvider;
+        }
+
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) {
             Group group = sender.getGroup();
@@ -106,11 +118,13 @@ public class RankCommand {
 
 
             Collection<Rank> ranks = group.getRanks();
-
+            Table table = tableProvider.get();
 
             for (Rank rank : ranks) {
-                sender.send(rank.getName());
+                table.addForwardingRow(rank);
             }
+
+            sender.send(table.render(ctx.getName(), page));
         }
     }
 

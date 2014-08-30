@@ -1,15 +1,19 @@
 package net.catharos.societies.commands.society.relation;
 
+import com.google.inject.Inject;
 import net.catharos.groups.Group;
 import net.catharos.groups.Relation;
 import net.catharos.groups.RelationFactory;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
+import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
+import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.societies.member.SocietyMember;
 
+import javax.inject.Provider;
 import java.util.Collection;
 
 /**
@@ -49,6 +53,16 @@ public class RelationCommand {
     @Command(identifier = "command.relation.list")
     public static class ListCommand implements Executor<SocietyMember> {
 
+        private final Provider<Table> tableProvider;
+
+        @Option(name = "argument.page")
+        int page;
+
+        @Inject
+        public ListCommand(Provider<Table> tableProvider) {
+            this.tableProvider = tableProvider;
+        }
+
         @Override
         public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
             Group group = sender.getGroup();
@@ -60,9 +74,13 @@ public class RelationCommand {
 
             Collection<Relation> relations = group.getRelations();
 
+            Table table = tableProvider.get();
+
             for (Relation relation : relations) {
-                sender.send(relation.getSource().getName() + " - " + relation.getTarget().getName());
+                table.addForwardingRow(relation);
             }
+
+            sender.send(table.render(ctx.getName(), page));
         }
     }
 

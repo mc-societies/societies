@@ -100,6 +100,11 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
     @Override
     public boolean onCommand(CommandSender sender, final Command command, String label, final String[] args) {
 
+        if (injector == null) {
+            sender.sendMessage("Societies failed to start somehow, sorry :/");
+            return true;
+        }
+
         if (sender instanceof Player) {
 
             ListenableFuture<SocietyMember> future = memberProvider.getMember(((Player) sender).getUniqueId());
