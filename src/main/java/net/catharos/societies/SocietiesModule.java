@@ -1,10 +1,10 @@
 package net.catharos.societies;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import net.catharos.lib.core.util.JarUtils;
+import com.typesafe.config.*;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import net.catharos.lib.shank.config.ConfigModule;
-import net.catharos.lib.shank.config.JSONSource;
+import net.catharos.lib.shank.config.TypeSafeConfigSource;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.bukkit.BukkitNameProvider;
 import net.catharos.societies.bukkit.BukkitPlayerProvider;
@@ -18,12 +18,12 @@ import net.catharos.societies.launcher.SocietiesPlugin;
 import net.catharos.societies.member.MemberModule;
 import net.catharos.societies.member.locale.LocaleModule;
 import net.catharos.societies.setting.SettingModule;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.UUID;
 
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
@@ -43,13 +43,42 @@ public class SocietiesModule extends AbstractServiceModule {
     protected void configure() {
         binder().disableCircularProxies();
         // Configuration
+//        try {
+//            JarUtils.extract("defaults", dataDirectory);
+//        } catch (URISyntaxException e) {
+//            throw new RuntimeException("Failed to create a URL of the code's source!", e);
+//        } catch (IOException e) {
+//            throw new RuntimeException("Failed to prepare resources!");
+//        }
+
+        ConfigParseOptions parseOptions = ConfigParseOptions.defaults()
+                .setSyntax(ConfigSyntax.CONF);
+
+        Config defaultConfig = ConfigFactory
+                .parseResources(SocietiesModule.class.getClassLoader(), "defaults/config.conf", parseOptions);
+
+        File file = new File(dataDirectory, "config.conf");
+
+        Config config = ConfigFactory.parseFile(file, parseOptions).withFallback(defaultConfig);
+
+        ConfigRenderOptions renderOptions = ConfigRenderOptions
+                .defaults()
+                .setOriginComments(false)
+                .setJson(false)
+                .setFormatted(true);
+
+        String rendered = config.root().render(renderOptions);
+
+
+        config = config.resolve();
+
         try {
-            JarUtils.extract("defaults", dataDirectory);
-        } catch (URISyntaxException e) {
-           throw new RuntimeException("Failed to create a URL of the code's source!", e);
+            FileUtils.writeStringToFile(file, rendered);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to prepare resources!");
+            e.printStackTrace();
         }
+
+        install(new ConfigModule(new TypeSafeConfigSource(config)));
 
         install(new SettingModule());
 
@@ -80,8 +109,6 @@ public class SocietiesModule extends AbstractServiceModule {
 
         // Dictionary
         install(new DictionaryModule(dataDirectory));
-
-        install(new ConfigModule(new JSONSource(new File(dataDirectory, "config.json"))));
 
         // Global stuff
         bind(Thread.UncaughtExceptionHandler.class).toInstance(new Thread.UncaughtExceptionHandler() {

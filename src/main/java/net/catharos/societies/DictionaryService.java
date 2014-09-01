@@ -3,25 +3,28 @@ package net.catharos.societies;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.typesafe.config.*;
 import net.catharos.lib.core.i18n.MutableDictionary;
-import net.catharos.lib.core.util.ExtensionFilter;
+import net.catharos.lib.core.util.JarUtils;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
+import java.util.jar.JarFile;
 
 /**
  * Represents a DictionaryService
  */
- class DictionaryService extends AbstractService {
+class DictionaryService extends AbstractService {
 
     private final MutableDictionary<String> dictionary;
     private final File directory;
@@ -39,21 +42,32 @@ import java.util.Properties;
     public void init(LifecycleContext context) throws Exception {
         logger.info("Loading language files!");
 
-        try {
-            for (File file : directory.listFiles(new ExtensionFilter("properties"))) {
-                String name = Files.getNameWithoutExtension(file.getName());
-                Locale locale = LocaleUtils.toLocale(name);
+        JarFile jar = JarUtils.getJarFile();
 
-                Properties properties = new Properties();
+        Map<String, InputStream> languages = JarUtils.listStreams(jar, "defaults/languages");
 
-                properties.load(new FileInputStream(file));
+        for (Map.Entry<String, InputStream> entry : languages.entrySet()) {
+            String file = entry.getKey();
+            String name = Files.getNameWithoutExtension(file);
+            Locale locale = LocaleUtils.toLocale(name);
 
-                for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-                    dictionary.addTranslation(locale, entry.getKey().toString(), entry.getValue().toString());
-                }
+            logger.info("Loading language: %s", name);
+
+            InputStreamReader reader = new InputStreamReader(entry.getValue());
+            ConfigParseOptions options = ConfigParseOptions.defaults().setSyntax(ConfigSyntax.PROPERTIES);
+            Config defaultConfig = ConfigFactory.parseReader(new BufferedReader(reader), options);
+            reader.close();
+
+            File output = new File(directory, file);
+            Config config = ConfigFactory.parseFile(output).withFallback(defaultConfig);
+
+            for (Map.Entry<String, ConfigValue> langEntry : config.entrySet()) {
+                dictionary.addTranslation(locale, langEntry.getKey(), langEntry.getValue().unwrapped().toString());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            FileUtils.writeStringToFile(output, config.root().render(ConfigRenderOptions.defaults().setOriginComments(false).setJson(false)));
         }
+
+        jar.close();
     }
 }
