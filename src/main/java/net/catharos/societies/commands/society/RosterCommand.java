@@ -19,7 +19,7 @@ import javax.inject.Provider;
 @Command(identifier = "command.roster")
 public class RosterCommand implements Executor<Sender> {
 
-    @Option(name = "argument.society.target")
+    @Option(name = "argument.target.society")
     Group target;
 
     private final Provider<Table> tableProvider;
@@ -42,7 +42,7 @@ public class RosterCommand implements Executor<Sender> {
         }
 
         if (target == null) {
-            sender.send("target.society.not.specified");
+            sender.send("target-society.not-specified");
             return;
         }
 

@@ -19,7 +19,7 @@ public class LeaveCommand implements Executor<SocietyMember> {
         if (group != null) {
             group.removeMember(sender);
             String name = group.getName();
-            sender.send("society.left", name, name);
+            sender.send("you.society-left", name, name);
             return;
         }
 

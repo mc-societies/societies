@@ -14,7 +14,7 @@ import net.catharos.lib.core.command.sender.Sender;
 @Command(identifier = "command.lookup")
 public class LookupCommand implements Executor<Sender> {
 
-    @Option(name = "argument.member.target")
+    @Option(name = "argument.target.member")
     Member target;
 
 

@@ -13,7 +13,7 @@ import net.catharos.lib.core.command.sender.Sender;
 @Command(identifier = "command.unverify")
 public class UnVerifyCommand implements Executor<Sender> {
 
-    @Argument(name = "argument.society.target")
+    @Argument(name = "argument.target.society")
     Group target;
 
     @Override

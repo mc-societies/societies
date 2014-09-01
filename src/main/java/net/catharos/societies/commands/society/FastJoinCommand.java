@@ -16,7 +16,7 @@ import net.catharos.lib.core.command.reflect.Sender;
 @Sender(sender = Member.class)
 public class FastJoinCommand implements Executor<Member> {
 
-    @Argument(name = "argument.society.target")
+    @Argument(name = "argument.target.society")
     Group target;
 
     @Override

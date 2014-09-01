@@ -16,10 +16,10 @@ import net.catharos.societies.member.SocietyMember;
 @Command(identifier = "command.rename", async = true)
 public class RenameCommand implements Executor<Sender> {
 
-    @Argument(name = "argument.society.name.new")
+    @Argument(name = "argument.society.name-new")
     String newName;
 
-    @Option(name = "argument.society.target")
+    @Option(name = "argument.target.society")
     Group target;
 
     @Override
@@ -28,12 +28,12 @@ public class RenameCommand implements Executor<Sender> {
             if (target == null) {
                 target = ((SocietyMember) sender).getGroup();
             } else {
-                sender.send("society.not.found");
+                sender.send("society.not-found");
             }
         }
 
         if (target == null) {
-            sender.send("target.society.not.specified");
+            sender.send("target-society.not-specified");
             return;
         }
 

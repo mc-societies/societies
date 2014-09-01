@@ -26,7 +26,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
 @Sender(sender = Member.class)
 public class JoinCommand implements Executor<Member> {
 
-    @Argument(name = "argument.society.target")
+    @Argument(name = "argument.target.society")
     Group target;
 
     @Override

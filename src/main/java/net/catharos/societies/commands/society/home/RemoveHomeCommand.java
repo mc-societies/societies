@@ -32,7 +32,7 @@ public class RemoveHomeCommand implements Executor<Member> {
         Group group = sender.getGroup();
 
         if (group == null) {
-            sender.send("society.not.found");
+            sender.send("society.not-found");
             return;
         }
 

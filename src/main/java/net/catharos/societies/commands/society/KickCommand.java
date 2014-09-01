@@ -15,7 +15,7 @@ import net.catharos.societies.member.SocietyMember;
 @Command(identifier = "command.kick")
 public class KickCommand implements Executor<SocietyMember> {
 
-    @Argument(name = "argument.member.target")
+    @Argument(name = "argument.target.member")
     Member target;
 
     @Override
@@ -23,12 +23,12 @@ public class KickCommand implements Executor<SocietyMember> {
         Group group = target.getGroup();
 
         if (group == null || !target.getGroup().equals(sender.getGroup())) {
-            sender.send("not.same.group", target.getName());
+            sender.send("member.not-same-group", target.getName());
             return;
         }
 
-        sender.send("you.kicked.member", target.getName());
-        target.send("kicked", group.getName());
+        sender.send("you.kicked-member", target.getName());
+        target.send("member.kicked", group.getName());
         group.removeMember(target);
     }
 }

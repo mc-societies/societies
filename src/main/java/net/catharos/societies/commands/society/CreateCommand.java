@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutionException;
 @Command(identifier = "command.create")
 public class CreateCommand implements Executor<Sender> {
 
-
     @Argument(name = "argument.society.name")
     String name;
 

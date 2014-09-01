@@ -19,7 +19,7 @@ import java.util.Collection;
 /**
  * Represents a RelationCommand
  */
-@Command(identifier = "command.relation")
+@Command(identifier = "command.relation.relation")
 @Children(children = {
         RelationCommand.CreateCommand.class,
         RelationCommand.RemoveCommand.class,
@@ -31,7 +31,7 @@ public class RelationCommand {
     @Command(identifier = "command.relation.remove")
     public static class RemoveCommand implements Executor<SocietyMember> {
 
-        @Argument(name = "argument.society.target")
+        @Argument(name = "argument.target.society")
         Group target;
 
         @Override
@@ -39,7 +39,7 @@ public class RelationCommand {
             Group group = sender.getGroup();
 
             if (group == null) {
-                sender.send("society.not.found");
+                sender.send("society.not-found");
                 return;
             }
 
@@ -68,7 +68,7 @@ public class RelationCommand {
             Group group = sender.getGroup();
 
             if (group == null) {
-                sender.send("society.not.found");
+                sender.send("society.not-found");
                 return;
             }
 
@@ -88,7 +88,7 @@ public class RelationCommand {
     @Command(identifier = "command.relation.create", async = true)
     public static class CreateCommand implements Executor<SocietyMember> {
 
-        @Argument(name = "argument.society.target")
+        @Argument(name = "argument.target.society")
         Group target;
 
         private final RelationFactory factory;
@@ -100,7 +100,7 @@ public class RelationCommand {
             Group group = sender.getGroup();
 
             if (group == null) {
-                sender.send("society.not.found");
+                sender.send("society.not-found");
                 return;
             }
 

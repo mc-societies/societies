@@ -1,6 +1,6 @@
 Commands:
 	Automatically find optional arguments without specifying them (e.g. --target)
-	Make group commands also executable (executor settable)
+	Make group commands also executable (executor settable) (HomeCommand)
 
 Commands:
 	Cancel requests
@@ -9,11 +9,56 @@ Commands:
 	group/member vitals
 	BulletinBoard
 
-Better config handling
+Config:
+   * Better config handling
+   * Ingame configuration
+   Settings:
+    	Pre check sender class
+    	drop-items-on-clan-home (item-list)
+    	teleport-home-on-spawn
+    	use-colorcode-from-prefix
+    	language
+    	rival-limit-percent
+    	min-size-to-set-rival
+    	clan.min-size-to-set-ally
+    	display-chat-tags
+    	unrivable-clans
+    	show-unverified-on-list
+    	blacklisted-worlds
+    	disallowed-tags (regex)
+    	new-clan-verification-required
+    	tag.default-color
+    	tag.max-length
+    	tag.min-length
+    	economy.purchase-clan-create
+        economy.creation-price
+        economy.purchase-clan-invite
+        economy.invite-price
+        economy.purchase-clan-verify
+        economy.verification-price
+        clan.max-length
+        clan.min-length
+        clan.trust-members-by-default
+		page.untrusted-color
+		page.trusted-color
+		page.size
+		clanchat.tag-based-clan-chat
+		purge.inactive-player-data-days
+		purge.inactive-clan-days
+		purge.unverified-clan-days
+
+
+		bb.color
+		bb.show-on-login
+
+        kill-weights.rival
+        kill-weights.neutral
+        kill-weights.civilian
 
 
 
-Config: Pre check sender class
+
+
 
 Supported databases:
 	* MySQL X

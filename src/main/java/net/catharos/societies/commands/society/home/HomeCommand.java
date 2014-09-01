@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 /**
  * Represents a AbandonCommand
  */
-@Command(identifier = "command.home", async = false)
+@Command(identifier = "command.home.home", async = false)
 @Sender(sender = SocietyMember.class)
 public class HomeCommand implements Executor<SocietyMember> {
 
@@ -32,14 +32,14 @@ public class HomeCommand implements Executor<SocietyMember> {
         Group group = sender.getGroup();
 
         if (group == null) {
-            sender.send("society.not.found");
+            sender.send("society.not-found");
             return;
         }
 
         Location location = group.get(homeSetting);
 
         if (location == null) {
-            sender.send("location.not.set");
+            sender.send("home.not-set");
             return;
         }
 

@@ -12,7 +12,7 @@ import net.catharos.lib.core.command.reflect.Option;
 @Command(identifier = "command.untrust")
 public class UnTrustCommand implements Executor<Member> {
 
-    @Option(name = "argument.member.target")
+    @Option(name = "argument.target.member")
     Member target;
 
     @Override

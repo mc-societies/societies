@@ -24,7 +24,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
 //todo simplify requests
 public class InviteCommand implements Executor<SocietyMember> {
 
-    @Argument(name = "argument.member.target")
+    @Argument(name = "argument.target.member")
     SocietyMember target;
 
     public static final String FAILED = "Invite failed! %s";

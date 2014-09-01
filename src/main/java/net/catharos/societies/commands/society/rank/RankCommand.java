@@ -21,7 +21,7 @@ import java.util.Collection;
 /**
  * Represents a RankCommand
  */
-@Command(identifier = "command.rank")
+@Command(identifier = "command.rank.rank")
 @Children(children = {
         RankCommand.CreateCommand.class,
         RankCommand.RemoveCommand.class,
@@ -53,7 +53,7 @@ public class RankCommand {
             Group group = sender.getGroup();
 
             if (group == null) {
-                sender.send("society.not.found");
+                sender.send("society.not-found");
                 return;
             }
 
@@ -77,14 +77,14 @@ public class RankCommand {
             Group group = sender.getGroup();
 
             if (group == null) {
-                sender.send("society.not.found");
+                sender.send("society.not-found");
                 return;
             }
 
             Rank rank = group.getRank(name);
 
             if (rank == null) {
-                sender.send("rank.not.found");
+                sender.send("rank.not-found");
                 return;
             }
 
@@ -112,7 +112,7 @@ public class RankCommand {
             Group group = sender.getGroup();
 
             if (group == null) {
-                sender.send("society.not.found");
+                sender.send("society.not-found");
                 return;
             }
 
@@ -140,14 +140,14 @@ public class RankCommand {
             Group group = sender.getGroup();
 
             if (group == null) {
-                sender.send("society.not.found");
+                sender.send("society.not-found");
                 return;
             }
 
             Rank rank = group.getRank(rankName);
 
             if (rank == null) {
-                sender.send("rank.not.found");
+                sender.send("rank.not-found");
                 return;
             }
 

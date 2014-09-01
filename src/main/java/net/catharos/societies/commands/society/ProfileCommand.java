@@ -16,7 +16,7 @@ import net.catharos.societies.NameProvider;
 @Command(identifier = "command.profile")
 public class ProfileCommand implements Executor<Sender> {
 
-    @Option(name = "argument.society.target")
+    @Option(name = "argument.target.society")
     Group target;
 
     private final NameProvider nameProvider;
@@ -31,7 +31,7 @@ public class ProfileCommand implements Executor<Sender> {
         }
 
         if (target == null) {
-            sender.send("target.society.not.specified");
+            sender.send("target-society.not-specified");
             return;
         }
 
