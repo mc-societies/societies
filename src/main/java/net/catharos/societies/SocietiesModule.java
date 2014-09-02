@@ -42,14 +42,6 @@ public class SocietiesModule extends AbstractServiceModule {
     @Override
     protected void configure() {
         binder().disableCircularProxies();
-        // Configuration
-//        try {
-//            JarUtils.extract("defaults", dataDirectory);
-//        } catch (URISyntaxException e) {
-//            throw new RuntimeException("Failed to create a URL of the code's source!", e);
-//        } catch (IOException e) {
-//            throw new RuntimeException("Failed to prepare resources!");
-//        }
 
         ConfigParseOptions parseOptions = ConfigParseOptions.defaults()
                 .setSyntax(ConfigSyntax.CONF);

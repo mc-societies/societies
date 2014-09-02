@@ -13,12 +13,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.jar.JarFile;
 
 /**
@@ -65,7 +63,57 @@ class DictionaryService extends AbstractService {
                 dictionary.addTranslation(locale, langEntry.getKey(), langEntry.getValue().unwrapped().toString());
             }
 
-            FileUtils.writeStringToFile(output, config.root().render(ConfigRenderOptions.defaults().setOriginComments(false).setJson(false)));
+            FileUtils.writeStringToFile(output, config.root()
+                    .render(ConfigRenderOptions.defaults().setOriginComments(false).setJson(false)));
+        }
+
+        jar.close();
+    }
+
+//    @Override
+    public void init0(LifecycleContext context) throws Exception {
+        logger.info("Loading language files!");
+
+        JarFile jar = JarUtils.getJarFile();
+
+        Map<String, InputStream> languages = JarUtils.listStreams(jar, "defaults/languages");
+
+        for (Map.Entry<String, InputStream> entry : languages.entrySet()) {
+            String file = entry.getKey();
+            String name = Files.getNameWithoutExtension(file);
+            Locale locale = LocaleUtils.toLocale(name);
+
+            logger.info("Loading language: %s", name);
+
+            Reader reader = new BufferedReader(new InputStreamReader(entry.getValue()));
+
+            Properties defaultConfig = new Properties();
+            defaultConfig.load(reader);
+
+            reader.close();
+
+            File output = new File(directory, file);
+            Properties config = new Properties();
+            if (output.exists()) {
+                config.load(reader);
+            }
+
+            defaultConfig.putAll(config);
+            config = defaultConfig;
+
+
+            for (Map.Entry<Object, Object> langEntry : config.entrySet()) {
+                dictionary.addTranslation(locale, langEntry.getKey().toString(), langEntry.getValue().toString());
+            }
+
+            if (!output.exists()) {
+                output.getParentFile().mkdirs();
+                output.createNewFile();
+            }
+
+            FileOutputStream outputStream = new FileOutputStream(output);
+            config.store(outputStream, "");
+            outputStream.close();
         }
 
         jar.close();
