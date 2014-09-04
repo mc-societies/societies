@@ -10,8 +10,8 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Sender;
 import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.teleport.TeleportController;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 /**
  * Represents a AbandonCommand
@@ -22,9 +22,12 @@ public class HomeCommand implements Executor<SocietyMember> {
 
     private final Setting<Location> homeSetting;
 
+    private final TeleportController teleportController;
+
     @Inject
-    public HomeCommand(@Named("home") Setting<Location> homeSetting) {
+    public HomeCommand(@Named("home") Setting<Location> homeSetting, TeleportController teleportController) {
         this.homeSetting = homeSetting;
+        this.teleportController = teleportController;
     }
 
     @Override
@@ -43,10 +46,6 @@ public class HomeCommand implements Executor<SocietyMember> {
             return;
         }
 
-        Player player = sender.toPlayer();
-
-        assert player != null : "Player not available!";
-
-        player.teleport(location);
+        teleportController.teleport(sender, location);
     }
 }
