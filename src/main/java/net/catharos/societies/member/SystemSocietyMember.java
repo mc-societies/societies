@@ -7,8 +7,10 @@ import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.groups.publisher.MemberRankPublisher;
 import net.catharos.groups.publisher.MemberStatePublisher;
 import net.catharos.lib.core.command.Command;
+import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.member.locale.LocaleProvider;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,7 +75,22 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
     }
 
     @Override
+    public <S extends Sender, R> R as(Executor<S, R> executor, Class<S> clazz) {
+        return null;
+    }
+
+    @Override
     public boolean hasPermission(Command command) {
         return true;
+    }
+
+    @Override
+    public EconomyResponse withdraw(double amount) {
+        return new EconomyResponse(amount, 0, EconomyResponse.ResponseType.SUCCESS, null);
+    }
+
+    @Override
+    public EconomyResponse deposit(double amount) {
+        return withdraw(amount);
     }
 }

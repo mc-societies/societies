@@ -21,7 +21,10 @@ import net.catharos.lib.shank.service.lifecycle.Lifecycle;
 import net.catharos.societies.SocietiesModule;
 import net.catharos.societies.bukkit.BukkitModule;
 import net.catharos.societies.database.sql.OnlineCacheMemberProvider;
+import net.catharos.societies.economy.DummyEconomy;
 import net.catharos.societies.member.SocietyMember;
+import net.milkbowl.vault.economy.Economy;
+import org.apache.logging.log4j.LogManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,6 +32,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
@@ -56,13 +60,23 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
     @Override
     public void onEnable() {
+        Economy economy;
+
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager()
+                .getRegistration(Economy.class);
+
+        if (economyProvider != null) {
+            economy = economyProvider.getProvider();
+        } else {
+            economy = new DummyEconomy();
+        }
 
         File dir = getDataFolder();
         injector = Guice.createInjector(
                 new ServiceModule(),
-                new LoggingModule(dir, LoggingHelper.createContext(SocietiesMain.class)),
+                new LoggingModule(dir, LogManager.getContext()/*LoggingHelper.createContext(SocietiesMain.class)*/),
                 new SocietiesModule(dir),
-                new BukkitModule(getServer(), this)
+                new BukkitModule(getServer(), this, economy)
         );
 
         serviceController = injector.getInstance(ServiceController.class);

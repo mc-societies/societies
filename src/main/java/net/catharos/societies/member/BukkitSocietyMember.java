@@ -8,10 +8,14 @@ import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.groups.publisher.MemberRankPublisher;
 import net.catharos.groups.publisher.MemberStatePublisher;
 import net.catharos.lib.core.command.Command;
+import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.i18n.Dictionary;
+import net.catharos.lib.core.util.CastSafe;
 import net.catharos.societies.NameProvider;
 import net.catharos.societies.PlayerProvider;
 import net.catharos.societies.member.locale.LocaleProvider;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +33,7 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
     private final LocaleProvider localeProvider;
     private final Dictionary<String> directory;
     private final NameProvider nameProvider;
+    private final Economy economy;
 
     @Inject
     public BukkitSocietyMember(Provider<UUID> uuid,
@@ -38,9 +43,9 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                MemberGroupPublisher societyPublisher,
                                NameProvider nameProvider,
                                MemberStatePublisher memberStatePublisher,
-                               MemberRankPublisher memberRankPublisher) {
+                               MemberRankPublisher memberRankPublisher, Economy economy) {
         this(uuid
-                .get(), playerProvider, localeProvider, directory, societyPublisher, nameProvider, memberStatePublisher, memberRankPublisher);
+                .get(), playerProvider, localeProvider, directory, economy, societyPublisher, nameProvider, memberStatePublisher, memberRankPublisher);
     }
 
     @AssistedInject
@@ -48,7 +53,7 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                PlayerProvider playerProvider,
                                LocaleProvider localeProvider,
                                Dictionary<String> dictionary,
-                               MemberGroupPublisher societyPublisher,
+                               Economy economy, MemberGroupPublisher societyPublisher,
                                NameProvider nameProvider,
                                MemberStatePublisher memberStatePublisher,
                                MemberRankPublisher memberRankPublisher) {
@@ -56,6 +61,7 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
         this.playerProvider = playerProvider;
         this.localeProvider = localeProvider;
         this.directory = dictionary;
+        this.economy = economy;
         this.nameProvider = nameProvider;
     }
 
@@ -108,6 +114,15 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
     }
 
     @Override
+    public <S extends Sender, R> R as(Executor<S, R> executor, Class<S> clazz) {
+        if (clazz.isAssignableFrom(getClass())) {
+            return executor.execute(CastSafe.<S>toGeneric(this));
+        }
+
+        return null;
+    }
+
+    @Override
     public boolean hasPermission(Command command) {
         Player player = toPlayer();
 
@@ -118,5 +133,15 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
     @Nullable
     public Player toPlayer() {
         return playerProvider.getPlayer(getUUID());
+    }
+
+    @Override
+    public EconomyResponse withdraw(double amount) {
+        return economy.withdrawPlayer(toPlayer(), amount);
+    }
+
+    @Override
+    public EconomyResponse deposit(double amount) {
+        return economy.depositPlayer(toPlayer(), amount);
     }
 }

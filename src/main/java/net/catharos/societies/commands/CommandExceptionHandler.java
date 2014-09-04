@@ -14,6 +14,7 @@ class CommandExceptionHandler implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         if (!(e instanceof CommandException)) {
+            e.printStackTrace();
             return;
         }
 
@@ -27,6 +28,5 @@ class CommandExceptionHandler implements Thread.UncaughtExceptionHandler {
         }  else if (e instanceof ExecuteException) {
             sender.send("Execution failed: " + e.getMessage());
         }
-
     }
 }

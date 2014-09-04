@@ -71,6 +71,8 @@ public class SocietiesModule extends AbstractServiceModule {
             e.printStackTrace();
         }
 
+        bind(Config.class).toInstance(config);
+
         install(new ConfigModule(new TypeSafeConfigSource(config)));
 
         install(new SettingModule());

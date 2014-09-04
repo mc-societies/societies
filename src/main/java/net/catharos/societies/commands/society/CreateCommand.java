@@ -1,7 +1,7 @@
 package net.catharos.societies.commands.society;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
+import com.typesafe.config.Config;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupFactory;
 import net.catharos.groups.GroupPublisher;
@@ -14,8 +14,6 @@ import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.societies.member.SocietyMember;
-
-import java.util.concurrent.ExecutionException;
 
 /**
  * Represents a CreateCommand
@@ -33,13 +31,18 @@ public class CreateCommand implements Executor<Sender> {
     private final GroupPublisher publisher;
     private final NameValidator nameValidator;
     private final TagValidator tagValidator;
+    private final double price;
 
     @Inject
-    public CreateCommand(GroupFactory groupFactory, GroupPublisher publisher, NameValidator nameValidator, TagValidator tagValidator) {
+    public CreateCommand(GroupFactory groupFactory,
+                         GroupPublisher publisher,
+                         NameValidator nameValidator, TagValidator tagValidator,
+                         Config config) {
         this.groupFactory = groupFactory;
         this.publisher = publisher;
         this.nameValidator = nameValidator;
         this.tagValidator = tagValidator;
+        this.price = config.getDouble("economy.creation-price");
     }
 
     @Override
@@ -59,16 +62,16 @@ public class CreateCommand implements Executor<Sender> {
             return;
         }
 
-        Group group = groupFactory.create(name, tag);
-        ListenableFuture<Group> future = publisher.publish(group);
+        if (!sender.as(new Sender.Executor<SocietyMember, Boolean>() {
+            @Override
+            public Boolean execute(SocietyMember sender) {return sender.withdraw(price).transactionSuccess(); }
 
-        try {
-            future.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        }, SocietyMember.class)) {
+            return;
         }
+
+        Group group = groupFactory.create(name, tag);
+        publisher.publish(group);
 
         if (sender instanceof SocietyMember) {
             group.addMember(((SocietyMember) sender));
