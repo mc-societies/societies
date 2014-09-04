@@ -46,6 +46,11 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
         return localeProvider.provide(this);
     }
 
+    @Override
+    public boolean hasPermission(String permission) {
+        return true;
+    }
+
     @Nullable
     @Override
     public Player toPlayer() {

@@ -7,6 +7,8 @@ import net.catharos.groups.GroupFactory;
 import net.catharos.groups.rank.DefaultRank;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
+import net.catharos.groups.validate.NameValidator;
+import net.catharos.groups.validate.TagValidator;
 import net.catharos.lib.shank.AbstractModule;
 
 /**
@@ -25,5 +27,8 @@ public class SocietyModule extends AbstractModule {
                 .build(GroupFactory.class));
 
         bind(Group.class).to(DefaultGroup.class);
+
+        bind(NameValidator.class).to(SimpleNameValidator.class);
+        bind(TagValidator.class).to(SimpleTagValidator.class);
     }
 }

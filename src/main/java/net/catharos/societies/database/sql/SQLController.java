@@ -122,42 +122,47 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
         // Preparing
         member.setState(PREPARE);
 
-        // Load society
-        byte[] rawSociety = record.getSociety();
+        try {
+            // Load society
+            byte[] rawSociety = record.getSociety();
 
-        if (rawSociety == null || rawSociety.length != UUIDGen.UUID_LENGTH) {
-            return member;
-        }
-
-        if (group == null) {
-            try {
-                member.setGroup(getGroup(UUIDGen.toUUID(rawSociety)).get());
-            } catch (InterruptedException e) {
-                throw new MemberException(uuid, e, "Failed to set group of member!");
-            } catch (ExecutionException e) {
-                throw new MemberException(uuid, e, "Failed to set group of member!");
+            if (rawSociety == null || rawSociety.length != UUIDGen.UUID_LENGTH) {
+                return member;
             }
-        } else {
-            member.setGroup(group);
-        }
 
-        if (group != null) {
-            //Load ranks
-            Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_RANKS);
-            query.bind(1, record.getUuid());
+            if (group == null) {
+                try {
+                    member.setGroup(getGroup(UUIDGen.toUUID(rawSociety)).get());
+                } catch (InterruptedException e) {
+                    throw new MemberException(uuid, e, "Failed to set group of member!");
+                } catch (ExecutionException e) {
+                    throw new MemberException(uuid, e, "Failed to set group of member!");
+                }
+            } else {
+                member.setGroup(group);
+            }
 
-            for (Record1<byte[]> rankRecord : query.fetch()) {
-                UUID rankUUID = UUIDGen.toUUID(rankRecord.value1());
-                Rank rank = group.getRank(rankUUID);
+            if (group != null) {
+                //Load ranks
+                Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_RANKS);
+                query.bind(1, record.getUuid());
 
-                if (rank != null) {
-                    member.addRank(rank);
+                for (Record1<byte[]> rankRecord : query.fetch()) {
+                    UUID rankUUID = UUIDGen.toUUID(rankRecord.value1());
+                    Rank rank = group.getRank(rankUUID);
+
+                    if (rank != null) {
+                        member.addRank(rank);
+                    }
                 }
             }
-        }
 
-        // Finished
-        member.setState(record.getState());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Finished
+            member.setState(record.getState());
+        }
 
         return member;
     }

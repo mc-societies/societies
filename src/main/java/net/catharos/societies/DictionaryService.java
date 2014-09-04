@@ -9,7 +9,6 @@ import net.catharos.lib.core.util.JarUtils;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.logging.log4j.Logger;
 
@@ -63,8 +62,8 @@ class DictionaryService extends AbstractService {
                 dictionary.addTranslation(locale, langEntry.getKey(), langEntry.getValue().unwrapped().toString());
             }
 
-            FileUtils.writeStringToFile(output, config.root()
-                    .render(ConfigRenderOptions.defaults().setOriginComments(false).setJson(false)));
+//            FileUtils.writeStringToFile(output, config.root()
+//                    .render(ConfigRenderOptions.defaults().setOriginComments(false).setJson(false)));
         }
 
         jar.close();

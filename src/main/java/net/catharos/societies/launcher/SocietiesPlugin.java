@@ -9,9 +9,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
-import net.catharos.groups.MemberFactory;
 import net.catharos.groups.MemberProvider;
-import net.catharos.groups.MemberPublisher;
 import net.catharos.lib.core.command.Commands;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.logging.LoggingHelper;
@@ -64,8 +62,9 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
                 new ServiceModule(),
                 new LoggingModule(dir, LoggingHelper.createContext(SocietiesMain.class)),
                 new SocietiesModule(dir),
-                new BukkitModule(getServer())
+                new BukkitModule(getServer(), this)
         );
+
         serviceController = injector.getInstance(ServiceController.class);
 
         serviceController.invoke(Lifecycle.INITIALISING);
@@ -133,13 +132,11 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
     @EventHandler
     public void onPlayerJoin(PlayerLoginEvent event) {
-        MemberPublisher<SocietyMember> publisher = injector
-                .getInstance(Key.get(new TypeLiteral<MemberPublisher<SocietyMember>>() {}));
+        MemberProvider<SocietyMember> provider = injector
+                .getInstance(Key.get(new TypeLiteral<MemberProvider<SocietyMember>>() {}));
 
-        MemberFactory<SocietyMember> memberFactory = injector
-                .getInstance(Key.get(new TypeLiteral<MemberFactory<SocietyMember>>() {}));
 
-        publisher.publish(memberFactory.create(event.getPlayer().getUniqueId()));
+        provider.getMember(event.getPlayer().getUniqueId());
     }
 
     @EventHandler

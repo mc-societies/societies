@@ -14,6 +14,8 @@ public interface SocietyMember extends Member, Sender {
 
     Locale getLocale();
 
+    boolean hasPermission(String permission);
+
     @Nullable
     Player toPlayer();
 }

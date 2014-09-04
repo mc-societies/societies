@@ -55,4 +55,20 @@ class LocationSetting extends Setting<Location> {
 
         return out.toByteArray();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LocationSetting that = (LocationSetting) o;
+
+        return getID() == that.getID();
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getID();
+    }
 }

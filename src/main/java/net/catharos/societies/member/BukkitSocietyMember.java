@@ -83,6 +83,16 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
     }
 
     @Override
+    public boolean hasPermission(String permission) {
+        Player player = toPlayer();
+        if (player == null) {
+            return false;
+        }
+
+        return player.hasPermission(permission);
+    }
+
+    @Override
     public void send(String message, Object... args) {
         Player player = toPlayer();
         if (player == null) {

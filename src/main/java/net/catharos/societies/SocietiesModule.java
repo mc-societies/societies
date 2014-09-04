@@ -18,6 +18,7 @@ import net.catharos.societies.launcher.SocietiesPlugin;
 import net.catharos.societies.member.MemberModule;
 import net.catharos.societies.member.locale.LocaleModule;
 import net.catharos.societies.setting.SettingModule;
+import net.catharos.societies.teleport.TeleportModule;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -122,6 +123,8 @@ public class SocietiesModule extends AbstractServiceModule {
         bind(NameProvider.class).to(BukkitNameProvider.class);
 
         bind(ReloadAction.class).to(SocietiesPlugin.class);
+
+        install(new TeleportModule());
     }
 
 }
