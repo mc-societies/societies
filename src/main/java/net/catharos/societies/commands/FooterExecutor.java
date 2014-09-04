@@ -11,7 +11,7 @@ import org.bukkit.ChatColor;
 /**
  * Represents a PreCommandStep
  */
-class PostCommandStep implements Executor<Sender> {
+class FooterExecutor implements Executor<Sender> {
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {

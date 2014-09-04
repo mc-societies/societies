@@ -33,6 +33,7 @@ import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.bukkit.BukkitSystemSender;
 import net.catharos.societies.bukkit.LocationParser;
 import net.catharos.societies.commands.society.SocietyCommand;
+import net.catharos.societies.commands.society.WorldExecutor;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.Location;
 
@@ -96,8 +97,9 @@ public class CommandModule extends AbstractModule {
 
         bind(new TypeLiteral<CommandPipeline<Sender>>() {}).to(new TypeLiteral<DefaultCommandPipeline<Sender>>() {});
         beforePipeline().addBinding().to(new TypeLiteral<PermissionStep<Sender>>() {});
-        beforePipeline().addBinding().to(PreCommandStep.class);
-        afterPipeline().addBinding().to(PostCommandStep.class);
+        beforePipeline().addBinding().to(HeaderExecutor.class);
+        beforePipeline().addBinding().to(WorldExecutor.class);
+        afterPipeline().addBinding().to(FooterExecutor.class);
 
         bindNamed("system-sender", Sender.class).to(BukkitSystemSender.class);
     }

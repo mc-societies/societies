@@ -10,7 +10,7 @@ import org.bukkit.ChatColor;
 /**
  * Represents a PreCommandStep
  */
-class PreCommandStep implements Executor<Sender> {
+class HeaderExecutor implements Executor<Sender> {
 
     public static final String GRAY = ChatColor.GRAY.toString();
     public static final String DARK_GRAY = ChatColor.DARK_GRAY.toString();
