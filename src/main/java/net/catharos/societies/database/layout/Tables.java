@@ -29,11 +29,6 @@ public class Tables {
 	public static final net.catharos.societies.database.layout.tables.Ranks RANKS = net.catharos.societies.database.layout.tables.Ranks.RANKS;
 
 	/**
-	 * The table societies.ranks_permissions
-	 */
-	public static final net.catharos.societies.database.layout.tables.RanksPermissions RANKS_PERMISSIONS = net.catharos.societies.database.layout.tables.RanksPermissions.RANKS_PERMISSIONS;
-
-	/**
 	 * The table societies.ranks_settings
 	 */
 	public static final net.catharos.societies.database.layout.tables.RanksSettings RANKS_SETTINGS = net.catharos.societies.database.layout.tables.RanksSettings.RANKS_SETTINGS;

@@ -11,7 +11,7 @@ package net.catharos.societies.database.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Societies extends org.jooq.impl.TableImpl<net.catharos.societies.database.layout.tables.records.SocietiesRecord> {
 
-	private static final long serialVersionUID = -5528984;
+	private static final long serialVersionUID = -1719641341;
 
 	/**
 	 * The singleton instance of <code>societies.societies</code>
@@ -91,7 +91,7 @@ public class Societies extends org.jooq.impl.TableImpl<net.catharos.societies.da
 	 */
 	@Override
 	public java.util.List<org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.SocietiesRecord>> getKeys() {
-		return java.util.Arrays.<org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.SocietiesRecord>>asList(net.catharos.societies.database.layout.Keys.KEY_SOCIETIES_PRIMARY);
+		return java.util.Arrays.<org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.SocietiesRecord>>asList(net.catharos.societies.database.layout.Keys.KEY_SOCIETIES_PRIMARY, net.catharos.societies.database.layout.Keys.KEY_SOCIETIES_UUID_UNIQUE);
 	}
 
 	/**

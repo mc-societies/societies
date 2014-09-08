@@ -11,7 +11,7 @@ package net.catharos.societies.database.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Members extends org.jooq.impl.TableImpl<net.catharos.societies.database.layout.tables.records.MembersRecord> {
 
-	private static final long serialVersionUID = 408364858;
+	private static final long serialVersionUID = 1868125261;
 
 	/**
 	 * The singleton instance of <code>societies.members</code>
@@ -45,6 +45,11 @@ public class Members extends org.jooq.impl.TableImpl<net.catharos.societies.data
 	 * The column <code>societies.members.society</code>.
 	 */
 	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.MembersRecord, byte[]> SOCIETY = createField("society", org.jooq.impl.SQLDataType.VARBINARY.length(16), this, "");
+
+	/**
+	 * The column <code>societies.members.lastActive</code>.
+	 */
+	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.MembersRecord, java.sql.Timestamp> LASTACTIVE = createField("lastActive", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
 	/**
 	 * Create a <code>societies.members</code> table reference
@@ -81,7 +86,7 @@ public class Members extends org.jooq.impl.TableImpl<net.catharos.societies.data
 	 */
 	@Override
 	public java.util.List<org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.MembersRecord>> getKeys() {
-		return java.util.Arrays.<org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.MembersRecord>>asList(net.catharos.societies.database.layout.Keys.KEY_MEMBERS_PRIMARY);
+		return java.util.Arrays.<org.jooq.UniqueKey<net.catharos.societies.database.layout.tables.records.MembersRecord>>asList(net.catharos.societies.database.layout.Keys.KEY_MEMBERS_PRIMARY, net.catharos.societies.database.layout.Keys.KEY_MEMBERS_UUID_UNIQUE);
 	}
 
 	/**
