@@ -12,7 +12,6 @@ import com.google.inject.name.Names;
 import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.Commands;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.lib.core.logging.LoggingHelper;
 import net.catharos.lib.database.Database;
 import net.catharos.lib.shank.logging.LoggingModule;
 import net.catharos.lib.shank.service.ServiceController;
@@ -72,12 +71,14 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
         }
 
         File dir = getDataFolder();
+
         injector = Guice.createInjector(
                 new ServiceModule(),
-                new LoggingModule(dir, LogManager.getContext()/*LoggingHelper.createContext(SocietiesMain.class)*/),
+                new LoggingModule(dir, LogManager.getContext()),
                 new SocietiesModule(dir),
                 new BukkitModule(getServer(), this, economy)
         );
+
 
         serviceController = injector.getInstance(ServiceController.class);
 

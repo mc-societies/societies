@@ -38,6 +38,7 @@ import static net.catharos.societies.database.sql.SQLQueries.*;
 /**
  * Represents a LoadingMemberProvider
  */
+// todo abstract and integrate caching
 class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<SocietyMember>, GroupProvider, GroupPublisher {
 
     public static final int PREPARE = DefaultGroup.PREPARE;
@@ -157,8 +158,6 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
                 }
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             // Finished
             member.setState(record.getState());

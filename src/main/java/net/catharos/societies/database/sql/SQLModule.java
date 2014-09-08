@@ -7,16 +7,18 @@ import net.catharos.groups.GroupPublisher;
 import net.catharos.groups.MemberProvider;
 import net.catharos.groups.MemberPublisher;
 import net.catharos.groups.publisher.*;
-import net.catharos.lib.shank.AbstractModule;
+import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.member.SocietyMember;
 
 /**
  * Represents a MemberProviderModule
  */
-public class SQLModule extends AbstractModule {
+public class SQLModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
+        bindService().to(CleanupService.class);
+
         bind(SQLQueries.class);
 
         Key<SQLController> controller = Key.get(SQLController.class);
@@ -38,7 +40,7 @@ public class SQLModule extends AbstractModule {
         //Publishers
         bind(MemberGroupPublisher.class).to(SQLMemberGroupPublisher.class);
         bind(NamePublisher.class).to(SQLNamePublisher.class);
-        bind(LastActivePublisher.class).to(SQLLastActivePublisher.class);
+        bind(GroupLastActivePublisher.class).to(SQLLastActivePublisher.class);
         bind(SettingPublisher.class).to(SQLSettingPublisher.class);
 
         // State publishers

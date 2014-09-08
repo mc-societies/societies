@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import net.catharos.groups.DefaultMember;
 import net.catharos.groups.publisher.MemberGroupPublisher;
+import net.catharos.groups.publisher.MemberLastActivePublisher;
 import net.catharos.groups.publisher.MemberRankPublisher;
 import net.catharos.groups.publisher.MemberStatePublisher;
 import net.catharos.lib.core.command.Command;
@@ -43,9 +44,11 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                MemberGroupPublisher societyPublisher,
                                NameProvider nameProvider,
                                MemberStatePublisher memberStatePublisher,
-                               MemberRankPublisher memberRankPublisher, Economy economy) {
+                               MemberRankPublisher memberRankPublisher,
+                               Economy economy,
+                               MemberLastActivePublisher lastActivePublisher) {
         this(uuid
-                .get(), playerProvider, localeProvider, directory, economy, societyPublisher, nameProvider, memberStatePublisher, memberRankPublisher);
+                .get(), playerProvider, localeProvider, directory, economy, societyPublisher, nameProvider, memberStatePublisher, memberRankPublisher, lastActivePublisher);
     }
 
     @AssistedInject
@@ -56,8 +59,9 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                Economy economy, MemberGroupPublisher societyPublisher,
                                NameProvider nameProvider,
                                MemberStatePublisher memberStatePublisher,
-                               MemberRankPublisher memberRankPublisher) {
-        super(uuid, societyPublisher, memberStatePublisher, memberRankPublisher);
+                               MemberRankPublisher memberRankPublisher,
+                               MemberLastActivePublisher lastActivePublisher) {
+        super(uuid, societyPublisher, memberStatePublisher, memberRankPublisher, lastActivePublisher);
         this.playerProvider = playerProvider;
         this.localeProvider = localeProvider;
         this.directory = dictionary;

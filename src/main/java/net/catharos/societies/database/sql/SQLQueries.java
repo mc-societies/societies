@@ -13,6 +13,8 @@ import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.types.UShort;
 
+import java.sql.Timestamp;
+
 import static net.catharos.societies.database.layout.Tables.*;
 
 /**
@@ -59,6 +61,8 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Insert> INSERT_SOCIETY_RANK = QueryKey.create();
     public static final QueryKey<Query> DROP_SOCIETY_RANK = QueryKey.create();
 
+    public static final QueryKey<Query> DROP_INACTIVE_SOCIETIES = QueryKey.create();
+
 
     //================================================================================
     // Ranks
@@ -68,6 +72,8 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Insert<RanksRecord>> INSERT_RANK = QueryKey.create();
 
     public static final QueryKey<Query> DROP_RANK = QueryKey.create();
+
+    public static final QueryKey<Query> DROP_RANK_ORPHANS = QueryKey.create();
 
 
     //================================================================================
@@ -85,12 +91,16 @@ class SQLQueries extends QueryProvider {
 
     public static final QueryKey<Query> DROP_MEMBER_BY_UUID = QueryKey.create();
 
+    public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER_LAST_ACTIVE = QueryKey.create();
+
 
     public static final QueryKey<Select<Record1<byte[]>>> SELECT_MEMBER_RANKS = QueryKey.create();
 
     public static final QueryKey<Insert> INSERT_MEMBER_RANK = QueryKey.create();
 
     public static final QueryKey<Query> DROP_MEMBER_RANK = QueryKey.create();
+
+    public static final QueryKey<Query> DROP_INACTIVE_MEMBERS = QueryKey.create();
 
 
     @Inject
@@ -246,6 +256,14 @@ class SQLQueries extends QueryProvider {
             }
         });
 
+        builder(DROP_INACTIVE_SOCIETIES, new QueryBuilder<Query>() {
+            @Override
+            public Query create(DSLContext context) {
+                return context.delete(SOCIETIES)
+                        .where(SOCIETIES.LASTACTIVE.le(new Timestamp(System.currentTimeMillis())));
+            }
+        });
+
         //================================================================================
         // Rank
         //================================================================================
@@ -262,6 +280,15 @@ class SQLQueries extends QueryProvider {
             @Override
             public Query create(DSLContext context) {
                 return context.delete(RANKS).where(RANKS.UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(DROP_RANK_ORPHANS, new QueryBuilder<Query>() {
+            @Override
+            public Query create(DSLContext context) {
+                return context.delete(RANKS)
+                        .where(RANKS.UUID.notIn(context.select(SOCIETIES_RANKS.RANK).from(SOCIETIES_RANKS))
+                                .and(RANKS.UUID.notIn(context.select(MEMBERS_RANKS.RANK).from(MEMBERS_RANKS))));
             }
         });
 
@@ -293,7 +320,8 @@ class SQLQueries extends QueryProvider {
                 return context
                         .insertInto(MEMBERS)
                         .set(MEMBERS.UUID, DEFAULT_BYTE_ARRAY)
-                        .set(MEMBERS.SOCIETY, DEFAULT_BYTE_ARRAY);
+                        .set(MEMBERS.SOCIETY, DEFAULT_BYTE_ARRAY)
+                        .set(MEMBERS.LASTACTIVE, DSL.currentTimestamp());
             }
         });
 
@@ -335,6 +363,23 @@ class SQLQueries extends QueryProvider {
             @Override
             public Query create(DSLContext context) {
                 return context.delete(MEMBERS_RANKS).where(MEMBERS_RANKS.RANK.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(DROP_INACTIVE_MEMBERS, new QueryBuilder<Query>() {
+            @Override
+            public Query create(DSLContext context) {
+                return context.delete(MEMBERS)
+                        .where(MEMBERS.CREATED.le(new Timestamp(System.currentTimeMillis())));
+            }
+        });
+
+        builder(UPDATE_MEMBER_LAST_ACTIVE, new QueryBuilder<Update<MembersRecord>>() {
+            @Override
+            public Update<MembersRecord> create(DSLContext context) {
+                return context.update(MEMBERS)
+                        .set(MEMBERS.LASTACTIVE, DEFAULT_TIMESTAMP)
+                        .where(MEMBERS.UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });
 
