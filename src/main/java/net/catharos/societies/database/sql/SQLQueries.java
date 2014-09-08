@@ -59,7 +59,7 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Insert> INSERT_SOCIETY_RANK = QueryKey.create();
     public static final QueryKey<Query> DROP_SOCIETY_RANK = QueryKey.create();
 
-    public static final QueryKey<Query> DROP_INACTIVE_SOCIETIES = QueryKey.create();
+    public static final QueryKey<Query> DROP_ORPHAN_SOCIETIES = QueryKey.create();
 
 
     //================================================================================
@@ -165,8 +165,7 @@ class SQLQueries extends QueryProvider {
                         .insertInto(SOCIETIES)
                         .set(SOCIETIES.UUID, DEFAULT_BYTE_ARRAY)
                         .set(SOCIETIES.NAME, DEFAULT_STRING)
-                        .set(SOCIETIES.TAG, DEFAULT_STRING)
-                        .set(SOCIETIES.LASTACTIVE, DSL.currentTimestamp());
+                        .set(SOCIETIES.TAG, DEFAULT_STRING);
             }
         });
 
@@ -245,11 +244,11 @@ class SQLQueries extends QueryProvider {
             }
         });
 
-        builder(DROP_INACTIVE_SOCIETIES, new QueryBuilder<Query>() {
+        builder(DROP_ORPHAN_SOCIETIES, new QueryBuilder<Query>() {
             @Override
             public Query create(DSLContext context) {
                 return context.delete(SOCIETIES)
-                        .where(SOCIETIES.LASTACTIVE.le(new Timestamp(System.currentTimeMillis())));
+                        .where(SOCIETIES.UUID.notIn(context.select(MEMBERS.SOCIETY).from(MEMBERS)));
             }
         });
 

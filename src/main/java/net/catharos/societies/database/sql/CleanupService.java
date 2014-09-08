@@ -16,9 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class CleanupService extends AbstractService {
 
-    private final long societiesMillis;
     private final long memberMillis;
-    private final long unverifiedMillis;
     private final SQLQueries queries;
 
     @InjectLogger
@@ -27,9 +25,7 @@ public class CleanupService extends AbstractService {
     @Inject
     public CleanupService(SQLQueries queries, Config config) {
         this.queries = queries;
-        this.societiesMillis = config.getDuration("purge.inactive-societies", TimeUnit.MILLISECONDS);
         this.memberMillis = config.getDuration("purge.inactive-members", TimeUnit.MILLISECONDS);
-        this.unverifiedMillis = config.getDuration("purge.unverified-societies", TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -37,20 +33,19 @@ public class CleanupService extends AbstractService {
         long current = System.currentTimeMillis();
         Query query;
 
-        query = queries.getQuery(SQLQueries.DROP_INACTIVE_SOCIETIES);
-        query.bind(1, new Timestamp(current - societiesMillis));
-        int societies = query.execute();
-
-        logger.info("Dropped %s societies because of inactivity.", societies);
-
         query = queries.getQuery(SQLQueries.DROP_INACTIVE_MEMBERS);
         query.bind(1, new Timestamp(current - memberMillis));
         int members = query.execute();
-
         logger.info("Dropped %s members because of inactivity.", members);
+
+
+        query = queries.getQuery(SQLQueries.DROP_ORPHAN_SOCIETIES);
+        int societies = query.execute();
+        logger.info("Dropped %s societies because of inactivity.", societies);
 
         // Delete rank orphans
         query = queries.getQuery(SQLQueries.DROP_RANK_ORPHANS);
-        query.execute();
+        int ranks = query.execute();
+        logger.info("Dropped %s ranks because of inactivity.", ranks);
     }
 }
