@@ -11,7 +11,7 @@ package net.catharos.societies.database.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Societies extends org.jooq.impl.TableImpl<net.catharos.societies.database.layout.tables.records.SocietiesRecord> {
 
-	private static final long serialVersionUID = -1719641341;
+	private static final long serialVersionUID = 1041678638;
 
 	/**
 	 * The singleton instance of <code>societies.societies</code>
@@ -50,11 +50,6 @@ public class Societies extends org.jooq.impl.TableImpl<net.catharos.societies.da
 	 * The column <code>societies.societies.state</code>.
 	 */
 	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.SocietiesRecord, java.lang.Short> STATE = createField("state", org.jooq.impl.SQLDataType.SMALLINT.defaulted(true), this, "");
-
-	/**
-	 * The column <code>societies.societies.lastActive</code>.
-	 */
-	public final org.jooq.TableField<net.catharos.societies.database.layout.tables.records.SocietiesRecord, java.sql.Timestamp> LASTACTIVE = createField("lastActive", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
 	/**
 	 * Create a <code>societies.societies</code> table reference

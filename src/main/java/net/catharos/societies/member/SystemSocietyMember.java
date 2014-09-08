@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import net.catharos.groups.DefaultMember;
 import net.catharos.groups.publisher.MemberGroupPublisher;
-import net.catharos.groups.publisher.MemberLastActivePublisher;
+import net.catharos.groups.publisher.LastActivePublisher;
 import net.catharos.groups.publisher.MemberRankPublisher;
 import net.catharos.groups.publisher.MemberStatePublisher;
 import net.catharos.lib.core.command.Command;
@@ -34,7 +34,7 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
                                MemberGroupPublisher societyPublisher,
                                MemberStatePublisher memberStatePublisher,
                                MemberRankPublisher memberRankPublisher,
-                               MemberLastActivePublisher lastActivePublisher) {
+                               LastActivePublisher lastActivePublisher) {
         super(uuid.get(), societyPublisher, memberStatePublisher, memberRankPublisher, lastActivePublisher);
         this.localeProvider = localeProvider;
         this.directory = dictionary;

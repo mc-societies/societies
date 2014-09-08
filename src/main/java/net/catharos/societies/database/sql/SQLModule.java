@@ -40,8 +40,8 @@ public class SQLModule extends AbstractServiceModule {
         //Publishers
         bind(MemberGroupPublisher.class).to(SQLMemberGroupPublisher.class);
         bind(NamePublisher.class).to(SQLNamePublisher.class);
-        bind(GroupLastActivePublisher.class).to(SQLLastActivePublisher.class);
         bind(SettingPublisher.class).to(SQLSettingPublisher.class);
+        bind(LastActivePublisher.class).to(SQLLastActivePublisher.class);
 
         // State publishers
         Key<SQLStatePublisher> statePublisherKey = Key.get(SQLStatePublisher.class);
