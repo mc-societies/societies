@@ -1,4 +1,4 @@
-#Societies ![alt text](https://travis-ci.org/Catharos/Societies.svg)
+#Societies ![build](https://travis-ci.org/Catharos/Societies.svg) ![wtfpl](http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-1.png)
 
 ## Motivation
 
@@ -39,3 +39,5 @@ We use maven to handle our dependencies.
 ## Contributing
 
 Currently, me - p000ison (Max A.) - is the only person who's working on this project, but this will hopefully change after release. You can contact me over at irc.esper.net @ #SimpleClans
+
+![wtfpl](http://www.wtfpl.net/wp-content/uploads/2012/12/logo-220x1601.png)
