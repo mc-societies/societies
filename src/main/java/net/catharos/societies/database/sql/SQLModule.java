@@ -8,6 +8,8 @@ import net.catharos.groups.MemberProvider;
 import net.catharos.groups.MemberPublisher;
 import net.catharos.groups.publisher.*;
 import net.catharos.lib.shank.service.AbstractServiceModule;
+import net.catharos.societies.group.OnlineGroupCache;
+import net.catharos.societies.member.OnlineMemberCache;
 import net.catharos.societies.member.SocietyMember;
 
 /**
@@ -21,21 +23,23 @@ public class SQLModule extends AbstractServiceModule {
 
         bind(SQLQueries.class);
 
-        Key<SQLController> controller = Key.get(SQLController.class);
+        Key<SQLMemberController> memberController = Key.get(SQLMemberController.class);
+        Key<SQLGroupController> groupController = Key.get(SQLGroupController.class);
 
         // Member publisher
-        bind(new TypeLiteral<MemberPublisher<SocietyMember>>() {}).to(controller);
+        bind(new TypeLiteral<MemberPublisher<SocietyMember>>() {}).to(memberController);
 
         // Member provider
-        bindNamed("forward", new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(controller);
+        bindNamed("forward", new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(memberController);
         bind(new TypeLiteral<MemberProvider<SocietyMember>>() {})
-                .to(new TypeLiteral<OnlineCacheMemberProvider<SocietyMember>>() {});
+                .to(new TypeLiteral<OnlineMemberCache<SocietyMember>>() {});
 
         // Group provider
-        bind(GroupProvider.class).to(controller);
+        bindNamed("forward", GroupProvider.class).to(groupController);
+        bind(GroupProvider.class).to(OnlineGroupCache.class);
 
         // Group publisher
-        bind(GroupPublisher.class).to(controller);
+        bind(GroupPublisher.class).to(groupController);
 
         //Publishers
         bind(MemberGroupPublisher.class).to(SQLMemberGroupPublisher.class);

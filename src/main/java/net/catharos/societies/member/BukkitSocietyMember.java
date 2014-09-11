@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import net.catharos.groups.DefaultMember;
-import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.groups.publisher.LastActivePublisher;
+import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.groups.publisher.MemberRankPublisher;
 import net.catharos.groups.publisher.MemberStatePublisher;
 import net.catharos.lib.core.command.Command;
@@ -85,6 +85,11 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
     @Nullable
     public String getName() {
         return nameProvider.getName(getUUID());
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return toPlayer() != null;
     }
 
     @Override

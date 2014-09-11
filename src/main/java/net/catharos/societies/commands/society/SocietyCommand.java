@@ -20,6 +20,7 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
         CreateCommand.class,
         RenameCommand.class,
         ProfileCommand.class,
+        LookupCommand.class,
         RosterCommand.class,
         ListCommand.class,
         InviteCommand.class,

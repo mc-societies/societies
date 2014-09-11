@@ -46,6 +46,11 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
     }
 
     @Override
+    public boolean isAvailable() {
+        return true;
+    }
+
+    @Override
     public Locale getLocale() {
         return localeProvider.provide(this);
     }

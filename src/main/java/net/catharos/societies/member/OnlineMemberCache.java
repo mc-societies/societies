@@ -1,7 +1,6 @@
-package net.catharos.societies.database.sql;
+package net.catharos.societies.member;
 
 import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -14,11 +13,14 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static com.google.common.util.concurrent.Futures.immediateFuture;
+
 /**
  * Represents a OnlineCacheMemberProvider
  */
 @Singleton
-public class OnlineCacheMemberProvider<M extends Member> implements MemberProvider<M> {
+public class OnlineMemberCache<M extends Member> implements MemberProvider<M> {
 
     private final THashMap<UUID, M> members = new THashMap<UUID, M>();
 
@@ -26,7 +28,7 @@ public class OnlineCacheMemberProvider<M extends Member> implements MemberProvid
     private final PlayerProvider provider;
 
     @Inject
-    public OnlineCacheMemberProvider(@Named("forward") MemberProvider<M> forward, PlayerProvider provider) {
+    public OnlineMemberCache(@Named("forward") MemberProvider<M> forward, PlayerProvider provider) {
         this.forward = forward;
         this.provider = provider;
     }
@@ -34,40 +36,33 @@ public class OnlineCacheMemberProvider<M extends Member> implements MemberProvid
     @Override
     public ListenableFuture<M> getMember(UUID uuid) {
         Player player = provider.getPlayer(uuid);
-
         return handle(player, uuid);
     }
 
     public ListenableFuture<M> handle(Player player, UUID uuid) {
+        if (player == null) {
+            return forward.getMember(uuid);
+        }
 
-        ListenableFuture<M> future = null;
+        M societyMember = members.get(uuid);
 
-        if (player != null) {
-            M societyMember = members.get(uuid);
+        if (societyMember != null) {
+            return immediateFuture(societyMember);
+        }
 
-            if (societyMember != null) {
-                return Futures.immediateFuture(societyMember);
+        ListenableFuture<M> future = forward.getMember(uuid);
+
+        addCallback(future, new FutureCallback<M>() {
+            @Override
+            public void onSuccess(M result) {
+                members.put(result.getUUID(), result);
             }
 
+            @Override
+            public void onFailure(Throwable t) {
 
-            future = forward.getMember(uuid);
-
-            Futures.addCallback(future, new FutureCallback<M>() {
-                @Override
-                public void onSuccess(M result) {
-                    members.put(result.getUUID(), result);
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-
-                }
-            });
-        }
-
-        if (future == null) {
-            future = forward.getMember(uuid);
-        }
+            }
+        });
 
         return future;
     }
@@ -78,7 +73,7 @@ public class OnlineCacheMemberProvider<M extends Member> implements MemberProvid
         return handle(player, player.getUniqueId());
     }
 
-    public void clear(UUID uuid) {
-        this.members.remove(uuid);
+    public M clear(UUID uuid) {
+        return this.members.remove(uuid);
     }
 }

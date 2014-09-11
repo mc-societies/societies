@@ -9,6 +9,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
+import net.catharos.groups.Group;
 import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.Commands;
 import net.catharos.lib.core.command.sender.Sender;
@@ -19,8 +20,9 @@ import net.catharos.lib.shank.service.ServiceModule;
 import net.catharos.lib.shank.service.lifecycle.Lifecycle;
 import net.catharos.societies.SocietiesModule;
 import net.catharos.societies.bukkit.BukkitModule;
-import net.catharos.societies.database.sql.OnlineCacheMemberProvider;
 import net.catharos.societies.economy.DummyEconomy;
+import net.catharos.societies.group.OnlineGroupCache;
+import net.catharos.societies.member.OnlineMemberCache;
 import net.catharos.societies.member.SocietyMember;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.logging.log4j.LogManager;
@@ -51,6 +53,8 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
     private Commands<Sender> commands;
     private MemberProvider<SocietyMember> memberProvider;
     private ServiceController serviceController;
+    private OnlineMemberCache<SocietyMember> memberCache;
+    private OnlineGroupCache groupCache;
 
     @Override
     public void onLoad() {
@@ -88,6 +92,8 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
         getServer().getPluginManager().registerEvents(this, this);
         commands = injector.getInstance(Key.get(new TypeLiteral<Commands<Sender>>() {}));
         memberProvider = injector.getInstance(Key.get(new TypeLiteral<MemberProvider<SocietyMember>>() {}));
+        memberCache = injector.getInstance(Key.get(new TypeLiteral<OnlineMemberCache<SocietyMember>>() {}));
+        groupCache = injector.getInstance(OnlineGroupCache.class);
 
         serviceController.invoke(Lifecycle.STARTING);
     }
@@ -156,9 +162,14 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        OnlineCacheMemberProvider cache = injector
-                .getInstance(Key.get(new TypeLiteral<OnlineCacheMemberProvider<SocietyMember>>() {}));
-        cache.clear(event.getPlayer().getUniqueId());
+        SocietyMember member = memberCache.clear(event.getPlayer().getUniqueId());
+
+        if (member != null) {
+            Group group = member.getGroup();
+            if (group != null) {
+                groupCache.clear(member, group);
+            }
+        }
     }
 
     @Override

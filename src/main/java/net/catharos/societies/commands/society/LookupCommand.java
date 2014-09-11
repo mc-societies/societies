@@ -7,6 +7,8 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.sender.Sender;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 /**
  * Represents a SocietyProfile
@@ -32,8 +34,8 @@ public class LookupCommand implements Executor<Sender> {
         sender.send("Name: " + target.getName());
         sender.send("UUID: " + target.getUUID());
         sender.send("Group: " + target.getGroup());
-        sender.send("Last Seen: ");
-        sender.send("Inactive: ");
+        sender.send("Last Seen: " + target.getLastActive());
+        sender.send("Inactive: " + new Interval(target.getLastActive(), DateTime.now()));
         sender.send("Join Date: ");
         sender.send("Ranks:");
         for (Rank rank : target.getRanks()) {

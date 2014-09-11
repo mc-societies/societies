@@ -1,3 +1,8 @@
+2 methods:
+	* Keep cached when player is online
+	* Zero caching
+
+
 Commands:
 	Automatically find optional arguments without specifying them (e.g. --target)
 	Make group commands also executable (executor settable) (HomeCommand)

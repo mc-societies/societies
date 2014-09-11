@@ -17,13 +17,8 @@ import net.catharos.groups.setting.target.SimpleTarget;
 import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
-import net.catharos.societies.PlayerProvider;
-import net.catharos.societies.database.layout.tables.records.MembersRecord;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
-import net.catharos.societies.member.MemberException;
-import net.catharos.societies.member.SocietyMember;
-import org.bukkit.entity.Player;
 import org.jooq.*;
 import org.jooq.types.UShort;
 
@@ -38,177 +33,31 @@ import static net.catharos.societies.database.sql.SQLQueries.*;
 /**
  * Represents a LoadingMemberProvider
  */
-// todo abstract and integrate caching
-class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<SocietyMember>, GroupProvider, GroupPublisher {
+class SQLGroupController implements GroupProvider, GroupPublisher {
 
     public static final int PREPARE = DefaultGroup.PREPARE;
 
-    private final PlayerProvider playerProvider;
     private final SQLQueries queries;
     private final ListeningExecutorService service;
     private final GroupFactory groupFactory;
-    private final MemberFactory<SocietyMember> memberFactory;
     private final SettingProvider settingProvider;
     private final RankFactory rankFactory;
 
+    private final SQLMemberController memberController;
+
     @Inject
-    public SQLController(PlayerProvider playerProvider,
-                         SQLQueries queries,
-                         ListeningExecutorService service,
-                         GroupFactory groupFactory, MemberFactory<SocietyMember> memberFactory,
-                         SettingProvider settingProvider,
-                         RankFactory rankFactory) {
-        this.playerProvider = playerProvider;
+    public SQLGroupController(SQLQueries queries,
+                              ListeningExecutorService service,
+                              GroupFactory groupFactory,
+                              SettingProvider settingProvider,
+                              RankFactory rankFactory,
+                              SQLMemberController memberController) {
         this.queries = queries;
         this.service = service;
         this.groupFactory = groupFactory;
-        this.memberFactory = memberFactory;
         this.settingProvider = settingProvider;
         this.rankFactory = rankFactory;
-    }
-
-    //================================================================================
-    // Members
-    //================================================================================
-
-    @Override
-    public ListenableFuture<SocietyMember> getMember(String name) {
-        Player player = playerProvider.getPlayer(name);
-
-        if (player == null) {
-            return Futures.immediateCheckedFuture(null);
-        }
-
-        return getMember(player.getUniqueId());
-    }
-
-    @Override
-    public ListenableFuture<SocietyMember> getMember(UUID uuid) {
-        return getMember(uuid, null);
-    }
-
-    public ListenableFuture<SocietyMember> getMember(final UUID uuid, final Group group) {
-        return queryMember(uuid, new Function<Result<MembersRecord>, SocietyMember>() {
-            @Nullable
-            @Override
-            public SocietyMember apply(@Nullable Result<MembersRecord> input) {
-                return evaluateMember(uuid, group, input);
-            }
-        });
-    }
-
-    private ListenableFuture<SocietyMember> queryMember(UUID uuid, Function<Result<MembersRecord>, SocietyMember> transformer) {
-        Select<MembersRecord> query = queries.getQuery(SQLQueries.SELECT_MEMBER_BY_UUID);
-        query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
-
-        ListenableFuture<Result<MembersRecord>> future = queries.query(service, query);
-
-        return Futures.transform(future, transformer);
-    }
-
-    private SocietyMember evaluateMember(UUID uuid, Group group, Result<MembersRecord> input) {
-        if (input == null) {
-            return null;
-        }
-
-        if (input.isEmpty()) {
-            return memberFactory.create(uuid);
-        } else if (input.size() > 1) {
-            throw new MemberException(uuid, "There are more users with the same uuid?!");
-        }
-
-        MembersRecord record = input.get(0);
-
-        SocietyMember member = memberFactory.create(UUIDGen.toUUID(record.getUuid()));
-        // Preparing
-        member.setState(PREPARE);
-
-        try {
-            // Load society
-            byte[] rawSociety = record.getSociety();
-
-            if (rawSociety == null || rawSociety.length != UUIDGen.UUID_LENGTH) {
-                return member;
-            }
-
-            if (group == null) {
-                try {
-                    member.setGroup(getGroup(UUIDGen.toUUID(rawSociety)).get());
-                } catch (InterruptedException e) {
-                    throw new MemberException(uuid, e, "Failed to set group of member!");
-                } catch (ExecutionException e) {
-                    throw new MemberException(uuid, e, "Failed to set group of member!");
-                }
-            } else {
-                member.setGroup(group);
-            }
-
-            if (group != null) {
-                //Load ranks
-                Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_RANKS);
-                query.bind(1, record.getUuid());
-
-                for (Record1<byte[]> rankRecord : query.fetch()) {
-                    UUID rankUUID = UUIDGen.toUUID(rankRecord.value1());
-                    Rank rank = group.getRank(rankUUID);
-
-                    if (rank != null) {
-                        member.addRank(rank);
-                    }
-                }
-            }
-
-        } finally {
-            // Finished
-            member.setState(record.getState());
-        }
-
-        return member;
-    }
-
-    //================================================================================
-    // Publisher
-    //================================================================================
-
-    @Override
-    public ListenableFuture<SocietyMember> publish(final SocietyMember member) {
-        return service.submit(new Callable<SocietyMember>() {
-            @Override
-            public SocietyMember call() throws Exception {
-                Insert<MembersRecord> query = queries.getQuery(SQLQueries.INSERT_MEMBER);
-
-                query.bind(1, UUIDGen.toByteArray(member.getUUID()));
-
-                Object group = null;
-
-                if (member.getGroup() != null) {
-                    group = UUIDGen.toByteArray(member.getGroup().getUUID());
-                }
-                query.bind(2, group);
-
-                query.execute();
-
-                return member;
-            }
-        });
-    }
-
-    //================================================================================
-    // Drop
-    //================================================================================
-
-    @Override
-    public ListenableFuture<?> drop(final SocietyMember member) {
-        return service.submit(new Runnable() {
-            @Override
-            public void run() {
-                Query query = queries.getQuery(SQLQueries.DROP_MEMBER_BY_UUID);
-
-                query.bind(1, UUIDGen.toByteArray(member.getUUID()));
-
-                query.execute();
-            }
-        });
+        this.memberController = memberController;
     }
 
     //================================================================================
@@ -217,13 +66,17 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
 
     @Override
     public ListenableFuture<Group> getGroup(UUID uuid) {
+        return getGroup(uuid, null);
+    }
+
+    public ListenableFuture<Group> getGroup(UUID uuid, Member predefined) {
         Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
-        return querySingleGroup(uuid, queries.query(service, query));
+        return querySingleGroup(uuid, queries.query(service, query), predefined);
     }
 
-    private ListenableFuture<Group> querySingleGroup(final UUID uuid, final ListenableFuture<Result<SocietiesRecord>> result) {
+    private ListenableFuture<Group> querySingleGroup(final UUID uuid, final ListenableFuture<Result<SocietiesRecord>> result, final Member predefined) {
         return Futures.transform(result, new Function<Result<SocietiesRecord>, Group>() {
 
             @Nullable
@@ -239,13 +92,13 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
 
                 SocietiesRecord record = Iterables.getOnlyElement(input);
 
-                return evaluateSingleGroup(record);
+                return evaluateSingleGroup(record, predefined);
             }
         });
 
     }
 
-    private Group evaluateSingleGroup(SocietiesRecord record) {
+    private Group evaluateSingleGroup(SocietiesRecord record, Member predefined) {
         byte[] uuid = record.getUuid();
         Group group = groupFactory.create(UUIDGen.toUUID(uuid), record.getName(), record.getTag());
         // Preparing
@@ -259,7 +112,15 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
         for (Record1<byte[]> member : query.fetch()) {
             try {
                 UUID memberUUID = UUIDGen.toUUID(member.value1());
-                group.addMember(getMember(memberUUID, group).get());
+                Member memberToAdd;
+
+                if (predefined != null && predefined.getUUID().equals(memberUUID)) {
+                    memberToAdd = predefined;
+                } else {
+                    memberToAdd = memberController.getMember(memberUUID, group).get();
+                }
+
+                group.addMember(memberToAdd);
             } catch (InterruptedException e) {
                 throw new SocietyException(e, "Failed to add member to group!");
             } catch (ExecutionException e) {
@@ -344,7 +205,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
                 THashSet<Group> groups = new THashSet<Group>(input.size());
 
                 for (SocietiesRecord record : input) {
-                    groups.add(evaluateSingleGroup(record));
+                    groups.add(evaluateSingleGroup(record, null));
                 }
 
                 return groups;
@@ -354,9 +215,7 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
 
     @Override
     public ListenableFuture<Set<Group>> getGroups() {
-        Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETIES);
-
-        return evaluateMultipleGroups(queries.query(service, query));
+        return evaluateMultipleGroups(queries.query(service, SELECT_SOCIETIES));
     }
 
     //================================================================================
