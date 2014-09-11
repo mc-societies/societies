@@ -10,8 +10,8 @@ import net.catharos.groups.publisher.MemberRankPublisher;
 import net.catharos.groups.publisher.MemberStatePublisher;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.core.command.sender.SenderHelper;
 import net.catharos.lib.core.i18n.Dictionary;
-import net.catharos.lib.core.util.CastSafe;
 import net.catharos.societies.NameProvider;
 import net.catharos.societies.PlayerProvider;
 import net.catharos.societies.member.locale.LocaleProvider;
@@ -124,11 +124,7 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
 
     @Override
     public <S extends Sender, R> R as(Executor<S, R> executor, Class<S> clazz) {
-        if (clazz.isAssignableFrom(getClass())) {
-            return executor.execute(CastSafe.<S>toGeneric(this));
-        }
-
-        return null;
+        return SenderHelper.as(executor, clazz, this);
     }
 
     @Override

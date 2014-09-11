@@ -1,6 +1,7 @@
 package net.catharos.societies.commands;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
@@ -9,12 +10,13 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.Group;
+import net.catharos.groups.Member;
 import net.catharos.groups.command.GroupParser;
+import net.catharos.groups.command.MemberParser;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.CommandPipeline;
 import net.catharos.lib.core.command.DefaultCommandPipeline;
 import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.builder.GroupBuilder;
 import net.catharos.lib.core.command.format.pagination.DefaultPaginator;
 import net.catharos.lib.core.command.format.pagination.Paginator;
 import net.catharos.lib.core.command.parser.ArgumentParser;
@@ -38,12 +40,11 @@ import net.catharos.societies.member.SocietyMember;
 import org.bukkit.Location;
 
 import java.util.Set;
+import java.util.concurrent.Executors;
 
-import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static com.google.inject.name.Names.named;
-import static java.util.concurrent.Executors.newFixedThreadPool;
 
 /**
  * Represents a CommandModule
@@ -72,8 +73,10 @@ public class CommandModule extends AbstractModule {
         parsers().addBinding(Location.class).to(LocationParser.class);
 
         // Member parser
-        //        bind(new TypeLiteral<ArgumentParser<SocietyMember>>() {}).to(TargetParser.class);
-        parsers().addBinding(SocietyMember.class).to(TargetParser.class);
+//                bind(new TypeLiteral<ArgumentParser<SocietyMember>>() {}).to(TargetParser.class);
+        parsers().addBinding(Sender.class).to(TargetParser.class);
+        parsers().addBinding(Member.class).to(new TypeLiteral<MemberParser<SocietyMember>>() {});
+        parsers().addBinding(SocietyMember.class).to(new TypeLiteral<MemberParser<SocietyMember>>() {});
 
 
         // Exception handler
@@ -94,7 +97,9 @@ public class CommandModule extends AbstractModule {
 
         // Sync/Async command executors
         bindNamedInstance("sync-executor", ListeningExecutorService.class, sameThreadExecutor());
-        bindNamedInstance("async-executor", ListeningExecutorService.class, listeningDecorator(newFixedThreadPool(2)));
+        bindNamedInstance("async-executor", ListeningExecutorService.class, MoreExecutors.listeningDecorator(Executors
+                .newFixedThreadPool(2)));
+//        bindNamedInstance("async-executor", ListeningExecutorService.class, sameThreadExecutor());
 
 
         bind(new TypeLiteral<CommandPipeline<Sender>>() {}).to(new TypeLiteral<DefaultCommandPipeline<Sender>>() {});
@@ -108,7 +113,7 @@ public class CommandModule extends AbstractModule {
 
     @Provides
     @Named("commands")
-    public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, CommandAnalyser<Sender> analyser) {
+    public Set<Command<Sender>> provideCommand(/*GroupBuilder<Sender> builder,*/ CommandAnalyser<Sender> analyser) {
         Set<Command<Sender>> commands = new THashSet<Command<Sender>>();
 
 //        builder.name("Societies")

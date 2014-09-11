@@ -62,11 +62,8 @@ public class CreateCommand implements Executor<Sender> {
             return;
         }
 
-        if (!sender.as(new Sender.Executor<SocietyMember, Boolean>() {
-            @Override
-            public Boolean execute(SocietyMember sender) {return sender.withdraw(price).transactionSuccess(); }
-
-        }, SocietyMember.class)) {
+        if (!sender.as(new SenderWithdrawer(), SocietyMember.class)) {
+            sender.send("economy.not-enough-money");
             return;
         }
 
@@ -78,5 +75,15 @@ public class CreateCommand implements Executor<Sender> {
         }
 
         sender.send("society.created", name, tag);
+    }
+
+    private class SenderWithdrawer implements Sender.Executor<SocietyMember, Boolean> {
+        @Override
+        public Boolean execute(SocietyMember sender) {return sender.withdraw(price).transactionSuccess(); }
+
+        @Override
+        public Boolean defaultValue(Sender sender) {
+            return true;
+        }
     }
 }

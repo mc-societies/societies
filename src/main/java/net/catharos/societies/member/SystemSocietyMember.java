@@ -3,12 +3,13 @@ package net.catharos.societies.member;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import net.catharos.groups.DefaultMember;
-import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.groups.publisher.LastActivePublisher;
+import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.groups.publisher.MemberRankPublisher;
 import net.catharos.groups.publisher.MemberStatePublisher;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.core.command.sender.SenderHelper;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.member.locale.LocaleProvider;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -83,7 +84,7 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
 
     @Override
     public <S extends Sender, R> R as(Executor<S, R> executor, Class<S> clazz) {
-        return null;
+        return SenderHelper.as(executor, clazz, this);
     }
 
     @Override
