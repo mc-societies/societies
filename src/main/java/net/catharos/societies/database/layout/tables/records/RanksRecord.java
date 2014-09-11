@@ -11,7 +11,7 @@ package net.catharos.societies.database.layout.tables.records;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.catharos.societies.database.layout.tables.records.RanksRecord> implements org.jooq.Record2<byte[], java.lang.String> {
 
-	private static final long serialVersionUID = -580965945;
+	private static final long serialVersionUID = 1997579712;
 
 	/**
 	 * Setter for <code>societies.ranks.uuid</code>.
@@ -49,8 +49,8 @@ public class RanksRecord extends org.jooq.impl.UpdatableRecordImpl<net.catharos.
 	 * {@inheritDoc}
 	 */
 	@Override
-	public org.jooq.Record1<byte[]> key() {
-		return (org.jooq.Record1) super.key();
+	public org.jooq.Record2<byte[], java.lang.String> key() {
+		return (org.jooq.Record2) super.key();
 	}
 
 	// -------------------------------------------------------------------------
