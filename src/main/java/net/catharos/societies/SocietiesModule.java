@@ -27,7 +27,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
+import static java.util.concurrent.Executors.newFixedThreadPool;
 
 /**
  * Represents a SocietiesModule
@@ -117,7 +118,7 @@ public class SocietiesModule extends AbstractServiceModule {
         bind(PlayerProvider.class).to(BukkitPlayerProvider.class);
 
         // Executor service for heavy work
-        bind(ListeningExecutorService.class).toInstance(sameThreadExecutor(/*newFixedThreadPool(2)*/));
+        bind(ListeningExecutorService.class).toInstance(listeningDecorator(newFixedThreadPool(2)));
 
         // Chat rendering
         install(new FormatModule());
