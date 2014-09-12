@@ -31,16 +31,20 @@ public class OnlineGroupCache implements GroupProvider {
         this.forward = forward;
     }
 
+
     @Override
     public ListenableFuture<Group> getGroup(UUID uuid) {
-        final Group group = groups.get(uuid);
+        ListenableFuture<Group> groupFuture = tryGet(uuid);
 
-        if (group != null) {
-            return immediateCheckedFuture(group);
+        if (groupFuture == null) {
+            groupFuture = forward.getGroup(uuid);
+            addCacheCallback(groupFuture);
         }
 
-        ListenableFuture<Group> groupFuture = forward.getGroup(uuid);
+        return groupFuture;
+    }
 
+    private void addCacheCallback(ListenableFuture<Group> groupFuture) {
         addCallback(groupFuture, new FutureCallback<Group>() {
             @Override
             public void onSuccess(Group result) {
@@ -57,12 +61,27 @@ public class OnlineGroupCache implements GroupProvider {
             }
         });
 
-        return groupFuture;
+    }
+
+
+    private ListenableFuture<Group> tryGet(UUID key) {
+        final Group group = groups.get(key);
+
+        if (group != null) {
+            return immediateCheckedFuture(group);
+        }
+
+        return null;
+    }
+
+    @Override
+    public ListenableFuture<Group> getGroup(UUID uuid, Member predefined) {
+        return getGroup(uuid);
     }
 
     @Override
     public ListenableFuture<Set<Group>> getGroup(String name) {
-        return null;
+        return forward.getGroup(name);
     }
 
     @Override
@@ -89,6 +108,33 @@ public class OnlineGroupCache implements GroupProvider {
             if (member.isAvailable()) {
                 clear(group.getUUID());
             }
+        }
+    }
+
+    private static final class Key {
+        private final String name;
+        private final UUID uuid;
+
+        private Key(String name, UUID uuid) {
+            this.name = name;
+            this.uuid = uuid;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Key key = (Key) o;
+
+            return name.equals(key.name) && uuid.equals(key.uuid);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = name.hashCode();
+            result = 31 * result + uuid.hashCode();
+            return result;
         }
     }
 }

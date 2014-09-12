@@ -23,22 +23,23 @@ public class SQLModule extends AbstractServiceModule {
 
         bind(SQLQueries.class);
 
-        Key<SQLController> controller = Key.get(SQLController.class);
+        Key<SQLGroupController> groupController = Key.get(SQLGroupController.class);
+        Key<SQLMemberController> memberController = Key.get(SQLMemberController.class);
 
         // Member publisher
-        bind(new TypeLiteral<MemberPublisher<SocietyMember>>() {}).to(controller);
+        bind(new TypeLiteral<MemberPublisher<SocietyMember>>() {}).to(memberController);
 
         // Member provider
-        bindNamed("forward", new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(controller);
+        bindNamed("forward", new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(memberController);
         bind(new TypeLiteral<MemberProvider<SocietyMember>>() {})
                 .to(new TypeLiteral<OnlineMemberCache<SocietyMember>>() {});
 
         // Group provider
-        bindNamed("forward", GroupProvider.class).to(controller);
+        bindNamed("forward", GroupProvider.class).to(groupController);
         bind(GroupProvider.class).to(OnlineGroupCache.class);
 
         // Group publisher
-        bind(GroupPublisher.class).to(controller);
+        bind(GroupPublisher.class).to(groupController);
 
         //Publishers
         bind(MemberGroupPublisher.class).to(SQLMemberGroupPublisher.class);

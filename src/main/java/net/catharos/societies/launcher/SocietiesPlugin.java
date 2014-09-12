@@ -38,6 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
@@ -128,6 +129,14 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
         if (sender instanceof Player) {
 
             ListenableFuture<SocietyMember> future = memberProvider.getMember(((Player) sender).getUniqueId());
+
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
 
             addCallback(future, new FutureCallback<SocietyMember>() {
                 @Override

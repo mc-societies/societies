@@ -42,7 +42,7 @@ public class SocietiesModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
-        binder().disableCircularProxies();
+//        binder().disableCircularProxies();
 
         ConfigParseOptions parseOptions = ConfigParseOptions.defaults()
                 .setSyntax(ConfigSyntax.CONF);

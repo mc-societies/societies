@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import gnu.trove.map.hash.THashMap;
+import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.MemberProvider;
 import net.catharos.societies.PlayerProvider;
@@ -37,6 +38,11 @@ public class OnlineMemberCache<M extends Member> implements MemberProvider<M> {
     public ListenableFuture<M> getMember(UUID uuid) {
         Player player = provider.getPlayer(uuid);
         return handle(player, uuid);
+    }
+
+    @Override
+    public ListenableFuture<M> getMember(UUID uuid, Group predefined) {
+        return getMember(uuid);
     }
 
     public ListenableFuture<M> handle(Player player, UUID uuid) {
