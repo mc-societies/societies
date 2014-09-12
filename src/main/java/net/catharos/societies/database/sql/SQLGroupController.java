@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.*;
@@ -69,11 +70,11 @@ class SQLGroupController implements GroupProvider, GroupPublisher {
 
     @Override
     public ListenableFuture<Group> getGroup(UUID uuid) {
-        return getGroup(uuid, null);
+        return getGroup(uuid, null, service);
     }
 
     @Override
-    public ListenableFuture<Group> getGroup(UUID uuid, Member predefined) {
+    public ListenableFuture<Group> getGroup(UUID uuid, Member predefined, ListeningExecutorService service) {
         Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
@@ -98,7 +99,7 @@ class SQLGroupController implements GroupProvider, GroupPublisher {
 
                 return evaluateSingleGroup(record, predefined);
             }
-        });
+        },MoreExecutors.sameThreadExecutor());
 
     }
 
@@ -122,7 +123,7 @@ class SQLGroupController implements GroupProvider, GroupPublisher {
                     if (predefined != null && predefined.getUUID().equals(memberUUID)) {
                         memberToAdd = predefined;
                     } else {
-                        memberToAdd = memberProvider.getMember(memberUUID, group).get();
+                        memberToAdd = memberProvider.getMember(memberUUID, group, MoreExecutors.sameThreadExecutor()).get();
                     }
 
                     group.addMember(memberToAdd);
@@ -150,7 +151,6 @@ class SQLGroupController implements GroupProvider, GroupPublisher {
             // Finished
             group.setState(record.getState());
         }
-
 
         return group;
     }

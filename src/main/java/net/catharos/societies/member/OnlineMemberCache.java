@@ -2,6 +2,7 @@ package net.catharos.societies.member;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -41,8 +42,8 @@ public class OnlineMemberCache<M extends Member> implements MemberProvider<M> {
     }
 
     @Override
-    public ListenableFuture<M> getMember(UUID uuid, Group predefined) {
-        return getMember(uuid);
+    public ListenableFuture<M> getMember(UUID uuid, Group predefined, ListeningExecutorService service) {
+        return forward.getMember(uuid, predefined, service);
     }
 
     public ListenableFuture<M> handle(Player player, UUID uuid) {

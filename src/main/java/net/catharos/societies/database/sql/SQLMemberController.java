@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import net.catharos.groups.*;
 import net.catharos.groups.rank.Rank;
@@ -71,12 +72,12 @@ class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublis
 
     @Override
     public ListenableFuture<SocietyMember> getMember(UUID uuid) {
-        return getMember(uuid, null);
+        return getMember(uuid, null, service);
     }
 
     @Override
-    public ListenableFuture<SocietyMember> getMember(final UUID uuid, final Group group) {
-        return queryMember(uuid, new Function<Result<MembersRecord>, SocietyMember>() {
+    public ListenableFuture<SocietyMember> getMember(final UUID uuid, final Group group, ListeningExecutorService service) {
+        return queryMember(service, uuid, new Function<Result<MembersRecord>, SocietyMember>() {
             @Nullable
             @Override
             public SocietyMember apply(@Nullable Result<MembersRecord> input) {
@@ -85,13 +86,13 @@ class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublis
         });
     }
 
-    private ListenableFuture<SocietyMember> queryMember(UUID uuid, Function<Result<MembersRecord>, SocietyMember> applier) {
+    private ListenableFuture<SocietyMember> queryMember(ListeningExecutorService service, UUID uuid, Function<Result<MembersRecord>, SocietyMember> applier) {
         Select<MembersRecord> query = queries.getQuery(SQLQueries.SELECT_MEMBER_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
         ListenableFuture<Result<MembersRecord>> future = queries.query(service, query);
 
-        return Futures.transform(future, applier);
+        return Futures.transform(future, applier,MoreExecutors.sameThreadExecutor());
     }
 
     private SocietyMember evaluateMember(UUID uuid, Group predefined, Result<MembersRecord> input) {
@@ -121,7 +122,7 @@ class SQLMemberController implements MemberProvider<SocietyMember>, MemberPublis
                 // Load group if necessary
                 if (predefined == null) {
                     try {
-                        predefined = groupProvider.getGroup(UUIDGen.toUUID(rawSociety), member).get();
+                        predefined = groupProvider.getGroup(UUIDGen.toUUID(rawSociety), member, MoreExecutors.sameThreadExecutor()).get();
                     } catch (InterruptedException e) {
                         throw new MemberException(uuid, e, "Failed to set group of member!");
                     } catch (ExecutionException e) {
