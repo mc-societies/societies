@@ -69,4 +69,9 @@ public class OnlineGroupCache implements GroupCache {
     public void cache(Group group) {
         groups.put(group.getUUID(), group);
     }
+
+    @Override
+    public void clear(Group group) {
+        clear(group.getUUID());
+    }
 }

@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.typesafe.config.Config;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupFactory;
-import net.catharos.groups.GroupPublisher;
+import net.catharos.groups.publisher.GroupPublisher;
 import net.catharos.groups.validate.NameValidator;
 import net.catharos.groups.validate.TagValidator;
 import net.catharos.groups.validate.ValidateResult;

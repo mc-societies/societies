@@ -7,7 +7,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import net.catharos.groups.GroupProvider;
-import net.catharos.groups.MemberPublisher;
+import net.catharos.groups.publisher.MemberPublisher;
 import net.catharos.lib.core.command.Commands;
 import net.catharos.lib.core.command.ParsingException;
 import net.catharos.lib.core.command.reflect.instance.CommandAnalyser;

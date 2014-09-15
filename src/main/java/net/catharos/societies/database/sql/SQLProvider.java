@@ -8,6 +8,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.*;
+import net.catharos.groups.publisher.MemberPublisher;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
 import net.catharos.groups.setting.Setting;
@@ -30,7 +31,6 @@ import org.jooq.types.UShort;
 import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
@@ -40,7 +40,7 @@ import static net.catharos.societies.database.sql.SQLQueries.*;
 /**
  * Represents a LoadingMemberProvider
  */
-class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<SocietyMember>, GroupProvider, GroupPublisher {
+class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
     public static final int PREPARE = DefaultGroup.PREPARE;
 
@@ -62,16 +62,16 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
 
 
     @Inject
-    public SQLController(SQLQueries queries,
-                         ListeningExecutorService service,
-                         PlayerProvider playerProvider,
-                         MemberFactory<SocietyMember> memberFactory,
-                         MemberPublisher<SocietyMember> memberPublisher,
-                         GroupCache groupCache,
-                         GroupFactory groupFactory,
-                         SettingProvider settingProvider,
-                         RankFactory rankFactory,
-                         MemberCache<SocietyMember> memberCache) {
+    public SQLProvider(SQLQueries queries,
+                       ListeningExecutorService service,
+                       PlayerProvider playerProvider,
+                       MemberFactory<SocietyMember> memberFactory,
+                       MemberPublisher<SocietyMember> memberPublisher,
+                       GroupCache groupCache,
+                       GroupFactory groupFactory,
+                       SettingProvider settingProvider,
+                       RankFactory rankFactory,
+                       MemberCache<SocietyMember> memberCache) {
         this.queries = queries;
         this.service = service;
 
@@ -202,49 +202,22 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
     }
 
     //================================================================================
-    // Publisher
-    //================================================================================
-
-    @Override
-    public ListenableFuture<SocietyMember> publish(final SocietyMember member) {
-        return service.submit(new Callable<SocietyMember>() {
-            @Override
-            public SocietyMember call() throws Exception {
-                Insert<MembersRecord> query = queries.getQuery(SQLQueries.INSERT_MEMBER);
-
-                query.bind(1, UUIDGen.toByteArray(member.getUUID()));
-
-                Object group = null;
-
-                if (member.getGroup() != null) {
-                    group = UUIDGen.toByteArray(member.getGroup().getUUID());
-                }
-                query.bind(2, group);
-
-                query.execute();
-
-                return member;
-            }
-        });
-    }
-
-    //================================================================================
     // Drop
     //================================================================================
 
-    @Override
-    public ListenableFuture<?> drop(final SocietyMember member) {
-        return service.submit(new Runnable() {
-            @Override
-            public void run() {
-                Query query = queries.getQuery(SQLQueries.DROP_MEMBER_BY_UUID);
-
-                query.bind(1, UUIDGen.toByteArray(member.getUUID()));
-
-                query.execute();
-            }
-        });
-    }
+//    @Override
+//    public ListenableFuture<?> drop(final SocietyMember member) {
+//        return service.submit(new Runnable() {
+//            @Override
+//            public void run() {
+//                Query query = queries.getQuery(SQLQueries.DROP_MEMBER_BY_UUID);
+//
+//                query.bind(1, UUIDGen.toByteArray(member.getUUID()));
+//
+//                query.execute();
+//            }
+//        });
+//    }
 
 
     //================================================================================
@@ -421,44 +394,22 @@ class SQLController implements MemberProvider<SocietyMember>, MemberPublisher<So
         return evaluateMultipleGroups(queries.query(service, SELECT_SOCIETIES));
     }
 
-    //================================================================================
-    // Publisher
-    //================================================================================
-
-    @Override
-    public ListenableFuture<Group> publish(final Group group) {
-        return service.submit(new Callable<Group>() {
-            @Override
-            public Group call() throws Exception {
-                Insert<SocietiesRecord> query = queries.getQuery(SQLQueries.INSERT_SOCIETY);
-
-                query.bind(1, UUIDGen.toByteArray(group.getUUID()));
-
-                query.bind(2, group.getName());
-                query.bind(3, group.getTag());
-
-                query.execute();
-
-                return group;
-            }
-        });
-    }
 
     //================================================================================
     // Drop
     //================================================================================
 
-    @Override
-    public ListenableFuture<?> drop(final Group group) {
-        return service.submit(new Runnable() {
-            @Override
-            public void run() {
-                Query query = queries.getQuery(SQLQueries.DROP_SOCIETY_BY_UUID);
-
-                query.bind(1, UUIDGen.toByteArray(group.getUUID()));
-
-                query.execute();
-            }
-        });
-    }
+//    @Override
+//    public ListenableFuture<?> drop(final Group group) {
+//        return service.submit(new Runnable() {
+//            @Override
+//            public void run() {
+//                Query query = queries.getQuery(SQLQueries.DROP_SOCIETY_BY_UUID);
+//
+//                query.bind(1, UUIDGen.toByteArray(group.getUUID()));
+//
+//                query.execute();
+//            }
+//        });
+//    }
 }

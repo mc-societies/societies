@@ -44,4 +44,9 @@ public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
     public void cache(M member) {
         members.put(member.getUUID(), member);
     }
+
+    @Override
+    public void clear(M member) {
+        this.clear(member.getUUID());
+    }
 }

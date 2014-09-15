@@ -2,7 +2,10 @@ package net.catharos.societies.database.sql;
 
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
-import net.catharos.groups.*;
+import net.catharos.groups.GroupCache;
+import net.catharos.groups.GroupProvider;
+import net.catharos.groups.MemberCache;
+import net.catharos.groups.MemberProvider;
 import net.catharos.groups.publisher.*;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.group.OnlineGroupCache;
@@ -20,10 +23,11 @@ public class SQLModule extends AbstractServiceModule {
 
         bind(SQLQueries.class);
 
-        Key<SQLController> controller = Key.get(SQLController.class);
+        Key<SQLProvider> controller = Key.get(SQLProvider.class);
 
         // Member publisher
-        bind(new TypeLiteral<MemberPublisher<SocietyMember>>() {}).to(controller);
+        bind(new TypeLiteral<MemberPublisher<SocietyMember>>() {})
+                .to(new TypeLiteral<SQLMemberPublisher<SocietyMember>>() {});
 
         // Member provider
         bind(new TypeLiteral<MemberCache<SocietyMember>>() {})
@@ -36,7 +40,7 @@ public class SQLModule extends AbstractServiceModule {
         bind(GroupProvider.class).to(controller);
 
         // Group publisher
-        bind(GroupPublisher.class).to(controller);
+        bind(GroupPublisher.class).to(SQLGroupPublisher.class);
 
         //Publishers
         bind(MemberGroupPublisher.class).to(SQLMemberGroupPublisher.class);
