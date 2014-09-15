@@ -2,6 +2,15 @@
 	* Keep cached when player is online
 	* Zero caching
 
+Bukkit dependencies:
+ * Player.getLocation()
+ * Player.sendMessage(...);
+ * Server.getWorld(...);
+ * Server.getScheduler();
+ * Server.getConsoleCommandSender();
+ * ChatColor
+ * JavaPlugin
+
 
 Commands:
 	Automatically find optional arguments without specifying them (e.g. --target)

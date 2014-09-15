@@ -43,8 +43,8 @@ public class OnlineGroupCache implements GroupCache {
         return null;
     }
 
-    public void clear(UUID uuid) {
-        this.groups.remove(uuid);
+    public Group clear(UUID uuid) {
+        return this.groups.remove(uuid);
     }
 
     public void clear(Member leaving, Group group) {
@@ -60,18 +60,18 @@ public class OnlineGroupCache implements GroupCache {
             }
 
             if (member.isAvailable()) {
-                clear(group.getUUID());
+                clear(group);
             }
         }
     }
 
     @Override
-    public void cache(Group group) {
-        groups.put(group.getUUID(), group);
+    public boolean cache(Group group) {
+        return groups.put(group.getUUID(), group) == null;
     }
 
     @Override
-    public void clear(Group group) {
-        clear(group.getUUID());
+    public Group clear(Group group) {
+        return clear(group.getUUID());
     }
 }

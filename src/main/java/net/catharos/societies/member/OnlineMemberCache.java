@@ -41,12 +41,12 @@ public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
     }
 
     @Override
-    public void cache(M member) {
-        members.put(member.getUUID(), member);
+    public boolean cache(M member) {
+        return members.put(member.getUUID(), member) == null;
     }
 
     @Override
-    public void clear(M member) {
-        this.clear(member.getUUID());
+    public M clear(M member) {
+        return this.clear(member.getUUID());
     }
 }

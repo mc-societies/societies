@@ -153,11 +153,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
     @EventHandler
     public void onPlayerJoin(PlayerLoginEvent event) {
-        MemberProvider<SocietyMember> provider = injector
-                .getInstance(Key.get(new TypeLiteral<MemberProvider<SocietyMember>>() {}));
-
-
-        provider.getMember(event.getPlayer().getUniqueId());
+        memberProvider.getMember(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
