@@ -134,7 +134,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
         ListenableFuture<Result<MembersRecord>> future = queries.query(service, query);
 
-        return transform(future, applier, MoreExecutors.sameThreadExecutor());
+        return transform(future, applier, service);
     }
 
     private SocietyMember evaluateMember(UUID uuid, Group predefined, Result<MembersRecord> input) {
@@ -260,8 +260,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
                 return evaluateSingleGroup(record, predefined);
             }
-        }, MoreExecutors.sameThreadExecutor());
-
+        }, service);
     }
 
     private Group evaluateSingleGroup(SocietiesRecord record, Member predefined) {

@@ -35,6 +35,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -55,6 +56,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
     private ServiceController serviceController;
     private OnlineMemberCache<SocietyMember> memberCache;
     private OnlineGroupCache groupCache;
+    private Sender systemSender;
 
     @Override
     public void onLoad() {
@@ -83,7 +85,6 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
                 new BukkitModule(getServer(), this, economy)
         );
 
-
         serviceController = injector.getInstance(ServiceController.class);
 
         serviceController.invoke(Lifecycle.INITIALISING);
@@ -94,6 +95,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
         memberProvider = injector.getInstance(Key.get(new TypeLiteral<MemberProvider<SocietyMember>>() {}));
         memberCache = injector.getInstance(Key.get(new TypeLiteral<OnlineMemberCache<SocietyMember>>() {}));
         groupCache = injector.getInstance(OnlineGroupCache.class);
+        systemSender = injector.getInstance(Key.get(Sender.class, Names.named("system-sender")));
 
         serviceController.invoke(Lifecycle.STARTING);
     }
@@ -126,7 +128,6 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
         }
 
         if (sender instanceof Player) {
-
             ListenableFuture<SocietyMember> future = memberProvider.getMember(((Player) sender).getUniqueId());
 
             addCallback(future, new FutureCallback<SocietyMember>() {
@@ -136,15 +137,14 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
+                public void onFailure(@NotNull Throwable t) {
                     t.printStackTrace();
                 }
             });
 
 
         } else {
-            commands.execute(injector.getInstance(Key.get(Sender.class, Names.named("system-sender"))), command
-                    .getName(), args);
+            commands.execute(systemSender, command.getName(), args);
         }
 
 

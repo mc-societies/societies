@@ -58,7 +58,7 @@ public class ListCommand implements Executor<Sender> {
 
             @Override
             public void onFailure(@NotNull Throwable t) {
-
+                t.printStackTrace();
             }
         });
     }

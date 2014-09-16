@@ -54,7 +54,7 @@ public class JoinCommand implements Executor<Member> {
 
             @Override
             public void onFailure(@NotNull Throwable t) {
-                sender.send("Failed: %s", t.getMessage());
+                t.printStackTrace();
             }
         });
     }

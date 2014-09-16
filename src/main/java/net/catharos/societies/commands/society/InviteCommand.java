@@ -58,8 +58,7 @@ public class InviteCommand implements Executor<SocietyMember> {
 
             @Override
             public void onFailure(@NotNull Throwable t) {
-                target.send(FAILED, t.getMessage());
-                sender.send(FAILED, t.getMessage());
+                t.printStackTrace();
             }
         });
     }
