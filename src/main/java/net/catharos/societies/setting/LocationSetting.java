@@ -3,6 +3,8 @@ package net.catharos.societies.setting;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.groups.setting.Setting;
+import net.catharos.groups.setting.subject.Subject;
+import net.catharos.groups.setting.target.Target;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +26,7 @@ class LocationSetting extends Setting<Location> {
     }
 
     @Override
-    public Location convert(byte[] value) {
+    public Location convert(Subject subject, Target target, byte[] value) {
         DataInputStream is = new DataInputStream(new ByteArrayInputStream(value));
 
         try {
@@ -37,7 +39,7 @@ class LocationSetting extends Setting<Location> {
     }
 
     @Override
-    public byte[] convert(@Nullable Location value) {
+    public byte[] convert(Subject subject, Target target, @Nullable Location value) {
         if (value == null) {
             return null;
         }

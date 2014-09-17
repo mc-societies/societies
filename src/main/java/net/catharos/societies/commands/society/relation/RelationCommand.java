@@ -106,7 +106,7 @@ public class RelationCommand {
 
             Relation relation = factory.create(group, target);
 
-            group.setRelation(relation);
+            group.setRelation(target, relation);
 
             sender.send("relation.created", target.getName());
         }

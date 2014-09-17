@@ -33,12 +33,12 @@ class SQLSettingPublisher extends AbstractPublisher implements SettingPublisher 
                     query.bind(1, UUIDGen.toByteArray(subject.getUUID()));
                     query.bind(2, UUIDGen.toByteArray(target.getUUID()));
                     query.bind(3, UShort.valueOf(setting.getID()));
-                    query.bind(4, setting.convert(value));
+                    query.bind(4, setting.convert(subject, target, value));
 
                     query.bind(5, UUIDGen.toByteArray(subject.getUUID()));
                     query.bind(6, UUIDGen.toByteArray(target.getUUID()));
                     query.bind(7, UShort.valueOf(setting.getID()));
-                    query.bind(8, setting.convert(value));
+                    query.bind(8, setting.convert(subject, target, value));
                     query.execute();
                 }
             });

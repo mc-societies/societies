@@ -347,7 +347,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
                 target = new SimpleTarget(UUIDGen.toUUID(targetUUID));
             }
 
-            Object value = setting.convert(settingRecord.value3());
+            Object value = setting.convert(subject, target, settingRecord.value3());
 
             subject.set(setting, target, value);
         }
