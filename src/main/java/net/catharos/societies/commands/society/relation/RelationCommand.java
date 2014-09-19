@@ -93,6 +93,7 @@ public class RelationCommand {
 
         private final RelationFactory factory;
 
+        @Inject
         public CreateCommand(RelationFactory factory) {this.factory = factory;}
 
         @Override

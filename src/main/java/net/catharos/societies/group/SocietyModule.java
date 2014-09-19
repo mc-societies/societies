@@ -1,9 +1,7 @@
 package net.catharos.societies.group;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import net.catharos.groups.DefaultGroup;
-import net.catharos.groups.Group;
-import net.catharos.groups.GroupFactory;
+import net.catharos.groups.*;
 import net.catharos.groups.rank.DefaultRank;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
@@ -25,6 +23,11 @@ public class SocietyModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Group.class, DefaultGroup.class)
                 .build(GroupFactory.class));
+
+        install(new FactoryModuleBuilder()
+                .implement(Relation.class, DefaultRelation.class)
+                .build(RelationFactory.class));
+
 
         bind(Group.class).to(DefaultGroup.class);
 
