@@ -13,7 +13,6 @@ Bukkit dependencies:
 
 
 Commands:
-	Automatically find optional arguments without specifying them (e.g. --target)
 	Make group commands also executable (executor settable) (HomeCommand)
 
 Commands:
