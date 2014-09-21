@@ -78,12 +78,16 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
         File dir = getDataFolder();
 
+        getLogger().info("Reloading AK-47... Please wait patiently!");
+
         injector = Guice.createInjector(
                 new ServiceModule(),
                 new LoggingModule(dir, LogManager.getContext()),
                 new SocietiesModule(dir),
                 new BukkitModule(getServer(), this, economy)
         );
+
+        getLogger().info("Well done.");
 
         serviceController = injector.getInstance(ServiceController.class);
 
@@ -116,6 +120,8 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
         Database database = injector.getInstance(Database.class);
         database.close();
+
+        getLogger().info("Engines and weapons unloaded and locked!");
     }
 
 
@@ -123,7 +129,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
     public boolean onCommand(CommandSender sender, final Command command, String label, final String[] args) {
 
         if (injector == null) {
-            sender.sendMessage("Societies failed to start somehow, sorry :/");
+            sender.sendMessage("Societies failed to start somehow, sorry :/ Fuck the dev!!");
             return true;
         }
 
