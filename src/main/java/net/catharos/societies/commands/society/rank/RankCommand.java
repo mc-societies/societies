@@ -22,7 +22,7 @@ import java.util.Collection;
  * Represents a RankCommand
  */
 @Command(identifier = "command.rank.rank")
-@Children(children = {
+@Children({
         RankCommand.CreateCommand.class,
         RankCommand.RemoveCommand.class,
         RankCommand.ListCommand.class,
@@ -118,6 +118,12 @@ public class RankCommand {
 
 
             Collection<Rank> ranks = group.getRanks();
+
+            if (ranks.isEmpty()) {
+                sender.send("ranks.not-found");
+                return;
+            }
+
             Table table = tableProvider.get();
 
             for (Rank rank : ranks) {

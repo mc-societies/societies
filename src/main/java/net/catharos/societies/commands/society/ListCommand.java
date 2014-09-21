@@ -47,6 +47,11 @@ public class ListCommand implements Executor<Sender> {
                     return;
                 }
 
+                if (result.isEmpty()) {
+                    sender.send("societies.not-found");
+                    return;
+                }
+
                 Table table = tableProvider.get();
 
                 for (Group group : result) {

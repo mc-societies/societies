@@ -11,10 +11,6 @@ Bukkit dependencies:
  * ChatColor
  * JavaPlugin
 
-
-Commands:
-	Make group commands also executable (executor settable) (HomeCommand)
-
 Commands:
 	Cancel requests
 

@@ -20,7 +20,7 @@ import java.util.Collection;
  * Represents a RelationCommand
  */
 @Command(identifier = "command.relation.relation")
-@Children(children = {
+@Children({
         RelationCommand.CreateCommand.class,
         RelationCommand.RemoveCommand.class,
         RelationCommand.ListCommand.class
@@ -73,6 +73,11 @@ public class RelationCommand {
             }
 
             Collection<Relation> relations = group.getRelations();
+
+            if (relations.isEmpty()) {
+                sender.send("relations.not-found");
+                return;
+            }
 
             Table table = tableProvider.get();
 
