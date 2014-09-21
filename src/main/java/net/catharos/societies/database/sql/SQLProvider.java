@@ -109,16 +109,16 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
     @Override
     public ListenableFuture<SocietyMember> getMember(UUID uuid) {
+        return getMember(uuid, null, service);
+    }
+
+    public ListenableFuture<SocietyMember> getMember(final UUID uuid, final Group group, ListeningExecutorService service) {
         // Cache lookup
         SocietyMember member = memberCache.getMember(uuid);
         if (member != null) {
             return immediateFuture(member);
         }
 
-        return getMember(uuid, null, service);
-    }
-
-    public ListenableFuture<SocietyMember> getMember(final UUID uuid, final Group group, ListeningExecutorService service) {
         return queryMember(service, uuid, new Function<Result<MembersRecord>, SocietyMember>() {
             @Nullable
             @Override
@@ -195,8 +195,9 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         } finally {
             // Finished
             member.setState(record.getState());
-
         }
+
+        memberCache.cache(member);
 
         return member;
     }
@@ -226,16 +227,16 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
     @Override
     public ListenableFuture<Group> getGroup(UUID uuid) {
+        return getGroup(uuid, null, service);
+    }
+
+    public ListenableFuture<Group> getGroup(UUID uuid, Member predefined, ListeningExecutorService service) {
         // Cache lookup
         Group group = groupCache.getGroup(uuid);
         if (group != null) {
             return immediateFuture(group);
         }
 
-        return getGroup(uuid, null, service);
-    }
-
-    public ListenableFuture<Group> getGroup(UUID uuid, Member predefined, ListeningExecutorService service) {
         Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
@@ -311,6 +312,8 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
             // Finished
             group.setState(record.getState());
         }
+
+        groupCache.cache(group);
 
         return group;
     }

@@ -60,9 +60,11 @@ public class OnlineGroupCache implements GroupCache {
             }
 
             if (member.isAvailable()) {
-                clear(group);
+                return;
             }
         }
+
+        clear(group);
     }
 
     @Override
