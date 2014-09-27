@@ -3,10 +3,7 @@ package net.catharos.societies.member;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import net.catharos.groups.DefaultMember;
-import net.catharos.groups.publisher.LastActivePublisher;
-import net.catharos.groups.publisher.MemberGroupPublisher;
-import net.catharos.groups.publisher.MemberRankPublisher;
-import net.catharos.groups.publisher.MemberStatePublisher;
+import net.catharos.groups.publisher.*;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderHelper;
@@ -35,8 +32,9 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
                                MemberGroupPublisher societyPublisher,
                                MemberStatePublisher memberStatePublisher,
                                MemberRankPublisher memberRankPublisher,
-                               LastActivePublisher lastActivePublisher) {
-        super(uuid.get(), societyPublisher, memberStatePublisher, memberRankPublisher, lastActivePublisher);
+                               LastActivePublisher lastActivePublisher,
+                               MemberCreatedPublisher createdPublisher) {
+        super(uuid.get(), societyPublisher, memberStatePublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
         this.localeProvider = localeProvider;
         this.directory = dictionary;
     }

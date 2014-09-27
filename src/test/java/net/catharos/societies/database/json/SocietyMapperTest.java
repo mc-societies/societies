@@ -5,9 +5,14 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import net.catharos.groups.DefaultGroup;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupFactory;
+import net.catharos.groups.GroupGenerator;
+import net.catharos.groups.rank.DefaultRank;
+import net.catharos.groups.rank.Rank;
+import net.catharos.groups.rank.RankFactory;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import org.jukito.JukitoModule;
 import org.jukito.JukitoRunner;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,25 +25,27 @@ public class SocietyMapperTest {
         @Override
         protected void configureTest() {
             bind(UUID.class).toProvider(TimeUUIDProvider.class);
+
             install(new FactoryModuleBuilder()
                     .implement(Group.class, DefaultGroup.class)
                     .build(GroupFactory.class));
+
+            install(new FactoryModuleBuilder()
+                    .implement(Rank.class, DefaultRank.class)
+                    .build(RankFactory.class));
         }
     }
 
     @Inject
     SocietyMapper mapper;
-    private String data = "{" +
-            "\"uuid\": \"d58be4c0-459b-11e4-916c-0800200c9a66\"," +
-            "\"name\": \"name\"," +
-            "\"tag\": \"tag\"," +
-            "\"ranks\": [ \"d58be4c0-459b-11e4-916c-0800200c9a66\" ]" +
-            "}";
+
+    @Inject
+    GroupGenerator generator;
 
     @Test
-    public void testReadGroup() throws Exception {
-
-        Group read = mapper.read(data);
-
+    public void testGroup() throws Exception {
+        Group group = generator.generate();
+        String data = mapper.writeGroup(group);
+        Assert.assertEquals(group, mapper.readGroup(data));
     }
 }

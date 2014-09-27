@@ -3,7 +3,7 @@ package net.catharos.societies.database.sql;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import net.catharos.groups.Group;
-import net.catharos.groups.publisher.CreatedPublisher;
+import net.catharos.groups.publisher.GroupCreatedPublisher;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.database.layout.tables.records.MembersRecord;
 import org.joda.time.DateTime;
@@ -14,10 +14,10 @@ import java.sql.Timestamp;
 /**
  * Represents a SQLCreatedPublisher
  */
-public class SQLCreatedPublisher extends AbstractPublisher implements CreatedPublisher {
+public class SQLGroupCreatedPublisher extends AbstractPublisher implements GroupCreatedPublisher {
 
     @Inject
-    public SQLCreatedPublisher(ListeningExecutorService service, SQLQueries queries) {
+    public SQLGroupCreatedPublisher(ListeningExecutorService service, SQLQueries queries) {
         super(service, queries);
     }
 
@@ -26,7 +26,7 @@ public class SQLCreatedPublisher extends AbstractPublisher implements CreatedPub
         Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_LAST_ACTIVE);
 
         query.bind(1, UUIDGen.toByteArray(group.getUUID()));
-        query.bind(2, new Timestamp(group.getCreated().getMillis()));
+        query.bind(2, new Timestamp(created.getMillis()));
 
         query.execute();
     }

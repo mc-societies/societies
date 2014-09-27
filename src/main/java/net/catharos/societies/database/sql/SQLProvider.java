@@ -25,6 +25,7 @@ import net.catharos.societies.group.SocietyException;
 import net.catharos.societies.member.MemberException;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.entity.Player;
+import org.joda.time.DateTime;
 import org.jooq.*;
 import org.jooq.types.UShort;
 
@@ -266,7 +267,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
     private Group evaluateSingleGroup(SocietiesRecord record, Member predefined) {
         byte[] uuid = record.getUuid();
-        Group group = groupFactory.create(UUIDGen.toUUID(uuid), record.getName(), record.getTag());
+        Group group = groupFactory.create(UUIDGen.toUUID(uuid), record.getName(), record.getTag(), new DateTime(record.getCreated()));
         // Preparing
         group.setState(PREPARE);
 

@@ -45,7 +45,8 @@ public class SQLModule extends AbstractServiceModule {
         //Publishers
         bind(MemberGroupPublisher.class).to(SQLMemberGroupPublisher.class);
         bind(NamePublisher.class).to(SQLNamePublisher.class);
-        bind(CreatedPublisher.class).to(SQLCreatedPublisher.class);
+        bind(GroupCreatedPublisher.class).to(SQLGroupCreatedPublisher.class);
+        bind(MemberCreatedPublisher.class).to(SQLMemberCreatedPublisher.class);
         bind(SettingPublisher.class).to(SQLSettingPublisher.class);
         bind(LastActivePublisher.class).to(SQLLastActivePublisher.class);
 
