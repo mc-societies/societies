@@ -98,6 +98,12 @@
             <artifactId>jukito</artifactId>
             <version>1.4.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.cqengine</groupId>
+            <artifactId>cqengine</artifactId>
+            <version>1.2.7</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>
