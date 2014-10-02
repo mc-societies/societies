@@ -48,7 +48,6 @@ public final class JSONGroupPublisher<M extends Member> implements
             @Override
             public Group call() throws Exception {
                 mapper.writeGroup(group, uuidStorage.getFile(group.getUUID()));
-                // fixme save in provider
                 provider.groups.add(group);
                 return group;
             }
