@@ -17,7 +17,7 @@ import org.jooq.Query;
 /**
  * Represents a SQLGroupRankPublisher
  */
-public class SQLRankPublisher extends AbstractPublisher implements RankPublisher, MemberRankPublisher, GroupRankPublisher, RankDropPublisher {
+class SQLRankPublisher extends AbstractPublisher implements RankPublisher, MemberRankPublisher, GroupRankPublisher, RankDropPublisher {
 
     @Inject
     public SQLRankPublisher(ListeningExecutorService service, SQLQueries queries) {
@@ -25,7 +25,7 @@ public class SQLRankPublisher extends AbstractPublisher implements RankPublisher
     }
 
     @Override
-    public void publish(Rank rank) {
+    public void publishRank(Group group, Rank rank) {
         Insert<RanksRecord> query = queries.getQuery(SQLQueries.INSERT_RANK);
         query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
         query.bind(2, rank.getName());
@@ -49,7 +49,7 @@ public class SQLRankPublisher extends AbstractPublisher implements RankPublisher
     }
 
     @Override
-    public void drop(Rank rank) {
+    public void drop(Group group, Rank rank) {
         Query query = queries.getQuery(SQLQueries.DROP_SOCIETY_RANK);
         query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
         query.execute();

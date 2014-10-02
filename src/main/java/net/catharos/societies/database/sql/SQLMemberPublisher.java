@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SQLMemberPublisher
  */
-public class SQLMemberPublisher<M extends Member> extends AbstractPublisher implements MemberPublisher<M> {
+class SQLMemberPublisher<M extends Member> extends AbstractPublisher implements MemberPublisher<M> {
 
     @Inject
     public SQLMemberPublisher(ListeningExecutorService service, SQLQueries queries) {

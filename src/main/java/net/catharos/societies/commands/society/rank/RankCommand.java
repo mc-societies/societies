@@ -58,7 +58,7 @@ public class RankCommand {
             }
 
             Rank rank = rankFactory.create(name, priority);
-            this.rankPublisher.publish(rank);
+            this.rankPublisher.publishRank(group, rank);
             group.addRank(rank);
 
             sender.send("rank.created", name);

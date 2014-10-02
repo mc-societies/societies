@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SQLGroupPublisher
  */
-public class SQLGroupPublisher extends AbstractPublisher implements GroupPublisher {
+class SQLGroupPublisher extends AbstractPublisher implements GroupPublisher {
 
     @Inject
     public SQLGroupPublisher(ListeningExecutorService service, SQLQueries queries) {

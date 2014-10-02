@@ -3,7 +3,7 @@ package net.catharos.societies.database.sql;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import net.catharos.groups.Group;
-import net.catharos.groups.publisher.NamePublisher;
+import net.catharos.groups.publisher.GroupNamePublisher;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
 import org.jooq.Update;
@@ -11,7 +11,7 @@ import org.jooq.Update;
 /**
  * Represents a SocietyNameUpdater
  */
-class SQLNamePublisher extends AbstractPublisher implements NamePublisher {
+class SQLNamePublisher extends AbstractPublisher implements GroupNamePublisher {
 
     @Inject
     public SQLNamePublisher(ListeningExecutorService service, SQLQueries queries) {

@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 /**
  * Represents a SQLCreatedPublisher
  */
-public class SQLGroupCreatedPublisher extends AbstractPublisher implements GroupCreatedPublisher {
+class SQLGroupCreatedPublisher extends AbstractPublisher implements GroupCreatedPublisher {
 
     @Inject
     public SQLGroupCreatedPublisher(ListeningExecutorService service, SQLQueries queries) {

@@ -32,7 +32,7 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
                                MemberGroupPublisher societyPublisher,
                                MemberStatePublisher memberStatePublisher,
                                MemberRankPublisher memberRankPublisher,
-                               LastActivePublisher lastActivePublisher,
+                               MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher) {
         super(uuid.get(), societyPublisher, memberStatePublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
         this.localeProvider = localeProvider;

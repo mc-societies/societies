@@ -43,7 +43,7 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                MemberStatePublisher memberStatePublisher,
                                MemberRankPublisher memberRankPublisher,
                                Economy economy,
-                               LastActivePublisher lastActivePublisher,
+                               MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher) {
         this(uuid
                 .get(), playerProvider, localeProvider, directory, economy, societyPublisher, nameProvider, memberStatePublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
@@ -58,7 +58,7 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                NameProvider nameProvider,
                                MemberStatePublisher memberStatePublisher,
                                MemberRankPublisher memberRankPublisher,
-                               LastActivePublisher lastActivePublisher,
+                               MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher) {
         super(uuid, societyPublisher, memberStatePublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
         this.playerProvider = playerProvider;

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Represents a CleanupPublisher
  */
-public class CleanupService extends AbstractService {
+class CleanupService extends AbstractService {
 
     private final long memberMillis;
     private final SQLQueries queries;
