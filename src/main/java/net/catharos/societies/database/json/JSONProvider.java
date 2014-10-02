@@ -6,10 +6,12 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.googlecode.cqengine.CQEngine;
 import com.googlecode.cqengine.IndexedCollection;
 import com.googlecode.cqengine.attribute.Attribute;
 import com.googlecode.cqengine.attribute.SimpleAttribute;
+import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.suffix.SuffixTreeIndex;
 import com.googlecode.cqengine.index.unique.UniqueIndex;
@@ -19,11 +21,15 @@ import net.catharos.groups.Group;
 import net.catharos.groups.GroupProvider;
 import net.catharos.groups.Member;
 import net.catharos.groups.MemberProvider;
+import net.catharos.lib.core.uuid.UUIDStorage;
+import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
 import net.catharos.societies.PlayerProvider;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.Set;
 import java.util.UUID;
 
@@ -58,30 +64,45 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
 
     IndexedCollection<M> members = CQEngine.newInstance();
 
-    public final Attribute<M, UUID> MEMBER_UUID = new SimpleAttribute<M, UUID>("group_uuid") {
+    public final Attribute<Member, UUID> MEMBER_UUID = new SimpleAttribute<Member, UUID>("group_uuid") {
         @Override
-        public UUID getValue(M member) { return member.getUUID(); }
+        public UUID getValue(Member member) { return member.getUUID(); }
     };
 
 
     {
-        members.addIndex(UniqueIndex.onAttribute(MEMBER_UUID));
+        members.addIndex((Index<M>) UniqueIndex.onAttribute(MEMBER_UUID));
 
-        members.addIndex(HashIndex.onAttribute(MEMBER_UUID));
+        members.addIndex((Index<M>) HashIndex.onAttribute(MEMBER_UUID));
     }
 
     private final PlayerProvider playerProvider;
-    private final SocietyMapper societyMapper;
+    private final SocietyMapper<M> mapper;
+    private final UUIDStorage memberStorage;
+    private final UUIDStorage groupStorage;
+
+    @InjectLogger
+    private Logger logger;
 
     @Inject
-    public JSONProvider(PlayerProvider playerProvider, SocietyMapper societyMapper) {
+    public JSONProvider(PlayerProvider playerProvider, SocietyMapper<M> mapper, @Named("group-root") File groupRoot, @Named("member-root") File memberRoot) {
         this.playerProvider = playerProvider;
-        this.societyMapper = societyMapper;
+        this.mapper = mapper;
+        this.groupStorage = new UUIDStorage(groupRoot, "json");
+        this.memberStorage = new UUIDStorage(memberRoot, "json");
     }
 
     @Override
     public void init(LifecycleContext context) throws Exception {
+        for (File file : groupStorage) {
+            groups.add(mapper.readGroup(file));
+        }
 
+        for (File file : memberStorage) {
+            members.add(mapper.readMember(file, this));
+        }
+
+        logger.info("loading stuff");
     }
 
     @Override
@@ -109,7 +130,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
 
     @Override
     public ListenableFuture<M> getMember(UUID uuid) {
-        Query<M> query = equal(MEMBER_UUID, uuid);
+        Query<M> query = (Query<M>) equal(MEMBER_UUID, uuid);
         ResultSet<M> retrieve = members.retrieve(query);
 
         return Futures.immediateFuture(retrieve.uniqueResult());

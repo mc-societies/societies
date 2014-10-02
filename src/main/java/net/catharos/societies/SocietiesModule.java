@@ -12,7 +12,6 @@ import net.catharos.societies.bukkit.BukkitPlayerProvider;
 import net.catharos.societies.commands.CommandModule;
 import net.catharos.societies.commands.FormatModule;
 import net.catharos.societies.database.DatabaseModule;
-import net.catharos.societies.database.sql.SQLModule;
 import net.catharos.societies.group.SocietyModule;
 import net.catharos.societies.launcher.ReloadAction;
 import net.catharos.societies.launcher.SocietiesPlugin;
@@ -100,7 +99,6 @@ public class SocietiesModule extends AbstractServiceModule {
         // Societies
         install(new SocietyModule());
 
-        install(new SQLModule());
 
         // Dictionary
         install(new DictionaryModule(dataDirectory));

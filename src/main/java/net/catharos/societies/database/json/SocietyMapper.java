@@ -1,5 +1,6 @@
 package net.catharos.societies.database.json;
 
+import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -15,11 +16,10 @@ import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.SettingProvider;
 import net.catharos.groups.setting.target.SimpleTarget;
 import net.catharos.groups.setting.target.Target;
-import net.catharos.societies.member.SocietyMember;
 import org.joda.time.DateTime;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Set;
@@ -29,25 +29,25 @@ import java.util.concurrent.ExecutionException;
 /**
  * Represents a GroupConverter
  */
-public class SocietyMapper {
+public class SocietyMapper<M extends Member> {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     private final Provider<GroupBuilder> builders;
     private final RankFactory rankFactory;
-    private final MemberFactory<SocietyMember> memberFactory;
+    private final MemberFactory<M> memberFactory;
     private final SettingProvider settingProvider;
 
     @Inject
-    public SocietyMapper(Provider<GroupBuilder> builders, RankFactory rankFactory, MemberFactory<SocietyMember> memberFactory, SettingProvider settingProvider) {
+    public SocietyMapper(Provider<GroupBuilder> builders, RankFactory rankFactory, MemberFactory<M> memberFactory, SettingProvider settingProvider) {
         this.builders = builders;
         this.rankFactory = rankFactory;
         this.memberFactory = memberFactory;
         this.settingProvider = settingProvider;
     }
 
-    public Group readGroup(InputStream inputStream) throws IOException {
-        JsonParser parser = mapper.getFactory().createParser(inputStream);
+    public Group readGroup(File file) throws IOException {
+        JsonParser parser = mapper.getFactory().createParser(file);
         Group output = readGroup(parser);
         parser.close();
         return output;
@@ -60,7 +60,14 @@ public class SocietyMapper {
         return output;
     }
 
-    public Member readMember(JsonParser parser, GroupProvider groupProvider) throws IOException, ExecutionException, InterruptedException {
+    public M readMember(File file, GroupProvider groupProvider) throws IOException, ExecutionException, InterruptedException {
+        JsonParser parser = mapper.getFactory().createParser(file);
+        M output = readMember(parser, groupProvider);
+        parser.close();
+        return output;
+    }
+
+    public M readMember(JsonParser parser, GroupProvider groupProvider) throws IOException, ExecutionException, InterruptedException {
         if (parser.nextToken() != JsonToken.START_OBJECT) {
             throw new IOException("Expected data to start with an Object");
         }
@@ -97,7 +104,7 @@ public class SocietyMapper {
             }
         }
 
-        Member member = memberFactory.create(uuid);
+        M member = memberFactory.create(uuid);
         member.setCreated(created);
         member.setLastActive(lastActive);
         member.setState(state);
@@ -110,6 +117,14 @@ public class SocietyMapper {
         }
 
         return member;
+    }
+
+    public void writeMember(Member member, File file) throws IOException {
+        JsonGenerator jg = mapper.getFactory().createGenerator(file, JsonEncoding.UTF8);
+        jg.useDefaultPrettyPrinter();
+        writeMember(jg, member);
+
+        jg.close();
     }
 
     public void writeMember(JsonGenerator generator, Member member) throws IOException {
@@ -129,6 +144,13 @@ public class SocietyMapper {
         generator.writeEndArray();
 
         generator.writeEndObject();
+    }
+
+    public Set<Group> readGroups(File file) throws IOException {
+        JsonParser parser = mapper.getFactory().createParser(file);
+        Set<Group> output = readGroups(parser);
+        parser.close();
+        return output;
     }
 
     public Set<Group> readGroups(JsonParser parser) throws IOException {
@@ -210,6 +232,14 @@ public class SocietyMapper {
 
 
         return builder.build();
+    }
+
+    public void writeGroup(Group group, File file) throws IOException {
+        JsonGenerator jg = mapper.getFactory().createGenerator(file, JsonEncoding.UTF8);
+        jg.useDefaultPrettyPrinter();
+        writeGroup(jg, group);
+
+        jg.close();
     }
 
     public String writeGroup(Group group) throws IOException {
