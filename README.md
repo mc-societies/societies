@@ -1,4 +1,4 @@
-#Societies ![build](https://travis-ci.org/Catharos/Societies.svg) ![wtfpl](http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-1.png)
+#Societies ![build](https://travis-ci.org/Catharos/Societies.svg) ![wtfpl](http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-1.png) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/societies/localized.png)](https://crowdin.com/project/societies)
 
 ## Motivation
 
