@@ -20,6 +20,7 @@ import net.catharos.societies.member.locale.LocaleModule;
 import net.catharos.societies.setting.SettingModule;
 import net.catharos.societies.teleport.TeleportModule;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.LocaleUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -96,7 +97,7 @@ public class SocietiesModule extends AbstractServiceModule {
 
         // Members
         install(new MemberModule());
-        install(new LocaleModule());
+        install(new LocaleModule(LocaleUtils.toLocale(config.getString("language"))));
 
         // Societies
         install(new SocietyModule());

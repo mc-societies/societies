@@ -9,11 +9,16 @@ import java.util.Locale;
  */
 public class LocaleModule extends AbstractModule {
 
+
+    private final Locale defaultLocale;
+
+    public LocaleModule(Locale defaultLocale) {this.defaultLocale = defaultLocale;}
+
     @Override
     protected void configure() {
         bind(LocaleProvider.class).to(DynamicLocaleProvider.class);
         bindNamed("fallback-provider", LocaleProvider.class).to(StaticLocaleProvider.class);
 
-        bindNamedInstance("default-locale", Locale.class, Locale.US);
+        bindNamedInstance("default-locale", Locale.class, defaultLocale);
     }
 }
