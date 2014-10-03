@@ -10,6 +10,7 @@ import net.catharos.groups.rank.DefaultRank;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
+import net.catharos.societies.member.SocietyMember;
 import org.jukito.JukitoModule;
 import org.jukito.JukitoRunner;
 import org.junit.Assert;
@@ -37,7 +38,7 @@ public class SocietyMapperTest {
     }
 
     @Inject
-    SocietyMapper mapper;
+    SocietyMapper<SocietyMember> mapper;
 
     @Inject
     GroupGenerator generator;
