@@ -1,28 +1,28 @@
 package net.catharos.societies;
 
-import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.typesafe.config.*;
 import net.catharos.lib.core.i18n.MutableDictionary;
-import net.catharos.lib.core.util.JarUtils;
+import net.catharos.lib.core.util.ZipUtils;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
-import org.apache.commons.lang.LocaleUtils;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.util.Locale;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Properties;
-import java.util.jar.JarFile;
+import java.util.zip.ZipInputStream;
 
 /**
  * Represents a DictionaryService
  */
 class DictionaryService extends AbstractService {
 
+
+    private final URL translationsURL;
     private final MutableDictionary<String> dictionary;
     private final File directory;
 
@@ -30,7 +30,8 @@ class DictionaryService extends AbstractService {
     private Logger logger;
 
     @Inject
-    public DictionaryService(MutableDictionary<String> dictionary, @Named("dictionary-directory") File directory) {
+    public DictionaryService(@Named("translation-url") URL translationsURL, MutableDictionary<String> dictionary, @Named("dictionary-directory") File directory) {
+        this.translationsURL = translationsURL;
         this.dictionary = dictionary;
         this.directory = directory;
     }
@@ -39,82 +40,88 @@ class DictionaryService extends AbstractService {
     public void init(LifecycleContext context) throws Exception {
         logger.info("Loading language files!");
 
-        JarFile jar = JarUtils.getJarFile();
+        ZipInputStream zip = new ZipInputStream(translationsURL.openStream());
 
-        Map<String, InputStream> languages = JarUtils.listStreams(jar, "defaults/languages");
+        org.apache.commons.io.IOUtils.copy(translationsURL.openStream(), new FileOutputStream("/tmp/lang.zip"));
 
-        for (Map.Entry<String, InputStream> entry : languages.entrySet()) {
-            String file = entry.getKey();
-            String name = Files.getNameWithoutExtension(file);
-            Locale locale = LocaleUtils.toLocale(name);
+        final ArrayList<String> loaded = new ArrayList<String>();
 
-            logger.info("Loading language: %s", name);
+        Map<String, InputStream> languages = ZipUtils.listStreams(zip, "", new ZipUtils.Consumer() {
+            @Override
+            public void consume(String name, InputStream stream) {
+//                String key = entry.getKey();
+                if (!name.endsWith("general.properties")) {
+                    return;
+                }
 
-            InputStreamReader reader = new InputStreamReader(entry.getValue());
-            ConfigParseOptions options = ConfigParseOptions.defaults().setSyntax(ConfigSyntax.PROPERTIES);
-            Config defaultConfig = ConfigFactory.parseReader(new BufferedReader(reader), options);
-            reader.close();
+                name = name.substring(0, name.length() - "general.properties".length() - 1);
 
-            File output = new File(directory, file);
-            Config config = ConfigFactory.parseFile(output).withFallback(defaultConfig);
+                InputStreamReader reader = new InputStreamReader(stream);
+                ConfigParseOptions options = ConfigParseOptions.defaults().setSyntax(ConfigSyntax.PROPERTIES);
+                Config defaultConfig = ConfigFactory.parseReader(new BufferedReader(reader), options);
 
-            for (Map.Entry<String, ConfigValue> langEntry : config.entrySet()) {
-                dictionary.addTranslation(locale, langEntry.getKey(), langEntry.getValue().unwrapped().toString());
+                File output = new File(directory, name);
+                Config config = ConfigFactory.parseFile(output).withFallback(defaultConfig);
+
+                for (Map.Entry<String, ConfigValue> langEntry : config.entrySet()) {
+                    dictionary.addTranslation(name, langEntry.getKey(), langEntry.getValue().unwrapped().toString());
+                }
+
+                loaded.add(name);
             }
+        });
 
-//            FileUtils.writeStringToFile(output, config.root()
-//                    .render(ConfigRenderOptions.defaults().setOriginComments(false).setJson(false)));
-        }
+        logger.info("Loaded the following languages: " + loaded.toString());
 
-        jar.close();
+        zip.close();
     }
 
-//    @Override
-    public void init0(LifecycleContext context) throws Exception {
-        logger.info("Loading language files!");
-
-        JarFile jar = JarUtils.getJarFile();
-
-        Map<String, InputStream> languages = JarUtils.listStreams(jar, "defaults/languages");
-
-        for (Map.Entry<String, InputStream> entry : languages.entrySet()) {
-            String file = entry.getKey();
-            String name = Files.getNameWithoutExtension(file);
-            Locale locale = LocaleUtils.toLocale(name);
-
-            logger.info("Loading language: %s", name);
-
-            Reader reader = new BufferedReader(new InputStreamReader(entry.getValue()));
-
-            Properties defaultConfig = new Properties();
-            defaultConfig.load(reader);
-
-            reader.close();
-
-            File output = new File(directory, file);
-            Properties config = new Properties();
-            if (output.exists()) {
-                config.load(reader);
-            }
-
-            defaultConfig.putAll(config);
-            config = defaultConfig;
-
-
-            for (Map.Entry<Object, Object> langEntry : config.entrySet()) {
-                dictionary.addTranslation(locale, langEntry.getKey().toString(), langEntry.getValue().toString());
-            }
-
-            if (!output.exists()) {
-                output.getParentFile().mkdirs();
-                output.createNewFile();
-            }
-
-            FileOutputStream outputStream = new FileOutputStream(output);
-            config.store(outputStream, "");
-            outputStream.close();
-        }
-
-        jar.close();
-    }
+////    @Override
+//    public void init0(LifecycleContext context) throws Exception {
+//        logger.info("Loading language files!");
+//
+//        JarFile jar = JarUtils.getJarFile();
+//
+//        Map<String, InputStream> languages = JarUtils.listStreams(jar, "defaults/languages");
+//
+//        for (Map.Entry<String, InputStream> entry : languages.entrySet()) {
+//            String file = entry.getKey();
+//            String name = Files.getNameWithoutExtension(file);
+//            Locale locale = LocaleUtils.toLocale(name);
+//
+//            logger.info("Loading language: %s", name);
+//
+//            Reader reader = new BufferedReader(new InputStreamReader(entry.getValue()));
+//
+//            Properties defaultConfig = new Properties();
+//            defaultConfig.load(reader);
+//
+//            reader.close();
+//
+//            File output = new File(directory, file);
+//            Properties config = new Properties();
+//            if (output.exists()) {
+//                config.load(reader);
+//            }
+//
+//            defaultConfig.putAll(config);
+//            config = defaultConfig;
+//
+//
+//            for (Map.Entry<Object, Object> langEntry : config.entrySet()) {
+//                dictionary.addTranslation(locale, langEntry.getKey().toString(), langEntry.getValue().toString());
+//            }
+//
+//            if (!output.exists()) {
+//                output.getParentFile().mkdirs();
+//                output.createNewFile();
+//            }
+//
+//            FileOutputStream outputStream = new FileOutputStream(output);
+//            config.store(outputStream, "");
+//            outputStream.close();
+//        }
+//
+//        jar.close();
+//    }
 }

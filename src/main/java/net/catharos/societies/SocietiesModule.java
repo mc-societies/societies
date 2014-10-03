@@ -25,6 +25,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
@@ -47,7 +49,7 @@ public class SocietiesModule extends AbstractServiceModule {
                 .setSyntax(ConfigSyntax.CONF);
 
         Config defaultConfig = ConfigFactory
-                .parseResources(SocietiesModule.class.getClassLoader(), "defaults/config.conf", parseOptions);
+                .parseResources(SocietiesModule.class.getClassLoader(), "config.conf", parseOptions);
 
         File file = new File(dataDirectory, "config.conf");
 
@@ -127,6 +129,13 @@ public class SocietiesModule extends AbstractServiceModule {
         bind(ReloadAction.class).to(SocietiesPlugin.class);
 
         install(new TeleportModule());
+
+
+        try {
+            bindNamedInstance("translation-url", new URL("http://www.societies.frederik-schmitt.de/translations.zip"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
 }
