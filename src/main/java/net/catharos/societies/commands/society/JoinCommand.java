@@ -4,6 +4,10 @@ import com.google.common.util.concurrent.FutureCallback;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.request.*;
+import net.catharos.groups.request.simple.Choices;
+import net.catharos.groups.request.simple.SimpleRequest;
+import net.catharos.groups.request.simple.SimpleRequestMessenger;
+import net.catharos.groups.request.DefaultRequestResult;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
@@ -38,9 +42,9 @@ public class JoinCommand implements Executor<Member> {
         SimpleRequest request = new SimpleRequest(name, sender, new SimpleRequestMessenger<Choices>(), new SetInvolved(participants));
         request.start();
 
-        addCallback(request.result(), new FutureCallback<SimpleRequestResult<Choices>>() {
+        addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
             @Override
-            public void onSuccess(@Nullable SimpleRequestResult<Choices> result) {
+            public void onSuccess(@Nullable DefaultRequestResult<Choices> result) {
                 if (result == null) {
                     return;
                 }

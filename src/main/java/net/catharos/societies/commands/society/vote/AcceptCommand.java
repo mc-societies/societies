@@ -1,6 +1,6 @@
 package net.catharos.societies.commands.society.vote;
 
-import net.catharos.groups.request.Choices;
+import net.catharos.groups.request.simple.Choices;
 import net.catharos.groups.request.Request;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
