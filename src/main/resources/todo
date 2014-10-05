@@ -1,3 +1,5 @@
+Request factory
+
 Bukkit dependencies:
  * Player.getLocation()
  * Player.sendMessage(...);
