@@ -34,7 +34,6 @@ public class OnlineGroupCache implements GroupCache {
 
     @Override
     public Set<Group> getGroup(String name) {
-        //todo cache by name
         return null;
     }
 

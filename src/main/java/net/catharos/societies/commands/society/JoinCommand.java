@@ -3,15 +3,13 @@ package net.catharos.societies.commands.society;
 import com.google.common.util.concurrent.FutureCallback;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
-import net.catharos.groups.request.SetInvolved;
-import net.catharos.groups.request.SimpleRequest;
-import net.catharos.groups.request.SimpleRequestMessenger;
-import net.catharos.groups.request.SimpleRequestResult;
+import net.catharos.groups.request.*;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.lib.core.i18n.Dictionary;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -29,15 +27,20 @@ public class JoinCommand implements Executor<Member> {
     @Argument(name = "argument.target.society")
     Group target;
 
+    private final Dictionary<String> dictionary;
+
+    public JoinCommand(Dictionary<String> dictionary) {this.dictionary = dictionary;}
+
     @Override
     public void execute(CommandContext<Member> ctx, final Member sender) {
         Set<Member> participants = target.getMembers();
-        SimpleRequest request = new SimpleRequest(new SimpleRequestMessenger(), new SetInvolved(participants));
+        String name = dictionary.getTranslation("requests.join", sender.getName());
+        SimpleRequest request = new SimpleRequest(name, sender, new SimpleRequestMessenger<Choices>(), new SetInvolved(participants));
         request.start();
 
-        addCallback(request.result(), new FutureCallback<SimpleRequestResult<SimpleRequest.Choices>>() {
+        addCallback(request.result(), new FutureCallback<SimpleRequestResult<Choices>>() {
             @Override
-            public void onSuccess(@Nullable SimpleRequestResult<SimpleRequest.Choices> result) {
+            public void onSuccess(@Nullable SimpleRequestResult<Choices> result) {
                 if (result == null) {
                     return;
                 }

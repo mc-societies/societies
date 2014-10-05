@@ -22,6 +22,7 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
         RosterCommand.class,
         ListCommand.class,
         InviteCommand.class,
+        KickCommand.class,
 
         JoinCommand.class,
         FastJoinCommand.class,

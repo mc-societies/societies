@@ -2,14 +2,12 @@ package net.catharos.societies.commands.society;
 
 import com.google.common.util.concurrent.FutureCallback;
 import net.catharos.groups.Group;
-import net.catharos.groups.request.SimpleRequest;
-import net.catharos.groups.request.SimpleRequestMessenger;
-import net.catharos.groups.request.SimpleRequestResult;
-import net.catharos.groups.request.SingleInvolved;
+import net.catharos.groups.request.*;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
+import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.member.SocietyMember;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +19,6 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * Represents a InviteCommand
  */
 @Command(identifier = "command.invite")
-//todo simplify requests
 public class InviteCommand implements Executor<SocietyMember> {
 
     @Argument(name = "argument.target.member")
@@ -29,14 +26,19 @@ public class InviteCommand implements Executor<SocietyMember> {
 
     public static final String FAILED = "Invite failed! %s";
 
+    private final Dictionary<String> dictionary;
+
+    public InviteCommand(Dictionary<String> dictionary) {this.dictionary = dictionary;}
+
     @Override
     public void execute(CommandContext<SocietyMember> ctx, final SocietyMember sender) {
-        SimpleRequest request = new SimpleRequest(new SimpleRequestMessenger(), new SingleInvolved(target));
+        String name = dictionary.getTranslation("requests.invite", sender.getName(), sender.getGroup().getName());
+        SimpleRequest request = new SimpleRequest(name, sender, new SimpleRequestMessenger<Choices>(), new SingleInvolved(target));
         request.start();
 
-        addCallback(request.result(), new FutureCallback<SimpleRequestResult<SimpleRequest.Choices>>() {
+        addCallback(request.result(), new FutureCallback<SimpleRequestResult<Choices>>() {
             @Override
-            public void onSuccess(@Nullable SimpleRequestResult<SimpleRequest.Choices> result) {
+            public void onSuccess(@Nullable SimpleRequestResult<Choices> result) {
                 if (result == null) {
                     return;
                 }

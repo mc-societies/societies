@@ -1,7 +1,7 @@
 package net.catharos.societies.commands.society.vote;
 
+import net.catharos.groups.request.Choices;
 import net.catharos.groups.request.Request;
-import net.catharos.groups.request.SimpleRequest;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
@@ -15,13 +15,14 @@ public class AbstainCommand implements Executor<SocietyMember> {
 
     @Override
     public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
-        Request activeRequest = sender.getActiveRequest();
+        Request activeRequest = sender.getReceivedRequest();
 
         if (activeRequest == null) {
+            sender.send("request.none-received");
             return;
         }
 
-        activeRequest.vote(sender, SimpleRequest.Choices.ABSTAIN);
-        sender.send("member.voted.abstain");
+        activeRequest.vote(sender, Choices.ABSTAIN);
+        sender.send("request.voted.abstain");
     }
 }
