@@ -17,6 +17,7 @@ import org.joda.time.DateTime;
 
 import java.io.File;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Represents a JSONMemberPublisher
@@ -42,7 +43,7 @@ public final class JSONMemberPublisher<M extends Member> implements
     }
 
     private <T extends Member> ListenableFuture<T> publishMember(final T member) {
-        return service.submit(new Callable<T>() {
+        ListenableFuture<T> submit = service.submit(new Callable<T>() {
 
             @Override
             public T call() throws Exception {
@@ -51,6 +52,14 @@ public final class JSONMemberPublisher<M extends Member> implements
                 return member;
             }
         });
+        try {
+            submit.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return submit;
     }
 
     @Override

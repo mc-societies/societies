@@ -90,6 +90,11 @@ public class SocietyMapper<M extends Member> {
             } else if (fieldName.equals("state")) {
                 state = parser.getShortValue();
             } else if (fieldName.equals("society")) {
+
+                if (parser.getText().equals("null")) {
+                    continue;
+                }
+
                 group = groupProvider.getGroup(UUID.fromString(parser.getText())).get();
             } else if (fieldName.equals("lastActive")) {
                 lastActive = new DateTime(parser.getLongValue());
@@ -133,7 +138,10 @@ public class SocietyMapper<M extends Member> {
         generator.writeStringField("uuid", member.getUUID().toString());
         generator.writeNumberField("created", member.getCreated().getMillis());
         generator.writeNumberField("state", member.getState());
-        generator.writeNumberField("society", member.getCreated().getMillis());
+        Group group = member.getGroup();
+        if (group != null) {
+            generator.writeStringField("society", group.getUUID().toString());
+        }
         generator.writeNumberField("lastActive", (short) member.getState());
         generator.writeArrayFieldStart("ranks");
 

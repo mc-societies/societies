@@ -10,7 +10,7 @@ public class SocietiesRequestMessenger implements RequestMessenger<Choices> {
 
     @Override
     public void start(Request<Choices> request, Participant participant) {
-        participant.send("request.started", request);
+        participant.send(request.getName(), request);
     }
 
     @Override
@@ -20,14 +20,14 @@ public class SocietiesRequestMessenger implements RequestMessenger<Choices> {
 
     @Override
     public void end(Request<Choices> request) {
-        for (Participant participant : request.getReceivers()) {
+        for (Participant participant : request.getRecipients()) {
             participant.send("request.finished", request);
         }
     }
 
     @Override
     public void cancelled(Request<Choices> request) {
-        for (Participant participant : request.getReceivers()) {
+        for (Participant participant : request.getRecipients()) {
             participant.send("request.cancelled", request);
         }
     }

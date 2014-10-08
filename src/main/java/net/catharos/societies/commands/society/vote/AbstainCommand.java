@@ -22,7 +22,7 @@ public class AbstainCommand implements Executor<SocietyMember> {
             return;
         }
 
-        activeRequest.vote(sender, Choices.ABSTAIN);
         sender.send("request.voted.abstain");
+        activeRequest.vote(sender, Choices.ABSTAIN);
     }
 }

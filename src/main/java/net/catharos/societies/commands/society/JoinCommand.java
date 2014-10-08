@@ -3,11 +3,11 @@ package net.catharos.societies.commands.society;
 import com.google.common.util.concurrent.FutureCallback;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
-import net.catharos.groups.request.*;
-import net.catharos.groups.request.simple.Choices;
-import net.catharos.groups.request.simple.SimpleRequest;
-import net.catharos.groups.request.simple.SimpleRequestMessenger;
 import net.catharos.groups.request.DefaultRequestResult;
+import net.catharos.groups.request.Request;
+import net.catharos.groups.request.RequestFactory;
+import net.catharos.groups.request.SetInvolved;
+import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
@@ -32,14 +32,18 @@ public class JoinCommand implements Executor<Member> {
     Group target;
 
     private final Dictionary<String> dictionary;
+    private final RequestFactory<Choices> requests;
 
-    public JoinCommand(Dictionary<String> dictionary) {this.dictionary = dictionary;}
+    public JoinCommand(Dictionary<String> dictionary, RequestFactory<Choices> requests) {
+        this.dictionary = dictionary;
+        this.requests = requests;
+    }
 
     @Override
     public void execute(CommandContext<Member> ctx, final Member sender) {
         Set<Member> participants = target.getMembers();
         String name = dictionary.getTranslation("requests.join", sender.getName());
-        SimpleRequest request = new SimpleRequest(name, sender, new SimpleRequestMessenger<Choices>(), new SetInvolved(participants));
+        Request<Choices> request = requests.create(sender, name, new SetInvolved(participants));
         request.start();
 
         addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {

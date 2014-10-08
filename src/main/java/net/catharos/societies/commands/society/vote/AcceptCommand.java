@@ -22,7 +22,7 @@ public class AcceptCommand implements Executor<SocietyMember> {
             return;
         }
 
-        activeRequest.vote(sender, Choices.ACCEPT);
         sender.send("request.voted.accept");
+        activeRequest.vote(sender, Choices.ACCEPT);
     }
 }

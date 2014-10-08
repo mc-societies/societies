@@ -21,7 +21,7 @@ public class DenyCommand implements Executor<SocietyMember> {
             return;
         }
 
-        activeRequest.vote(sender, Choices.DENY);
         sender.send("request.voted.deny");
+        activeRequest.vote(sender, Choices.DENY);
     }
 }

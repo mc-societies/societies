@@ -1,12 +1,13 @@
 package net.catharos.societies.commands.society;
 
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.inject.Inject;
 import net.catharos.groups.Group;
-import net.catharos.groups.request.*;
-import net.catharos.groups.request.simple.Choices;
-import net.catharos.groups.request.simple.SimpleRequest;
-import net.catharos.groups.request.simple.SimpleRequestMessenger;
 import net.catharos.groups.request.DefaultRequestResult;
+import net.catharos.groups.request.Request;
+import net.catharos.groups.request.RequestFactory;
+import net.catharos.groups.request.SingleInvolved;
+import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
@@ -31,13 +32,19 @@ public class InviteCommand implements Executor<SocietyMember> {
     public static final String FAILED = "Invite failed! %s";
 
     private final Dictionary<String> dictionary;
+    private final RequestFactory<Choices> requests;
 
-    public InviteCommand(Dictionary<String> dictionary) {this.dictionary = dictionary;}
+
+    @Inject
+    public InviteCommand(Dictionary<String> dictionary, RequestFactory<Choices> requests) {
+        this.dictionary = dictionary;
+        this.requests = requests;
+    }
 
     @Override
     public void execute(CommandContext<SocietyMember> ctx, final SocietyMember sender) {
         String name = dictionary.getTranslation("requests.invite", sender.getName(), sender.getGroup().getName());
-        SimpleRequest request = new SimpleRequest(name, sender, new SimpleRequestMessenger<Choices>(), new SingleInvolved(target));
+        Request<Choices> request = requests.create(sender, name, new SingleInvolved(target));
         request.start();
 
         addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {

@@ -17,10 +17,8 @@ import com.googlecode.cqengine.index.suffix.SuffixTreeIndex;
 import com.googlecode.cqengine.index.unique.UniqueIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.resultset.ResultSet;
-import net.catharos.groups.Group;
-import net.catharos.groups.GroupProvider;
-import net.catharos.groups.Member;
-import net.catharos.groups.MemberProvider;
+import net.catharos.groups.*;
+import net.catharos.groups.publisher.MemberPublisher;
 import net.catharos.lib.core.uuid.UUIDStorage;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
@@ -81,13 +79,19 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     private final UUIDStorage memberStorage;
     private final UUIDStorage groupStorage;
 
+    private final MemberPublisher<M> memberPublisher;
+
+    private final MemberFactory<M> memberFactory;
+
     @InjectLogger
     private Logger logger;
 
     @Inject
-    public JSONProvider(PlayerProvider playerProvider, SocietyMapper<M> mapper, @Named("group-root") File groupRoot, @Named("member-root") File memberRoot) {
+    public JSONProvider(PlayerProvider playerProvider, SocietyMapper<M> mapper, @Named("group-root") File groupRoot, @Named("member-root") File memberRoot, MemberPublisher<M> memberPublisher, MemberFactory<M> memberFactory) {
         this.playerProvider = playerProvider;
         this.mapper = mapper;
+        this.memberPublisher = memberPublisher;
+        this.memberFactory = memberFactory;
         this.groupStorage = new UUIDStorage(groupRoot, "json");
         this.memberStorage = new UUIDStorage(memberRoot, "json");
     }
@@ -132,6 +136,12 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     public ListenableFuture<M> getMember(UUID uuid) {
         Query<M> query = (Query<M>) equal(MEMBER_UUID, uuid);
         ResultSet<M> retrieve = members.retrieve(query);
+
+        if (retrieve.isEmpty()) {
+            M member = memberFactory.create(uuid);
+            memberPublisher.publish(member);
+            return immediateFuture(member);
+        }
 
         return Futures.immediateFuture(retrieve.uniqueResult());
     }
