@@ -8,8 +8,6 @@ import net.catharos.groups.publisher.*;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.member.SocietyMember;
 
-import java.io.File;
-
 /**
  * Represents a MemberProviderModule
  */
@@ -21,7 +19,7 @@ public class JSONModule extends AbstractServiceModule {
 
         bindService().to(provider);
 
-        bind(new TypeLiteral<SocietyMapper<SocietyMember>>() {});
+        bind(new TypeLiteral<MemberMapper<SocietyMember>>() {});
 
         // Member provider
         bind(new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(provider);
@@ -53,10 +51,6 @@ public class JSONModule extends AbstractServiceModule {
         // Rank publishers
         bind(RankPublisher.class).to(groupPublisher);
         bind(RankDropPublisher.class).to(groupPublisher);
-
-        bindNamedInstance("group-root", File.class, new File("/tmp/groups"));
-        bindNamedInstance("member-root", File.class, new File("/tmp/members"));
-
     }
 
 

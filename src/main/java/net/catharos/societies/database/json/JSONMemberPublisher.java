@@ -27,11 +27,11 @@ public final class JSONMemberPublisher<M extends Member> implements
         MemberGroupPublisher, MemberRankPublisher, SettingPublisher {
 
     private final UUIDStorage uuidStorage;
-    private final SocietyMapper<?> mapper;
+    private final MemberMapper<?> mapper;
     private final ListeningExecutorService service;
 
     @Inject
-    public JSONMemberPublisher(@Named("member-root") File memberRoot, SocietyMapper<M> mapper, ListeningExecutorService service) {
+    public JSONMemberPublisher(@Named("member-root") File memberRoot, MemberMapper<M> mapper, ListeningExecutorService service) {
         this.uuidStorage = new UUIDStorage(memberRoot, "json");
         this.mapper = mapper;
         this.service = service;

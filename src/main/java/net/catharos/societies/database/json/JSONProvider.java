@@ -75,7 +75,8 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     }
 
     private final PlayerProvider playerProvider;
-    private final SocietyMapper<M> mapper;
+    private final GroupMapper groupMapper;
+    private final MemberMapper<M> mapper;
     private final UUIDStorage memberStorage;
     private final UUIDStorage groupStorage;
 
@@ -87,9 +88,16 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     private Logger logger;
 
     @Inject
-    public JSONProvider(PlayerProvider playerProvider, SocietyMapper<M> mapper, @Named("group-root") File groupRoot, @Named("member-root") File memberRoot, MemberPublisher<M> memberPublisher, MemberFactory<M> memberFactory) {
+    public JSONProvider(PlayerProvider playerProvider,
+                        MemberMapper<M> mapper,
+                        @Named("group-root") File groupRoot,
+                        @Named("member-root") File memberRoot,
+                        GroupMapper groupMapper,
+                        MemberPublisher<M> memberPublisher,
+                        MemberFactory<M> memberFactory) {
         this.playerProvider = playerProvider;
         this.mapper = mapper;
+        this.groupMapper = groupMapper;
         this.memberPublisher = memberPublisher;
         this.memberFactory = memberFactory;
         this.groupStorage = new UUIDStorage(groupRoot, "json");
@@ -99,11 +107,19 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     @Override
     public void init(LifecycleContext context) throws Exception {
         for (File file : groupStorage) {
-            groups.add(mapper.readGroup(file));
+            try {
+                groups.add(groupMapper.readGroup(file));
+            } catch (Throwable e) {
+                logger.error("Failed loading group from file " + file + "!", e);
+            }
         }
 
         for (File file : memberStorage) {
-            members.add(mapper.readMember(file, this));
+            try {
+                members.add(mapper.readMember(file, this));
+            } catch (Throwable e) {
+                logger.error("Failed loading member from file " + file + "!", e);
+            }
         }
 
         logger.info("loading stuff");

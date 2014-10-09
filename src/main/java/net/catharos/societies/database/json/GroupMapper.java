@@ -1,15 +1,14 @@
 package net.catharos.societies.database.json;
 
-import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Table;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import gnu.trove.set.hash.THashSet;
-import net.catharos.groups.*;
+import net.catharos.groups.Group;
+import net.catharos.groups.GroupBuilder;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
 import net.catharos.groups.setting.Setting;
@@ -24,138 +23,39 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 /**
- * Represents a GroupConverter
+ * Represents a GroupMapper
  */
-public class SocietyMapper<M extends Member> {
-
-    private final ObjectMapper mapper = new ObjectMapper();
+public class GroupMapper extends AbstractMapper {
 
     private final Provider<GroupBuilder> builders;
     private final RankFactory rankFactory;
-    private final MemberFactory<M> memberFactory;
     private final SettingProvider settingProvider;
 
     @Inject
-    public SocietyMapper(Provider<GroupBuilder> builders, RankFactory rankFactory, MemberFactory<M> memberFactory, SettingProvider settingProvider) {
+    public GroupMapper(Provider<GroupBuilder> builders, RankFactory rankFactory, SettingProvider settingProvider) {
         this.builders = builders;
         this.rankFactory = rankFactory;
-        this.memberFactory = memberFactory;
         this.settingProvider = settingProvider;
     }
 
     public Group readGroup(File file) throws IOException {
-        JsonParser parser = mapper.getFactory().createParser(file);
+        JsonParser parser = createParser(file);
         Group output = readGroup(parser);
         parser.close();
         return output;
     }
 
     public Group readGroup(String data) throws IOException {
-        JsonParser parser = mapper.getFactory().createParser(data);
+        JsonParser parser = createParser(data);
         Group output = readGroup(parser);
         parser.close();
         return output;
     }
 
-    public M readMember(File file, GroupProvider groupProvider) throws IOException, ExecutionException, InterruptedException {
-        JsonParser parser = mapper.getFactory().createParser(file);
-        M output = readMember(parser, groupProvider);
-        parser.close();
-        return output;
-    }
-
-    public M readMember(JsonParser parser, GroupProvider groupProvider) throws IOException, ExecutionException, InterruptedException {
-        if (parser.nextToken() != JsonToken.START_OBJECT) {
-            throw new IOException("Expected data to start with an Object");
-        }
-
-        UUID uuid = null;
-        DateTime created = null, lastActive = null;
-        short state = 0;
-        Group group = null;
-
-        ArrayList<UUID> ranks = new ArrayList<UUID>();
-
-        while (parser.nextToken() != JsonToken.END_OBJECT) {
-            String fieldName = parser.getCurrentName();
-
-            JsonToken token = parser.nextToken();
-            if (fieldName.equals("uuid")) {
-                uuid = UUID.fromString(parser.getText());
-            } else if (fieldName.equals("created")) {
-                created = new DateTime(parser.getLongValue());
-            } else if (fieldName.equals("state")) {
-                state = parser.getShortValue();
-            } else if (fieldName.equals("society")) {
-
-                if (parser.getText().equals("null")) {
-                    continue;
-                }
-
-                group = groupProvider.getGroup(UUID.fromString(parser.getText())).get();
-            } else if (fieldName.equals("lastActive")) {
-                lastActive = new DateTime(parser.getLongValue());
-            } else if (fieldName.equals("ranks")) {
-                if (token != JsonToken.START_ARRAY) {
-                    throw new IOException("Expected data to start with an Array");
-                }
-
-                while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    ranks.add(UUID.fromString(parser.getText()));
-                }
-            }
-        }
-
-        M member = memberFactory.create(uuid);
-        member.setCreated(created);
-        member.setLastActive(lastActive);
-        member.setState(state);
-        member.setGroup(group);
-
-        if (group != null) {
-            for (UUID rank : ranks) {
-                member.addRank(group.getRank(rank));
-            }
-        }
-
-        return member;
-    }
-
-    public void writeMember(Member member, File file) throws IOException {
-        JsonGenerator jg = mapper.getFactory().createGenerator(file, JsonEncoding.UTF8);
-        jg.useDefaultPrettyPrinter();
-        writeMember(jg, member);
-
-        jg.close();
-    }
-
-    public void writeMember(JsonGenerator generator, Member member) throws IOException {
-        generator.writeStartObject();
-
-        generator.writeStringField("uuid", member.getUUID().toString());
-        generator.writeNumberField("created", member.getCreated().getMillis());
-        generator.writeNumberField("state", member.getState());
-        Group group = member.getGroup();
-        if (group != null) {
-            generator.writeStringField("society", group.getUUID().toString());
-        }
-        generator.writeNumberField("lastActive", (short) member.getState());
-        generator.writeArrayFieldStart("ranks");
-
-        for (Rank rank : member.getRanks()) {
-            generator.writeString(rank.getUUID().toString());
-        }
-
-        generator.writeEndArray();
-
-        generator.writeEndObject();
-    }
-
     public Set<Group> readGroups(File file) throws IOException {
-        JsonParser parser = mapper.getFactory().createParser(file);
+        JsonParser parser = createParser(file);
         Set<Group> output = readGroups(parser);
         parser.close();
         return output;
@@ -243,7 +143,7 @@ public class SocietyMapper<M extends Member> {
     }
 
     public void writeGroup(Group group, File file) throws IOException {
-        JsonGenerator jg = mapper.getFactory().createGenerator(file, JsonEncoding.UTF8);
+        JsonGenerator jg = createGenerator(file);
         jg.useDefaultPrettyPrinter();
         writeGroup(jg, group);
 
@@ -252,7 +152,7 @@ public class SocietyMapper<M extends Member> {
 
     public String writeGroup(Group group) throws IOException {
         StringWriter stringWriter = new StringWriter();
-        JsonGenerator jg = mapper.getFactory().createGenerator(stringWriter);
+        JsonGenerator jg = createGenerator(stringWriter);
         jg.useDefaultPrettyPrinter();
         writeGroup(jg, group);
 
@@ -326,4 +226,5 @@ public class SocietyMapper<M extends Member> {
         generator.writeStringField("name", rank.getName());
         generator.writeEndObject();
     }
+
 }

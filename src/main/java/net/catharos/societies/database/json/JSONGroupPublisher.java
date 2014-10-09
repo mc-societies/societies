@@ -29,12 +29,12 @@ public final class JSONGroupPublisher<M extends Member> implements
         SettingPublisher {
 
     private final UUIDStorage uuidStorage;
-    private final SocietyMapper<?> mapper;
+    private final GroupMapper mapper;
     private final ListeningExecutorService service;
     private final JSONProvider<M> provider;
 
     @Inject
-    public JSONGroupPublisher(@Named("group-root") File groupRoot, SocietyMapper<M> mapper, ListeningExecutorService service, JSONProvider<M> provider) {
+    public JSONGroupPublisher(@Named("group-root") File groupRoot, GroupMapper mapper, ListeningExecutorService service, JSONProvider<M> provider) {
         this.provider = provider;
         this.uuidStorage = new UUIDStorage(groupRoot, "json");
         this.mapper = mapper;
