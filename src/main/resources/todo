@@ -1,3 +1,9 @@
+- Support sponge
+- pvp stuff
+- Vitals and some formatting for commands
+- configurable data store
+
+
 Bukkit dependencies:
  * Player.getLocation()
  * Player.sendMessage(...);
@@ -8,8 +14,6 @@ Bukkit dependencies:
  * JavaPlugin
 
 Commands:
-	Cancel requests
-
 	ff allow/auto
 	group/member vitals
 	BulletinBoard
