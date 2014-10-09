@@ -10,7 +10,6 @@ import net.catharos.groups.rank.DefaultRank;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
-import net.catharos.societies.member.SocietyMember;
 import org.jukito.JukitoModule;
 import org.jukito.JukitoRunner;
 import org.junit.Assert;
@@ -20,7 +19,7 @@ import org.junit.runner.RunWith;
 import java.util.UUID;
 
 @RunWith(JukitoRunner.class)
-public class MemberMapperTest {
+public class GroupMapperTest {
 
     public static class Module extends JukitoModule {
         @Override
@@ -38,8 +37,6 @@ public class MemberMapperTest {
     }
 
     @Inject
-    MemberMapper<SocietyMember> mapper;
-
     GroupMapper groupMapper;
 
     @Inject
