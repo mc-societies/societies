@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 import java.util.UUID;
 
 @RunWith(JukitoRunner.class)
-public class SocietyMapperTest {
+public class MemberMapperTest {
 
     public static class Module extends JukitoModule {
         @Override
@@ -38,7 +38,9 @@ public class SocietyMapperTest {
     }
 
     @Inject
-    SocietyMapper<SocietyMember> mapper;
+    MemberMapper<SocietyMember> mapper;
+
+    GroupMapper groupMapper;
 
     @Inject
     GroupGenerator generator;
@@ -46,7 +48,7 @@ public class SocietyMapperTest {
     @Test
     public void testGroup() throws Exception {
         Group group = generator.generate();
-        String data = mapper.writeGroup(group);
-        Assert.assertEquals(group, mapper.readGroup(data));
+        String data = groupMapper.writeGroup(group);
+        Assert.assertEquals(group, groupMapper.readGroup(data));
     }
 }

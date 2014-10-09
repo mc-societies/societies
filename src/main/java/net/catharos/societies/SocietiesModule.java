@@ -134,6 +134,8 @@ public class SocietiesModule extends AbstractServiceModule {
 
         install(new RequestModule());
 
+        bindNamedInstance("group-root", File.class, new File(dataDirectory, "data/groups"));
+        bindNamedInstance("member-root", File.class, new File(dataDirectory, "data/members"));
 
         try {
             bindNamedInstance("translation-url", new URL("http://www.societies.frederik-schmitt.de/translations.zip"));

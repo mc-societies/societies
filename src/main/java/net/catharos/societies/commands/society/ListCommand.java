@@ -66,5 +66,7 @@ public class ListCommand implements Executor<Sender> {
                 t.printStackTrace();
             }
         });
+
+        ctx.put("future", future);
     }
 }
