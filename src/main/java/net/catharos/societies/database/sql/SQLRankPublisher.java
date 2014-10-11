@@ -10,7 +10,7 @@ import net.catharos.groups.publisher.RankDropPublisher;
 import net.catharos.groups.publisher.RankPublisher;
 import net.catharos.groups.rank.Rank;
 import net.catharos.lib.core.uuid.UUIDGen;
-import net.catharos.societies.database.layout.tables.records.RanksRecord;
+import net.catharos.societies.database.sql.layout.tables.records.RanksRecord;
 import org.jooq.Insert;
 import org.jooq.Query;
 

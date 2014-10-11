@@ -5,17 +5,17 @@ import com.google.inject.Singleton;
 import net.catharos.lib.database.DSLProvider;
 import net.catharos.lib.database.QueryKey;
 import net.catharos.lib.database.QueryProvider;
-import net.catharos.societies.database.layout.tables.records.MembersRecord;
-import net.catharos.societies.database.layout.tables.records.RanksRecord;
-import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
-import net.catharos.societies.database.layout.tables.records.SocietiesSettingsRecord;
+import net.catharos.societies.database.sql.layout.tables.records.MembersRecord;
+import net.catharos.societies.database.sql.layout.tables.records.RanksRecord;
+import net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord;
+import net.catharos.societies.database.sql.layout.tables.records.SocietiesSettingsRecord;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.types.UShort;
 
 import java.sql.Timestamp;
 
-import static net.catharos.societies.database.layout.Tables.*;
+import static net.catharos.societies.database.sql.layout.Tables.*;
 
 /**
  * Represents a SocietiesQueries

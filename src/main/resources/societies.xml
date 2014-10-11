@@ -118,7 +118,7 @@
 
         <target>
             <!-- The destination package of your generated classes (within the destination directory) -->
-            <packageName>net.catharos.societies.database.layout</packageName>
+            <packageName>net.catharos.societies.database.sql.layout</packageName>
 
             <!-- The destination directory of your generated classes -->
             <directory>src/main/java/</directory>

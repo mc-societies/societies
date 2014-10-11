@@ -7,8 +7,8 @@ import net.catharos.groups.Member;
 import net.catharos.groups.publisher.GroupStatePublisher;
 import net.catharos.groups.publisher.MemberStatePublisher;
 import net.catharos.lib.core.uuid.UUIDGen;
-import net.catharos.societies.database.layout.tables.records.MembersRecord;
-import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
+import net.catharos.societies.database.sql.layout.tables.records.MembersRecord;
+import net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord;
 import org.jooq.Update;
 
 /**

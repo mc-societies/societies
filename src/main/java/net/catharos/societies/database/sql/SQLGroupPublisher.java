@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import net.catharos.groups.Group;
 import net.catharos.groups.publisher.GroupPublisher;
 import net.catharos.lib.core.uuid.UUIDGen;
-import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
+import net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord;
 import org.bukkit.ChatColor;
 import org.jooq.Insert;
 

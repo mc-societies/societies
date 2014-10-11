@@ -1,11 +1,11 @@
 - verify/trust stuff
 
 - Support sponge
-- pvp stuff
+- pvp stuff  ff allow/auto
 - backup command
-- ff allow/auto
 - BulletinBoard
 - log file
+- Performance: Lazy loading of settings/ranks
 
 
 Bukkit dependencies:

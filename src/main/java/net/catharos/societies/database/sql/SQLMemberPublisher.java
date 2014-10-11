@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import net.catharos.groups.Member;
 import net.catharos.groups.publisher.MemberPublisher;
 import net.catharos.lib.core.uuid.UUIDGen;
-import net.catharos.societies.database.layout.tables.records.MembersRecord;
+import net.catharos.societies.database.sql.layout.tables.records.MembersRecord;
 import org.jooq.Insert;
 
 import java.util.concurrent.Callable;

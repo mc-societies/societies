@@ -8,7 +8,7 @@ import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.uuid.UUIDGen;
-import net.catharos.societies.database.layout.tables.records.SocietiesSettingsRecord;
+import net.catharos.societies.database.sql.layout.tables.records.SocietiesSettingsRecord;
 import org.jooq.Insert;
 import org.jooq.types.UShort;
 

@@ -6,7 +6,7 @@ import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.lib.core.uuid.UUIDGen;
-import net.catharos.societies.database.layout.tables.records.MembersRecord;
+import net.catharos.societies.database.sql.layout.tables.records.MembersRecord;
 import org.jooq.Update;
 
 import java.util.UUID;
