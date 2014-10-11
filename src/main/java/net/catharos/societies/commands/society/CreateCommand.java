@@ -1,5 +1,8 @@
 package net.catharos.societies.commands.society;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
 import net.catharos.groups.Group;
@@ -46,7 +49,7 @@ public class CreateCommand implements Executor<Sender> {
     }
 
     @Override
-    public void execute(CommandContext<Sender> ctx, Sender sender) {
+    public void execute(CommandContext<Sender> ctx, final Sender sender) {
         ValidateResult nameResult = nameValidator.validateName(name);
 
 
@@ -68,13 +71,30 @@ public class CreateCommand implements Executor<Sender> {
         }
 
         Group group = groupFactory.create(name, tag);
-        publisher.publish(group);
+        ListenableFuture<Group> future = publisher.publish(group);
 
-        if (sender instanceof SocietyMember) {
-            group.addMember(((SocietyMember) sender));
-        }
+        Futures.addCallback(future, new FutureCallback<Group>() {
+            @Override
+            public void onSuccess(Group result) {
+                if (result == null) {
+                    //todo already exist  unable to create
+                    return;
+                }
 
-        sender.send("society.created", name, tag);
+                if (sender instanceof SocietyMember) {
+                    result.addMember(((SocietyMember) sender));
+                }
+
+                sender.send("society.created", name, tag);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                          t.printStackTrace();
+            }
+        });
+
+
     }
 
     private class SenderWithdrawer implements Sender.Executor<SocietyMember, Boolean> {

@@ -14,7 +14,6 @@ import com.googlecode.cqengine.attribute.SimpleAttribute;
 import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.suffix.SuffixTreeIndex;
-import com.googlecode.cqengine.index.unique.UniqueIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.resultset.ResultSet;
 import net.catharos.groups.*;
@@ -53,11 +52,19 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         public String getValue(Group group) { return group.getName(); }
     };
 
-    {
-        groups.addIndex(UniqueIndex.onAttribute(GROUP_UUID));
+    public static final Attribute<Group, String> GROUP_TAG = new SimpleAttribute<Group, String>("group_tag") {
+        @Override
+        public String getValue(Group group) { return group.getTag(); }
+    };
 
+
+    {
         groups.addIndex(HashIndex.onAttribute(GROUP_UUID));
+
+        groups.addIndex(HashIndex.onAttribute(GROUP_NAME));
         groups.addIndex(SuffixTreeIndex.onAttribute(GROUP_NAME));
+
+        groups.addIndex(HashIndex.onAttribute(GROUP_TAG));
     }
 
     IndexedCollection<M> members = CQEngine.newInstance();
@@ -69,8 +76,6 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
 
 
     {
-        members.addIndex((Index<M>) UniqueIndex.onAttribute(MEMBER_UUID));
-
         members.addIndex((Index<M>) HashIndex.onAttribute(MEMBER_UUID));
     }
 

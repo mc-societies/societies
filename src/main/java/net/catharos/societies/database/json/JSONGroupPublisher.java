@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.googlecode.cqengine.query.Query;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.publisher.*;
@@ -16,7 +17,11 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Callable;
+
+import static com.googlecode.cqengine.query.QueryFactory.contains;
+import static com.googlecode.cqengine.query.QueryFactory.or;
 
 /**
  * Represents a JSONMemberPublisher
@@ -47,16 +52,38 @@ public final class JSONGroupPublisher<M extends Member> implements
 
             @Override
             public Group call() throws Exception {
-                mapper.writeGroup(group, uuidStorage.getFile(group.getUUID()));
-                provider.groups.add(group);
-                return group;
+                Query<Group> query = or(contains(JSONProvider.GROUP_TAG, group
+                        .getTag()), contains(JSONProvider.GROUP_NAME, group.getName()));
+
+                if (provider.groups.retrieve(query).isNotEmpty()) {
+                    return null;
+                }
+
+                return publish0(group);
+            }
+        });
+    }
+
+
+    private Group publish0(final Group group) throws IOException {
+        provider.groups.add(group);
+        mapper.writeGroup(group, uuidStorage.getFile(group.getUUID()));
+        return group;
+    }
+
+    public ListenableFuture<Group> defaultPublish(final Group group) {
+        return service.submit(new Callable<Group>() {
+
+            @Override
+            public Group call() throws Exception {
+                return publish0(group);
             }
         });
     }
 
     @Override
     public void publish(Group group, DateTime created) {
-        publish(group);
+        defaultPublish(group);
     }
 
     @Override
@@ -64,29 +91,28 @@ public final class JSONGroupPublisher<M extends Member> implements
         publish(group);
     }
 
-
     @Override
     public void publishRank(Group group, Rank rank) {
-        publish(group);
+        defaultPublish(group);
     }
 
     @Override
     public void publish(Group group, short state) {
-        publish(group);
+        defaultPublish(group);
     }
 
     @Override
     public void drop(Group group, Rank rank) {
-        publish(group);
+        defaultPublish(group);
     }
 
     @Override
     public void publish(Group group, Rank rank) {
-        publish(group);
+        defaultPublish(group);
     }
 
     @Override
     public <V> void publish(Subject subject, Target target, Setting<V> setting, @Nullable V value) {
-        publish(((Group) subject));
+        defaultPublish(((Group) subject));
     }
 }

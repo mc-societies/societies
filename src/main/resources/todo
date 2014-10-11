@@ -1,9 +1,8 @@
+Critical:
+- configurable data store
+
 - Support sponge
 - pvp stuff
-- configurable data store
-- Verify states and unnecessary publishes
-- Duplicate groups?
-
 
 Bukkit dependencies:
  * Player.getLocation()

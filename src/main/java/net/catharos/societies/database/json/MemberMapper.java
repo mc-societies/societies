@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.google.inject.Inject;
-import net.catharos.groups.Group;
-import net.catharos.groups.GroupProvider;
-import net.catharos.groups.Member;
-import net.catharos.groups.MemberFactory;
+import net.catharos.groups.*;
 import net.catharos.groups.rank.Rank;
 import org.joda.time.DateTime;
 
@@ -79,6 +76,10 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
         }
 
         M member = memberFactory.create(uuid);
+
+        int previousState = member.getState();
+        member.setState(DefaultGroup.PREPARE);
+
         member.setCreated(created);
         member.setLastActive(lastActive);
         member.setState(state);
@@ -89,6 +90,8 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
                 member.addRank(group.getRank(rank));
             }
         }
+
+        member.setState(previousState);
 
         return member;
     }

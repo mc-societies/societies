@@ -168,7 +168,7 @@ class SQLQueries extends QueryProvider {
                         .insertInto(SOCIETIES)
                         .set(SOCIETIES.UUID, DEFAULT_BYTE_ARRAY)
                         .set(SOCIETIES.NAME, DEFAULT_STRING)
-                        .set(SOCIETIES.TAG, DEFAULT_STRING);
+                        .set(SOCIETIES.TAG, DEFAULT_STRING).onDuplicateKeyIgnore();
             }
         });
 

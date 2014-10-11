@@ -33,7 +33,12 @@ class SQLGroupPublisher extends AbstractPublisher implements GroupPublisher {
                 query.bind(2, group.getName());
                 query.bind(3, group.getTag());
 
-                query.execute();
+                int inserted = query.execute();
+
+                //already exists
+                if (inserted == 0) {
+                    return null;
+                }
 
                 return group;
             }
