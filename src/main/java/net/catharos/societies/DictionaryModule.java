@@ -23,7 +23,7 @@ public class DictionaryModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bindNamedInstance("dictionary-directory", File.class, new File(dataDirectory, "languages"));
+        bindNamedInstance("dictionary-directory", File.class, new File(dataDirectory, "translations"));
 
         Key<MutableDictionary<String>> dictionaryKey = Key.get(new TypeLiteral<MutableDictionary<String>>() {});
         bind(dictionaryKey).to(new TypeLiteral<DefaultDictionary<String>>() {})

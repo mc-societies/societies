@@ -1,5 +1,6 @@
 package net.catharos.societies;
 
+import com.google.common.io.ByteStreams;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.typesafe.config.*;
@@ -8,6 +9,7 @@ import net.catharos.lib.core.util.ZipUtils;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
@@ -40,36 +42,66 @@ class DictionaryService extends AbstractService {
     public void init(LifecycleContext context) throws Exception {
         logger.info("Loading language files!");
 
-        ZipInputStream zip = new ZipInputStream(translationsURL.openStream());
+        InputStream in;
 
-        org.apache.commons.io.IOUtils.copy(translationsURL.openStream(), new FileOutputStream("/tmp/lang.zip"));
+        File localTranslations = new File(directory, "translations.zip");
+        if (localTranslations.exists()) {
+            in = new FileInputStream(localTranslations);
+        } else {
+            in = translationsURL.openStream();
+        }
+
+        in = new ByteArrayInputStream(ByteStreams.toByteArray(in));
+
+        ZipInputStream zip = new ZipInputStream(in);
 
         final ArrayList<String> loaded = new ArrayList<String>();
 
         ZipUtils.listStreams(zip, "", new ZipUtils.Consumer() {
             @Override
             public void consume(String name, InputStream stream) {
-//                String key = entry.getKey();
                 if (!name.endsWith("general.properties")) {
                     return;
                 }
+                try {
+                    stream = new ByteArrayInputStream(ByteStreams.toByteArray(stream));
 
-                name = name.substring(0, name.length() - "general.properties".length() - 1);
+                    String lang = name.substring(0, name.length() - "general.properties".length() - 1);
 
-                InputStreamReader reader = new InputStreamReader(stream);
-                ConfigParseOptions options = ConfigParseOptions.defaults().setSyntax(ConfigSyntax.PROPERTIES);
-                Config defaultConfig = ConfigFactory.parseReader(new BufferedReader(reader), options);
+                    InputStreamReader reader = new InputStreamReader(stream);
+                    ConfigParseOptions options = ConfigParseOptions.defaults().setSyntax(ConfigSyntax.PROPERTIES);
+                    Config config = ConfigFactory.parseReader(new BufferedReader(reader), options);
 
-                File output = new File(directory, name);
-                Config config = ConfigFactory.parseFile(output).withFallback(defaultConfig);
+                    File output = new File(directory, name);
 
-                for (Map.Entry<String, ConfigValue> langEntry : config.entrySet()) {
-                    dictionary.addTranslation(name, langEntry.getKey(), langEntry.getValue().unwrapped().toString());
+//                    if (!output.exists()) {
+//                        FileUtils.forceMkdir(output.getParentFile());
+//                        output.createNewFile();
+//                    }
+//
+//                    stream.reset();
+//                    IOUtils.copy(stream, new FileOutputStream(output));
+
+                    if (output.exists()) {
+                        config = ConfigFactory.parseFile(output).withFallback(config);
+                    }
+
+                    for (Map.Entry<String, ConfigValue> langEntry : config.entrySet()) {
+                        dictionary.addTranslation(lang, langEntry.getKey(), langEntry.getValue().unwrapped().toString());
+                    }
+
+                    loaded.add(lang);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
-                loaded.add(name);
             }
         });
+
+        File cache = new File(directory, ".cache-translations.zip");
+        in.reset();
+        IOUtils.copy(in, new FileOutputStream(cache));
 
         logger.info("Loaded the following languages: " + loaded.toString());
 
