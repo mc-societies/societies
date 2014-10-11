@@ -73,7 +73,7 @@ public class CreateCommand implements Executor<Sender> {
             return;
         }
 
-        name = stripColor(name);
+        name = stripColor(name).trim();
         tag = translateAlternateColorCodes('&', tag);
 
         Group group = groupFactory.create(name, tag);

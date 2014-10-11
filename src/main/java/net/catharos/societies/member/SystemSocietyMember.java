@@ -8,6 +8,7 @@ import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderHelper;
 import net.catharos.lib.core.i18n.Dictionary;
+import net.catharos.societies.bukkit.BukkitUtil;
 import net.catharos.societies.member.locale.LocaleProvider;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.entity.Player;
@@ -72,6 +73,7 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
 
     @Override
     public void send(String message, Object... args) {
+        BukkitUtil.argumentColorReset(args);
         System.out.println(MessageFormat.format(directory.getTranslation(message), args));
     }
 

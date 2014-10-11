@@ -29,6 +29,7 @@ public class BukkitSystemSender extends SystemSender {
 
     @Override
     public void send(String message, Object... args) {
+        BukkitUtil.argumentColorReset(args);
         sender.sendMessage(MessageFormat.format(dictionary.getTranslation(message), args));
     }
 }

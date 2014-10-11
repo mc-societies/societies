@@ -1,8 +1,12 @@
-Critical:
-- configurable data store
+- verify/trust stuff
 
 - Support sponge
 - pvp stuff
+- backup command
+- ff allow/auto
+- BulletinBoard
+- log file
+
 
 Bukkit dependencies:
  * Player.getLocation()
@@ -13,34 +17,17 @@ Bukkit dependencies:
  * ChatColor
  * JavaPlugin
 
-Commands:
-	ff allow/auto
-	group/member vitals
-	BulletinBoard
-
 Config:
    Settings:
         kill-weights.rival
         kill-weights.neutral
         kill-weights.civilian
 
-Supported databases:
-	* MySQL X
-	* cqengine with json
-
-Storage:
-	* In database
-	* JSON backups
-
 Text renderer:
 	* Tree like structure
 
 Cosmetics:
-	Publishers also for creating/dropping societies?
 	Get player name from external source if player is offline and there is no "offline player data"
-	Beautify states
+
 Caching
 	* Pre-rendered listing output
-
-History
-Statistics

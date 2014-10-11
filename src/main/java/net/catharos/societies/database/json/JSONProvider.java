@@ -128,7 +128,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
             }
         }
 
-        logger.info("loading stuff");
+        logger.info("Loaded societies and members! Ready to rock on!");
     }
 
     @Override

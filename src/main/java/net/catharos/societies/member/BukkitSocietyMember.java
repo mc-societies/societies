@@ -11,6 +11,7 @@ import net.catharos.lib.core.command.sender.SenderHelper;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.NameProvider;
 import net.catharos.societies.PlayerProvider;
+import net.catharos.societies.bukkit.BukkitUtil;
 import net.catharos.societies.member.locale.LocaleProvider;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -99,11 +100,7 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
     @Override
     public boolean hasPermission(String permission) {
         Player player = toPlayer();
-        if (player == null) {
-            return false;
-        }
-
-        return player.hasPermission(permission);
+        return player != null && player.hasPermission(permission);
     }
 
     @Override
@@ -112,6 +109,8 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
         if (player == null) {
             return;
         }
+
+        BukkitUtil.argumentColorReset(args);
 
         player.sendMessage(MessageFormat.format(directory.getTranslation(message), args));
     }
