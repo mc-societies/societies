@@ -77,7 +77,7 @@ public class CreateCommand implements Executor<Sender> {
             @Override
             public void onSuccess(Group result) {
                 if (result == null) {
-                    //todo already exist  unable to create
+                    sender.send(" society.already-exists", name, tag);
                     return;
                 }
 
