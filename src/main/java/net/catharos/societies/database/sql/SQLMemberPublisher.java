@@ -35,6 +35,7 @@ class SQLMemberPublisher<M extends Member> extends AbstractPublisher implements 
                 if (member.getGroup() != null) {
                     group = UUIDGen.toByteArray(member.getGroup().getUUID());
                 }
+
                 query.bind(2, group);
 
                 query.execute();

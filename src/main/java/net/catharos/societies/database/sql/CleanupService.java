@@ -2,6 +2,7 @@ package net.catharos.societies.database.sql;
 
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
+import net.catharos.lib.database.Database;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
@@ -18,13 +19,15 @@ class CleanupService extends AbstractService {
 
     private final long memberMillis;
     private final SQLQueries queries;
+    private final Database database;
 
     @InjectLogger
     private Logger logger;
 
     @Inject
-    public CleanupService(SQLQueries queries, Config config) {
+    public CleanupService(SQLQueries queries, Database database, Config config) {
         this.queries = queries;
+        this.database = database;
         this.memberMillis = config.getDuration("purge.inactive-members", TimeUnit.MILLISECONDS);
     }
 
@@ -47,5 +50,10 @@ class CleanupService extends AbstractService {
         query = queries.getQuery(SQLQueries.DROP_RANK_ORPHANS);
         int ranks = query.execute();
         logger.info("Dropped %s ranks because of inactivity.", ranks);
+    }
+
+    @Override
+    public void stop(LifecycleContext context) throws Exception {
+        database.close();
     }
 }

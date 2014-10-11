@@ -13,7 +13,6 @@ import net.catharos.groups.Group;
 import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.Commands;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.lib.database.Database;
 import net.catharos.lib.shank.logging.LoggingModule;
 import net.catharos.lib.shank.service.ServiceController;
 import net.catharos.lib.shank.service.ServiceModule;
@@ -106,7 +105,6 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
     @Override
     public void onDisable() {
-        serviceController.invoke(Lifecycle.STOPPING);
         ListeningExecutorService service = injector.getInstance(ListeningExecutorService.class);
 
         try {
@@ -118,8 +116,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
         service.shutdown();
 
-        Database database = injector.getInstance(Database.class);
-        database.close();
+        serviceController.invoke(Lifecycle.STOPPING);
 
         getLogger().info("Engines and weapons unloaded and locked!");
     }

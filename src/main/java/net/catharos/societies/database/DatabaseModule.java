@@ -1,45 +1,36 @@
 package net.catharos.societies.database;
 
 
-import net.catharos.lib.database.DSLProvider;
-import net.catharos.lib.database.Database;
-import net.catharos.lib.database.RemoteDatabase;
-import net.catharos.lib.database.data.DataWorker;
-import net.catharos.lib.database.data.queue.DefaultQueue;
-import net.catharos.lib.database.data.queue.Queue;
+import com.typesafe.config.Config;
 import net.catharos.lib.shank.AbstractModule;
-import org.jooq.SQLDialect;
+import net.catharos.societies.database.json.JSONModule;
+import net.catharos.societies.database.sql.SQLModule;
 
-import java.util.concurrent.TimeUnit;
+import java.io.File;
 
 /**
  * Represents a DatabaseModule
  */
 public class DatabaseModule extends AbstractModule {
 
+    private final Config config;
+    private final File dataDirectory;
+
+    public DatabaseModule(Config config, File dataDirectory) {
+        this.config = config;
+        this.dataDirectory = dataDirectory;
+    }
+
     @Override
     protected void configure() {
-        bindNamedString(RemoteDatabase.DB_DATASOURCE_CLASS, "com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+        String type = config.getString("database.type");
+        if (type.equals("mysql")) {
+            install(new SQLModule(config.getBoolean("database.mysql.caching")));
+        } else if (type.equals("default")) {
+            bindNamedInstance("group-root", File.class, new File(dataDirectory, config.getString("database.default.societies")));
+            bindNamedInstance("member-root", File.class, new File(dataDirectory, config.getString("database.default.members")));
 
-        bind(SQLDialect.class).toInstance(SQLDialect.MYSQL);
-//
-//        bind(SQLDialect.class).toInstance(SQLDialect.HSQLDB);
-//        bindNamedString("db-url", "jdbc:hsqldb:mem:test");
-//
-//        bindNamedString(URLDatabase.DB_DATASOURCE_CLASS, "org.hsqldb.jdbc.JDBCDataSource");
-//
-//        bindNamedString("db-driver", "org.hsqldb.jdbc.JDBCDriver");
-
-        bind(DataWorker.class);
-
-        bind(Queue.class).to(DefaultQueue.class);
-        bindNamedInstance("auto-flush-interval", long.class, 5000L);
-        bindNamedInstance("max-batch-idle", long.class, 5000L);
-        bindNamedInstance("queue-time-unit", TimeUnit.class, TimeUnit.MILLISECONDS);
-        bindNamedInstance("critical-batch-size", int.class, 100);
-
-
-        bind(Database.class).to(RemoteDatabase.class);
-        bind(DSLProvider.class).to(RemoteDatabase.class);
+            install(new JSONModule());
+        }
     }
 }

@@ -52,8 +52,13 @@ public final class JSONGroupPublisher<M extends Member> implements
 
             @Override
             public Group call() throws Exception {
-                Query<Group> query = or(contains(JSONProvider.GROUP_TAG, group
-                        .getTag()), contains(JSONProvider.GROUP_NAME, group.getName()));
+                String tag = group.getTag();
+                String name = group.getName();
+
+                Query<Group> query = or(
+                        contains(JSONProvider.GROUP_CLEAN_TAG, tag),
+                        contains(JSONProvider.GROUP_NAME, name)
+                );
 
                 if (provider.groups.retrieve(query).isNotEmpty()) {
                     return null;

@@ -18,6 +18,9 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.societies.member.SocietyMember;
 
+import static org.bukkit.ChatColor.stripColor;
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
+
 /**
  * Represents a CreateCommand
  */
@@ -70,6 +73,9 @@ public class CreateCommand implements Executor<Sender> {
             return;
         }
 
+        name = stripColor(name);
+        tag = translateAlternateColorCodes('&', tag);
+
         Group group = groupFactory.create(name, tag);
         ListenableFuture<Group> future = publisher.publish(group);
 
@@ -90,7 +96,7 @@ public class CreateCommand implements Executor<Sender> {
 
             @Override
             public void onFailure(Throwable t) {
-                          t.printStackTrace();
+                t.printStackTrace();
             }
         });
 

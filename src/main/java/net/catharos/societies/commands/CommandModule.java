@@ -1,7 +1,6 @@
 package net.catharos.societies.commands;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
@@ -32,6 +31,7 @@ import net.catharos.lib.core.command.token.DelimiterTokenizer;
 import net.catharos.lib.core.command.token.SpaceDelimiter;
 import net.catharos.lib.core.command.token.Tokenizer;
 import net.catharos.lib.shank.AbstractModule;
+import net.catharos.societies.SocietiesModule;
 import net.catharos.societies.bukkit.BukkitSystemSender;
 import net.catharos.societies.bukkit.LocationParser;
 import net.catharos.societies.commands.society.SocietyCommand;
@@ -40,7 +40,6 @@ import net.catharos.societies.member.SocietyMember;
 import org.bukkit.Location;
 
 import java.util.Set;
-import java.util.concurrent.Executors;
 
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
@@ -97,8 +96,7 @@ public class CommandModule extends AbstractModule {
 
         // Sync/Async command executors
         bindNamedInstance("sync-executor", ListeningExecutorService.class, sameThreadExecutor());
-        bindNamedInstance("async-executor", ListeningExecutorService.class, MoreExecutors.listeningDecorator(Executors
-                .newFixedThreadPool(2)));
+        bindNamed("async-executor", ListeningExecutorService.class).to(SocietiesModule.WORKER_EXECUTOR);
 //        bindNamedInstance("async-executor", ListeningExecutorService.class, sameThreadExecutor());
 
 

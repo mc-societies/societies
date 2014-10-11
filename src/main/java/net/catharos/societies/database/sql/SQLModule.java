@@ -2,37 +2,75 @@ package net.catharos.societies.database.sql;
 
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
-import net.catharos.groups.GroupCache;
-import net.catharos.groups.GroupProvider;
-import net.catharos.groups.MemberCache;
-import net.catharos.groups.MemberProvider;
+import net.catharos.groups.*;
 import net.catharos.groups.publisher.*;
+import net.catharos.lib.database.DSLProvider;
+import net.catharos.lib.database.Database;
+import net.catharos.lib.database.RemoteDatabase;
+import net.catharos.lib.database.data.DataWorker;
+import net.catharos.lib.database.data.queue.DefaultQueue;
+import net.catharos.lib.database.data.queue.Queue;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.group.OnlineGroupCache;
 import net.catharos.societies.member.OnlineMemberCache;
 import net.catharos.societies.member.SocietyMember;
+import org.jooq.SQLDialect;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents a MemberProviderModule
  */
 public class SQLModule extends AbstractServiceModule {
 
+    private final boolean cache;
+
+    public SQLModule(boolean cache) {this.cache = cache;}
+
     @Override
     protected void configure() {
         bindService().to(CleanupService.class);
+
+        bindNamedString(RemoteDatabase.DB_DATASOURCE_CLASS, "com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+
+        bind(SQLDialect.class).toInstance(SQLDialect.MYSQL);
+
+        bind(DataWorker.class);
+
+        bind(Queue.class).to(DefaultQueue.class);
+        bindNamedInstance("auto-flush-interval", long.class, 5000L);
+        bindNamedInstance("max-batch-idle", long.class, 5000L);
+        bindNamedInstance("queue-time-unit", TimeUnit.class, TimeUnit.MILLISECONDS);
+        bindNamedInstance("critical-batch-size", int.class, 100);
+
+        bind(Database.class).to(RemoteDatabase.class);
+        bind(DSLProvider.class).to(RemoteDatabase.class);
+        install(new SQLModule(cache));
+
 
         bind(SQLQueries.class);
 
         Key<SQLProvider> controller = Key.get(SQLProvider.class);
 
         // Member provider
-        bind(new TypeLiteral<MemberCache<SocietyMember>>() {})
-                .to(new TypeLiteral<OnlineMemberCache<SocietyMember>>() {});
+        if (cache) {
+            bind(new TypeLiteral<MemberCache<SocietyMember>>() {})
+                    .to(new TypeLiteral<OnlineMemberCache<SocietyMember>>() {});
+        } else {
+            bind(new TypeLiteral<MemberCache<SocietyMember>>() {})
+                    .to(new TypeLiteral<NaughtyMemberCache<SocietyMember>>() {});
+        }
+
         bind(new TypeLiteral<MemberProvider<SocietyMember>>() {})
                 .to(controller);
 
         // Group provider
-        bind(GroupCache.class).to(OnlineGroupCache.class);
+        if (cache) {
+            bind(GroupCache.class).to(OnlineGroupCache.class);
+        } else {
+            bind(GroupCache.class).to(NaughtyGroupCache.class);
+        }
+
         bind(GroupProvider.class).to(controller);
 
         Key<SQLStatePublisher> statePublisherKey = Key.get(SQLStatePublisher.class);

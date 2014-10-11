@@ -2,6 +2,8 @@ package net.catharos.societies;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import com.typesafe.config.*;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import net.catharos.lib.shank.config.ConfigModule;
@@ -38,6 +40,8 @@ import java.util.concurrent.Executors;
 public class SocietiesModule extends AbstractServiceModule {
 
     private final File dataDirectory;
+    public static final Key<ListeningExecutorService> WORKER_EXECUTOR = Key
+            .get(ListeningExecutorService.class, Names.named("worker-executor"));
 
     public SocietiesModule(File dataDirectory) {
         this.dataDirectory = dataDirectory;
@@ -91,7 +95,7 @@ public class SocietiesModule extends AbstractServiceModule {
         bind(UUID.class).toProvider(TimeUUIDProvider.class);
 
         // Database
-        install(new DatabaseModule());
+        install(new DatabaseModule(config, dataDirectory));
 
         // Commands
         install(new CommandModule());
@@ -119,9 +123,9 @@ public class SocietiesModule extends AbstractServiceModule {
         bind(PlayerProvider.class).to(BukkitPlayerProvider.class);
 
         // Executor service for heavy work
-//        bind(ListeningExecutorService.class).toInstance(sameThreadExecutor(/*newFixedThreadPool(2)*/));
-        bind(ListeningExecutorService.class)
-                .toInstance(MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(2)));
+        bind(WORKER_EXECUTOR).toInstance(MoreExecutors.listeningDecorator(Executors.newCachedThreadPool()));
+
+        bind(ListeningExecutorService.class).to(WORKER_EXECUTOR);
 
         // Chat rendering
         install(new FormatModule());
@@ -134,11 +138,8 @@ public class SocietiesModule extends AbstractServiceModule {
 
         install(new RequestModule());
 
-        bindNamedInstance("group-root", File.class, new File(dataDirectory, "data/groups"));
-        bindNamedInstance("member-root", File.class, new File(dataDirectory, "data/members"));
-
         try {
-            bindNamedInstance("translation-url", new URL("http://www.societies.frederik-schmitt.de/translations.zip"));
+            bindNamedInstance("translations-url", new URL(config.getString("translations-url")));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

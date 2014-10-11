@@ -5,7 +5,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import net.catharos.groups.MemberFactory;
 import net.catharos.lib.core.command.sender.SenderProvider;
 import net.catharos.lib.shank.AbstractModule;
-import net.catharos.societies.database.json.JSONModule;
 
 /**
  * Represents a MemberModule
@@ -23,8 +22,5 @@ public class MemberModule extends AbstractModule {
         bind(SocietyMember.class).to(MEMBER_IMPLEMENTATION);
 
         bind(SenderProvider.class).to(SenderAdapter.class);
-
-//        install(new SQLModule());
-        install(new JSONModule());
     }
 }

@@ -24,6 +24,7 @@ import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
 import net.catharos.societies.PlayerProvider;
 import org.apache.logging.log4j.Logger;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -52,9 +53,9 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         public String getValue(Group group) { return group.getName(); }
     };
 
-    public static final Attribute<Group, String> GROUP_TAG = new SimpleAttribute<Group, String>("group_tag") {
+    public static final Attribute<Group, String> GROUP_CLEAN_TAG = new SimpleAttribute<Group, String>("group_tag") {
         @Override
-        public String getValue(Group group) { return group.getTag(); }
+        public String getValue(Group group) { return ChatColor.stripColor(group.getTag()); }
     };
 
 
@@ -64,7 +65,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         groups.addIndex(HashIndex.onAttribute(GROUP_NAME));
         groups.addIndex(SuffixTreeIndex.onAttribute(GROUP_NAME));
 
-        groups.addIndex(HashIndex.onAttribute(GROUP_TAG));
+        groups.addIndex(HashIndex.onAttribute(GROUP_CLEAN_TAG));
     }
 
     IndexedCollection<M> members = CQEngine.newInstance();

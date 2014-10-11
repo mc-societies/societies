@@ -7,6 +7,7 @@ import net.catharos.groups.Group;
 import net.catharos.groups.publisher.GroupPublisher;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.database.layout.tables.records.SocietiesRecord;
+import org.bukkit.ChatColor;
 import org.jooq.Insert;
 
 import java.util.concurrent.Callable;
@@ -32,6 +33,7 @@ class SQLGroupPublisher extends AbstractPublisher implements GroupPublisher {
 
                 query.bind(2, group.getName());
                 query.bind(3, group.getTag());
+                query.bind(4, ChatColor.stripColor(group.getTag()));
 
                 int inserted = query.execute();
 

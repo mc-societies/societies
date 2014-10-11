@@ -14,6 +14,7 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.societies.member.SocietyMember;
+import org.bukkit.ChatColor;
 
 import javax.inject.Provider;
 import java.util.Collection;
@@ -57,7 +58,16 @@ public class RankCommand {
                 return;
             }
 
+            name = ChatColor.stripColor(name);
+
             Rank rank = rankFactory.create(name, priority);
+
+
+            if (group.getRank(name) != null) {
+                sender.send("rank.already-exists");
+                return;
+            }
+
             this.rankPublisher.publishRank(group, rank);
             group.addRank(rank);
 

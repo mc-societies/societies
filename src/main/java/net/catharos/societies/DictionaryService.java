@@ -30,7 +30,7 @@ class DictionaryService extends AbstractService {
     private Logger logger;
 
     @Inject
-    public DictionaryService(@Named("translation-url") URL translationsURL, MutableDictionary<String> dictionary, @Named("dictionary-directory") File directory) {
+    public DictionaryService(@Named("translations-url") URL translationsURL, MutableDictionary<String> dictionary, @Named("dictionary-directory") File directory) {
         this.translationsURL = translationsURL;
         this.dictionary = dictionary;
         this.directory = directory;
@@ -46,7 +46,7 @@ class DictionaryService extends AbstractService {
 
         final ArrayList<String> loaded = new ArrayList<String>();
 
-        Map<String, InputStream> languages = ZipUtils.listStreams(zip, "", new ZipUtils.Consumer() {
+        ZipUtils.listStreams(zip, "", new ZipUtils.Consumer() {
             @Override
             public void consume(String name, InputStream stream) {
 //                String key = entry.getKey();
