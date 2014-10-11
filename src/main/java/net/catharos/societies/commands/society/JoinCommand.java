@@ -1,6 +1,7 @@
 package net.catharos.societies.commands.society;
 
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.inject.name.Named;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.request.DefaultRequestResult;
@@ -33,14 +34,21 @@ public class JoinCommand implements Executor<Member> {
 
     private final Dictionary<String> dictionary;
     private final RequestFactory<Choices> requests;
+    private final int maxSize;
 
-    public JoinCommand(Dictionary<String> dictionary, RequestFactory<Choices> requests) {
+    public JoinCommand(Dictionary<String> dictionary, RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
         this.dictionary = dictionary;
         this.requests = requests;
+        this.maxSize = maxSize;
     }
 
     @Override
     public void execute(CommandContext<Member> ctx, final Member sender) {
+        if (maxSize >= 0 && target.size() >= maxSize) {
+            sender.send("society.other-reached-max-size", target.getName());
+            return;
+        }
+
         Set<Member> participants = target.getMembers();
         String name = dictionary.getTranslation("requests.join", sender.getName());
         Request<Choices> request = requests.create(sender, name, new SetInvolved(participants));

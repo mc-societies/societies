@@ -83,7 +83,7 @@ public class CreateCommand implements Executor<Sender> {
             @Override
             public void onSuccess(Group result) {
                 if (result == null) {
-                    sender.send(" society.already-exists", name, tag);
+                    sender.send("society.already-exists", name, tag);
                     return;
                 }
 
