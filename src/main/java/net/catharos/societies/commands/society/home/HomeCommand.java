@@ -21,7 +21,7 @@ import org.bukkit.entity.Player;
  * Represents a AbandonCommand
  */
 @Command(identifier = "command.home.home", async = false)
-@Sender(sender = SocietyMember.class)
+@Sender(value = SocietyMember.class)
 @Children({HomeCommand.SetHomeCommand.class,
         HomeCommand.RemoveHomeCommand.class})
 public class HomeCommand implements Executor<SocietyMember> {
@@ -58,7 +58,7 @@ public class HomeCommand implements Executor<SocietyMember> {
 
 
     @Command(identifier = "command.home.remove", async = true)
-    @Sender(sender = SocietyMember.class)
+    @Sender(value = SocietyMember.class)
     public static class RemoveHomeCommand implements Executor<Member> {
 
         private final Setting<Location> homeSetting;
@@ -83,7 +83,7 @@ public class HomeCommand implements Executor<SocietyMember> {
     }
 
     @Command(identifier = "command.home.set", async = true)
-    @Sender(sender = SocietyMember.class)
+    @Sender(value = SocietyMember.class)
     public static class SetHomeCommand implements Executor<SocietyMember> {
 
         @Option(name = "argument.location")

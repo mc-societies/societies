@@ -1,8 +1,8 @@
 - Support sponge
 - pvp stuff
-- Vitals and some formatting for commands
 - configurable data store
 - Verify states and unnecessary publishes
+- Duplicate groups?
 
 
 Bukkit dependencies:

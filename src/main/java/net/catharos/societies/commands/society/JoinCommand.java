@@ -25,7 +25,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * Represents a AbandonCommand
  */
 @Command(identifier = "command.join", async = true)
-@Sender(sender = Member.class)
+@Sender(value = Member.class)
 public class JoinCommand implements Executor<Member> {
 
     @Argument(name = "argument.target.society")

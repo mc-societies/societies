@@ -22,6 +22,7 @@ public class FormatModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Row.class, Names.named("default"), DefaultRow.class)
                 .implement(Row.class, Names.named("forward"), ForwardingRow.class)
+                .implement(Row.class, Names.named("dictionary"), DictionaryRow.class)
                 .build(RowFactory.class));
 
         bindNamedInstance("column-spacing", double.class, 12.0D);

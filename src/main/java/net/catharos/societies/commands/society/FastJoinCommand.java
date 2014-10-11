@@ -13,7 +13,7 @@ import net.catharos.lib.core.command.reflect.Sender;
  * Represents a AbandonCommand
  */
 @Command(identifier = "command.fastjoin", async = true)
-@Sender(sender = Member.class)
+@Sender(value = Member.class)
 public class FastJoinCommand implements Executor<Member> {
 
     @Argument(name = "argument.target.society")

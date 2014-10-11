@@ -5,11 +5,13 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
+import net.catharos.lib.core.command.reflect.Sender;
 
 /**
  * Represents a RelationListCommand
  */
 @Command(identifier = "command.untrust")
+@Sender(Member.class)
 public class UnTrustCommand implements Executor<Member> {
 
     @Option(name = "argument.target.member")

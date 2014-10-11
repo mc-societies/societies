@@ -19,6 +19,9 @@ public class LookupCommand implements Executor<Sender> {
     @Option(name = "argument.target.member")
     Member target;
 
+    @Option(name = "v")
+    boolean v;
+
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {
@@ -32,11 +35,15 @@ public class LookupCommand implements Executor<Sender> {
         }
 
         sender.send("Name: " + target.getName());
-        sender.send("UUID: " + target.getUUID());
-        sender.send("Group: " + target.getGroup());
+        sender.send("Society: " + target.getGroup());
+
+        if (v) {
+            sender.send("UUID: " + target.getUUID());
+        }
+        sender.send("Join Date: " + target.getCreated());
         sender.send("Last Seen: " + target.getLastActive());
         sender.send("Inactive: " + new Interval(target.getLastActive(), DateTime.now()));
-        sender.send("Join Date: ");
+
         sender.send("Ranks:");
         for (Rank rank : target.getRanks()) {
             sender.send(" -" + rank.getName());

@@ -19,12 +19,17 @@ public class RelationSetting extends Setting<Relation> {
 
     @Override
     public Relation convert(Subject subject, Target target, byte[] value) {
-        return new DefaultRelation(subject.getUUID(), target.getUUID());
+        byte type = value[0];
+        return new DefaultRelation(subject.getUUID(), target.getUUID(), Relation.Type.getType(type));
     }
 
     @Override
     public byte[] convert(Subject subject, Target target, @Nullable Relation value) {
-        return new byte[0];
+        if (value == null) {
+            return null;
+        }
+
+        return new byte[]{value.getType().getID()};
     }
 
     @Override

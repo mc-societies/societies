@@ -1,34 +1,27 @@
-package net.catharos.societies.commands.society;
+package net.catharos.societies.commands.society.relation;
 
-import com.google.inject.Inject;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
+import net.catharos.groups.Relation;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
-import net.catharos.lib.core.command.reflect.Sender;
 
 import javax.inject.Provider;
+import java.util.Collection;
 
 /**
- * Represents a SocietyProfile
- */
-@Command(identifier = "command.roster")
-@Sender(Member.class)
-public class RosterCommand implements Executor<Member> {
-
-    @Option(name = "argument.target.society")
-    Group target;
+* Represents a ListCommand
+*/
+abstract class ListCommand implements Executor<Member> {
 
     private final Provider<Table> tableProvider;
 
     @Option(name = "argument.page")
     int page;
 
-    @Inject
-    public RosterCommand(Provider<Table> tableProvider) {
+    public ListCommand(Provider<Table> tableProvider) {
         this.tableProvider = tableProvider;
     }
 
@@ -41,14 +34,21 @@ public class RosterCommand implements Executor<Member> {
             return;
         }
 
+        Collection<Relation> relations = group.getRelations();
+
+        if (relations.isEmpty()) {
+            sender.send("relations.not-found");
+            return;
+        }
+
         Table table = tableProvider.get();
 
-        table.addRow("Name", "Rank", "Seen");
-
-        for (Member member : target.getMembers()) {
-            table.addRow(member.getName(), member.getRanks(), member.getLastActive());
+        for (Relation relation : relations) {
+            table.addForwardingRow(relation);
         }
 
         sender.send(table.render(ctx.getName(), page));
     }
+
+    protected abstract Relation.Type getType();
 }

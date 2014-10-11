@@ -7,19 +7,20 @@ import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.lib.core.command.reflect.Sender;
 
 /**
  * Represents a SocietyProfile
  */
 @Command(identifier = "command.kick")
-public class KickCommand implements Executor<SocietyMember> {
+@Sender(Member.class)
+public class KickCommand implements Executor<Member> {
 
     @Argument(name = "argument.target.member")
     Member target;
 
     @Override
-    public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) throws ExecuteException {
+    public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
         Group group = target.getGroup();
 
         if (group == null || !target.getGroup().equals(sender.getGroup())) {

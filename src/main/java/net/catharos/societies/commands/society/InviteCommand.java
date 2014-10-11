@@ -3,6 +3,7 @@ package net.catharos.societies.commands.society;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.inject.Inject;
 import net.catharos.groups.Group;
+import net.catharos.groups.Member;
 import net.catharos.groups.request.DefaultRequestResult;
 import net.catharos.groups.request.Request;
 import net.catharos.groups.request.RequestFactory;
@@ -12,6 +13,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
+import net.catharos.lib.core.command.reflect.Sender;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.member.SocietyMember;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +26,8 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * Represents a InviteCommand
  */
 @Command(identifier = "command.invite")
-public class InviteCommand implements Executor<SocietyMember> {
+@Sender(Member.class)
+public class InviteCommand implements Executor<Member> {
 
     @Argument(name = "argument.target.member")
     SocietyMember target;
@@ -42,7 +45,7 @@ public class InviteCommand implements Executor<SocietyMember> {
     }
 
     @Override
-    public void execute(CommandContext<SocietyMember> ctx, final SocietyMember sender) {
+    public void execute(CommandContext<Member> ctx, final Member sender) {
         String name = dictionary.getTranslation("requests.invite", sender.getName(), sender.getGroup().getName());
         Request<Choices> request = requests.create(sender, name, new SingleInvolved(target));
         request.start();
