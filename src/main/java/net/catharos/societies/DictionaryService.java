@@ -9,6 +9,7 @@ import net.catharos.lib.core.util.ZipUtils;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Logger;
 
@@ -101,7 +102,8 @@ class DictionaryService extends AbstractService {
 
         File cache = new File(directory, ".cache-translations.zip");
         in.reset();
-        IOUtils.copy(in, new FileOutputStream(cache));
+
+        IOUtils.copy(in, FileUtils.openOutputStream(cache));
 
         logger.info("Loaded the following languages: " + loaded.toString());
 

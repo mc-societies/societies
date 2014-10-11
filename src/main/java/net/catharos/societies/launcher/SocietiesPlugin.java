@@ -2,6 +2,7 @@ package net.catharos.societies.launcher;
 
 
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Guice;
@@ -156,14 +157,32 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
     @EventHandler
     public void onPlayerJoin(PlayerLoginEvent event) {
-        memberProvider.getMember(event.getPlayer().getUniqueId());
+        ListenableFuture<SocietyMember> future = memberProvider.getMember(event.getPlayer().getUniqueId());
+
+        Futures.addCallback(future, new FutureCallback<SocietyMember>() {
+            @Override
+            public void onSuccess(@Nullable SocietyMember result) {
+                if (result != null) {
+                    result.activate();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         SocietyMember member = memberCache.clear(event.getPlayer().getUniqueId());
 
+
         if (member != null) {
+
+            member.activate();
+
             Group group = member.getGroup();
             if (group != null) {
                 groupCache.clear(member, group);

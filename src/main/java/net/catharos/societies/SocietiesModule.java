@@ -3,8 +3,12 @@ package net.catharos.societies;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Key;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.typesafe.config.*;
+import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import net.catharos.lib.shank.config.ConfigModule;
 import net.catharos.lib.shank.config.TypeSafeConfigSource;
@@ -26,11 +30,16 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
@@ -143,6 +152,33 @@ public class SocietiesModule extends AbstractServiceModule {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Singleton
+    @Provides
+    public DateTimeFormatter provideDateTimeFormatter(@Named("default-locale") Locale locale) {
+        return DateTimeFormat.forPattern(DateTimeFormat.patternForStyle("MM", locale));
+    }
+
+    @Singleton
+    @Provides
+    public PeriodFormatter providePeriodFormatter(Dictionary<String> dictionary) {
+        return new PeriodFormatterBuilder()
+                .appendYears()
+                .appendSuffix(" " + dictionary.getTranslation("year"), " " + dictionary.getTranslation("years"))
+                .appendSeparator(" ")
+                .appendMonths()
+                .appendSuffix(" " + dictionary.getTranslation("month"), " " + dictionary.getTranslation("months"))
+                .appendSeparator(" ")
+                .appendDays()
+                .appendSuffix(" " + dictionary.getTranslation("day"), " " + dictionary.getTranslation("days"))
+                .appendSeparator(" ")
+                .appendMinutes()
+                .appendSuffix(" " + dictionary.getTranslation("minute"), " " + dictionary.getTranslation("minutes"))
+                .appendSeparator(" ")
+                .appendSeconds()
+                .appendSuffix(" " + dictionary.getTranslation("second"), " " + dictionary.getTranslation("seconds"))
+                .toFormatter();
     }
 
 }

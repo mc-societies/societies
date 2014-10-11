@@ -57,8 +57,13 @@ public class VitalsCommand implements Executor<Member> {
 
             PlayerState state = new PlayerState(player);
 
-            table.addRow(member.getName(), state.getHealth(), state.getArmor("H", "C", "L", "B"), state
-                    .getWeapons("S", "B", "A"), state.getHunger());
+            table.addRow(
+                    member.getName(),
+                    state.getHealth(),
+                    state.getArmor("H", "C", "L", "B"),
+                    state.getWeapons("S", "B", "A"),
+                    state.getHunger()
+            );
         }
 
         sender.send(table.render(ctx.getName(), page));

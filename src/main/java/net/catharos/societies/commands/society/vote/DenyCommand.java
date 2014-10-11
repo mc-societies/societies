@@ -18,6 +18,7 @@ public class DenyCommand implements Executor<SocietyMember> {
         Request activeRequest = sender.getReceivedRequest();
 
         if (activeRequest == null) {
+            sender.send("request.none-received=");
             return;
         }
 

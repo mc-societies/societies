@@ -15,6 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import javax.inject.Provider;
+import java.text.DecimalFormat;
 
 /**
  * Represents a SocietyProfile
@@ -25,6 +26,8 @@ public class CoordsCommand implements Executor<SocietyMember> {
 
     private final Provider<Table> tableProvider;
     private final RowFactory rowFactory;
+
+    private static final DecimalFormat numberFormat = new DecimalFormat("#.#");
 
     @Option(name = "argument.page")
     int page;
@@ -61,7 +64,12 @@ public class CoordsCommand implements Executor<SocietyMember> {
             }
 
             Location memberLocation = player.getLocation();
-            table.addRow(member.getName(), location.distance(memberLocation), memberLocation, memberLocation.getWorld().getName());
+            table.addRow(
+                    member.getName(),
+                    numberFormat.format(location.distance(memberLocation)),
+                    "X: " + memberLocation.getBlockX() + " Y: " + memberLocation.getBlockX() + " Z: " + memberLocation.getBlockZ(),
+                    memberLocation.getWorld().getName()
+            );
         }
 
         sender.send(table.render(ctx.getName(), page));

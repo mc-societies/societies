@@ -50,14 +50,17 @@ public class InviteCommand implements Executor<Member> {
     public void execute(CommandContext<Member> ctx, final Member sender) {
         final Group group = sender.getGroup();
 
-        assert group != null;
+        if (group == null) {
+            sender.send("society.not-found");
+            return;
+        }
 
         if (maxSize >= 0 && group.size() >= maxSize) {
             sender.send("society.reached-max-size");
             return;
         }
 
-        String name = dictionary.getTranslation("requests.invite", sender.getName(), group.getName());
+        String name = dictionary.getTranslation("requests.invite", new Object[]{sender.getName(), group.getName()});
         Request<Choices> request = requests.create(sender, name, new SingleInvolved(target));
         request.start();
 
@@ -71,7 +74,7 @@ public class InviteCommand implements Executor<Member> {
                 switch (result.getChoice()) {
                     case ACCEPT:
                         group.addMember(target);
-                        target.send("You've been added to %s!", group.getName());
+                        target.send("You've been added to {0}!", group.getName());
                         sender.send(target.getName() + " is not a member of your society!");
                         break;
                     case DENY:

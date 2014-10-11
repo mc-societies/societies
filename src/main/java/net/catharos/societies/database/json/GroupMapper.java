@@ -102,7 +102,7 @@ public class GroupMapper extends AbstractMapper {
                 }
 
                 while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    if (parser.nextToken() != JsonToken.START_OBJECT) {
+                    if (parser.getCurrentToken() != JsonToken.START_OBJECT) {
                         throw new IOException("Expected data to start with an Object");
                     }
 
@@ -113,6 +113,7 @@ public class GroupMapper extends AbstractMapper {
                     while (parser.nextToken() != JsonToken.END_OBJECT) {
                         String settingField = parser.getCurrentName();
 
+                        parser.nextToken();
                         if (settingField.equals("target")) {
                             target = new SimpleTarget(UUID.fromString(parser.getText()));
                         } else if (settingField.equals("setting")) {

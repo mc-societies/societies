@@ -1,6 +1,5 @@
 package net.catharos.societies.database.json;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -113,6 +112,9 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     @Override
     public void init(LifecycleContext context) throws Exception {
         for (File file : groupStorage) {
+            if (!file.exists()) {
+                continue;
+            }
             try {
                 groups.add(groupMapper.readGroup(file));
             } catch (Throwable e) {
@@ -121,6 +123,9 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         }
 
         for (File file : memberStorage) {
+            if (!file.exists()) {
+                continue;
+            }
             try {
                 members.add(mapper.readMember(file, this));
             } catch (Throwable e) {
@@ -136,7 +141,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         Query<Group> query = equal(GROUP_UUID, uuid);
         ResultSet<Group> retrieve = groups.retrieve(query);
 
-        return Futures.immediateFuture(Iterables.getOnlyElement(retrieve));
+        return Futures.immediateFuture(retrieve.uniqueResult());
     }
 
     @Override
@@ -162,6 +167,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         if (retrieve.isEmpty()) {
             M member = memberFactory.create(uuid);
             memberPublisher.publish(member);
+            members.add(member);
             return immediateFuture(member);
         }
 

@@ -50,7 +50,7 @@ public class JoinCommand implements Executor<Member> {
         }
 
         Set<Member> participants = target.getMembers();
-        String name = dictionary.getTranslation("requests.join", sender.getName());
+        String name = dictionary.getTranslation("requests.join", new Object[]{sender.getName()});
         Request<Choices> request = requests.create(sender, name, new SetInvolved(participants));
         request.start();
 
@@ -64,6 +64,7 @@ public class JoinCommand implements Executor<Member> {
                 switch (result.getChoice()) {
                     case ACCEPT:
                         target.addMember(sender);
+                        sender.send("You successfully joined {0}.", target.getName());
                         break;
                     case DENY:
                     case ABSTAIN:

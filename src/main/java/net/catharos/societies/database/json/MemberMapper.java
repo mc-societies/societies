@@ -99,7 +99,6 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
     public void writeMember(Member member, File file) throws IOException {
         JsonGenerator jg = createGenerator(file);
         writeMember(jg, member);
-
         jg.close();
     }
 
@@ -113,7 +112,7 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
         if (group != null) {
             generator.writeStringField("society", group.getUUID().toString());
         }
-        generator.writeNumberField("lastActive", (short) member.getState());
+        generator.writeNumberField("lastActive", member.getLastActive().getMillis());
         generator.writeArrayFieldStart("ranks");
 
         for (Rank rank : member.getRanks()) {
