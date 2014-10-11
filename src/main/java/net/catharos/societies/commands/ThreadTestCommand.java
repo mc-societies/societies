@@ -13,6 +13,6 @@ public class ThreadTestCommand implements Executor<Sender> {
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {
-        sender.send("Curent thread: %s", Thread.currentThread());
+        sender.send("Curent thread: {0}", Thread.currentThread());
     }
 }

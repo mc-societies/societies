@@ -1,5 +1,6 @@
 - verify/trust stuff
 - ally request
+- rank permissions
 
 
 - remove e.printStackTrace()
@@ -29,7 +30,7 @@ Config:
 Text renderer:
 	* Tree like structure
 
-Cosmetics:
+a:
 	Get player name from external source if player is offline and there is no "offline player data"
 
 Caching
