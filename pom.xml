@@ -104,6 +104,12 @@
             <artifactId>cqengine</artifactId>
             <version>1.2.7</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.brsanthu</groupId>
+            <artifactId>migbase64</artifactId>
+            <version>2.2</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

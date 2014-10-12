@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.google.common.collect.Table;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.migcomponents.migbase64.Base64;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupBuilder;
@@ -15,12 +16,14 @@ import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.SettingProvider;
 import net.catharos.groups.setting.target.SimpleTarget;
 import net.catharos.groups.setting.target.Target;
+import net.catharos.lib.core.util.CastSafe;
 import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,31 +43,9 @@ public class GroupMapper extends AbstractMapper {
         this.settingProvider = settingProvider;
     }
 
-    public Group readGroup(File file) throws IOException {
-        JsonParser parser = createParser(file);
-        Group output = readGroup(parser);
-        parser.close();
-        return output;
-    }
-
-    public Group readGroup(String data) throws IOException {
-        JsonParser parser = createParser(data);
-        Group output = readGroup(parser);
-        parser.close();
-        return output;
-    }
-
-    public Set<Group> readGroups(File file) throws IOException {
-        JsonParser parser = createParser(file);
-        Set<Group> output = readGroups(parser);
-        parser.close();
-        return output;
-    }
-
     public Set<Group> readGroups(JsonParser parser) throws IOException {
-        if (parser.nextToken() != JsonToken.START_ARRAY) {
-            throw new IOException("Expected data to start with an Object");
-        }
+        parser.nextToken();
+        validateObject(parser);
 
         THashSet<Group> groups = new THashSet<Group>();
 
@@ -75,17 +56,28 @@ public class GroupMapper extends AbstractMapper {
         return groups;
     }
 
-    public Group readGroup(JsonParser parser) throws IOException {
-        if (parser.nextToken() != JsonToken.START_OBJECT) {
-            throw new IOException("Expected data to start with an Object");
+    static void validateObject(JsonParser parser) throws IOException {
+        if (parser.getCurrentToken() != JsonToken.START_OBJECT) {
+            throw new IOException("Expected data to start with an Object, but was " + parser.getCurrentToken());
         }
+    }
+
+    static void validateArray(JsonParser parser) throws IOException {
+        if (parser.getCurrentToken() != JsonToken.START_ARRAY) {
+            throw new IOException("Expected data to start with an Array, but was " + parser.getCurrentToken());
+        }
+    }
+
+    public Group readGroup(JsonParser parser) throws IOException {
+        parser.nextToken();
+        validateObject(parser);
 
         GroupBuilder builder = builders.get();
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String groupField = parser.getCurrentName();
 
-            JsonToken token = parser.nextToken();
+            parser.nextToken();
             if (groupField.equals("uuid")) {
                 builder.setUUID(UUID.fromString(parser.getText()));
             } else if (groupField.equals("name")) {
@@ -97,18 +89,14 @@ public class GroupMapper extends AbstractMapper {
             } else if (groupField.equals("state")) {
                 builder.setState(parser.getShortValue());
             } else if (groupField.equals("settings")) {
-                if (token != JsonToken.START_ARRAY) {
-                    throw new IOException("Expected data to start with an Array");
-                }
+                validateArray(parser);
 
                 while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    if (parser.getCurrentToken() != JsonToken.START_OBJECT) {
-                        throw new IOException("Expected data to start with an Object");
-                    }
+                    validateObject(parser);
 
                     Target target = null;
                     Setting setting = null;
-                    byte[] value = new byte[0];
+                    byte[] value = null;
 
                     while (parser.nextToken() != JsonToken.END_OBJECT) {
                         String settingField = parser.getCurrentName();
@@ -123,12 +111,14 @@ public class GroupMapper extends AbstractMapper {
                         }
                     }
 
+                    if (target == null || setting == null || value == null) {
+                        continue;
+                    }
+
                     builder.put(setting, target, value);
                 }
             } else if (groupField.equals("ranks")) {
-                if (token != JsonToken.START_ARRAY) {
-                    throw new IOException("Expected data to start with an Array");
-                }
+                validateArray(parser);
 
                 ArrayList<Rank> ranks = new ArrayList<Rank>();
                 while (parser.nextToken() != JsonToken.END_ARRAY) {
@@ -143,25 +133,6 @@ public class GroupMapper extends AbstractMapper {
         return builder.build();
     }
 
-    public void writeGroup(Group group, File file) throws IOException {
-        JsonGenerator jg = createGenerator(file);
-        jg.useDefaultPrettyPrinter();
-        writeGroup(jg, group);
-
-        jg.close();
-    }
-
-    public String writeGroup(Group group) throws IOException {
-        StringWriter stringWriter = new StringWriter();
-        JsonGenerator jg = createGenerator(stringWriter);
-        jg.useDefaultPrettyPrinter();
-        writeGroup(jg, group);
-
-        jg.close();
-
-        return stringWriter.toString();
-    }
-
     public void writeGroup(JsonGenerator generator, Group group) throws IOException {
         generator.writeStartObject();
 
@@ -170,38 +141,43 @@ public class GroupMapper extends AbstractMapper {
         generator.writeStringField("tag", group.getTag());
         generator.writeNumberField("created", group.getCreated().getMillis());
         generator.writeNumberField("state", (short) group.getState());
-        generator.writeArrayFieldStart("ranks");
 
-        for (Rank rank : group.getRanks()) {
-            writeRank(generator, rank);
+
+        Collection<Rank> ranks = group.getRanks();
+        if (!ranks.isEmpty()) {
+            generator.writeArrayFieldStart("ranks");
+            for (Rank rank : ranks) {
+                writeRank(generator, rank);
+            }
+            generator.writeEndArray();
         }
 
-        generator.writeEndArray();
+        Set<Table.Cell<Setting, Target, Object>> settings = group.getSettings().cellSet();
+        if (!settings.isEmpty()) {
 
-        generator.writeArrayFieldStart("settings");
+            generator.writeArrayFieldStart("settings");
+            for (Table.Cell<Setting, Target, Object> cell : settings) {
+                generator.writeStartObject();
+                Target target = cell.getColumnKey();
+                Setting<Object> setting = CastSafe.toGeneric(cell.getRowKey());
 
-        for (Table.Cell<Setting, Target, Object> cell : group.getSettings().cellSet()) {
-            generator.writeStartObject();
-            Target target = cell.getColumnKey();
-            Setting setting = cell.getRowKey();
+                generator.writeStringField("target", target.getUUID().toString());
 
-            generator.writeStringField("target", target.getUUID().toString());
+                generator.writeNumberField("setting", setting.getID());
+                byte[] convert = setting.convert(group, target, cell.getValue());
+                generator.writeStringField("value", Base64.encodeToString(convert, false));
+                generator.writeEndObject();
+            }
+            generator.writeEndArray();
 
-            generator.writeNumberField("setting", setting.getID());
-            generator.writeBinaryField("value", setting.convert(group, target, cell.getValue()));
-            generator.writeEndObject();
         }
-
-        generator.writeEndArray();
 
         generator.writeEndObject();
     }
 
 
     public Rank readRank(JsonParser parser) throws IOException {
-        if (parser.getCurrentToken() != JsonToken.START_OBJECT) {
-            throw new IOException("Expected data to start with an Object");
-        }
+        validateObject(parser);
 
         UUID uuid = null;
         String name = null;
@@ -228,4 +204,42 @@ public class GroupMapper extends AbstractMapper {
         generator.writeEndObject();
     }
 
+
+    public Group readGroup(File file) throws IOException {
+        JsonParser parser = createParser(file);
+        Group output = readGroup(parser);
+        parser.close();
+        return output;
+    }
+
+    public Group readGroup(String data) throws IOException {
+        JsonParser parser = createParser(data);
+        Group output = readGroup(parser);
+        parser.close();
+        return output;
+    }
+
+    public Set<Group> readGroups(File file) throws IOException {
+        JsonParser parser = createParser(file);
+        Set<Group> output = readGroups(parser);
+        parser.close();
+        return output;
+    }
+
+    public void writeGroup(Group group, File file) throws IOException {
+        JsonGenerator jg = createGenerator(file);
+        writeGroup(jg, group);
+
+        jg.close();
+    }
+
+    public String writeGroup(Group group) throws IOException {
+        StringWriter stringWriter = new StringWriter();
+        JsonGenerator jg = createGenerator(stringWriter);
+        writeGroup(jg, group);
+
+        jg.close();
+
+        return stringWriter.toString();
+    }
 }

@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -26,17 +27,9 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
         this.memberFactory = memberFactory;
     }
 
-    public M readMember(File file, GroupProvider groupProvider) throws IOException, ExecutionException, InterruptedException {
-        JsonParser parser = createParser(file);
-        M output = readMember(parser, groupProvider);
-        parser.close();
-        return output;
-    }
-
     public M readMember(JsonParser parser, GroupProvider groupProvider) throws IOException, ExecutionException, InterruptedException {
-        if (parser.nextToken() != JsonToken.START_OBJECT) {
-            throw new IOException("Expected data to start with an Object");
-        }
+        parser.nextToken();
+        GroupMapper.validateObject(parser);
 
         UUID uuid = null;
         DateTime created = null, lastActive = null;
@@ -48,7 +41,7 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String fieldName = parser.getCurrentName();
 
-            JsonToken token = parser.nextToken();
+            parser.nextToken();
             if (fieldName.equals("uuid")) {
                 uuid = UUID.fromString(parser.getText());
             } else if (fieldName.equals("created")) {
@@ -65,15 +58,15 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
             } else if (fieldName.equals("lastActive")) {
                 lastActive = new DateTime(parser.getLongValue());
             } else if (fieldName.equals("ranks")) {
-                if (token != JsonToken.START_ARRAY) {
-                    throw new IOException("Expected data to start with an Array");
-                }
+                GroupMapper.validateArray(parser);
 
                 while (parser.nextToken() != JsonToken.END_ARRAY) {
                     ranks.add(UUID.fromString(parser.getText()));
                 }
             }
         }
+
+        //Create member
 
         M member = memberFactory.create(uuid);
 
@@ -96,12 +89,6 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
         return member;
     }
 
-    public void writeMember(Member member, File file) throws IOException {
-        JsonGenerator jg = createGenerator(file);
-        writeMember(jg, member);
-        jg.close();
-    }
-
     public void writeMember(JsonGenerator generator, Member member) throws IOException {
         generator.writeStartObject();
 
@@ -113,15 +100,30 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
             generator.writeStringField("society", group.getUUID().toString());
         }
         generator.writeNumberField("lastActive", member.getLastActive().getMillis());
-        generator.writeArrayFieldStart("ranks");
 
-        for (Rank rank : member.getRanks()) {
-            generator.writeString(rank.getUUID().toString());
+        Set<Rank> ranks = member.getRanks();
+
+        if (!ranks.isEmpty()) {
+            generator.writeArrayFieldStart("ranks");
+            for (Rank rank : ranks) {
+                generator.writeString(rank.getUUID().toString());
+            }
+            generator.writeEndArray();
         }
-
-        generator.writeEndArray();
 
         generator.writeEndObject();
     }
 
+    public M readMember(File file, GroupProvider groupProvider) throws IOException, ExecutionException, InterruptedException {
+        JsonParser parser = createParser(file);
+        M output = readMember(parser, groupProvider);
+        parser.close();
+        return output;
+    }
+
+    public void writeMember(Member member, File file) throws IOException {
+        JsonGenerator jg = createGenerator(file);
+        writeMember(jg, member);
+        jg.close();
+    }
 }
