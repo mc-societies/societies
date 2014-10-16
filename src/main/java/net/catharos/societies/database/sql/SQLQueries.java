@@ -82,6 +82,7 @@ class SQLQueries extends QueryProvider {
 
     public static final QueryKey<Select<MembersRecord>> SELECT_MEMBER_BY_UUID = QueryKey.create();
 
+    public static final QueryKey<Select<MembersRecord>> SELECT_MEMBERS = QueryKey.create();
 
     public static final QueryKey<Insert<MembersRecord>> INSERT_MEMBER = QueryKey.create();
 
@@ -296,6 +297,14 @@ class SQLQueries extends QueryProvider {
         //================================================================================
         //  Members
         //================================================================================
+
+        builder(SELECT_MEMBERS, new QueryBuilder<Select<MembersRecord>>() {
+            @Override
+            public Select<MembersRecord> create(DSLContext context) {
+                return context.
+                        selectFrom(MEMBERS);
+            }
+        });
 
         builder(SELECT_MEMBER_BY_UUID, new QueryBuilder<Select<MembersRecord>>() {
             @Override

@@ -97,7 +97,6 @@ public class SocietiesModule extends AbstractServiceModule {
         bindNamed("service-logger", Logger.class).toInstance(LogManager.getLogger());
 
         // Register service
-        bindService().to(SocietiesService.class);
         bindService().to(DictionaryService.class);
 
         // UUID provider
@@ -143,7 +142,7 @@ public class SocietiesModule extends AbstractServiceModule {
 
         bind(ReloadAction.class).to(SocietiesPlugin.class);
 
-        install(new TeleportModule());
+        install(new TeleportModule(config.getBoolean("teleport.enabled")));
 
         install(new RequestModule());
 

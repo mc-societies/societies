@@ -12,6 +12,7 @@ import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.command.GroupParser;
 import net.catharos.groups.command.MemberParser;
+import net.catharos.groups.setting.Setting;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.CommandPipeline;
 import net.catharos.lib.core.command.DefaultCommandPipeline;
@@ -107,6 +108,9 @@ public class CommandModule extends AbstractModule {
         afterPipeline().addBinding().to(FooterExecutor.class);
 
         bindNamed("system-sender", Sender.class).to(BukkitSystemSender.class);
+
+        //fixme rules
+        rules();
     }
 
     @Provides
@@ -149,5 +153,10 @@ public class CommandModule extends AbstractModule {
                 .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-before"))
                 .permitDuplicates();
     }
+
+    public MapBinder<String, Setting> rules() {
+        return MapBinder.newMapBinder(binder(), String.class, Setting.class);
+    }
+
 
 }

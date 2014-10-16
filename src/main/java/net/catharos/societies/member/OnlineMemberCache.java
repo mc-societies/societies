@@ -8,6 +8,7 @@ import net.catharos.groups.MemberCache;
 import net.catharos.societies.PlayerProvider;
 import org.bukkit.entity.Player;
 
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -34,6 +35,11 @@ public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
     public M getMember(String name) {
         Player player = provider.getPlayer(name);
         return members.get(player.getUniqueId());
+    }
+
+    @Override
+    public Set<M> getMembers() {
+        return null;
     }
 
     public M clear(UUID uuid) {

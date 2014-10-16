@@ -30,6 +30,7 @@ import org.jooq.*;
 import org.jooq.types.UShort;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -109,6 +110,34 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     }
 
     @Override
+    public ListenableFuture<Set<SocietyMember>> getMembers() {
+        Set<SocietyMember> members = memberCache.getMembers();
+        if (members != null) {
+            return immediateFuture(members);
+        }
+
+        ListenableFuture<Result<MembersRecord>> future = queries.query(service, SQLQueries.SELECT_MEMBERS);
+
+        return transform(future, new Function<Result<MembersRecord>, Set<SocietyMember>>() {
+            @Nullable
+            @Override
+            public Set<SocietyMember> apply(@Nullable Result<MembersRecord> input) {
+                if (input == null) {
+                    return Collections.emptySet();
+                }
+
+                THashSet<SocietyMember> result = new THashSet<SocietyMember>(input.size());
+
+                for (MembersRecord record : input) {
+                    result.add(evaluateSingleMember(UUIDGen.toUUID(record.getUuid()), null, record));
+                }
+
+                return result;
+            }
+        });
+    }
+
+    @Override
     public ListenableFuture<SocietyMember> getMember(UUID uuid) {
         return getMember(uuid, null, service);
     }
@@ -153,6 +182,10 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
         MembersRecord record = input.get(0);
 
+        return evaluateSingleMember(uuid, predefined, record);
+    }
+
+    private SocietyMember evaluateSingleMember(UUID uuid, Group predefined, MembersRecord record) {
         SocietyMember member = memberFactory.create(UUIDGen.toUUID(record.getUuid()));
         // Preparing
         member.setState(PREPARE);

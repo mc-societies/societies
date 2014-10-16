@@ -27,6 +27,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -184,5 +185,11 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         }
 
         return getMember(player.getUniqueId());
+    }
+
+    @Override
+    public ListenableFuture<Set<M>> getMembers() {
+        Set<M> result = Collections.unmodifiableSet(members);
+        return Futures.immediateFuture(result);
     }
 }

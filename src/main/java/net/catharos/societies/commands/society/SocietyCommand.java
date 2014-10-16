@@ -55,6 +55,8 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
 //        VerifyCommand.class,
 //        UnVerifyCommand.class,
 
+        ReloadCommand.class,
+        BackupCommand.class,
         ThreadTestCommand.class
 })
 public class SocietyCommand {

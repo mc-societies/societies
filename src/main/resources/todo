@@ -1,18 +1,18 @@
 - verify
 - rank rules
 - predefined ranks
-- bukkit permissions
+- catch group not found when loading
 
-- disable teleporting
-- home delay
+- cleanup for json engine
 - set home only once/ time delay
 - rename only colors
-- coords sort
 - remove e.printStackTrace()
-- Support sponge
 - pvp stuff  ff allow/auto
 - backup command
 - BulletinBoard
+
+- Support sponge
+- coords sort
 - log file
 - Performance: Lazy loading of settings/ranks
 
