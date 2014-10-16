@@ -12,10 +12,9 @@ import net.catharos.groups.request.SingleInvolved;
 import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.reflect.Argument;
-import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.i18n.Dictionary;
+import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.member.SocietyMember;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +27,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  */
 @Command(identifier = "command.invite")
 @Sender(Member.class)
+@Meta(@Entry(key = RuleStep.RULE, value = "invite"))
 public class InviteCommand implements Executor<Member> {
 
     @Argument(name = "argument.target.member")

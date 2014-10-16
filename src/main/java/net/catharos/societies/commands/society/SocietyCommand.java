@@ -17,7 +17,7 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
 @Command(identifier = "society")
 @Children({
         CreateCommand.class,
-        RenameCommand.class,
+//        RenameCommand.class,
         ProfileCommand.class,
         LookupCommand.class,
         CoordsCommand.class,
@@ -36,7 +36,7 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
         RivalriesCommand.class,
 
         JoinCommand.class,
-        FastJoinCommand.class,
+//        FastJoinCommand.class,
         LeaveCommand.class,
 
         AcceptCommand.class,

@@ -14,10 +14,9 @@ import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.Argument;
-import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import net.catharos.societies.commands.RuleStep;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -34,6 +33,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
         AlliesCommand.RemoveCommand.class
 })
 @Sender(Member.class)
+@Meta(@Entry(key = RuleStep.RULE, value = "allies"))
 public class AlliesCommand extends ListCommand {
 
     public static final Relation.Type TYPE = Relation.Type.ALLIED;
@@ -50,6 +50,7 @@ public class AlliesCommand extends ListCommand {
 
     @Command(identifier = "command.allies.remove")
     @Sender(Member.class)
+    @Meta(@Entry(key = RuleStep.RULE, value = "allies.remove"))
     public static class RemoveCommand implements Executor<Member> {
 
         @Argument(name = "argument.target.society")
@@ -72,6 +73,7 @@ public class AlliesCommand extends ListCommand {
 
     @Command(identifier = "command.allies.add", async = true)
     @Sender(Member.class)
+    @Meta(@Entry(key = RuleStep.RULE, value = "allies.add"))
     public static class AddCommand implements Executor<Member> {
 
         @Argument(name = "argument.target.society")

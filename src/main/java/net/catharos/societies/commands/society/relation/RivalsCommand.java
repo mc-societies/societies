@@ -6,15 +6,17 @@ import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.Relation;
 import net.catharos.groups.RelationFactory;
-import net.catharos.groups.request.*;
+import net.catharos.groups.request.DefaultRequestResult;
+import net.catharos.groups.request.Request;
+import net.catharos.groups.request.RequestFactory;
+import net.catharos.groups.request.SetInvolved;
 import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.Argument;
-import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import net.catharos.societies.commands.RuleStep;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -31,6 +33,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
         RivalsCommand.RemoveCommand.class
 })
 @Sender(Member.class)
+@Meta(@Entry(key = RuleStep.RULE, value = "rivals"))
 public class RivalsCommand extends ListCommand {
 
     public static final Relation.Type TYPE = Relation.Type.RIVALED;
@@ -46,10 +49,9 @@ public class RivalsCommand extends ListCommand {
     }
 
 
-
-
     @Command(identifier = "command.rivals.remove")
     @Sender(Member.class)
+    @Meta(@Entry(key = RuleStep.RULE, value = "rivals.remove"))
     public static class RemoveCommand implements Executor<Member> {
 
         @Argument(name = "argument.target.society")
@@ -100,6 +102,7 @@ public class RivalsCommand extends ListCommand {
 
     @Command(identifier = "command.rivals.add", async = true)
     @Sender(Member.class)
+    @Meta(@Entry(key = RuleStep.RULE, value = "rivals.add"))
     public static class AddCommand implements Executor<Member> {
 
         @Argument(name = "argument.target.society")

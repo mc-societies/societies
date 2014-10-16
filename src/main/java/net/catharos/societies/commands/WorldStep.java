@@ -1,4 +1,4 @@
-package net.catharos.societies.commands.society;
+package net.catharos.societies.commands;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -15,12 +15,12 @@ import java.util.List;
 /**
  * Represents a WorldExecutor
  */
-public class WorldExecutor implements Executor<Sender> {
+public class WorldStep implements Executor<Sender> {
 
     private final List disabledWorlds;
 
     @Inject
-    public WorldExecutor(@Named("blacklisted-worlds") ArrayList disabledWorlds) {
+    public WorldStep(@Named("blacklisted-worlds") ArrayList disabledWorlds) {
         this.disabledWorlds = disabledWorlds;
     }
 

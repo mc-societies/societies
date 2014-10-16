@@ -9,10 +9,9 @@ import net.catharos.groups.rank.RankFactory;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.Argument;
-import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Option;
+import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.ChatColor;
 
@@ -32,6 +31,7 @@ import java.util.Collection;
 public class RankCommand {
 
     @Command(identifier = "command.rank.create")
+    @Meta(@Entry(key = RuleStep.RULE, value = "rank.create"))
     public static class CreateCommand implements Executor<SocietyMember> {
 
         @Argument(name = "argument.rank.name", description = "The name of the new rank")
@@ -77,6 +77,7 @@ public class RankCommand {
 
 
     @Command(identifier = "command.rank.remove")
+    @Meta(@Entry(key = RuleStep.RULE, value = "rank.remove"))
     public static class RemoveCommand implements Executor<SocietyMember> {
 
         @Argument(name = "argument.rank.name", description = "The name of the new rank")
@@ -105,6 +106,7 @@ public class RankCommand {
     }
 
     @Command(identifier = "command.rank.list")
+    @Meta(@Entry(key = RuleStep.RULE, value = "rank.list"))
     public static class ListCommand implements Executor<Member> {
 
         private final Provider<Table> tableProvider;
@@ -146,6 +148,7 @@ public class RankCommand {
 
 
     @Command(identifier = "command.rank.assign")
+    @Meta(@Entry(key = RuleStep.RULE, value = "rank.assign"))
     public static class AssignCommand implements Executor<SocietyMember> {
 
         @Argument(name = "argument.rank")

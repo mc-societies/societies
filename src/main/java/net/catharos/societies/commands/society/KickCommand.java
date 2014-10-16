@@ -5,15 +5,15 @@ import net.catharos.groups.Member;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.reflect.Argument;
-import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.lib.core.command.reflect.*;
+import net.catharos.societies.commands.RuleStep;
 
 /**
  * Represents a SocietyProfile
  */
 @Command(identifier = "command.kick")
 @Sender(Member.class)
+@Meta(@Entry(key = RuleStep.RULE, value = "kick"))
 public class KickCommand implements Executor<Member> {
 
     @Argument(name = "argument.target.member")

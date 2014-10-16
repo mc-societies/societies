@@ -8,9 +8,8 @@ import net.catharos.groups.rank.Rank;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Option;
-import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.lib.core.command.reflect.*;
+import net.catharos.societies.commands.RuleStep;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.format.PeriodFormatter;
@@ -22,6 +21,7 @@ import javax.inject.Provider;
  */
 @Command(identifier = "command.roster")
 @Sender(Member.class)
+@Meta(@Entry(key = RuleStep.RULE, value = "roster"))
 public class RosterCommand implements Executor<Member> {
 
     private final Provider<Table> tableProvider;
