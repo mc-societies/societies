@@ -14,77 +14,97 @@ Simplesocieties was borne out of the need for a self-sustaining drop-and-go syst
 
 ## Installation
 
-If you're familiar with [Bukkit](http://bukkit.org/), you're probably also familiar with the installation of plugins. Look [here](http://wiki.bukkit.org/Installing_Plugins) for some more information.
+If you're familiar with [Bukkit](http://bukkit.org/), you're probably also familiar with the installation of plugins.
+Look [here](http://wiki.bukkit.org/Installing_Plugins) for some more information.
 
 The latest build can be downloaded [here](http://build.frederik-schmitt.de/).
 
 
-## Usage
+## Commands
 
 ### Society List
-You can view all the societies on your server using the **/society list** command.
+You can view all the societies using the **/society list** command.
 
 ### Society Roster
-The **/society roster** command shows you the members of your society. Here you can see your society's members ranks, status, and when the last time they were seen online was.
+The **/society roster** command shows you the members of your society.
+Here you can see your society's members ranks, status, and when they have been seen last.
 
 
 ### Society Vitals
-The **/society vitals** command shows you the vitals of all online members of your society. Here you can see their health, what armor and weapons they are carrying and of what materials, and how many hearts all of their food contains. This comes in handy during battle to know who you need to help and who can bring help to you.
+The **/society vitals** command shows you the vitals of all online members of your society.
+Here you can see their health, what armor and weapons they are carrying and of what materials,
+and how many hearts all of their food contains.
+This comes in handy during battle to know who you need to help and who can bring help to you.
 
 
 ### Society Coordinates
-The **/society coords** command shows you the distance and coordinates of all online members of you society, sorted by distance. With this you will be able to know who to call for help during a raid/battle.
+The **/society coords** command shows you the distance and coordinates of all online members of you society.
+ With this you will be able to know who to call for help during a raid/battle.
 
 
 ### Member Lookup
-You can look up your own or another players info using **/society lookup** command. This gives you all the data concerning the player, his kills and deaths, what society he belongs to, the date when he joined the society, his status in the society, when he was last seen, and how many days he has been inactive for.
+You can look up your own or another players info using **/society lookup** command.
+This gives you all the data concerning the player, his kills and deaths, what society he belongs to,
+the date when he joined the society, his status in the society, when he was last seen, and how many days he has been inactive for.
 
 
 ### Society Profile
-With the **/society profile** command you can view details about any society. It shows you the society leaders, how many members are currently online, allies, rivalries, the date founded, and how many days it has been inactive for.
+With the **/society profile** command you can view details about any society.
+It shows you the society leaders, how many members are currently online, allies, rivalries, the date founded,
+and how many days it has been inactive for.
 
 
 ### Society Tags
-When a society is created, you must give it a name and a tag. The tag will be used as the unique identifier for you society, will be used in the society commands, and will pretty much represent your society. This tag can have color codes which can be later modified. For example, If i wanted to create a society named "Knights of the Labyrinth" with a red and white tag named "kol", I would use the following create command:
-
-**/society create "Knights of the Labyrinth" &4K&Fo&4l**
-Later on if I wanted to modify this tag, for example I wanted to make it all red instead of red and white and all uppercase I would use the modtag command. Note: with the modtag command you can only change colors and case, but not the letters that make up the tag
-
-**/society tag &4KOL**
-The colored tag will prefix all society player's names on chat.
-
+When a society is created, you must give it a name and a tag. The tag will be used as the unique identifier for you society
+and will represent your society
+This tag can have color codes which can be modified later.
 
 ### Society Alliances and Rivalries
-Any society leader can send an request to start an alliance with any other society with **/society allies** add. If the request is accepted by a leader of the second society, the alliance is formed. The alliance can be broken by any leader of either society at any time with **/society allies** remove, no one needs to accept the removal of an alliance.
+Any society can send an request to start an alliance with any other society with **/society allies add**.
+If the request is accepted of the second society, the alliance is formed.
+The alliance can be broken of either society at any time with **/society allies** remove, no one needs to accept the removal of an alliance.
 
-society rivalries can be started by any society at any time, no request is needed, rivalries are automatically formed once a society leader decides he wants one by using **/society rivals add**. If someone has pissed you off and you want them as rivals, their permission is not needed. To break a society rivalry on the other hand, you need the acceptance of the other society, you must use **/society rival remove** to send the other society a request, once one of their leaders accept the rivalry is broken.
+Society rivalries can be started by any society at any time, no request is needed,
+rivalries are automatically formed once a society decides it wants one by using **/society rivals add**.
+To break a society rivalry on the other hand, you need the acceptance of the other society,
+you must use **/society rival remove** to send the other society a request, once one of their leaders accept the rivalry is broken.
 
-You can view a list of all societies and their allies with the **/society alliances** command, or their rivals with the **/society rivalries** command.
+You can view a list of all societies and their allies with the **/society alliances** command,
+or their rivals with the **/society rivalries** command.
 
 
 ### Society Homes
-Societies can set a home location with **/society home set**. The society must be verified and only the leader is able to use this command, and he is able to use it only once. Once the home base is set it cannot be changed. This is to prevent players setting home bases in the middle of battlefields, enemy camps etc. The only ones who can change it are mods with the **/society home set [tag]** command.
+Societies can set a home location with **/society home set**. Once the home base is set it cannot be changed.
+This is to prevent players setting home bases in the middle of battlefields, enemy camps etc.
+If you're a moderator of a server you can change it with the **/society home set [tag]** command.
 
-Once home is set any member is able to **/society home** at any time to teleport back to their home base. Leaders have permissions for a powerful command **/society home regroup**, which will teleport all society members to the home base. This is useful for when your home base is being raided, or when you want to coordinate an event or raid.
+Once a home is set any member is able to **/society home** at any time to teleport back to their home base.
+Societies can also regroup by executing **/society home regroup**, which will teleport all society members to the home base.
+This is useful for when your home base is being raided, or when you want to coordinate an event or raid.
 
-Before a player is teleported he must wait a pre-configured amount of seconds on the same block. This is to prevent them from running away from pvp fights. If they move before the warmup time is expired, then the teleport is canceled. Warm-up timer for teleport can be configured with the teleport.delay config setting. If set to 0, the warmup is disabled.
+Before a player is teleported he must wait a pre-configured amount of seconds on the same block.
+This is to prevent them from running away from fights. If they move before the warm-up time is expired,
+then the teleport is canceled. Warm-up timer for teleport can be configured with the **teleport.delay** config setting.
 
-Alternatively if you do not allow teleporting in your server (many survival servers don't), you can disable the "societies.member.home" and "simplesocieties.member.home-regroup" permissions from your players and enable the "teleport-home-on-spawn" config setting. This will turn society homes into society spawn points. Your server's societies will still be able to set homes, and their members will be able spawn in their society homes.
+
+### Society Permissions
 
 
 ### Society Ranks
 
 
 ### Inviting Members
-Creators of societies will become the first society leader. They can invite other members into the society with **/society invite**. These members are first added with the untrusted status. These members will not be able to view society vitals, coords, or stats. This is to prevent players form joining societies just to spy on other societies by writing down coordinates of bases or viewing vitals during battles. Once a player has gained the society's trust he can be upgraded to trusted status with **/society trust**.
+A society can invite members into the society with **/society invite**.
+These members are first added with the untrusted status.
+These members will not be able to view society vitals, coords, or stats.
+This is to prevent players form joining societies just to spy on other societies by writing down coordinates of bases
+or viewing vitals during battles.
+ Once a player has gained the society's trust he can be upgraded to trusted status with **/society trust**.
+
 
 ### Economy Support
-You will need Vault for economy plugin support. You can download it form [here](http://dev.bukkit.org/server-mods/vault/). Just drop it into your plugins folder.
-#### Society Creation
-You can charge your players for unverified society creation by using the economy.creation-price config setting. Turn it off by setting it to 0. With only this setting on, you still have control of society verification.
-#### Society Verification
-You can also add pay for verification with the economy.verification-price config setting. This will give control of society verification back to the players, it will give them the **/society verify** menu item, which will charge them for society verification.
-You can have either or both of these systems in place at the same time.
+You will need Vault for economy plugin support.
+You can download it form [here](http://dev.bukkit.org/server-mods/vault/).
 
 
 ### Permissions
