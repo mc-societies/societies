@@ -7,8 +7,18 @@ import net.catharos.lib.shank.service.AbstractServiceModule;
  */
 public class TeleportModule extends AbstractServiceModule {
 
+    private final boolean enabled;
+
+    public TeleportModule(boolean enabled) {this.enabled = enabled;}
+
     @Override
     protected void configure() {
-        bindService().to(TeleportService.class);
+
+        if (enabled) {
+            bind(Teleporter.class).to(TeleportController.class);
+            bindService().to(TeleportService.class);
+        } else {
+            bind(Teleporter.class).to(DisabledTeleporter.class);
+        }
     }
 }

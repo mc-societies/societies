@@ -22,19 +22,23 @@ import static java.lang.Math.abs;
  * Represents a TeleportTask
  */
 @Singleton
-public class TeleportController implements Runnable {
+public class TeleportController implements Runnable, Teleporter {
 
     private final THashSet<TeleportState> states = new THashSet<TeleportState>();
+    private final int delay;
     private final boolean blocks;
     private final boolean dropItems;
     private final Set<Material> whitelisted;
     private final Set<Material> blacklisted;
 
     @Inject
-    public TeleportController(@Named("teleport.blocks") boolean blocks,
-                              @Named("teleport.drop-items") boolean dropItems,
-                              @Named("teleport.item-whitelist") ArrayList whitelisted,
-                              @Named("teleport.item-blacklist") ArrayList blacklisted) {
+    public TeleportController(
+            @Named("teleport.delay") int delay,
+            @Named("teleport.blocks") boolean blocks,
+            @Named("teleport.drop-items") boolean dropItems,
+            @Named("teleport.item-whitelist") ArrayList whitelisted,
+            @Named("teleport.item-blacklist") ArrayList blacklisted) {
+        this.delay = delay;
         this.blocks = blocks;
         this.dropItems = dropItems;
 
@@ -152,7 +156,8 @@ public class TeleportController implements Runnable {
         }
     }
 
+    @Override
     public void teleport(final SocietyMember member, final Location target) {
-        states.add(new TeleportState(member, target, member.toPlayer().getLocation(), 10));
+        states.add(new TeleportState(member, target, member.toPlayer().getLocation(), delay));
     }
 }
