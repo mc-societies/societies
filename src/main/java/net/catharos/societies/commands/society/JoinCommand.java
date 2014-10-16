@@ -13,6 +13,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
+import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
 import net.catharos.lib.core.i18n.Dictionary;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * Represents a AbandonCommand
  */
 @Command(identifier = "command.join", async = true)
+@Permission("societies.join")
 @Sender(value = Member.class)
 public class JoinCommand implements Executor<Member> {
 

@@ -11,6 +11,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
+import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +23,7 @@ import java.util.Set;
  * Represents a SocietiesListCommand
  */
 @Command(identifier = "command.list")
+@Permission("societies.list")
 public class ListCommand implements Executor<Sender> {
 
     private final GroupProvider groupProvider;

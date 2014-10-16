@@ -20,8 +20,9 @@ import java.text.DecimalFormat;
  * Represents a SocietyProfile
  */
 @Command(identifier = "command.coords")
-@Sender(SocietyMember.class)
+@Permission("societies.coords")
 @Meta(@Entry(key = RuleStep.RULE, value = "coords"))
+@Sender(SocietyMember.class)
 public class CoordsCommand implements Executor<SocietyMember> {
 
     private final Provider<Table> tableProvider;

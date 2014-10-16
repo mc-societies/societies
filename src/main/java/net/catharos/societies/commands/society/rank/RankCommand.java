@@ -30,8 +30,14 @@ import java.util.Collection;
 })
 public class RankCommand {
 
+    //================================================================================
+    // Create
+    //================================================================================
+
     @Command(identifier = "command.rank.create")
+    @Permission("societies.rank.create")
     @Meta(@Entry(key = RuleStep.RULE, value = "rank.create"))
+    @Sender(SocietyMember.class)
     public static class CreateCommand implements Executor<SocietyMember> {
 
         @Argument(name = "argument.rank.name", description = "The name of the new rank")
@@ -75,9 +81,14 @@ public class RankCommand {
         }
     }
 
+    //================================================================================
+    // Remove
+    //================================================================================
 
     @Command(identifier = "command.rank.remove")
+    @Permission("societies.rank.remove")
     @Meta(@Entry(key = RuleStep.RULE, value = "rank.remove"))
+    @Sender(SocietyMember.class)
     public static class RemoveCommand implements Executor<SocietyMember> {
 
         @Argument(name = "argument.rank.name", description = "The name of the new rank")
@@ -105,8 +116,14 @@ public class RankCommand {
         }
     }
 
+    //================================================================================
+    // List
+    //================================================================================
+
     @Command(identifier = "command.rank.list")
+    @Permission("societies.rank.list")
     @Meta(@Entry(key = RuleStep.RULE, value = "rank.list"))
+    @Sender(Member.class)
     public static class ListCommand implements Executor<Member> {
 
         private final Provider<Table> tableProvider;
@@ -147,8 +164,14 @@ public class RankCommand {
     }
 
 
+    //================================================================================
+    // Assign
+    //================================================================================
+
     @Command(identifier = "command.rank.assign")
+    @Permission("societies.rank.assign")
     @Meta(@Entry(key = RuleStep.RULE, value = "rank.assign"))
+    @Sender(SocietyMember.class)
     public static class AssignCommand implements Executor<SocietyMember> {
 
         @Argument(name = "argument.rank")

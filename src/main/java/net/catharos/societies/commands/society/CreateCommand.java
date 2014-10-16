@@ -15,6 +15,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
+import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.societies.member.SocietyMember;
 
@@ -25,6 +26,7 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
  * Represents a CreateCommand
  */
 @Command(identifier = "command.create")
+@Permission("societies.create")
 public class CreateCommand implements Executor<Sender> {
 
     @Argument(name = "argument.society.name")

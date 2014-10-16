@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
+import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.societies.launcher.ReloadAction;
 
@@ -11,6 +12,7 @@ import net.catharos.societies.launcher.ReloadAction;
  * Represents a RelationListCommand
  */
 @Command(identifier = "command.reload")
+@Permission("societies.reload")
 public class ReloadCommand implements Executor<Sender> {
 
     private final ReloadAction reloadAction;

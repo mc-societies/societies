@@ -10,8 +10,9 @@ import net.catharos.societies.commands.RuleStep;
  * Represents a RelationListCommand
  */
 @Command(identifier = "command.trust")
-@Sender(Member.class)
+@Permission("societies.trust")
 @Meta(@Entry(key = RuleStep.RULE, value = "trust"))
+@Sender(Member.class)
 public class TrustCommand implements Executor<Member> {
 
     @Option(name = "argument.target.member")

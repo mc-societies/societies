@@ -7,6 +7,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
+import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.societies.member.SocietyMember;
 
@@ -14,6 +15,7 @@ import net.catharos.societies.member.SocietyMember;
  * Represents a AbandonCommand
  */
 @Command(identifier = "command.rename", async = true)
+@Permission("societies.rename")
 public class RenameCommand implements Executor<Sender> {
 
     @Argument(name = "argument.society.name-new")

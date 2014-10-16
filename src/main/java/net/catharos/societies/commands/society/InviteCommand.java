@@ -26,8 +26,9 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * Represents a InviteCommand
  */
 @Command(identifier = "command.invite")
-@Sender(Member.class)
+@Permission("societies.invite")
 @Meta(@Entry(key = RuleStep.RULE, value = "invite"))
+@Sender(Member.class)
 public class InviteCommand implements Executor<Member> {
 
     @Argument(name = "argument.target.member")

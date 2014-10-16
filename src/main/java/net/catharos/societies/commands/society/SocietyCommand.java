@@ -9,6 +9,7 @@ import net.catharos.societies.commands.society.relation.AlliesCommand;
 import net.catharos.societies.commands.society.relation.RivalsCommand;
 import net.catharos.societies.commands.society.vote.AbstainCommand;
 import net.catharos.societies.commands.society.vote.AcceptCommand;
+import net.catharos.societies.commands.society.vote.CancelCommand;
 import net.catharos.societies.commands.society.vote.DenyCommand;
 
 /**
@@ -42,6 +43,7 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
         AcceptCommand.class,
         DenyCommand.class,
         AbstainCommand.class,
+        CancelCommand.class,
 
         HomeCommand.class,
 

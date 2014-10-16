@@ -20,13 +20,14 @@ import org.bukkit.entity.Player;
  * Represents a AbandonCommand
  */
 @Command(identifier = "command.home.home")
-@Sender(value = SocietyMember.class)
+@Permission("societies.home.teleport")
 @Children({
         HomeCommand.SetHomeCommand.class,
         HomeCommand.RegroupCommand.class,
         HomeCommand.RemoveHomeCommand.class
 })
-@Meta(@Entry(key = RuleStep.RULE, value = "home"))
+@Meta(@Entry(key = RuleStep.RULE, value = "home.teleport"))
+@Sender(value = SocietyMember.class)
 public class HomeCommand implements Executor<SocietyMember> {
 
     private final Setting<Location> homeSetting;
@@ -61,8 +62,9 @@ public class HomeCommand implements Executor<SocietyMember> {
 
 
     @Command(identifier = "command.home.remove", async = true)
+    @Permission("societies.home.remove")
+    @Meta(@Entry(key = RuleStep.RULE, value = "home.remove"))
     @Sender(value = SocietyMember.class)
-    @Meta(@Entry(key = RuleStep.RULE, value = "rank.remove"))
     public static class RemoveHomeCommand implements Executor<Member> {
 
         private final Setting<Location> homeSetting;
@@ -87,8 +89,9 @@ public class HomeCommand implements Executor<SocietyMember> {
     }
 
     @Command(identifier = "command.home.set")
+    @Permission("societies.home.set")
+    @Meta(@Entry(key = RuleStep.RULE, value = "home.set"))
     @Sender(value = SocietyMember.class)
-    @Meta(@Entry(key = RuleStep.RULE, value = "rank.set"))
     public static class SetHomeCommand implements Executor<SocietyMember> {
 
         @Option(name = "argument.location")
@@ -123,8 +126,9 @@ public class HomeCommand implements Executor<SocietyMember> {
 
 
     @Command(identifier = "command.home.regroup")
+    @Permission("societies.home.regroup")
+    @Meta(@Entry(key = RuleStep.RULE, value = "home.regroup"))
     @Sender(value = SocietyMember.class)
-    @Meta(@Entry(key = RuleStep.RULE, value = "rank.regroup"))
     public static class RegroupCommand implements Executor<Member> {
 
         private final Setting<Location> homeSetting;

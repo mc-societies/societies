@@ -7,6 +7,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
+import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -18,6 +19,7 @@ import org.joda.time.format.PeriodFormatter;
  * Represents a SocietyProfile
  */
 @Command(identifier = "command.profile")
+@Permission("societies.profile")
 public class ProfileCommand implements Executor<Sender> {
 
     @Option(name = "argument.target.society")

@@ -12,8 +12,9 @@ import net.catharos.societies.commands.RuleStep;
  * Represents a SocietyProfile
  */
 @Command(identifier = "command.kick")
-@Sender(Member.class)
+@Permission("societies.kick")
 @Meta(@Entry(key = RuleStep.RULE, value = "kick"))
+@Sender(Member.class)
 public class KickCommand implements Executor<Member> {
 
     @Argument(name = "argument.target.member")

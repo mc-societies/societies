@@ -7,12 +7,14 @@ import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
+import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
 
 /**
  * Represents a AbandonCommand
  */
 @Command(identifier = "command.fastjoin", async = true)
+@Permission("societies.fastjoin")
 @Sender(value = Member.class)
 public class FastJoinCommand implements Executor<Member> {
 

@@ -28,13 +28,18 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * Represents a RelationCommand
  */
 @Command(identifier = "command.allies")
+@Permission("societies.allies.list")
 @Children({
         AlliesCommand.AddCommand.class,
         AlliesCommand.RemoveCommand.class
 })
+@Meta(@Entry(key = RuleStep.RULE, value = "allies.list"))
 @Sender(Member.class)
-@Meta(@Entry(key = RuleStep.RULE, value = "allies"))
 public class AlliesCommand extends ListCommand {
+
+    //================================================================================
+    // List
+    //================================================================================
 
     public static final Relation.Type TYPE = Relation.Type.ALLIED;
 
@@ -48,7 +53,12 @@ public class AlliesCommand extends ListCommand {
         return TYPE;
     }
 
+    //================================================================================
+    // Remove
+    //================================================================================
+
     @Command(identifier = "command.allies.remove")
+    @Permission("societies.allies.remove")
     @Sender(Member.class)
     @Meta(@Entry(key = RuleStep.RULE, value = "allies.remove"))
     public static class RemoveCommand implements Executor<Member> {
@@ -71,9 +81,14 @@ public class AlliesCommand extends ListCommand {
         }
     }
 
+    //================================================================================
+    // Add
+    //================================================================================
+
     @Command(identifier = "command.allies.add", async = true)
     @Sender(Member.class)
     @Meta(@Entry(key = RuleStep.RULE, value = "allies.add"))
+    @Permission("societies.allies.add")
     public static class AddCommand implements Executor<Member> {
 
         @Argument(name = "argument.target.society")

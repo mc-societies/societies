@@ -19,8 +19,9 @@ import javax.inject.Provider;
  * Represents a SocietyProfile
  */
 @Command(identifier = "command.vitals")
-@Sender(Member.class)
+@Permission("societies.vitals")
 @Meta(@Entry(key = RuleStep.RULE, value = "vitals"))
+@Sender(Member.class)
 public class VitalsCommand implements Executor<Member> {
 
     private final Provider<Table> tableProvider;

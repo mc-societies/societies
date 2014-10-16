@@ -20,8 +20,9 @@ import javax.inject.Provider;
  * Represents a SocietyProfile
  */
 @Command(identifier = "command.roster")
-@Sender(Member.class)
+@Permission("societies.roster")
 @Meta(@Entry(key = RuleStep.RULE, value = "roster"))
+@Sender(Member.class)
 public class RosterCommand implements Executor<Member> {
 
     private final Provider<Table> tableProvider;

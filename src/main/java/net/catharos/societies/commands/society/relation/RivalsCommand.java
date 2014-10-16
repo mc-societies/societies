@@ -28,13 +28,18 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * Represents a RelationCommand
  */
 @Command(identifier = "command.rivals")
+@Permission("societies.rivals.list")
 @Children({
         RivalsCommand.AddCommand.class,
         RivalsCommand.RemoveCommand.class
 })
+@Meta(@Entry(key = RuleStep.RULE, value = "rivals.list"))
 @Sender(Member.class)
-@Meta(@Entry(key = RuleStep.RULE, value = "rivals"))
 public class RivalsCommand extends ListCommand {
+
+    //================================================================================
+    // List
+    //================================================================================
 
     public static final Relation.Type TYPE = Relation.Type.RIVALED;
 
@@ -48,10 +53,14 @@ public class RivalsCommand extends ListCommand {
         return TYPE;
     }
 
+    //================================================================================
+    // Remove
+    //================================================================================
 
     @Command(identifier = "command.rivals.remove")
-    @Sender(Member.class)
+    @Permission("societies.rivals.remove")
     @Meta(@Entry(key = RuleStep.RULE, value = "rivals.remove"))
+    @Sender(Member.class)
     public static class RemoveCommand implements Executor<Member> {
 
         @Argument(name = "argument.target.society")
@@ -100,9 +109,14 @@ public class RivalsCommand extends ListCommand {
         }
     }
 
+    //================================================================================
+    // Add
+    //================================================================================
+
     @Command(identifier = "command.rivals.add", async = true)
-    @Sender(Member.class)
+    @Permission("societies.rivals.add")
     @Meta(@Entry(key = RuleStep.RULE, value = "rivals.add"))
+    @Sender(Member.class)
     public static class AddCommand implements Executor<Member> {
 
         @Argument(name = "argument.target.society")
