@@ -22,7 +22,7 @@ public class BukkitNameProvider implements NameProvider {
         OfflinePlayer offlinePlayer = server.getOfflinePlayer(uuid);
 
         if (offlinePlayer == null) {
-            return null;
+            return uuid.toString();
         }
         return offlinePlayer.getName();
     }

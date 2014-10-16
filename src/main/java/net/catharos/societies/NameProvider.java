@@ -9,6 +9,5 @@ import java.util.UUID;
  */
 public interface NameProvider {
 
-    @Nullable
     String getName(UUID uuid);
 }
