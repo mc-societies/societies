@@ -27,8 +27,10 @@ public class DatabaseModule extends AbstractModule {
         if (type.equals("mysql")) {
             install(new SQLModule(config.getBoolean("database.mysql.caching")));
         } else if (type.equals("default")) {
-            bindNamedInstance("group-root", File.class, new File(dataDirectory, config.getString("database.default.societies")));
-            bindNamedInstance("member-root", File.class, new File(dataDirectory, config.getString("database.default.members")));
+            bindNamedInstance("group-root", File.class, new File(dataDirectory, config
+                    .getString("database.default.societies")));
+            bindNamedInstance("member-root", File.class, new File(dataDirectory, config
+                    .getString("database.default.members")));
 
             install(new JSONModule());
         }

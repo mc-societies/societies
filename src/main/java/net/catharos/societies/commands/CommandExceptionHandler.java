@@ -30,7 +30,7 @@ class CommandExceptionHandler implements Thread.UncaughtExceptionHandler {
 
         if (e instanceof ParsingException) {
             sender.send(e.getMessage());
-        }  else if (e instanceof ExecuteException) {
+        } else if (e instanceof ExecuteException) {
             sender.send("Execution failed: " + e.getMessage());
         }
 

@@ -68,7 +68,8 @@ public class CoordsCommand implements Executor<SocietyMember> {
             table.addRow(
                     member.getName(),
                     numberFormat.format(location.distance(memberLocation)),
-                    "X: " + memberLocation.getBlockX() + " Y: " + memberLocation.getBlockX() + " Z: " + memberLocation.getBlockZ(),
+                    "X: " + memberLocation.getBlockX() + " Y: " + memberLocation.getBlockX() + " Z: " + memberLocation
+                            .getBlockZ(),
                     memberLocation.getWorld().getName()
             );
         }

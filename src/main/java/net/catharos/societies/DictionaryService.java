@@ -88,7 +88,8 @@ class DictionaryService extends AbstractService {
                     }
 
                     for (Map.Entry<String, ConfigValue> langEntry : config.entrySet()) {
-                        dictionary.addTranslation(lang, langEntry.getKey(), langEntry.getValue().unwrapped().toString());
+                        dictionary
+                                .addTranslation(lang, langEntry.getKey(), langEntry.getValue().unwrapped().toString());
                     }
 
                     loaded.add(lang);

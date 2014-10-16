@@ -9,6 +9,6 @@ public class TeleportModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
-          bindService().to(TeleportService.class);
+        bindService().to(TeleportService.class);
     }
 }

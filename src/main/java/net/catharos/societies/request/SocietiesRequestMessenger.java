@@ -1,6 +1,8 @@
 package net.catharos.societies.request;
 
-import net.catharos.groups.request.*;
+import net.catharos.groups.request.Participant;
+import net.catharos.groups.request.Request;
+import net.catharos.groups.request.RequestMessenger;
 import net.catharos.groups.request.simple.Choices;
 
 /**

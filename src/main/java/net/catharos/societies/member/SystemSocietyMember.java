@@ -35,7 +35,8 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
                                MemberRankPublisher memberRankPublisher,
                                MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher) {
-        super(uuid.get(), societyPublisher, memberStatePublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
+        super(uuid
+                .get(), societyPublisher, memberStatePublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
         this.localeProvider = localeProvider;
         this.directory = dictionary;
     }

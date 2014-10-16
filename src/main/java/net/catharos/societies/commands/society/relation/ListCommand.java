@@ -12,8 +12,8 @@ import javax.inject.Provider;
 import java.util.Collection;
 
 /**
-* Represents a ListCommand
-*/
+ * Represents a ListCommand
+ */
 abstract class ListCommand implements Executor<Member> {
 
     private final Provider<Table> tableProvider;

@@ -267,7 +267,8 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
     private Group evaluateSingleGroup(SocietiesRecord record, Member predefined) {
         byte[] uuid = record.getUuid();
-        Group group = groupFactory.create(UUIDGen.toUUID(uuid), record.getName(), record.getTag(), new DateTime(record.getCreated()));
+        Group group = groupFactory
+                .create(UUIDGen.toUUID(uuid), record.getName(), record.getTag(), new DateTime(record.getCreated()));
         // Preparing
         group.setState(PREPARE);
 

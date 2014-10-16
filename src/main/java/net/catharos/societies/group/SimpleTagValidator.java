@@ -22,8 +22,8 @@ public class SimpleTagValidator implements TagValidator {
 
     @Inject
     public SimpleTagValidator(@Named("tag.max-length") Integer maxLength,
-                               @Named("tag.min-length") Integer minLength,
-                               @Named("tag.disallowed") ArrayList disallowed) {
+                              @Named("tag.min-length") Integer minLength,
+                              @Named("tag.disallowed") ArrayList disallowed) {
         this.maxLength = maxLength;
         this.minLength = minLength;
         this.disallowed = disallowed;
