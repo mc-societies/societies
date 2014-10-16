@@ -32,7 +32,7 @@ class SQLQueries extends QueryProvider {
 
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY_BY_UUID = QueryKey.create();
 
-    public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY_BY_NAME = QueryKey.create();
+    public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY_BY_TAG = QueryKey.create();
 
 
     public static final QueryKey<Insert<SocietiesRecord>> INSERT_SOCIETY = QueryKey.create();
@@ -143,12 +143,12 @@ class SQLQueries extends QueryProvider {
             }
         });
 
-        builder(SELECT_SOCIETY_BY_NAME, new QueryBuilder<Select<SocietiesRecord>>() {
+        builder(SELECT_SOCIETY_BY_TAG, new QueryBuilder<Select<SocietiesRecord>>() {
             @Override
             public Select<SocietiesRecord> create(DSLContext context) {
                 return context.
                         selectFrom(SOCIETIES)
-                        .where(SOCIETIES.NAME.like(DEFAULT_STRING));
+                        .where(SOCIETIES.CLEAN_TAG.like(DEFAULT_STRING));
             }
         });
 

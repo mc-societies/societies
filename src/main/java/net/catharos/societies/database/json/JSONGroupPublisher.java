@@ -57,7 +57,7 @@ public final class JSONGroupPublisher<M extends Member> implements
 
                 Query<Group> query = or(
                         contains(JSONProvider.GROUP_CLEAN_TAG, tag),
-                        contains(JSONProvider.GROUP_NAME, name)
+                        contains(JSONProvider.GROUP_TAG, name)
                 );
 
                 if (provider.groups.retrieve(query).isNotEmpty()) {

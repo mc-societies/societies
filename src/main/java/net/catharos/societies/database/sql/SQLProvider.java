@@ -358,15 +358,15 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     }
 
     @Override
-    public ListenableFuture<Set<Group>> getGroup(String name) {
+    public ListenableFuture<Set<Group>> getGroup(String tag) {
         // Cache lookup
-        Set<Group> group = groupCache.getGroup(name);
+        Set<Group> group = groupCache.getGroup(tag);
         if (group != null) {
             return immediateFuture(group);
         }
 
-        Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_NAME);
-        query.bind(1, name);
+        Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_TAG);
+        query.bind(1, tag);
 
         return evaluateMultipleGroups(queries.query(service, query));
     }

@@ -47,9 +47,9 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         public UUID getValue(Group group) { return group.getUUID(); }
     };
 
-    public static final Attribute<Group, String> GROUP_NAME = new SimpleAttribute<Group, String>("group_name") {
+    public static final Attribute<Group, String> GROUP_TAG = new SimpleAttribute<Group, String>("group_tag") {
         @Override
-        public String getValue(Group group) { return group.getName(); }
+        public String getValue(Group group) { return group.getTag(); }
     };
 
     public static final Attribute<Group, String> GROUP_CLEAN_TAG = new SimpleAttribute<Group, String>("group_tag") {
@@ -61,8 +61,8 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     {
         groups.addIndex(HashIndex.onAttribute(GROUP_UUID));
 
-        groups.addIndex(HashIndex.onAttribute(GROUP_NAME));
-        groups.addIndex(SuffixTreeIndex.onAttribute(GROUP_NAME));
+        groups.addIndex(HashIndex.onAttribute(GROUP_TAG));
+        groups.addIndex(SuffixTreeIndex.onAttribute(GROUP_TAG));
 
         groups.addIndex(HashIndex.onAttribute(GROUP_CLEAN_TAG));
     }
@@ -145,8 +145,9 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     }
 
     @Override
-    public ListenableFuture<Set<Group>> getGroup(String name) {
-        Query<Group> query = contains(GROUP_NAME, name);
+    public ListenableFuture<Set<Group>> getGroup(String tag) {
+        Query<Group> query = contains(GROUP_TAG, tag);
+
         ResultSet<Group> retrieve = groups.retrieve(query);
 
         Set<Group> result = Sets.newHashSet(retrieve);

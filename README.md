@@ -155,7 +155,7 @@ The glue for all components is [google guice](https://code.google.com/p/google-g
 
 Currently, me - p000ison (Max A.) - is the only person who's working on this project, but this will hopefully change after release. You can contact me over at irc.esper.net @ #Simplesocieties
 
-## License
+#### License
 
 Societies is licenced under [WTFPL](http://www.wtfpl.net/)
 

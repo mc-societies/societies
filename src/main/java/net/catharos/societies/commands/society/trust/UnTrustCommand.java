@@ -19,6 +19,6 @@ public class UnTrustCommand implements Executor<Member> {
 
     @Override
     public void execute(CommandContext<Member> ctx, Member sender) {
-        target.setState(-1);
+
     }
 }
