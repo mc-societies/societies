@@ -7,10 +7,9 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Option;
-import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.lib.core.command.reflect.*;
 import net.catharos.societies.bukkit.PlayerState;
+import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.entity.Player;
 
@@ -21,6 +20,7 @@ import javax.inject.Provider;
  */
 @Command(identifier = "command.vitals")
 @Sender(Member.class)
+@Meta(@Entry(key = RuleStep.RULE, value = "vitals"))
 public class VitalsCommand implements Executor<Member> {
 
     private final Provider<Table> tableProvider;
