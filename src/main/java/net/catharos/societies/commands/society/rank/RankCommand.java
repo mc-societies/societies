@@ -12,7 +12,6 @@ import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.societies.commands.RuleStep;
-import net.catharos.societies.member.SocietyMember;
 import org.bukkit.ChatColor;
 
 import javax.inject.Provider;
@@ -26,7 +25,8 @@ import java.util.Collection;
         RankCommand.CreateCommand.class,
         RankCommand.RemoveCommand.class,
         RankCommand.ListCommand.class,
-        RankCommand.AssignCommand.class
+        RankCommand.AssignCommand.class,
+        RuleCommand.class
 })
 public class RankCommand {
 
@@ -37,8 +37,8 @@ public class RankCommand {
     @Command(identifier = "command.rank.create")
     @Permission("societies.rank.create")
     @Meta(@Entry(key = RuleStep.RULE, value = "rank.create"))
-    @Sender(SocietyMember.class)
-    public static class CreateCommand implements Executor<SocietyMember> {
+    @Sender(Member.class)
+    public static class CreateCommand implements Executor<Member> {
 
         @Argument(name = "argument.rank.name", description = "The name of the new rank")
         String name;
@@ -56,7 +56,7 @@ public class RankCommand {
         }
 
         @Override
-        public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
+        public void execute(CommandContext<Member> ctx, Member sender) {
             Group group = sender.getGroup();
 
             if (group == null) {
@@ -88,14 +88,14 @@ public class RankCommand {
     @Command(identifier = "command.rank.remove")
     @Permission("societies.rank.remove")
     @Meta(@Entry(key = RuleStep.RULE, value = "rank.remove"))
-    @Sender(SocietyMember.class)
-    public static class RemoveCommand implements Executor<SocietyMember> {
+    @Sender(Member.class)
+    public static class RemoveCommand implements Executor<Member> {
 
         @Argument(name = "argument.rank.name", description = "The name of the new rank")
         String name;
 
         @Override
-        public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
+        public void execute(CommandContext<Member> ctx, Member sender) {
             Group group = sender.getGroup();
 
             if (group == null) {
@@ -171,14 +171,14 @@ public class RankCommand {
     @Command(identifier = "command.rank.assign")
     @Permission("societies.rank.assign")
     @Meta(@Entry(key = RuleStep.RULE, value = "rank.assign"))
-    @Sender(SocietyMember.class)
-    public static class AssignCommand implements Executor<SocietyMember> {
+    @Sender(Member.class)
+    public static class AssignCommand implements Executor<Member> {
 
         @Argument(name = "argument.rank")
         String rankName;
 
         @Override
-        public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
+        public void execute(CommandContext<Member> ctx, Member sender) {
             Group group = sender.getGroup();
 
             if (group == null) {
