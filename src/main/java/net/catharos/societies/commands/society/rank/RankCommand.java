@@ -66,7 +66,7 @@ public class RankCommand {
 
             name = ChatColor.stripColor(name);
 
-            Rank rank = rankFactory.create(name, priority);
+            Rank rank = rankFactory.create(name, priority, group);
 
 
             if (group.getRank(name) != null) {

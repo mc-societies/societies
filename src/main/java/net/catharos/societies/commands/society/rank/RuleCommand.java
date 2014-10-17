@@ -13,6 +13,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.societies.commands.RuleStep;
+import net.catharos.societies.setting.RulesSetting;
 
 import java.util.Map;
 
@@ -22,36 +23,49 @@ import java.util.Map;
 @Command(identifier = "command.rank.rules.rules")
 @Children({
         RuleCommand.AssignCommand.class,
-        RuleCommand.RemoveCommand.class
+        RuleCommand.RemoveCommand.class,
+        RuleCommand.ListCommand.class
 })
 @Sender(Member.class)
-public class RuleCommand implements Executor<Member> {
+public class RuleCommand {
 
-    @Argument(name = "argument.rank.name", description = "The name of the new rank")
-    String name;
+    //================================================================================
+    // List
+    //================================================================================
 
-    @Option(name = "argument.page")
-    int page;
+    @Command(identifier = "command.rank.rules.list")
+    @Permission("societies.rank.rules.list")
+    @Meta(@Entry(key = RuleStep.RULE, value = "rank.rules.list"))
+    @Sender(Member.class)
+    public static class ListCommand implements Executor<Member> {
 
-    @Override
-    public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
-        Group group = sender.getGroup();
+        @Argument(name = "argument.rank.name", description = "The name of the new rank")
+        String name;
 
-        if (group == null) {
-            sender.send("society.not-found");
-            return;
+        @Override
+        public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
+            Group group = sender.getGroup();
+
+            if (group == null) {
+                sender.send("society.not-found");
+                return;
+            }
+
+            Rank rank = group.getRank(name);
+
+            if (rank == null) {
+                sender.send("rank.not-found");
+                return;
+            }
+
+            for (Table.Cell<Setting, Target, Object> cell : rank.getSettings().cellSet()) {
+                if (cell.getRowKey() instanceof RulesSetting) {
+                    sender.send(((RulesSetting) cell.getRowKey()).getRule());
+                }
+
+            }
         }
 
-        Rank rank = group.getRank(name);
-
-        if (rank == null) {
-            sender.send("rank.not-found");
-            return;
-        }
-
-        for (Table.Cell<Setting, Target, Object> cell : rank.getSettings().cellSet()) {
-            sender.send(cell.getRowKey().toString());
-        }
     }
 
     //================================================================================

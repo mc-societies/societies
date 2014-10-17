@@ -37,6 +37,7 @@ import net.catharos.societies.bukkit.BukkitSystemSender;
 import net.catharos.societies.bukkit.LocationParser;
 import net.catharos.societies.commands.society.SocietyCommand;
 import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.setting.RulesSetting;
 import org.bukkit.Location;
 
 import java.util.Set;
@@ -110,7 +111,7 @@ public class CommandModule extends AbstractModule {
         bindNamed("system-sender", Sender.class).to(BukkitSystemSender.class);
 
         //fixme rules
-        rules();
+        rules().addBinding("vitals").toInstance(new RulesSetting("vitals", 0));
     }
 
     @Provides
@@ -145,7 +146,8 @@ public class CommandModule extends AbstractModule {
 
     public Multibinder<Executor<Sender>> afterPipeline() {
         return Multibinder
-                .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-after"));
+                .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-after"))
+                .permitDuplicates();
     }
 
     public Multibinder<Executor<Sender>> beforePipeline() {
