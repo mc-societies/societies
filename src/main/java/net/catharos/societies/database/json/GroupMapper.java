@@ -3,6 +3,8 @@ package net.catharos.societies.database.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -14,16 +16,18 @@ import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
 import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.SettingProvider;
+import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.SimpleTarget;
 import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.util.CastSafe;
+import org.javatuples.Triplet;
 import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -74,6 +78,8 @@ public class GroupMapper extends AbstractMapper {
 
         GroupBuilder builder = builders.get();
 
+        List<Triplet<UUID, String, Table<Setting, Target, byte[]>>> rawRanks = Lists.newArrayList();
+
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String groupField = parser.getCurrentName();
 
@@ -89,48 +95,59 @@ public class GroupMapper extends AbstractMapper {
             } else if (groupField.equals("state")) {
                 builder.setState(parser.getShortValue());
             } else if (groupField.equals("settings")) {
-                validateArray(parser);
-
-                while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    validateObject(parser);
-
-                    Target target = null;
-                    Setting setting = null;
-                    byte[] value = null;
-
-                    while (parser.nextToken() != JsonToken.END_OBJECT) {
-                        String settingField = parser.getCurrentName();
-
-                        parser.nextToken();
-                        if (settingField.equals("target")) {
-                            target = new SimpleTarget(UUID.fromString(parser.getText()));
-                        } else if (settingField.equals("setting")) {
-                            setting = settingProvider.getSetting(parser.getIntValue());
-                        } else if (settingField.equals("value")) {
-                            value = parser.getBinaryValue();
-                        }
-                    }
-
-                    if (target == null || setting == null || value == null) {
-                        continue;
-                    }
-
-                    builder.put(setting, target, value);
-                }
+                readSettings(parser, builder.getSettings());
             } else if (groupField.equals("ranks")) {
                 validateArray(parser);
 
-                ArrayList<Rank> ranks = new ArrayList<Rank>();
                 while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    ranks.add(readRank(parser));
+                    rawRanks.add(readRank(parser));
                 }
-
-                builder.setRanks(ranks);
             }
         }
 
 
-        return builder.build();
+        //beatify
+        Group group = builder.build();
+
+        for (Triplet<UUID, String, Table<Setting, Target, byte[]>> rank : rawRanks) {
+            group.addRank(toRank(group, rank));
+        }
+
+        group.setState(0);
+
+
+        return group;
+    }
+
+    public void readSettings(JsonParser parser, Table<Setting, Target, byte[]> settings) throws IOException {
+        validateArray(parser);
+
+        while (parser.nextToken() != JsonToken.END_ARRAY) {
+            validateObject(parser);
+
+            Target target = null;
+            Setting setting = null;
+            byte[] value = null;
+
+            while (parser.nextToken() != JsonToken.END_OBJECT) {
+                String settingField = parser.getCurrentName();
+
+                parser.nextToken();
+                if (settingField.equals("target")) {
+                    target = new SimpleTarget(UUID.fromString(parser.getText()));
+                } else if (settingField.equals("setting")) {
+                    setting = settingProvider.getSetting(parser.getIntValue());
+                } else if (settingField.equals("value")) {
+                    value = parser.getBinaryValue();
+                }
+            }
+
+            if (target == null || setting == null || value == null) {
+                continue;
+            }
+
+            settings.put(setting, target, value);
+        }
     }
 
     public void writeGroup(JsonGenerator generator, Group group) throws IOException {
@@ -152,35 +169,50 @@ public class GroupMapper extends AbstractMapper {
             generator.writeEndArray();
         }
 
-        Set<Table.Cell<Setting, Target, Object>> settings = group.getSettings().cellSet();
-        if (!settings.isEmpty()) {
-
-            generator.writeArrayFieldStart("settings");
-            for (Table.Cell<Setting, Target, Object> cell : settings) {
-                generator.writeStartObject();
-                Target target = cell.getColumnKey();
-                Setting<Object> setting = CastSafe.toGeneric(cell.getRowKey());
-
-                generator.writeStringField("target", target.getUUID().toString());
-
-                generator.writeNumberField("setting", setting.getID());
-                byte[] convert = setting.convert(group, target, cell.getValue());
-                generator.writeStringField("value", Base64.encodeToString(convert, false));
-                generator.writeEndObject();
-            }
-            generator.writeEndArray();
-
-        }
+        writeSettings(group, generator, group.getSettings());
 
         generator.writeEndObject();
     }
 
+    public void writeSettings(Subject subject, JsonGenerator generator, Table<Setting, Target, Object> settings) throws IOException {
+        if (settings.isEmpty()) {
+            return;
+        }
 
-    public Rank readRank(JsonParser parser) throws IOException {
+        generator.writeArrayFieldStart("settings");
+        for (Table.Cell<Setting, Target, Object> cell : settings.cellSet()) {
+            generator.writeStartObject();
+            Target target = cell.getColumnKey();
+            Setting<Object> setting = CastSafe.toGeneric(cell.getRowKey());
+
+            generator.writeStringField("target", target.getUUID().toString());
+
+            generator.writeNumberField("setting", setting.getID());
+            byte[] convert = setting.convert(subject, target, cell.getValue());
+            generator.writeStringField("value", Base64.encodeToString(convert, false));
+            generator.writeEndObject();
+        }
+        generator.writeEndArray();
+    }
+
+    private Rank toRank(Group group, Triplet<UUID, String, Table<Setting, Target, byte[]>> triplet) {
+        Rank rank = rankFactory.create(triplet.getValue0(), triplet.getValue1(), Rank.DEFAULT_PRIORITY, group);
+
+        for (Table.Cell<Setting, Target, byte[]> cell : triplet.getValue2().cellSet()) {
+            rank.set(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
+        }
+
+        rank.setState(0);
+
+        return rank;
+    }
+
+    private Triplet<UUID, String, Table<Setting, Target, byte[]>> readRank(JsonParser parser) throws IOException {
         validateObject(parser);
 
         UUID uuid = null;
         String name = null;
+        Table<Setting, Target, byte[]> settings = HashBasedTable.create();
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String fieldName = parser.getCurrentName();
@@ -190,10 +222,12 @@ public class GroupMapper extends AbstractMapper {
                 uuid = UUID.fromString(parser.getText());
             } else if (fieldName.equals("name")) {
                 name = parser.getText();
+            } else if (fieldName.equals("settings")) {
+                readSettings(parser, settings);
             }
         }
 
-        return rankFactory.create(uuid, name, Rank.DEFAULT_PRIORITY);
+        return Triplet.with(uuid, name, settings);
     }
 
     public void writeRank(JsonGenerator generator, Rank rank) throws IOException {
@@ -201,6 +235,8 @@ public class GroupMapper extends AbstractMapper {
 
         generator.writeStringField("uuid", rank.getUUID().toString());
         generator.writeStringField("name", rank.getName());
+        writeSettings(rank, generator, rank.getSettings());
+
         generator.writeEndObject();
     }
 

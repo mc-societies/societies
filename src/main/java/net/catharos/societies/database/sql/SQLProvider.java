@@ -339,7 +339,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
 
             for (Record2<byte[], String> rankRecord : rankQuery.fetch()) {
-                Rank rank = loadRank(rankRecord);
+                Rank rank = loadRank(group, rankRecord);
                 group.addRank(rank);
             }
 
@@ -353,8 +353,8 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         return group;
     }
 
-    private Rank loadRank(Record2<byte[], String> rankRecord) {
-        Rank rank = rankFactory.create(UUIDGen.toUUID(rankRecord.value1()), rankRecord.value2(), 0);
+    private Rank loadRank(Group group, Record2<byte[], String> rankRecord) {
+        Rank rank = rankFactory.create(UUIDGen.toUUID(rankRecord.value1()), rankRecord.value2(), 0, group);
         rank.setState(PREPARE);
 
         loadSettings(rank, rankRecord.value1(), queries.getQuery(SQLQueries.SELECT_RANK_SETTINGS));
