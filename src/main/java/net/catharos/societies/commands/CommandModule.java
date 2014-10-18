@@ -102,7 +102,7 @@ public class CommandModule extends AbstractModule {
 
 
         bind(new TypeLiteral<CommandPipeline<Sender>>() {}).to(new TypeLiteral<DefaultCommandPipeline<Sender>>() {});
-        beforePipeline().addBinding().to(new TypeLiteral<PermissionStep<Sender>>() {});
+        beforePipeline().addBinding().to(PermissionStep.class);
         beforePipeline().addBinding().to(VerifyStep.class);
         beforePipeline().addBinding().to(RuleStep.class);
         beforePipeline().addBinding().to(HeaderExecutor.class);
