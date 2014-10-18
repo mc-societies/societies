@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class RulesSetting extends Setting<Boolean> {
 
-    public static final int ID = 0xFFFF;
+    public static final int ID = 0xFFF;
 
     private final String rule;
 

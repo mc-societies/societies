@@ -151,20 +151,8 @@ public class CommandModule extends AbstractModule {
 
     @Provides
     @Named("commands")
-    public Set<Command<Sender>> provideCommand(/*GroupBuilder<Sender> builder,*/ CommandAnalyser<Sender> analyser) {
+    public Set<Command<Sender>> provideCommand(CommandAnalyser<Sender> analyser) {
         Set<Command<Sender>> commands = new THashSet<Command<Sender>>();
-
-//        builder.name("Societies")
-//                .identifier("society")
-//                .description("Society command");
-//
-//        GroupCommand<Sender> society = builder.build();
-//
-//        for (Class<?> subCommand : this.commands) {
-//            society.addChild(analyser.analyse(subCommand));
-//        }
-//
-//        analyser.analyseOptions(society, builder.getExecutor().getClass());
 
         commands.add(analyser.analyse(SocietyCommand.class));
 
