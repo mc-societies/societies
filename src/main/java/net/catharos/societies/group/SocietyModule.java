@@ -1,18 +1,20 @@
 package net.catharos.societies.group;
 
-import com.google.inject.TypeLiteral;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
+import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.*;
 import net.catharos.groups.rank.DefaultRank;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
-import net.catharos.groups.rank.StaticRankProvider;
+import net.catharos.groups.rank.StaticRank;
 import net.catharos.groups.validate.NameValidator;
 import net.catharos.groups.validate.TagValidator;
 import net.catharos.lib.shank.AbstractModule;
 
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -24,6 +26,7 @@ public class SocietyModule extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder()
                 .implement(Rank.class, DefaultRank.class)
+                .implement(Rank.class, Names.named("static"), StaticRank.class)
                 .build(RankFactory.class));
 
         install(new FactoryModuleBuilder()
@@ -39,17 +42,24 @@ public class SocietyModule extends AbstractModule {
 
         bind(NameValidator.class).to(SimpleNameValidator.class);
         bind(TagValidator.class).to(SimpleTagValidator.class);
-
-
-        //fixme add rules
-        defaultRanks().addBinding().toInstance(new StaticRankProvider(UUID.randomUUID(), "Leader", 0));
-        defaultRanks().addBinding().toInstance(new StaticRankProvider(UUID.randomUUID(), "Member", 0));
     }
 
-    public Multibinder<StaticRankProvider> defaultRanks() {
-        return Multibinder
-                .newSetBinder(binder(), new TypeLiteral<StaticRankProvider>() {}, Names.named("default-ranks"))
-                .permitDuplicates();
+    @Provides
+    @Singleton
+    public Set<Rank> provideDefaultRanks(RankFactory rankFactory) {
+        //fixme add rules
+        THashSet<Rank> ranks = new THashSet<Rank>();
+
+        Rank leader = rankFactory.createStatic(UUID.randomUUID(), "Leader", 0);
+        leader.addRule("trust");
+
+        Rank member = rankFactory.createStatic(UUID.randomUUID(), "Member", 0);
+        leader.addRule("vitals");
+
+        ranks.add(leader);
+        ranks.add(member);
+
+        return ranks;
     }
 
 }

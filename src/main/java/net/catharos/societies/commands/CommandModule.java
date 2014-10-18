@@ -178,8 +178,8 @@ public class CommandModule extends AbstractModule {
                 .permitDuplicates();
     }
 
-    public MapBinder<String, Setting> rules() {
-        return MapBinder.newMapBinder(binder(), String.class, Setting.class);
+    public MapBinder<String, Setting<Boolean>> rules() {
+        return MapBinder.newMapBinder(binder(), new TypeLiteral<String>() {}, new TypeLiteral<Setting<Boolean>>() {});
     }
 
 
