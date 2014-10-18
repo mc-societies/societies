@@ -30,4 +30,6 @@ public class SettingModule extends AbstractModule {
         settings.addBinding(RelationSetting.ID).to(RelationSetting.class);
     }
 
+
+
 }

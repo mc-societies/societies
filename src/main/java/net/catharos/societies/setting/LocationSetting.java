@@ -15,7 +15,7 @@ import java.io.*;
  * Represents a LocationSetting
  */
 class LocationSetting extends Setting<Location> {
-    public static final int ID = 0;
+    public static final int ID = 0x0;
 
     private final World world;
 

@@ -10,10 +10,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class RulesSetting extends Setting<Boolean> {
 
+    public static final int ID = 0xFFFF;
+
     private final String rule;
 
     public RulesSetting(String rule, int id) {
-        super(id);
+        super(ID + id);
         this.rule = rule;
     }
 

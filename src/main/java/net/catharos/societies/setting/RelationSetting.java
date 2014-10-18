@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * Represents a RelationSetting
  */
 public class RelationSetting extends Setting<Relation> {
-    public static final int ID = 1;
+    public static final int ID = 0x1;
 
     public RelationSetting() {
         super(ID);
