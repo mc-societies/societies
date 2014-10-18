@@ -103,6 +103,7 @@ public class CommandModule extends AbstractModule {
 
         bind(new TypeLiteral<CommandPipeline<Sender>>() {}).to(new TypeLiteral<DefaultCommandPipeline<Sender>>() {});
         beforePipeline().addBinding().to(new TypeLiteral<PermissionStep<Sender>>() {});
+        beforePipeline().addBinding().to(VerifyStep.class);
         beforePipeline().addBinding().to(RuleStep.class);
         beforePipeline().addBinding().to(HeaderExecutor.class);
         beforePipeline().addBinding().to(WorldStep.class);
@@ -134,16 +135,13 @@ public class CommandModule extends AbstractModule {
         addRule("rank.rules.list", 0x41);
         addRule("rank.rules.remove", 0x42);
 
-        addRule("rivalries", 0x50);
-        addRule("alliances", 0x51);
+        addRule("allies.list", 0x50);
+        addRule("allies.add", 0x51);
+        addRule("allies.remove", 0x52);
 
-        addRule("allies.list", 0x60);
-        addRule("allies.add", 0x61);
-        addRule("allies.remove", 0x62);
-
-        addRule("rivals.list", 0x70);
-        addRule("rivals.add", 0x71);
-        addRule("rivals.remove", 0x72);
+        addRule("rivals.list", 0x60);
+        addRule("rivals.add", 0x61);
+        addRule("rivals.remove", 0x62);
     }
 
     private void addRule(String rule, int id) {

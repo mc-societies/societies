@@ -12,6 +12,7 @@ import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.societies.commands.RuleStep;
+import net.catharos.societies.commands.VerifyStep;
 import org.bukkit.ChatColor;
 
 import javax.inject.Provider;
@@ -36,7 +37,7 @@ public class RankCommand {
 
     @Command(identifier = "command.rank.create")
     @Permission("societies.rank.create")
-    @Meta(@Entry(key = RuleStep.RULE, value = "rank.create"))
+    @Meta({@Entry(key = RuleStep.RULE, value = "rank.create"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(Member.class)
     public static class CreateCommand implements Executor<Member> {
 
@@ -87,7 +88,7 @@ public class RankCommand {
 
     @Command(identifier = "command.rank.remove")
     @Permission("societies.rank.remove")
-    @Meta(@Entry(key = RuleStep.RULE, value = "rank.remove"))
+    @Meta({@Entry(key = RuleStep.RULE, value = "rank.remove"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(Member.class)
     public static class RemoveCommand implements Executor<Member> {
 
@@ -122,7 +123,7 @@ public class RankCommand {
 
     @Command(identifier = "command.rank.list")
     @Permission("societies.rank.list")
-    @Meta(@Entry(key = RuleStep.RULE, value = "rank.list"))
+    @Meta({@Entry(key = RuleStep.RULE, value = "rank.list"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(Member.class)
     public static class ListCommand implements Executor<Member> {
 
@@ -170,7 +171,7 @@ public class RankCommand {
 
     @Command(identifier = "command.rank.assign")
     @Permission("societies.rank.assign")
-    @Meta(@Entry(key = RuleStep.RULE, value = "rank.assign"))
+    @Meta({@Entry(key = RuleStep.RULE, value = "rank.assign"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(Member.class)
     public static class AssignCommand implements Executor<Member> {
 

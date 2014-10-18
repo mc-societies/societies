@@ -17,6 +17,7 @@ import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.societies.commands.RuleStep;
+import net.catharos.societies.commands.VerifyStep;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -33,7 +34,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
         RivalsCommand.AddCommand.class,
         RivalsCommand.RemoveCommand.class
 })
-@Meta(@Entry(key = RuleStep.RULE, value = "rivals.list"))
+@Meta({@Entry(key = RuleStep.RULE, value = "rivals.list"), @Entry(key = VerifyStep.VERIFY)})
 @Sender(Member.class)
 public class RivalsCommand extends ListCommand {
 
@@ -59,7 +60,7 @@ public class RivalsCommand extends ListCommand {
 
     @Command(identifier = "command.rivals.remove")
     @Permission("societies.rivals.remove")
-    @Meta(@Entry(key = RuleStep.RULE, value = "rivals.remove"))
+    @Meta({@Entry(key = RuleStep.RULE, value = "rivals.remove"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(Member.class)
     public static class RemoveCommand implements Executor<Member> {
 
@@ -115,7 +116,7 @@ public class RivalsCommand extends ListCommand {
 
     @Command(identifier = "command.rivals.add", async = true)
     @Permission("societies.rivals.add")
-    @Meta(@Entry(key = RuleStep.RULE, value = "rivals.add"))
+    @Meta({@Entry(key = RuleStep.RULE, value = "rivals.add"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(Member.class)
     public static class AddCommand implements Executor<Member> {
 

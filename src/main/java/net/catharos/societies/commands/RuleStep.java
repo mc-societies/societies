@@ -39,6 +39,7 @@ public class RuleStep implements Executor<Sender> {
         Setting setting = rules.get(rule);
 
         if (setting == null) {
+            ctx.cancel();
             throw new ExecuteException("No setting for rule " + rule + " found!", ctx);
         }
 

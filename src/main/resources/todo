@@ -1,8 +1,8 @@
 - verify
-- rank rules
+- fix states
 - predefined ranks
-- catch group not found when loading
 
+- list only verified
 - cleanup for json engine
 - set home only once/ time delay
 - rename only colors

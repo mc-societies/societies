@@ -11,6 +11,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.societies.commands.RuleStep;
+import net.catharos.societies.commands.VerifyStep;
 import net.catharos.societies.member.SocietyMember;
 import net.catharos.societies.teleport.TeleportController;
 import org.bukkit.Location;
@@ -26,7 +27,7 @@ import org.bukkit.entity.Player;
         HomeCommand.RegroupCommand.class,
         HomeCommand.RemoveHomeCommand.class
 })
-@Meta(@Entry(key = RuleStep.RULE, value = "home.teleport"))
+@Meta({@Entry(key = RuleStep.RULE, value = "home.teleport"), @Entry(key = VerifyStep.VERIFY)})
 @Sender(value = SocietyMember.class)
 public class HomeCommand implements Executor<SocietyMember> {
 
@@ -63,7 +64,7 @@ public class HomeCommand implements Executor<SocietyMember> {
 
     @Command(identifier = "command.home.remove", async = true)
     @Permission("societies.home.remove")
-    @Meta(@Entry(key = RuleStep.RULE, value = "home.remove"))
+    @Meta({@Entry(key = RuleStep.RULE, value = "home.remove"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(value = SocietyMember.class)
     public static class RemoveHomeCommand implements Executor<Member> {
 
@@ -90,7 +91,7 @@ public class HomeCommand implements Executor<SocietyMember> {
 
     @Command(identifier = "command.home.set")
     @Permission("societies.home.set")
-    @Meta(@Entry(key = RuleStep.RULE, value = "home.set"))
+    @Meta({@Entry(key = RuleStep.RULE, value = "home.set"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(value = SocietyMember.class)
     public static class SetHomeCommand implements Executor<SocietyMember> {
 
@@ -127,7 +128,7 @@ public class HomeCommand implements Executor<SocietyMember> {
 
     @Command(identifier = "command.home.regroup")
     @Permission("societies.home.regroup")
-    @Meta(@Entry(key = RuleStep.RULE, value = "home.regroup"))
+    @Meta({@Entry(key = RuleStep.RULE, value = "home.regroup"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(value = SocietyMember.class)
     public static class RegroupCommand implements Executor<Member> {
 

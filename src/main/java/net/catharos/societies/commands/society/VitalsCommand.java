@@ -10,6 +10,7 @@ import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.societies.bukkit.PlayerState;
 import net.catharos.societies.commands.RuleStep;
+import net.catharos.societies.commands.VerifyStep;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.entity.Player;
 
@@ -20,7 +21,7 @@ import javax.inject.Provider;
  */
 @Command(identifier = "command.vitals")
 @Permission("societies.vitals")
-@Meta(@Entry(key = RuleStep.RULE, value = "vitals"))
+@Meta({@Entry(key = RuleStep.RULE, value = "vitals"), @Entry(key = VerifyStep.VERIFY)})
 @Sender(Member.class)
 public class VitalsCommand implements Executor<Member> {
 

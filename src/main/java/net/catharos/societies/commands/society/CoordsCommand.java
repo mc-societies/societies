@@ -9,6 +9,7 @@ import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.societies.commands.RuleStep;
+import net.catharos.societies.commands.VerifyStep;
 import net.catharos.societies.member.SocietyMember;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ import java.text.DecimalFormat;
  */
 @Command(identifier = "command.coords")
 @Permission("societies.coords")
-@Meta(@Entry(key = RuleStep.RULE, value = "coords"))
+@Meta({@Entry(key = RuleStep.RULE, value = "coords"), @Entry(key = VerifyStep.VERIFY)})
 @Sender(SocietyMember.class)
 public class CoordsCommand implements Executor<SocietyMember> {
 
