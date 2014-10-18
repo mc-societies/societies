@@ -1,5 +1,7 @@
 package net.catharos.societies.database.json;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -15,6 +17,7 @@ import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.suffix.SuffixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.resultset.ResultSet;
+import gnu.trove.map.hash.THashMap;
 import net.catharos.groups.*;
 import net.catharos.groups.publisher.MemberPublisher;
 import net.catharos.lib.core.uuid.UUIDStorage;
@@ -26,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collections;
 import java.util.Set;
@@ -112,12 +116,18 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
 
     @Override
     public void init(LifecycleContext context) throws Exception {
+
+        final THashMap<UUID, Group> temp = new THashMap<UUID, Group>();
+
         for (File file : groupStorage) {
             if (!file.exists()) {
                 continue;
             }
             try {
-                groups.add(groupMapper.readGroup(file));
+                Group group = groupMapper.readGroup(file);
+
+                temp.put(group.getUUID(), group);
+                groups.add(group);
             } catch (Throwable e) {
                 logger.error("Failed loading group from file " + file + "!", e);
             }
@@ -128,7 +138,13 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
                 continue;
             }
             try {
-                members.add(mapper.readMember(file, this));
+                members.add(mapper.readMember(file, new Function<UUID, Group>() {
+                    @Nullable
+                    @Override
+                    public Group apply(UUID input) {
+                        return temp.get(input);
+                    }
+                }));
             } catch (Throwable e) {
                 logger.error("Failed loading member from file " + file + "!", e);
             }
@@ -142,7 +158,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         Query<Group> query = equal(GROUP_UUID, uuid);
         ResultSet<Group> retrieve = groups.retrieve(query);
 
-        return Futures.immediateFuture(retrieve.uniqueResult());
+        return Futures.immediateFuture(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override
@@ -173,7 +189,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
             return immediateFuture(member);
         }
 
-        return Futures.immediateFuture(retrieve.uniqueResult());
+        return Futures.immediateFuture(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override

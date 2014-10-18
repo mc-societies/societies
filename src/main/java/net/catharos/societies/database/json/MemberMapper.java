@@ -3,8 +3,12 @@ package net.catharos.societies.database.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.google.common.base.Function;
 import com.google.inject.Inject;
-import net.catharos.groups.*;
+import net.catharos.groups.DefaultGroup;
+import net.catharos.groups.Group;
+import net.catharos.groups.Member;
+import net.catharos.groups.MemberFactory;
 import net.catharos.groups.rank.Rank;
 import org.joda.time.DateTime;
 
@@ -27,7 +31,7 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
         this.memberFactory = memberFactory;
     }
 
-    public M readMember(JsonParser parser, GroupProvider groupProvider) throws IOException, ExecutionException, InterruptedException {
+    public M readMember(JsonParser parser, Function<UUID, Group> groupSupplier) throws IOException, ExecutionException, InterruptedException {
         parser.nextToken();
         GroupMapper.validateObject(parser);
 
@@ -54,7 +58,11 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
                     continue;
                 }
 
-                group = groupProvider.getGroup(UUID.fromString(parser.getText())).get();
+                group = groupSupplier.apply(UUID.fromString(parser.getText()));
+
+                if (group == null) {
+                    throw new RuntimeException("Could not find group with the uuid " + parser.getText());
+                }
             } else if (fieldName.equals("lastActive")) {
                 lastActive = new DateTime(parser.getLongValue());
             } else if (fieldName.equals("ranks")) {
@@ -114,9 +122,9 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
         generator.writeEndObject();
     }
 
-    public M readMember(File file, GroupProvider groupProvider) throws IOException, ExecutionException, InterruptedException {
+    public M readMember(File file, Function<UUID, Group> groupSupplier) throws IOException, ExecutionException, InterruptedException {
         JsonParser parser = createParser(file);
-        M output = readMember(parser, groupProvider);
+        M output = readMember(parser, groupSupplier);
         parser.close();
         return output;
     }
