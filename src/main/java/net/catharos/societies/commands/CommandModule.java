@@ -119,30 +119,31 @@ public class CommandModule extends AbstractModule {
         addRule("kick", 0x6);
         addRule("coords", 0x7);
         addRule("trust", 0x8);
+        addRule("untrust", 0x9);
 
-        addRule("home.teleport", 0x10);
-        addRule("home.regroup", 0x11);
-        addRule("home.set", 0x12);
+        addRule("home.teleport", 0x20);
+        addRule("home.regroup", 0x21);
+        addRule("home.set", 0x22);
 
-        addRule("rank.assign", 0x20);
-        addRule("rank.create", 0x21);
-        addRule("rank.list", 0x22);
-        addRule("rank.remove", 0x23);
+        addRule("rank.assign", 0x30);
+        addRule("rank.create", 0x31);
+        addRule("rank.list", 0x32);
+        addRule("rank.remove", 0x33);
 
-        addRule("rank.rules.assign", 0x30);
-        addRule("rank.rules.list", 0x31);
-        addRule("rank.rules.remove", 0x32);
+        addRule("rank.rules.assign", 0x40);
+        addRule("rank.rules.list", 0x41);
+        addRule("rank.rules.remove", 0x42);
 
-        addRule("rivalries", 0x40);
-        addRule("alliances", 0x41);
+        addRule("rivalries", 0x50);
+        addRule("alliances", 0x51);
 
-        addRule("allies.list", 0x50);
-        addRule("allies.add", 0x51);
-        addRule("allies.remove", 0x52);
+        addRule("allies.list", 0x60);
+        addRule("allies.add", 0x61);
+        addRule("allies.remove", 0x62);
 
-        addRule("rivals.list", 0x60);
-        addRule("rivals.add", 0x61);
-        addRule("rivals.remove", 0x62);
+        addRule("rivals.list", 0x70);
+        addRule("rivals.add", 0x71);
+        addRule("rivals.remove", 0x72);
     }
 
     private void addRule(String rule, int id) {
