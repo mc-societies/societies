@@ -1,8 +1,10 @@
 package net.catharos.societies.database.json;
 
 import com.google.inject.Inject;
+import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
+import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.DefaultGroup;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupFactory;
@@ -18,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Set;
 import java.util.UUID;
 
 @RunWith(JukitoRunner.class)
@@ -36,6 +39,8 @@ public class GroupMapperTest {
                     .implement(Rank.class, DefaultRank.class)
                     .implement(Rank.class, Names.named("static"), StaticRank.class)
                     .build(RankFactory.class));
+
+            bindNamed(new TypeLiteral<Set<Rank>>() {}, "default-ranks").toInstance(new THashSet<Rank>());
         }
     }
 
