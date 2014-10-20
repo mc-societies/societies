@@ -43,7 +43,7 @@ public class JSONModule extends AbstractServiceModule {
                 .get(new TypeLiteral<JSONMemberPublisher<SocietyMember>>() {});
 
         // Member Publishers
-        bind(new TypeLiteral<MemberPublisher<SocietyMember>>() {}).to(memberPublisher);
+        bind(MemberPublisher.class).to(memberPublisher);
         bind(MemberGroupPublisher.class).to(memberPublisher);
         bind(MemberCreatedPublisher.class).to(memberPublisher);
         bind(MemberLastActivePublisher.class).to(memberPublisher);

@@ -49,7 +49,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     private final SQLQueries queries;
     private final ListeningExecutorService service;
 
-    private final MemberPublisher<SocietyMember> memberPublisher;
+    private final MemberPublisher memberPublisher;
 
     private final MemberFactory<SocietyMember> memberFactory;
     private final GroupFactory groupFactory;
@@ -68,7 +68,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
                        ListeningExecutorService service,
                        PlayerProvider playerProvider,
                        MemberFactory<SocietyMember> memberFactory,
-                       MemberPublisher<SocietyMember> memberPublisher,
+                       MemberPublisher memberPublisher,
                        GroupCache groupCache,
                        GroupFactory groupFactory,
                        SettingProvider settingProvider,

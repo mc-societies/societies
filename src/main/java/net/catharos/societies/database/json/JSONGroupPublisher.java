@@ -1,5 +1,7 @@
 package net.catharos.societies.database.json;
 
+import com.google.common.base.Function;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -87,33 +89,45 @@ public final class JSONGroupPublisher<M extends Member> implements
     }
 
     @Override
-    public void publish(Group group, DateTime created) {
-        defaultPublish(group);
+    public ListenableFuture<Group> publishCreated(Group group, DateTime created) {
+        return defaultPublish(group);
     }
 
     @Override
-    public void publish(Group group, String name) {
-        publish(group);
+    public ListenableFuture<Group> publishName(Group group, String name) {
+        return publish(group);
     }
 
     @Override
-    public void publishRank(Group group, Rank rank) {
-        defaultPublish(group);
+    public ListenableFuture<Rank> publish(final Rank rank) {
+        return Futures.transform(defaultPublish(rank.getGroup()), new Function<Group, Rank>() {
+            @javax.annotation.Nullable
+            @Override
+            public Rank apply(@Nullable Group input) {
+                return rank;
+            }
+        });
     }
 
     @Override
-    public void publish(Group group, short state) {
-        defaultPublish(group);
+    public ListenableFuture<Group> publishState(Group group, short state) {
+        return defaultPublish(group);
     }
 
     @Override
-    public void drop(Group group, Rank rank) {
-        defaultPublish(group);
+    public ListenableFuture<Rank> drop(final Rank rank) {
+        return Futures.transform(defaultPublish(rank.getGroup()), new Function<Group, Rank>() {
+            @javax.annotation.Nullable
+            @Override
+            public Rank apply(@Nullable Group input) {
+                return rank;
+            }
+        });
     }
 
     @Override
-    public void publish(Group group, Rank rank) {
-        defaultPublish(group);
+    public ListenableFuture<Group> publishRank(Group group, Rank rank) {
+        return defaultPublish(group);
     }
 
     @Override

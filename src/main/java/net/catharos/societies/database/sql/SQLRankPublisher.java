@@ -1,5 +1,6 @@
 package net.catharos.societies.database.sql;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import net.catharos.groups.Group;
@@ -14,6 +15,8 @@ import net.catharos.societies.database.sql.layout.tables.records.RanksRecord;
 import org.jooq.Insert;
 import org.jooq.Query;
 
+import java.util.concurrent.Callable;
+
 /**
  * Represents a SQLGroupRankPublisher
  */
@@ -25,41 +28,65 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher, Membe
     }
 
     @Override
-    public void publishRank(Group group, Rank rank) {
-        Insert<RanksRecord> query = queries.getQuery(SQLQueries.INSERT_RANK);
-        query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
-        query.bind(2, rank.getName());
-        query.execute();
+    public ListenableFuture<Rank> publish(final Rank rank) {
+        return service.submit(new Callable<Rank>() {
+            @Override
+            public Rank call() throws Exception {
+                Insert<RanksRecord> query = queries.getQuery(SQLQueries.INSERT_RANK);
+                query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
+                query.bind(2, rank.getName());
+                query.execute();
+                return rank;
+            }
+        });
     }
 
     @Override
-    public void publish(Group group, Rank rank) {
-        Insert query = queries.getQuery(SQLQueries.INSERT_SOCIETY_RANK);
-        query.bind(1, UUIDGen.toByteArray(group.getUUID()));
-        query.bind(2, UUIDGen.toByteArray(rank.getUUID()));
-        query.execute();
+    public ListenableFuture<Group> publishRank(final Group group, final Rank rank) {
+        return service.submit(new Callable<Group>() {
+            @Override
+            public Group call() throws Exception {
+                Insert query = queries.getQuery(SQLQueries.INSERT_SOCIETY_RANK);
+                query.bind(1, UUIDGen.toByteArray(group.getUUID()));
+                query.bind(2, UUIDGen.toByteArray(rank.getUUID()));
+                query.execute();
+                return group;
+            }
+        });
     }
 
     @Override
-    public void publish(Member member, Rank rank) {
-        Insert query = queries.getQuery(SQLQueries.INSERT_MEMBER_RANK);
-        query.bind(1, UUIDGen.toByteArray(member.getUUID()));
-        query.bind(2, UUIDGen.toByteArray(rank.getUUID()));
-        query.execute();
+    public <M extends Member> ListenableFuture<M> publishRank(final M member, final Rank rank) {
+        return service.submit(new Callable<M>() {
+            @Override
+            public M call() throws Exception {
+                Insert query = queries.getQuery(SQLQueries.INSERT_MEMBER_RANK);
+                query.bind(1, UUIDGen.toByteArray(member.getUUID()));
+                query.bind(2, UUIDGen.toByteArray(rank.getUUID()));
+                query.execute();
+                return member;
+            }
+        });
     }
 
     @Override
-    public void drop(Group group, Rank rank) {
-        Query query = queries.getQuery(SQLQueries.DROP_SOCIETY_RANK);
-        query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
-        query.execute();
+    public ListenableFuture<Rank> drop(final Rank rank) {
+        return service.submit(new Callable<Rank>() {
+            @Override
+            public Rank call() throws Exception {
+                Query query = queries.getQuery(SQLQueries.DROP_SOCIETY_RANK);
+                query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
+                query.execute();
 
-        query = queries.getQuery(SQLQueries.DROP_MEMBER_RANK);
-        query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
-        query.execute();
+                query = queries.getQuery(SQLQueries.DROP_MEMBER_RANK);
+                query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
+                query.execute();
 
-        query = queries.getQuery(SQLQueries.DROP_RANK);
-        query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
-        query.execute();
+                query = queries.getQuery(SQLQueries.DROP_RANK);
+                query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
+                query.execute();
+                return rank;
+            }
+        });
     }
 }

@@ -90,7 +90,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     private final UUIDStorage memberStorage;
     private final UUIDStorage groupStorage;
 
-    private final MemberPublisher<M> memberPublisher;
+    private final MemberPublisher memberPublisher;
 
     private final MemberFactory<M> memberFactory;
 
@@ -103,7 +103,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
                         @Named("group-root") File groupRoot,
                         @Named("member-root") File memberRoot,
                         GroupMapper groupMapper,
-                        MemberPublisher<M> memberPublisher,
+                        MemberPublisher memberPublisher,
                         MemberFactory<M> memberFactory) {
         this.playerProvider = playerProvider;
         this.mapper = mapper;

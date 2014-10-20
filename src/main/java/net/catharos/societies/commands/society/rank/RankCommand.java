@@ -75,7 +75,7 @@ public class RankCommand {
                 return;
             }
 
-            this.rankPublisher.publishRank(group, rank);
+            this.rankPublisher.publish(rank);
             group.addRank(rank);
 
             sender.send("rank.created", name);

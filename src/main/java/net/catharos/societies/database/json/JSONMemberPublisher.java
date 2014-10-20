@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
  * Represents a JSONMemberPublisher
  */
 public final class JSONMemberPublisher<M extends Member> implements
-        MemberPublisher<M>, MemberCreatedPublisher, MemberLastActivePublisher, MemberStatePublisher,
+        MemberPublisher, MemberCreatedPublisher, MemberLastActivePublisher, MemberStatePublisher,
         MemberGroupPublisher, MemberRankPublisher, SettingPublisher {
 
     private final UUIDStorage uuidStorage;
@@ -36,10 +36,6 @@ public final class JSONMemberPublisher<M extends Member> implements
         this.service = service;
     }
 
-    @Override
-    public ListenableFuture<M> publish(final M member) {
-        return publishMember(member);
-    }
 
     private <T extends Member> ListenableFuture<T> publishMember(final T member) {
         return service.submit(new Callable<T>() {
@@ -54,27 +50,37 @@ public final class JSONMemberPublisher<M extends Member> implements
     }
 
     @Override
-    public void publish(Member member, DateTime created) {
-        publishMember(member);
-    }
-
-    @Override
-    public void publish(Member member, Group group) {
-        publishMember(member);
-    }
-
-    @Override
-    public void publish(Member member, Rank rank) {
-        publishMember(member);
-    }
-
-    @Override
-    public void publish(Member member, short state) {
-        publishMember(member);
-    }
-
-    @Override
     public <V> void publish(Subject subject, Target target, Setting<V> setting, @Nullable V value) {
         publishMember(((Member) subject));
+    }
+
+    @Override
+    public <M extends Member> ListenableFuture<M> publish(M member) {
+        return publishMember(member);
+    }
+
+    @Override
+    public <M extends Member> ListenableFuture<M> publishCreated(M member, DateTime created) {
+        return publishMember(member);
+    }
+
+    @Override
+    public <M extends Member> ListenableFuture<M> publishGroup(M member, Group group) {
+        return publishMember(member);
+    }
+
+    @Override
+    public <M extends Member> ListenableFuture<M> publishLastActive(M member, DateTime date) {
+        return publishMember(member);
+    }
+
+    @Override
+    public <M extends Member> ListenableFuture<M> publishRank(M member, Rank rank) {
+        return publishMember(member);
+    }
+
+    @Override
+    public <M extends Member> ListenableFuture<M> publishState(M member, short state) {
+        return publishMember(member);
     }
 }

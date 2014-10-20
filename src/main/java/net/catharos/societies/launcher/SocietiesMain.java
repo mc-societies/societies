@@ -59,8 +59,8 @@ public class SocietiesMain implements ReloadAction {
 //        instance.execute(target, "society accept");
 
 
-        MemberPublisher<SocietyMember> memberProvider = injector
-                .getInstance(Key.get(new TypeLiteral<MemberPublisher<SocietyMember>>() {}));
+        MemberPublisher memberProvider = injector
+                .getInstance(MemberPublisher.class);
 
         GroupProvider groupProvider = injector
                 .getInstance(GroupProvider.class);

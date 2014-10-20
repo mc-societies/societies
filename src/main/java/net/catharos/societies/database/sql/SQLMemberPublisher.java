@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SQLMemberPublisher
  */
-class SQLMemberPublisher<M extends Member> extends AbstractPublisher implements MemberPublisher<M> {
+class SQLMemberPublisher extends AbstractPublisher implements MemberPublisher {
 
     @Inject
     public SQLMemberPublisher(ListeningExecutorService service, SQLQueries queries) {
@@ -22,7 +22,7 @@ class SQLMemberPublisher<M extends Member> extends AbstractPublisher implements 
     }
 
     @Override
-    public ListenableFuture<M> publish(final M member) {
+    public <M extends Member> ListenableFuture<M> publish(final M member) {
         return service.submit(new Callable<M>() {
             @Override
             public M call() throws Exception {

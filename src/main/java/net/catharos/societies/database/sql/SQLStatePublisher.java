@@ -1,5 +1,6 @@
 package net.catharos.societies.database.sql;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import net.catharos.groups.Group;
@@ -10,6 +11,8 @@ import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.societies.database.sql.layout.tables.records.MembersRecord;
 import net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord;
 import org.jooq.Update;
+
+import java.util.concurrent.Callable;
 
 /**
  * Represents a SQLGroupStatePublisher
@@ -22,22 +25,36 @@ class SQLStatePublisher extends AbstractPublisher implements GroupStatePublisher
     }
 
     @Override
-    public void publish(Group group, short state) {
-        Update<SocietiesRecord> query = queries.getQuery(SQLQueries.UPDATE_SOCIETY_STATE);
+    public ListenableFuture<Group> publishState(final Group group, final short state) {
 
-        query.bind(1, state);
-        query.bind(2, UUIDGen.toByteArray(group.getUUID()));
+        return service.submit(new Callable<Group>() {
+            @Override
+            public Group call() throws Exception {
+                Update<SocietiesRecord> query = queries.getQuery(SQLQueries.UPDATE_SOCIETY_STATE);
 
-        query.execute();
+                query.bind(1, state);
+                query.bind(2, UUIDGen.toByteArray(group.getUUID()));
+
+                query.execute();
+
+                return group;
+            }
+        });
     }
 
     @Override
-    public void publish(Member member, short state) {
-        Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_STATE);
+    public <M extends Member> ListenableFuture<M> publishState(final M member, final short state) {
+        return service.submit(new Callable<M>() {
+            @Override
+            public M call() throws Exception {
+                Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_STATE);
 
-        query.bind(1, state);
-        query.bind(2, UUIDGen.toByteArray(member.getUUID()));
+                query.bind(1, state);
+                query.bind(2, UUIDGen.toByteArray(member.getUUID()));
 
-        query.execute();
+                query.execute();
+                return member;
+            }
+        });
     }
 }

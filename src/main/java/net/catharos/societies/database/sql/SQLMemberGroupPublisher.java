@@ -1,5 +1,6 @@
 package net.catharos.societies.database.sql;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import net.catharos.groups.Group;
@@ -10,6 +11,7 @@ import net.catharos.societies.database.sql.layout.tables.records.MembersRecord;
 import org.jooq.Update;
 
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 /**
  * Represents a SocietyModifier
@@ -22,18 +24,24 @@ class SQLMemberGroupPublisher extends AbstractPublisher implements MemberGroupPu
     }
 
     @Override
-    public void publish(Member member, Group group) {
-        Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_SOCIETY);
+    public <M extends Member> ListenableFuture<M> publishGroup(final M member, final Group group) {
+        return service.submit(new Callable<M>() {
+            @Override
+            public M call() throws Exception {
+                Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_SOCIETY);
 
-        UUID uuid = null;
+                UUID uuid = null;
 
-        if (group != null) {
-            uuid = group.getUUID();
-        }
+                if (group != null) {
+                    uuid = group.getUUID();
+                }
 
-        query.bind(1, UUIDGen.toByteArray(uuid));
-        query.bind(2, UUIDGen.toByteArray(member.getUUID()));
+                query.bind(1, UUIDGen.toByteArray(uuid));
+                query.bind(2, UUIDGen.toByteArray(member.getUUID()));
 
-        query.execute();
+                query.execute();
+                return member;
+            }
+        });
     }
 }
