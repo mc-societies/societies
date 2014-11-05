@@ -1,18 +1,23 @@
 - verify
 - fix states
 - predefined ranks
-
-- list only verified
+- List options
+    * list only verified
 - cleanup for json engine
-- set home only once/ time delay
 - rename only colors
 - remove e.printStackTrace()
 - pvp stuff ff allow/auto
 - BulletinBoard
 
+
+- set home only once/ time delay
+
+
+
 - Support sponge
 - coords sort
 - log file
+- Get player name from external source if player is offline and there is no "offline player data"
 - Performance: Lazy loading of settings/ranks
 
 
@@ -33,9 +38,6 @@ Config:
 
 Text renderer:
 	* Tree like structure
-
-a:
-	Get player name from external source if player is offline and there is no "offline player data"
 
 Caching
 	* Pre-rendered listing output
