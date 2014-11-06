@@ -20,6 +20,6 @@ public class UnVerifyCommand implements Executor<Sender> {
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {
-        target.setState((short) -1);
+        target.verify(false);
     }
 }

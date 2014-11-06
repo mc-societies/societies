@@ -113,8 +113,7 @@ public class GroupMapper extends AbstractMapper {
             group.addRank(toRank(group, rank));
         }
 
-        group.setState(0);
-
+        group.complete();
 
         return group;
     }
@@ -157,7 +156,7 @@ public class GroupMapper extends AbstractMapper {
         generator.writeStringField("name", group.getName());
         generator.writeStringField("tag", group.getTag());
         generator.writeNumberField("created", group.getCreated().getMillis());
-        generator.writeNumberField("state", (short) group.getState());
+        generator.writeBooleanField("verified", group.isVerified());
 
 
         Collection<Rank> ranks = group.getRanks();

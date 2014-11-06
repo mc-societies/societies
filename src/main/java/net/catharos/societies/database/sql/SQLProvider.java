@@ -187,8 +187,6 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
     private SocietyMember evaluateSingleMember(UUID uuid, Group predefined, MembersRecord record) {
         SocietyMember member = memberFactory.create(UUIDGen.toUUID(record.getUuid()));
-        // Preparing
-        member.setState(PREPARE);
 
         try {
             // Load society
@@ -228,7 +226,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
         } finally {
             // Finished
-            member.setState(record.getState());
+            member.complete();
         }
 
         memberCache.cache(member);
@@ -302,8 +300,6 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         byte[] uuid = record.getUuid();
         Group group = groupFactory
                 .create(UUIDGen.toUUID(uuid), record.getName(), record.getTag(), new DateTime(record.getCreated()));
-        // Preparing
-        group.setState(PREPARE);
 
         try {
             // Load members
@@ -345,7 +341,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
         } finally {
             // Finished
-            group.setState(record.getState());
+            group.complete();
         }
 
         groupCache.cache(group);

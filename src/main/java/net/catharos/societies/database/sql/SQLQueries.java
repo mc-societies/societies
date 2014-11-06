@@ -88,8 +88,6 @@ class SQLQueries extends QueryProvider {
 
     public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER_SOCIETY = QueryKey.create();
 
-    public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER_STATE = QueryKey.create();
-
     public static final QueryKey<Query> DROP_MEMBER_BY_UUID = QueryKey.create();
 
     public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER_LAST_ACTIVE = QueryKey.create();
@@ -348,15 +346,6 @@ class SQLQueries extends QueryProvider {
             public Update<MembersRecord> create(DSLContext context) {
                 return context.update(MEMBERS)
                         .set(MEMBERS.SOCIETY, DEFAULT_BYTE_ARRAY)
-                        .where(MEMBERS.UUID.equal(DEFAULT_BYTE_ARRAY));
-            }
-        });
-
-        builder(UPDATE_MEMBER_STATE, new QueryBuilder<Update<MembersRecord>>() {
-            @Override
-            public Update<MembersRecord> create(DSLContext context) {
-                return context.update(MEMBERS)
-                        .set(MEMBERS.STATE, Short.MAX_VALUE)
                         .where(MEMBERS.UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });

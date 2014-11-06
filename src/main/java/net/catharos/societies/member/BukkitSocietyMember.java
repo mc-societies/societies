@@ -41,13 +41,12 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                Dictionary<String> directory,
                                MemberGroupPublisher societyPublisher,
                                NameProvider nameProvider,
-                               MemberStatePublisher memberStatePublisher,
                                MemberRankPublisher memberRankPublisher,
                                Economy economy,
                                MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher) {
         this(uuid
-                .get(), playerProvider, localeProvider, directory, economy, societyPublisher, nameProvider, memberStatePublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
+                .get(), playerProvider, localeProvider, directory, economy, societyPublisher, nameProvider, memberRankPublisher, lastActivePublisher, createdPublisher);
     }
 
     @AssistedInject
@@ -57,11 +56,10 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
                                Dictionary<String> dictionary,
                                Economy economy, MemberGroupPublisher societyPublisher,
                                NameProvider nameProvider,
-                               MemberStatePublisher memberStatePublisher,
                                MemberRankPublisher memberRankPublisher,
                                MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher) {
-        super(uuid, societyPublisher, memberStatePublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
+        super(uuid, societyPublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
         this.playerProvider = playerProvider;
         this.localeProvider = localeProvider;
         this.directory = dictionary;

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import net.catharos.groups.DefaultGroup;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.MemberFactory;
@@ -78,12 +77,8 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
 
         M member = memberFactory.create(uuid);
 
-        int previousState = member.getState();
-        member.setState(DefaultGroup.PREPARE);
-
         member.setCreated(created);
         member.setLastActive(lastActive);
-        member.setState(state);
         member.setGroup(group);
 
         if (group != null) {
@@ -92,8 +87,7 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
             }
         }
 
-        member.setState(previousState);
-
+        member.complete();
         return member;
     }
 
@@ -102,7 +96,7 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
 
         generator.writeStringField("uuid", member.getUUID().toString());
         generator.writeNumberField("created", member.getCreated().getMillis());
-        generator.writeNumberField("state", member.getState());
+
         Group group = member.getGroup();
         if (group != null) {
             generator.writeStringField("society", group.getUUID().toString());

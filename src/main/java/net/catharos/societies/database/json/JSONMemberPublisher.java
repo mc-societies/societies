@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
  * Represents a JSONMemberPublisher
  */
 public final class JSONMemberPublisher<M extends Member> implements
-        MemberPublisher, MemberCreatedPublisher, MemberLastActivePublisher, MemberStatePublisher,
+        MemberPublisher, MemberCreatedPublisher, MemberLastActivePublisher,
         MemberGroupPublisher, MemberRankPublisher, SettingPublisher {
 
     private final UUIDStorage uuidStorage;
@@ -76,11 +76,6 @@ public final class JSONMemberPublisher<M extends Member> implements
 
     @Override
     public <M extends Member> ListenableFuture<M> publishRank(M member, Rank rank) {
-        return publishMember(member);
-    }
-
-    @Override
-    public <M extends Member> ListenableFuture<M> publishState(M member, short state) {
         return publishMember(member);
     }
 }

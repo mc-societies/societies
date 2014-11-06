@@ -31,12 +31,10 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
                                LocaleProvider localeProvider,
                                Dictionary<String> dictionary,
                                MemberGroupPublisher societyPublisher,
-                               MemberStatePublisher memberStatePublisher,
                                MemberRankPublisher memberRankPublisher,
                                MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher) {
-        super(uuid
-                .get(), societyPublisher, memberStatePublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
+        super(uuid.get(), societyPublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
         this.localeProvider = localeProvider;
         this.directory = dictionary;
     }

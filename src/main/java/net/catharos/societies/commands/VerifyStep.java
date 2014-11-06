@@ -28,7 +28,7 @@ public class VerifyStep implements Executor<Sender> {
 
         String verify = ctx.getCommand().get(VERIFY);
 
-        if (verify != null && group.getState() != 0) {
+        if (verify != null && !group.isVerified()) {
             sender.send("not-verified");
             ctx.cancel();
         }

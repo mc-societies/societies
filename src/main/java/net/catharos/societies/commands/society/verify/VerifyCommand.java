@@ -20,6 +20,6 @@ public class VerifyCommand implements Executor<Sender> {
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {
-        target.setState(0);
+        target.verify(true);
     }
 }
