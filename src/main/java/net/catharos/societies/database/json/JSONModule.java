@@ -35,7 +35,6 @@ public class JSONModule extends AbstractServiceModule {
         bind(GroupNamePublisher.class).to(groupPublisher);
         bind(GroupCreatedPublisher.class).to(groupPublisher);
         bind(SettingPublisher.class).to(groupPublisher);
-        bind(GroupStatePublisher.class).to(groupPublisher);
         bind(GroupRankPublisher.class).to(groupPublisher);
 
 

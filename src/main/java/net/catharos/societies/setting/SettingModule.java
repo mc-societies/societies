@@ -26,8 +26,10 @@ public class SettingModule extends AbstractModule {
 
         MapBinder<Integer, Setting> settings = MapBinder
                 .newMapBinder(binder(), Integer.class, Setting.class, Names.named("settings"));
+        //todo verify ids
         settings.addBinding(LocationSetting.ID).to(LocationSetting.class);
         settings.addBinding(RelationSetting.ID).to(RelationSetting.class);
+        settings.addBinding(VerifySetting.ID).to(VerifySetting.class);
     }
 
 

@@ -30,7 +30,7 @@ import static com.googlecode.cqengine.query.QueryFactory.or;
  */
 public final class JSONGroupPublisher<M extends Member> implements
         GroupPublisher,
-        GroupNamePublisher, GroupCreatedPublisher, GroupStatePublisher,
+        GroupNamePublisher, GroupCreatedPublisher,
         GroupRankPublisher,
         RankPublisher, RankDropPublisher,
         SettingPublisher {
@@ -107,11 +107,6 @@ public final class JSONGroupPublisher<M extends Member> implements
                 return rank;
             }
         });
-    }
-
-    @Override
-    public ListenableFuture<Group> publishState(Group group, short state) {
-        return defaultPublish(group);
     }
 
     @Override

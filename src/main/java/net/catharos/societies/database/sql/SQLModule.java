@@ -73,7 +73,6 @@ public class SQLModule extends AbstractServiceModule {
 
         bind(GroupProvider.class).to(controller);
 
-        Key<SQLStatePublisher> statePublisherKey = Key.get(SQLStatePublisher.class);
         Key<SQLRankPublisher> rankKey = Key.get(SQLRankPublisher.class);
 
         // Group Publishers
@@ -81,7 +80,6 @@ public class SQLModule extends AbstractServiceModule {
         bind(GroupNamePublisher.class).to(SQLNamePublisher.class);
         bind(GroupCreatedPublisher.class).to(SQLGroupCreatedPublisher.class);
         bind(SettingPublisher.class).to(SQLSettingPublisher.class);
-        bind(GroupStatePublisher.class).to(statePublisherKey);
         bind(GroupRankPublisher.class).to(rankKey);
 
         // Member Publishers
