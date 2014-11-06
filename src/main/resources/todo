@@ -1,19 +1,15 @@
-- verify
-- predefined ranks
-- List options
-    * list only verified
+- predefined ranks (untrusted)
 - cleanup for json engine
 - rename only colors
 - remove e.printStackTrace()
 - pvp stuff ff allow/auto
-- BulletinBoard
-
-
+- cache levels (quick-living cache)
 - set home only once/ time delay
 
 
-
-- Remove assisted inject for groups -> use builder
+- BulletinBoard
+- List options
+    * list only verified
 - Support sponge
 - coords sort
 - log file
