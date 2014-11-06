@@ -3,6 +3,7 @@ package net.catharos.societies.group;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.*;
@@ -41,6 +42,7 @@ public class SocietyModule extends AbstractModule {
 
     @Provides
     @Singleton
+    @Named("default-ranks")
     public Set<Rank> provideDefaultRanks(RankFactory rankFactory) {
         //fixme add rules
         THashSet<Rank> ranks = new THashSet<Rank>();

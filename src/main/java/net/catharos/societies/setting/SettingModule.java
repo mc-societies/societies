@@ -22,6 +22,9 @@ public class SettingModule extends AbstractModule {
 
         bind(new TypeLiteral<Setting<Relation>>() {}).to(RelationSetting.class);
 
+        bindNamed("verify", new TypeLiteral<Setting<Boolean>>() {}).to(VerifySetting.class);
+
+
         bind(SettingProvider.class).to(CollectiveSettingProvider.class);
 
         MapBinder<Integer, Setting> settings = MapBinder

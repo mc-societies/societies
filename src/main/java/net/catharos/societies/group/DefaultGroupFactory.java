@@ -40,7 +40,7 @@ class DefaultGroupFactory implements GroupFactory {
             RankDropPublisher rankDropPublisher,
             GroupCreatedPublisher createdPublisher,
             Setting<Relation> relationSetting,
-            Setting<Boolean> verifySetting,
+            @Named("verify") Setting<Boolean> verifySetting,
             @Named("default-ranks") Set<Rank> defaultRanks) {
 
         this.uuidProvider = uuidProvider;
