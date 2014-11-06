@@ -22,10 +22,9 @@ public class VerifySetting extends Setting<Boolean> {
         if (o == null || getClass() != o.getClass()) return false;
 
 
-        RelationSetting that = (RelationSetting) o;
+        VerifySetting that = (VerifySetting) o;
 
         return getID() == that.getID();
-
     }
 
     @Override

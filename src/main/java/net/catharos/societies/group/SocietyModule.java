@@ -29,16 +29,11 @@ public class SocietyModule extends AbstractModule {
                 .implement(Rank.class, Names.named("static"), StaticRank.class)
                 .build(RankFactory.class));
 
-        install(new FactoryModuleBuilder()
-                .implement(Group.class, DefaultGroup.class)
-                .build(GroupFactory.class));
+        bind(GroupFactory.class).to(DefaultGroupFactory.class);
 
         install(new FactoryModuleBuilder()
                 .implement(Relation.class, DefaultRelation.class)
                 .build(RelationFactory.class));
-
-
-        bind(Group.class).to(DefaultGroup.class);
 
         bind(NameValidator.class).to(SimpleNameValidator.class);
         bind(TagValidator.class).to(SimpleTagValidator.class);

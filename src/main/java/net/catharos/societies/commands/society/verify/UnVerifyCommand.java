@@ -21,5 +21,6 @@ public class UnVerifyCommand implements Executor<Sender> {
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {
         target.verify(false);
+        sender.send("target-society.unverifed");
     }
 }
