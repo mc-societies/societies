@@ -88,7 +88,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
         injector = Guice.createInjector(
                 new ServiceModule(),
-                new LoggingModule(dir, context),
+                new LoggingModule(context),
                 new SocietiesModule(dir, logger),
                 new BukkitModule(getServer(), this, economy)
         );
