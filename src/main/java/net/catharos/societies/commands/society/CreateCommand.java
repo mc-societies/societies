@@ -17,7 +17,9 @@ import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.member.SocietyMember;
+import org.apache.logging.log4j.Logger;
 
 import static org.bukkit.ChatColor.stripColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
@@ -40,6 +42,9 @@ public class CreateCommand implements Executor<Sender> {
     private final NameValidator nameValidator;
     private final TagValidator tagValidator;
     private final double price;
+
+    @InjectLogger
+    private Logger logger;
 
     @Inject
     public CreateCommand(GroupFactory groupFactory,
@@ -98,7 +103,7 @@ public class CreateCommand implements Executor<Sender> {
 
             @Override
             public void onFailure(Throwable t) {
-                t.printStackTrace();
+                logger.catching(t);
             }
         });
 

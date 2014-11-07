@@ -11,7 +11,7 @@ package net.catharos.societies.database.sql.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Societies extends org.jooq.impl.TableImpl<net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord> {
 
-	private static final long serialVersionUID = -1009873293;
+	private static final long serialVersionUID = -1247184774;
 
 	/**
 	 * The singleton instance of <code>societies.societies</code>
@@ -40,6 +40,11 @@ public class Societies extends org.jooq.impl.TableImpl<net.catharos.societies.da
 	 * The column <code>societies.societies.tag</code>.
 	 */
 	public final org.jooq.TableField<net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord, java.lang.String> TAG = createField("tag", org.jooq.impl.SQLDataType.VARCHAR.length(45), this, "");
+
+	/**
+	 * The column <code>societies.societies.clean_tag</code>.
+	 */
+	public final org.jooq.TableField<net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord, java.lang.String> CLEAN_TAG = createField("clean_tag", org.jooq.impl.SQLDataType.VARCHAR.length(45), this, "");
 
 	/**
 	 * The column <code>societies.societies.created</code>.
@@ -81,7 +86,7 @@ public class Societies extends org.jooq.impl.TableImpl<net.catharos.societies.da
 	 */
 	@Override
 	public java.util.List<org.jooq.UniqueKey<net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord>> getKeys() {
-		return java.util.Arrays.<org.jooq.UniqueKey<net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord>>asList(net.catharos.societies.database.sql.layout.Keys.KEY_SOCIETIES_PRIMARY, net.catharos.societies.database.sql.layout.Keys.KEY_SOCIETIES_UUID_UNIQUE, net.catharos.societies.database.sql.layout.Keys.KEY_SOCIETIES_NAME_UNIQUE, net.catharos.societies.database.sql.layout.Keys.KEY_SOCIETIES_TAG_UNIQUE);
+		return java.util.Arrays.<org.jooq.UniqueKey<net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord>>asList(net.catharos.societies.database.sql.layout.Keys.KEY_SOCIETIES_PRIMARY, net.catharos.societies.database.sql.layout.Keys.KEY_SOCIETIES_UUID_UNIQUE, net.catharos.societies.database.sql.layout.Keys.KEY_SOCIETIES_NAME_UNIQUE, net.catharos.societies.database.sql.layout.Keys.KEY_SOCIETIES_TAG_UNIQUE, net.catharos.societies.database.sql.layout.Keys.KEY_SOCIETIES_CLEAN_TAG_UNIQUE);
 	}
 
 	/**

@@ -16,6 +16,8 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
 import net.catharos.lib.core.i18n.Dictionary;
+import net.catharos.lib.shank.logging.InjectLogger;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -37,6 +39,10 @@ public class JoinCommand implements Executor<Member> {
     private final Dictionary<String> dictionary;
     private final RequestFactory<Choices> requests;
     private final int maxSize;
+
+    @InjectLogger
+    private Logger logger;
+
 
     public JoinCommand(Dictionary<String> dictionary, RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
         this.dictionary = dictionary;
@@ -76,7 +82,7 @@ public class JoinCommand implements Executor<Member> {
 
             @Override
             public void onFailure(@NotNull Throwable t) {
-                t.printStackTrace();
+                logger.catching(t);
             }
         });
     }

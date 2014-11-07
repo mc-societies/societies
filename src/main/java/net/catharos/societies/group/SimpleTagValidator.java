@@ -18,7 +18,7 @@ public class SimpleTagValidator implements TagValidator {
     private final int minLength;
     private final List disallowed;
 
-    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)&[0-9A-FK-OR]");
+    public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)&[0-9A-FK-OR]");
 
     @Inject
     public SimpleTagValidator(@Named("tag.max-length") Integer maxLength,

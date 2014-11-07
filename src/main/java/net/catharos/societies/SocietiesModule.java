@@ -49,11 +49,13 @@ import java.util.concurrent.Executors;
 public class SocietiesModule extends AbstractServiceModule {
 
     private final File dataDirectory;
+    private final Logger logger;
     public static final Key<ListeningExecutorService> WORKER_EXECUTOR = Key
             .get(ListeningExecutorService.class, Names.named("worker-executor"));
 
-    public SocietiesModule(File dataDirectory) {
+    public SocietiesModule(File dataDirectory, Logger logger) {
         this.dataDirectory = dataDirectory;
+        this.logger = logger;
     }
 
     @Override
@@ -84,7 +86,7 @@ public class SocietiesModule extends AbstractServiceModule {
         try {
             FileUtils.writeStringToFile(file, rendered);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.catching(e);
         }
 
         bind(Config.class).toInstance(config);
@@ -123,7 +125,7 @@ public class SocietiesModule extends AbstractServiceModule {
         bind(Thread.UncaughtExceptionHandler.class).toInstance(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
-                e.printStackTrace();
+                logger.catching(e);
             }
         });
 
@@ -149,7 +151,7 @@ public class SocietiesModule extends AbstractServiceModule {
         try {
             bindNamedInstance("translations-url", new URL(config.getString("translations-url")));
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            logger.catching(e);
         }
     }
 

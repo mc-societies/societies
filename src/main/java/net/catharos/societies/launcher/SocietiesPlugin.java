@@ -26,6 +26,8 @@ import net.catharos.societies.member.OnlineMemberCache;
 import net.catharos.societies.member.SocietyMember;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.spi.ExtendedLogger;
+import org.apache.logging.log4j.spi.LoggerContext;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -57,6 +59,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
     private OnlineMemberCache<SocietyMember> memberCache;
     private OnlineGroupCache groupCache;
     private Sender systemSender;
+    private ExtendedLogger logger;
 
     @Override
     public void onLoad() {
@@ -65,6 +68,9 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
     @Override
     public void onEnable() {
+        LoggerContext context = LogManager.getContext();
+        logger = context.getLogger("bootstrap");
+
         Economy economy;
 
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager()
@@ -82,8 +88,8 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
         injector = Guice.createInjector(
                 new ServiceModule(),
-                new LoggingModule(dir, LogManager.getContext()),
-                new SocietiesModule(dir),
+                new LoggingModule(dir, context),
+                new SocietiesModule(dir, logger),
                 new BukkitModule(getServer(), this, economy)
         );
 
@@ -112,7 +118,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
             service.awaitTermination(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             // Nobody fucking cares!
-            e.printStackTrace();
+            logger.catching(e);
         }
 
         service.shutdown();
@@ -142,7 +148,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
                 @Override
                 public void onFailure(@NotNull Throwable t) {
-                    t.printStackTrace();
+                    logger.catching(t);
                 }
             });
 
@@ -169,7 +175,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
             @Override
             public void onFailure(Throwable t) {
-                t.printStackTrace();
+                logger.catching(t);
             }
         });
     }

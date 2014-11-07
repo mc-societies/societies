@@ -19,7 +19,7 @@ class CommandExceptionHandler implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         if (!(e instanceof CommandException)) {
-            e.printStackTrace();
+            logger.catching(e);
             return;
         }
 

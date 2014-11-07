@@ -1,6 +1,4 @@
 - predefined ranks (untrusted)
-- cleanup for json engine
-- rename only colors
 - remove e.printStackTrace()
 - pvp stuff ff allow/auto
 - cache levels (quick-living cache)

@@ -12,18 +12,21 @@ import net.catharos.groups.publisher.MemberPublisher;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
 import net.catharos.groups.setting.Setting;
+import net.catharos.groups.setting.SettingException;
 import net.catharos.groups.setting.SettingProvider;
 import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.SimpleTarget;
 import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
+import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.PlayerProvider;
 import net.catharos.societies.database.sql.layout.tables.records.MembersRecord;
 import net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
 import net.catharos.societies.member.MemberException;
 import net.catharos.societies.member.SocietyMember;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.entity.Player;
 import org.joda.time.DateTime;
 import org.jooq.*;
@@ -62,6 +65,8 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     private final GroupCache groupCache;
     private final MemberCache<SocietyMember> memberCache;
 
+    @InjectLogger
+    private Logger logger;
 
     @Inject
     public SQLProvider(SQLQueries queries,
@@ -368,7 +373,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
             Setting setting = settingProvider.getSetting(settingID);
 
             if (setting == null) {
-                //invalid setting
+                logger.warn("Failed to convert setting %s!", settingID);
                 continue;
             }
 
@@ -381,7 +386,12 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
                 target = new SimpleTarget(UUIDGen.toUUID(targetUUID));
             }
 
-            Object value = setting.convert(subject, target, settingRecord.value3());
+            Object value;
+            try {
+                value = setting.convert(subject, target, settingRecord.value3());
+            } catch (SettingException e) {
+                continue;
+            }
 
             subject.set(setting, target, value);
         }

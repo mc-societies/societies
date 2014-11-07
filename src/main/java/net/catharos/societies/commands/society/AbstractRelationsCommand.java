@@ -12,6 +12,8 @@ import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.shank.logging.InjectLogger;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -28,6 +30,9 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
     private final GroupProvider groupProvider;
     private final Provider<Table> tableProvider;
     private final RowFactory rowFactory;
+
+    @InjectLogger
+    private Logger logger;
 
     public AbstractRelationsCommand(GroupProvider groupProvider, Provider<Table> tableProvider, RowFactory rowFactory) {
         this.groupProvider = groupProvider;
@@ -74,9 +79,9 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
                             try {
                                 relationGroup = groupProvider.getGroup(relation.getTarget()).get();
                             } catch (InterruptedException e) {
-                                e.printStackTrace();
+                                logger.catching(e);
                             } catch (ExecutionException e) {
-                                e.printStackTrace();
+                                logger.catching(e);
                             }
 
                             if (relationGroup == null) {
@@ -96,7 +101,7 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
 
             @Override
             public void onFailure(@NotNull Throwable t) {
-                t.printStackTrace();
+                logger.catching(t);
             }
         });
 

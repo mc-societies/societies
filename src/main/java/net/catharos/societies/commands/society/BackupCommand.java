@@ -16,9 +16,11 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.uuid.UUIDStorage;
+import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.database.json.GroupMapper;
 import net.catharos.societies.database.json.MemberMapper;
 import net.catharos.societies.member.SocietyMember;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +40,9 @@ public class BackupCommand implements Executor<Sender> {
     private final MemberMapper<?> memberMapper;
     private final MemberProvider<?> memberProvider;
     private final GroupProvider groupProvider;
+
+    @InjectLogger
+    private Logger logger;
 
     @Inject
     public BackupCommand(GroupMapper groupMapper, MemberMapper<SocietyMember> memberMapper, MemberProvider<SocietyMember> memberProvider, GroupProvider groupProvider) {
@@ -62,14 +67,14 @@ public class BackupCommand implements Executor<Sender> {
                     try {
                         groupMapper.writeGroup(group, groupStorage.getFile(group.getUUID()));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.catching(e);
                     }
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                t.printStackTrace();
+                logger.catching(t);
             }
         });
 
@@ -83,14 +88,14 @@ public class BackupCommand implements Executor<Sender> {
                     try {
                         memberMapper.writeMember(member, memberStorage.getFile(member.getUUID()));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.catching(e);
                     }
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                t.printStackTrace();
+                logger.catching(t);
             }
         });
     }

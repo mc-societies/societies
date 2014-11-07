@@ -20,6 +20,7 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
 @Command(identifier = "society")
 @Children({
         CreateCommand.class,
+        TagCommand.class,
 //        RenameCommand.class,
         ProfileCommand.class,
         LookupCommand.class,

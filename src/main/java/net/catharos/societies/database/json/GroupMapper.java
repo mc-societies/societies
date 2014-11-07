@@ -15,11 +15,14 @@ import net.catharos.groups.GroupBuilder;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
 import net.catharos.groups.setting.Setting;
+import net.catharos.groups.setting.SettingException;
 import net.catharos.groups.setting.SettingProvider;
 import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.SimpleTarget;
 import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.util.CastSafe;
+import net.catharos.lib.shank.logging.InjectLogger;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Triplet;
 import org.joda.time.DateTime;
 
@@ -39,6 +42,9 @@ public class GroupMapper extends AbstractMapper {
     private final Provider<GroupBuilder> builders;
     private final RankFactory rankFactory;
     private final SettingProvider settingProvider;
+
+    @InjectLogger
+    private Logger logger;
 
     @Inject
     public GroupMapper(Provider<GroupBuilder> builders, RankFactory rankFactory, SettingProvider settingProvider) {
@@ -180,14 +186,22 @@ public class GroupMapper extends AbstractMapper {
 
         generator.writeArrayFieldStart("settings");
         for (Table.Cell<Setting, Target, Object> cell : settings.cellSet()) {
-            generator.writeStartObject();
             Target target = cell.getColumnKey();
             Setting<Object> setting = CastSafe.toGeneric(cell.getRowKey());
+            Object value = cell.getValue();
 
+            byte[] convert;
+
+            try {
+                convert = setting.convert(subject, target, value);
+            } catch (SettingException e) {
+                logger.warn("Failed to convert setting %s! Subject: %s Target: %s Value: %s", setting, subject, target, value);
+                continue;
+            }
+
+            generator.writeStartObject();
             generator.writeStringField("target", target.getUUID().toString());
-
             generator.writeNumberField("setting", setting.getID());
-            byte[] convert = setting.convert(subject, target, cell.getValue());
             generator.writeStringField("value", Base64.encodeToString(convert, false));
             generator.writeEndObject();
         }

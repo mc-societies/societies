@@ -13,6 +13,8 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.shank.logging.InjectLogger;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -28,6 +30,9 @@ public class ListCommand implements Executor<Sender> {
 
     private final GroupProvider groupProvider;
     private final Provider<Table> tableProvider;
+
+    @InjectLogger
+    private Logger logger;
 
     @Inject
     public ListCommand(GroupProvider groupProvider, Provider<Table> tableProvider) {
@@ -69,7 +74,7 @@ public class ListCommand implements Executor<Sender> {
 
             @Override
             public void onFailure(@NotNull Throwable t) {
-                t.printStackTrace();
+                logger.catching(t);
             }
         });
 

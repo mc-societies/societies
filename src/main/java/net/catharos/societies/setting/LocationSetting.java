@@ -3,6 +3,7 @@ package net.catharos.societies.setting;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.groups.setting.Setting;
+import net.catharos.groups.setting.SettingException;
 import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.Target;
 import org.bukkit.Location;
@@ -26,20 +27,18 @@ class LocationSetting extends Setting<Location> {
     }
 
     @Override
-    public Location convert(Subject subject, Target target, byte[] value) {
+    public Location convert(Subject subject, Target target, byte[] value) throws SettingException {
         DataInputStream is = new DataInputStream(new ByteArrayInputStream(value));
 
         try {
             return new Location(world, is.readInt(), is.readInt(), is.readInt());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SettingException(e);
         }
-
-        return world.getSpawnLocation();
     }
 
     @Override
-    public byte[] convert(Subject subject, Target target, @Nullable Location value) {
+    public byte[] convert(Subject subject, Target target, @Nullable Location value) throws SettingException {
         if (value == null) {
             return null;
         }
@@ -52,7 +51,7 @@ class LocationSetting extends Setting<Location> {
             os.writeInt(value.getBlockY());
             os.writeInt(value.getBlockZ());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SettingException(e);
         }
 
         return out.toByteArray();

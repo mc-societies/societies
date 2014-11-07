@@ -14,8 +14,10 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.i18n.Dictionary;
+import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.member.SocietyMember;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -39,6 +41,9 @@ public class InviteCommand implements Executor<Member> {
     private final Dictionary<String> dictionary;
     private final RequestFactory<Choices> requests;
     private final int maxSize;
+
+    @InjectLogger
+    private Logger logger;
 
     @Inject
     public InviteCommand(Dictionary<String> dictionary, RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
@@ -88,7 +93,7 @@ public class InviteCommand implements Executor<Member> {
 
             @Override
             public void onFailure(@NotNull Throwable t) {
-                t.printStackTrace();
+                logger.catching(t);
             }
         });
     }

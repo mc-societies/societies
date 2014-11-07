@@ -16,8 +16,10 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -69,6 +71,9 @@ public class RivalsCommand extends ListCommand {
 
         private final RequestFactory<Choices> requests;
 
+        @InjectLogger
+        private Logger logger;
+
         @Inject
         public RemoveCommand(RequestFactory<Choices> requests) {this.requests = requests;}
 
@@ -104,7 +109,7 @@ public class RivalsCommand extends ListCommand {
 
                 @Override
                 public void onFailure(@NotNull Throwable t) {
-                    t.printStackTrace();
+                    logger.catching(t);
                 }
             });
         }

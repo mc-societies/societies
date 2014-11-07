@@ -16,8 +16,10 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -98,6 +100,9 @@ public class AlliesCommand extends ListCommand {
         private final RelationFactory factory;
         private final RequestFactory<Choices> requests;
 
+        @InjectLogger
+        private Logger logger;
+
         public AddCommand(RelationFactory factory, RequestFactory<Choices> requests) {
             this.factory = factory;
             this.requests = requests;
@@ -138,7 +143,7 @@ public class AlliesCommand extends ListCommand {
 
                 @Override
                 public void onFailure(@NotNull Throwable t) {
-                    t.printStackTrace();
+                    logger.catching(t);
                 }
             });
 

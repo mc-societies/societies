@@ -99,6 +99,11 @@ public final class JSONGroupPublisher<M extends Member> implements
     }
 
     @Override
+    public ListenableFuture<Group> publishTag(Group group, String tag) {
+        return publish(group);
+    }
+
+    @Override
     public ListenableFuture<Rank> publish(final Rank rank) {
         return Futures.transform(defaultPublish(rank.getGroup()), new Function<Group, Rank>() {
             @javax.annotation.Nullable

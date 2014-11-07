@@ -121,6 +121,7 @@ public class CommandModule extends AbstractModule {
         addRule("coords", 0x7);
         addRule("trust", 0x8);
         addRule("untrust", 0x9);
+        addRule("tag", 0xA);
 
         addRule("home.teleport", 0x20);
         addRule("home.regroup", 0x21);

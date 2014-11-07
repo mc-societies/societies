@@ -36,4 +36,20 @@ class SQLNamePublisher extends AbstractPublisher implements GroupNamePublisher {
             }
         });
     }
+
+    @Override
+    public ListenableFuture<Group> publishTag(final Group group, final String tag) {
+        return service.submit(new Callable<Group>() {
+            @Override
+            public Group call() throws Exception {
+                Update<SocietiesRecord> query = queries.getQuery(SQLQueries.UPDATE_SOCIETY_TAG);
+
+                query.bind(1, tag);
+                query.bind(2, UUIDGen.toByteArray(group.getUUID()));
+
+                query.execute();
+                return group;
+            }
+        });
+    }
 }

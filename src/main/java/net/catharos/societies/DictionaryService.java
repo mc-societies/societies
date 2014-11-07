@@ -95,7 +95,7 @@ class DictionaryService extends AbstractService {
                     loaded.add(lang);
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.catching(e);
                 }
 
             }
