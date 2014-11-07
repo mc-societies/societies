@@ -5,10 +5,7 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import gnu.trove.set.hash.THashSet;
-import net.catharos.groups.DefaultGroup;
-import net.catharos.groups.Group;
-import net.catharos.groups.GroupFactory;
-import net.catharos.groups.GroupGenerator;
+import net.catharos.groups.*;
 import net.catharos.groups.rank.DefaultRank;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
@@ -31,9 +28,7 @@ public class GroupMapperTest {
         protected void configureTest() {
             bind(UUID.class).toProvider(TimeUUIDProvider.class);
 
-            install(new FactoryModuleBuilder()
-                    .implement(Group.class, DefaultGroup.class)
-                    .build(GroupFactory.class));
+            bind(GroupFactory.class).to(DefaultGroupFactory.class);
 
             install(new FactoryModuleBuilder()
                     .implement(Rank.class, DefaultRank.class)
