@@ -17,22 +17,26 @@ public class SettingModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(SettingProvider.class).to(CollectiveSettingProvider.class);
+        MapBinder<Integer, Setting> settings = MapBinder
+                .newMapBinder(binder(), Integer.class, Setting.class, Names.named("settings"));
+
 
         bindNamed("home", new TypeLiteral<Setting<Location>>() {}).to(LocationSetting.class);
-
         bind(new TypeLiteral<Setting<Relation>>() {}).to(RelationSetting.class);
-
         bindNamed("verify", new TypeLiteral<Setting<Boolean>>() {}).to(VerifySetting.class);
 
 
-        bind(SettingProvider.class).to(CollectiveSettingProvider.class);
+        BooleanSetting ffSetting = new BooleanSetting(0x4);
+        bindNamed("personal-friendly-fire", new TypeLiteral<Setting<Boolean>>() {}).toInstance(ffSetting);
+        bindNamed("group-friendly-fire", new TypeLiteral<Setting<Boolean>>() {}).toInstance(ffSetting);
 
-        MapBinder<Integer, Setting> settings = MapBinder
-                .newMapBinder(binder(), Integer.class, Setting.class, Names.named("settings"));
-        //todo verify ids
         settings.addBinding(LocationSetting.ID).to(LocationSetting.class);
         settings.addBinding(RelationSetting.ID).to(RelationSetting.class);
         settings.addBinding(VerifySetting.ID).to(VerifySetting.class);
+        settings.addBinding(0x4).toInstance(ffSetting);
+
+        //todo verify ids
     }
 
 

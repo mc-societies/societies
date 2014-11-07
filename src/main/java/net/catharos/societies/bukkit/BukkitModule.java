@@ -1,6 +1,6 @@
 package net.catharos.societies.bukkit;
 
-import net.catharos.lib.shank.AbstractModule;
+import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.WorldProvider;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Server;
@@ -12,7 +12,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 /**
  * Represents a BukkitModule
  */
-public class BukkitModule extends AbstractModule {
+public class BukkitModule extends AbstractServiceModule {
 
     private final Server server;
     private final Plugin plugin;
@@ -26,6 +26,8 @@ public class BukkitModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bindService().to(ListenerService.class);
+
         bind(Economy.class).toInstance(economy);
         bind(Server.class).toInstance(server);
         bind(Plugin.class).toInstance(plugin);

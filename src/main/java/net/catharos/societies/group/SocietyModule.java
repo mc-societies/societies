@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
+import com.typesafe.config.Config;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.*;
 import net.catharos.groups.rank.DefaultRank;
@@ -15,6 +16,7 @@ import net.catharos.groups.validate.NameValidator;
 import net.catharos.groups.validate.TagValidator;
 import net.catharos.lib.shank.AbstractModule;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,6 +24,10 @@ import java.util.UUID;
  * Represents a SocietyModule
  */
 public class SocietyModule extends AbstractModule {
+
+    private final Config config;
+
+    public SocietyModule(Config config) {this.config = config;}
 
     @Override
     protected void configure() {
@@ -44,17 +50,23 @@ public class SocietyModule extends AbstractModule {
     @Singleton
     @Named("default-ranks")
     public Set<Rank> provideDefaultRanks(RankFactory rankFactory) {
-        //fixme add rules
         THashSet<Rank> ranks = new THashSet<Rank>();
 
-        Rank leader = rankFactory.createStatic(UUID.randomUUID(), "Leader", 0);
-        leader.addRule("trust");
+        List<? extends Config> objectList = config.getConfigList("ranks.predefined");
 
-        Rank member = rankFactory.createStatic(UUID.randomUUID(), "Member", 0);
-        leader.addRule("vitals");
+        for (Config object : objectList) {
+            String name = object.getString("name");
+            UUID uuid = UUID.fromString(object.getString("uuid"));
+            List<String> rules = object.getStringList("rules");
 
-        ranks.add(leader);
-        ranks.add(member);
+            Rank rank = rankFactory.createStatic(uuid, name, 0);
+
+            for (String rule : rules) {
+                rank.addRule(rule);
+            }
+
+            ranks.add(rank);
+        }
 
         return ranks;
     }

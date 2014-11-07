@@ -31,22 +31,4 @@ public class RelationSetting extends Setting<Relation> {
 
         return new byte[]{value.getType().getID()};
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-
-        RelationSetting that = (RelationSetting) o;
-
-        return getID() == that.getID();
-
-    }
-
-    @Override
-    public int hashCode() {
-        return getID();
-    }
-
 }

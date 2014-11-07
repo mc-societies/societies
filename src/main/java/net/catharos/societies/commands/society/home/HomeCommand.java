@@ -17,6 +17,8 @@ import net.catharos.societies.teleport.TeleportController;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.Set;
+
 /**
  * Represents a AbandonCommand
  */
@@ -120,6 +122,13 @@ public class HomeCommand implements Executor<SocietyMember> {
                 location = player.getLocation();
             }
 
+            Location currentHome = group.get(homeSetting);
+
+            if (currentHome != null) {
+                sender.send("home.already-set");
+                return;
+            }
+
             group.set(homeSetting, location);
             sender.send("home.set", location.getX(), location.getY(), location.getZ());
         }
@@ -155,7 +164,16 @@ public class HomeCommand implements Executor<SocietyMember> {
                 return;
             }
 
-            //fixme teleport all
+            Set<Member> members = group.getMembers();
+
+            for (Member member : members) {
+                Player player = ((SocietyMember) member).toPlayer();
+
+                if (player != null) {
+                    player.teleport(location);
+                    sender.send("home.regrouped");
+                }
+            }
         }
     }
 }

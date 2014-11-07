@@ -115,7 +115,7 @@ public class SocietiesModule extends AbstractServiceModule {
         install(new LocaleModule(LocaleUtils.toLocale(config.getString("language"))));
 
         // Societies
-        install(new SocietyModule());
+        install(new SocietyModule(config));
 
 
         // Dictionary

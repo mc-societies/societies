@@ -112,6 +112,10 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
 
     @Override
     public void onDisable() {
+        if (injector == null) {
+            return;
+        }
+
         ListeningExecutorService service = injector.getInstance(ListeningExecutorService.class);
 
         try {
