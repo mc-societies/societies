@@ -1,20 +1,18 @@
-- trust/untrust
-
-
 - rank priority for display
-- warring
-- fast access player metadata -> player
-- rank priority
-- cache levels (quick-living cache)
-- BulletinBoard
-- List options
-    * list only verified
-- Support sponge
-- coords sort
-- log file
+- fast access player metadata -> player, getMember(Player player)
 - Get player name from external source if player is offline and there is no "offline player data"
-- Performance: Lazy loading of settings/ranks
 
+- Support sponge
+  * remove bukkit dependencies
+  * log support
+- wars/claiming
+- BulletinBoard
+- command options
+    * list only verified
+    * coords sort
+- Performance: Lazy loading of settings/ranks
+- cache levels (quick-living cache)
+- over-think publishers, collect publishers
 
 Bukkit dependencies:
  * Player.getLocation()

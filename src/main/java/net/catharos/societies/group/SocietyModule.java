@@ -52,7 +52,7 @@ public class SocietyModule extends AbstractModule {
 
     @Provides
     @Singleton
-    @Named("default-ranks")
+    @Named("predefined-ranks")
     public Set<Rank> provideDefaultRanks(RankFactory rankFactory) {
         THashSet<Rank> ranks = new THashSet<Rank>();
 
@@ -85,7 +85,7 @@ public class SocietyModule extends AbstractModule {
         private final Set<Rank> ranks;
 
         @Inject
-        private DefaultRankProvider(RankSelector selector, Set<Rank> ranks) {
+        private DefaultRankProvider(RankSelector selector, @Named("predefined-ranks") Set<Rank> ranks) {
             this.selector = selector;
             this.ranks = ranks;
         }
