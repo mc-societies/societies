@@ -1,7 +1,6 @@
 package net.catharos.societies.group;
 
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
+import com.google.inject.*;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
@@ -44,6 +43,11 @@ public class SocietyModule extends AbstractModule {
 
         bind(NameValidator.class).to(SimpleNameValidator.class);
         bind(TagValidator.class).to(SimpleTagValidator.class);
+
+
+        install(new DefaultRankModule("default-rank", config.getString("ranks.default")));
+        install(new DefaultRankModule("normal-default-rank", config.getString("ranks.normal-default")));
+        install(new DefaultRankModule("super-default-rank", config.getString("ranks.super-default")));
     }
 
     @Provides
@@ -71,4 +75,53 @@ public class SocietyModule extends AbstractModule {
         return ranks;
     }
 
+    private static interface RankSelector {
+        boolean is(Rank rank);
+    }
+
+    private static class DefaultRankProvider implements Provider<Rank> {
+
+        private final RankSelector selector;
+        private final Set<Rank> ranks;
+
+        @Inject
+        private DefaultRankProvider(RankSelector selector, Set<Rank> ranks) {
+            this.selector = selector;
+            this.ranks = ranks;
+        }
+
+        @Override
+        public Rank get() {
+            for (Rank rank : ranks) {
+                if (selector.is(rank)) {
+                    return rank;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private class DefaultRankModule extends PrivateModule {
+
+        private final String keyName;
+        private final String defaultRank;
+
+        private DefaultRankModule(String keyName, String defaultRank) {
+            this.keyName = keyName;
+            this.defaultRank = defaultRank;
+        }
+
+        @Override
+        protected void configure() {
+            Key<Rank> key = Key.get(Rank.class, Names.named(keyName));
+            bind(RankSelector.class).toInstance(new RankSelector() {
+                @Override
+                public boolean is(Rank rank) {return rank.getName().equals(defaultRank);
+                }
+            });
+            bind(key).toProvider(DefaultRankProvider.class).in(Singleton.class);
+            expose(key);
+        }
+    }
 }
