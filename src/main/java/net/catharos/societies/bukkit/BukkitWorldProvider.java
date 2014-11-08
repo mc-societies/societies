@@ -3,8 +3,9 @@ package net.catharos.societies.bukkit;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.societies.WorldProvider;
+import net.catharos.societies.bridge.World;
+import net.catharos.societies.bukkit.bridge.BukkitWorld;
 import org.bukkit.Server;
-import org.bukkit.World;
 
 /**
  * Represents a BukkitWorldProvider
@@ -22,7 +23,7 @@ public class BukkitWorldProvider implements WorldProvider {
 
     @Override
     public World getWorld(String name) {
-        return server.getWorld(name);
+        return new BukkitWorld(server.getWorld(name));
     }
 
     @Override

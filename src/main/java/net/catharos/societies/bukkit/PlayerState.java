@@ -1,10 +1,10 @@
 package net.catharos.societies.bukkit;
 
+import net.catharos.societies.bridge.Inventory;
+import net.catharos.societies.bridge.ItemStack;
+import net.catharos.societies.bridge.Material;
+import net.catharos.societies.bridge.Player;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -42,14 +42,14 @@ public class PlayerState {
     }
 
 
-    public PlayerState(Player player) {
+    public PlayerState(net.catharos.societies.bridge.Player player) {
         this.player = player;
     }
 
     public String getArmor(String helmetSign, String chestplateSign, String leggingsSign, String bootsSign) {
         StringBuilder armorString = new StringBuilder();
         ChatColor color = ChatColor.BLACK;
-        PlayerInventory inventory = player.getInventory();
+        Inventory inventory = player.getInventory();
 
         ItemStack helmet = inventory.getHelmet();
         ItemStack chestplate = inventory.getChestplate();

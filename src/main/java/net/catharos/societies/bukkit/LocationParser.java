@@ -6,10 +6,9 @@ import net.catharos.lib.core.command.ParsingException;
 import net.catharos.lib.core.command.parser.ArgumentParser;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.societies.WorldProvider;
+import net.catharos.societies.bridge.Location;
+import net.catharos.societies.bridge.World;
 import net.catharos.societies.member.SocietyMember;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -67,13 +66,12 @@ public class LocationParser implements ArgumentParser<Location> {
             Sender sender = ctx.getSender();
 
             if (sender instanceof SocietyMember) {
-                Player player = ((SocietyMember) sender).toPlayer();
+                SocietyMember societyMember = ((SocietyMember) sender);
 
-                if (player != null) {
-                    world = player.getWorld();
+                if (societyMember.isAvailable()) {
+                    world = societyMember.getLocation().getWorld();
                 }
             } else {
-
                 world = worldProvider.getDefaultWorld();
             }
         }

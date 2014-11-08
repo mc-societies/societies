@@ -1,4 +1,4 @@
-package net.catharos.societies.member;
+package net.catharos.societies.bukkit.bridge;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -14,7 +14,12 @@ import net.catharos.lib.core.command.sender.SenderHelper;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.NameProvider;
 import net.catharos.societies.PlayerProvider;
+import net.catharos.societies.bridge.Inventory;
+import net.catharos.societies.bridge.Location;
+import net.catharos.societies.bridge.Material;
+import net.catharos.societies.bridge.World;
 import net.catharos.societies.bukkit.BukkitUtil;
+import net.catharos.societies.member.SocietyMember;
 import net.catharos.societies.member.locale.LocaleProvider;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -29,7 +34,7 @@ import java.util.UUID;
 /**
  * Represents a SocietyMember
  */
-class BukkitSocietyMember extends DefaultMember implements SocietyMember {
+public class BukkitSocietyMember extends DefaultMember implements SocietyMember {
 
     private final PlayerProvider playerProvider;
     private final LocaleProvider localeProvider;
@@ -133,10 +138,8 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
         return player != null && (command.getPermission() == null || player.hasPermission(command.getPermission()));
     }
 
-    @Override
-    @Nullable
     public Player toPlayer() {
-        return playerProvider.getPlayer(getUUID());
+        return null; //fixme
     }
 
     @Override
@@ -147,5 +150,49 @@ class BukkitSocietyMember extends DefaultMember implements SocietyMember {
     @Override
     public EconomyResponse deposit(double amount) {
         return economy.depositPlayer(toPlayer(), amount);
+    }
+
+    @Override
+    public double getHealth() {
+        Player player = toPlayer();
+        if (player == null) {
+            throw new RuntimeException("Player not online!");
+        }
+
+        return player.getHealth();
+    }
+
+    @Override
+    public int getFoodLevel() {
+        Player player = toPlayer();
+        return player.getFoodLevel();
+    }
+
+    @Nullable
+    @Override
+    public Location getLocation() {
+        Player player = toPlayer();
+        return BukkitWorld.toLocation(player.getLocation());
+    }
+
+    @Override
+    public World getWorld() {
+        return new BukkitWorld(toPlayer().getWorld());
+    }
+
+    @Override
+    public boolean teleport(Location location) {
+//        return toPlayer().teleport(new org.bukkit.Location(location.getWorld()));
+        return false;
+    }
+
+    @Override
+    public void sendBlockChange(Location location, Material material, byte b) {
+//        toPlayer().sendBlockChange(location, material, b);
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return new BukkitInventory(toPlayer().getInventory());
     }
 }

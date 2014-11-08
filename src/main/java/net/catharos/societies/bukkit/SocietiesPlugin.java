@@ -1,4 +1,4 @@
-package net.catharos.societies.launcher;
+package net.catharos.societies.bukkit;
 
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -18,8 +18,8 @@ import net.catharos.lib.shank.logging.LoggingModule;
 import net.catharos.lib.shank.service.ServiceController;
 import net.catharos.lib.shank.service.ServiceModule;
 import net.catharos.lib.shank.service.lifecycle.Lifecycle;
+import net.catharos.societies.ReloadAction;
 import net.catharos.societies.SocietiesModule;
-import net.catharos.societies.bukkit.BukkitModule;
 import net.catharos.societies.economy.DummyEconomy;
 import net.catharos.societies.group.OnlineGroupCache;
 import net.catharos.societies.member.OnlineMemberCache;

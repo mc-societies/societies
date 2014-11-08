@@ -3,9 +3,9 @@ package net.catharos.societies.bukkit;
 import com.google.inject.Inject;
 import net.catharos.societies.PlayerProvider;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -19,24 +19,27 @@ public class BukkitPlayerProvider implements PlayerProvider {
     @Inject
     public BukkitPlayerProvider(Server sender) {this.sender = sender;}
 
+    @Nullable
     @Override
-    public Player getPlayer(String name) {
-        return Bukkit.getPlayer(name);
-    }
+    public UUID getPlayer(String name) {
+        Player player = Bukkit.getPlayer(name);
 
-    @Override
-    public Player getPlayer(UUID uuid) {
-        try {
-            return sender.getPlayer(uuid);
-        } catch (NullPointerException e) {
-            throw new RuntimeException("Bukkit is not active!", e);
+        if (player == null) {
+            return null;
         }
+
+        return player.getUniqueId();
     }
 
     @Override
-    public OfflinePlayer getOfflinePlayer(UUID uuid) {
+    public boolean isAvailable(String name) {
+        return getPlayer(name) != null;
+    }
+
+    @Override
+    public boolean isAvailable(UUID uuid) {
         try {
-            return sender.getPlayer(uuid);
+            return sender.getPlayer(uuid) != null;
         } catch (NullPointerException e) {
             throw new RuntimeException("Bukkit is not active!", e);
         }
