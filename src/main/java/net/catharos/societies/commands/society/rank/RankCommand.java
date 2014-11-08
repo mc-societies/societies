@@ -27,6 +27,7 @@ import java.util.Collection;
         RankCommand.RemoveCommand.class,
         RankCommand.ListCommand.class,
         RankCommand.AssignCommand.class,
+        RankCommand.DeAssignCommand.class,
         RuleCommand.class
 })
 public class RankCommand {
@@ -197,6 +198,37 @@ public class RankCommand {
             sender.addRank(rank);
 
             sender.send("rank.assigned", rank.getName(), sender.getName());
+        }
+    }
+
+    @Command(identifier = "command.rank.deassign")
+    @Permission("societies.rank.deassign")
+    @Meta({@Entry(key = RuleStep.RULE, value = "rank.deassign"), @Entry(key = VerifyStep.VERIFY)})
+    @Sender(Member.class)
+    public static class DeAssignCommand implements Executor<Member> {
+
+        @Argument(name = "argument.rank")
+        String rankName;
+
+        @Override
+        public void execute(CommandContext<Member> ctx, Member sender) {
+            Group group = sender.getGroup();
+
+            if (group == null) {
+                sender.send("society.not-found");
+                return;
+            }
+
+            Rank rank = group.getRank(rankName);
+
+            if (rank == null) {
+                sender.send("rank.not-found");
+                return;
+            }
+
+            sender.removeRank(rank);
+
+            sender.send("rank.deassigned", rank.getName(), sender.getName());
         }
     }
 }

@@ -7,7 +7,7 @@ import net.catharos.societies.commands.society.home.HomeCommand;
 import net.catharos.societies.commands.society.rank.RankCommand;
 import net.catharos.societies.commands.society.relation.AlliesCommand;
 import net.catharos.societies.commands.society.relation.RivalsCommand;
-import net.catharos.societies.commands.society.verify.UnVerifyCommand;
+import net.catharos.societies.commands.society.verify.DisproveCommand;
 import net.catharos.societies.commands.society.verify.VerifyCommand;
 import net.catharos.societies.commands.society.vote.AbstainCommand;
 import net.catharos.societies.commands.society.vote.AcceptCommand;
@@ -59,7 +59,7 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
         GroupFFCommand.class,
 
         VerifyCommand.class,
-        UnVerifyCommand.class,
+        DisproveCommand.class,
 
         ReloadCommand.class,
         BackupCommand.class,

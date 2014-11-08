@@ -11,9 +11,9 @@ import net.catharos.lib.core.command.sender.Sender;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "command.unverify")
-@Permission("societies.unverify")
-public class UnVerifyCommand implements Executor<Sender> {
+@Command(identifier = "command.disprove")
+@Permission("societies.disprove")
+public class DisproveCommand implements Executor<Sender> {
 
     @Argument(name = "argument.target.society")
     Group target;
@@ -21,6 +21,6 @@ public class UnVerifyCommand implements Executor<Sender> {
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {
         target.verify(false);
-        sender.send("target-society.unverifed");
+        sender.send("target-society.disproved");
     }
 }

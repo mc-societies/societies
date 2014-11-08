@@ -11,12 +11,12 @@ import net.catharos.societies.commands.RuleStep;
 /**
  * Represents a RelationListCommand
  */
-@Command(identifier = "command.untrust")
-@Permission("societies.untrust")
-@Meta(@Entry(key = RuleStep.RULE, value = "untrust"))
+@Command(identifier = "command.distrust")
+@Permission("societies.distrust")
+@Meta(@Entry(key = RuleStep.RULE, value = "distrust"))
 @Sender(Member.class)
 //fixme
-public class UnTrustCommand implements Executor<Member> {
+public class DistrustCommand implements Executor<Member> {
 
     @Option(name = "argument.target.member")
     Member target;
@@ -25,7 +25,7 @@ public class UnTrustCommand implements Executor<Member> {
     private final Rank normalDefaultRank;
 
     @Inject
-    public UnTrustCommand(Rank defaultRank, Rank normalDefaultRank) {
+    public DistrustCommand(Rank defaultRank, Rank normalDefaultRank) {
         this.defaultRank = defaultRank;
         this.normalDefaultRank = normalDefaultRank;
     }
