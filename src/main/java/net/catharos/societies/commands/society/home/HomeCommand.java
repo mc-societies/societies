@@ -52,7 +52,7 @@ public class HomeCommand implements Executor<SocietyMember> {
             return;
         }
 
-        Location location = group.get(homeSetting);
+        Location location = group.getBoolean(homeSetting);
 
         if (location == null) {
             sender.send("home.not-set");
@@ -122,7 +122,7 @@ public class HomeCommand implements Executor<SocietyMember> {
                 location = player.getLocation();
             }
 
-            Location currentHome = group.get(homeSetting);
+            Location currentHome = group.getBoolean(homeSetting);
 
             if (currentHome != null) {
                 sender.send("home.already-set");
@@ -157,7 +157,7 @@ public class HomeCommand implements Executor<SocietyMember> {
                 return;
             }
 
-            Location location = group.get(homeSetting);
+            Location location = group.getBoolean(homeSetting);
 
             if (location == null) {
                 sender.send("home.not-set");

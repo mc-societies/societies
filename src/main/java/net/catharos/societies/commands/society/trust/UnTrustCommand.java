@@ -13,6 +13,7 @@ import net.catharos.societies.commands.RuleStep;
 @Permission("societies.untrust")
 @Meta(@Entry(key = RuleStep.RULE, value = "untrust"))
 @Sender(Member.class)
+//fixme
 public class UnTrustCommand implements Executor<Member> {
 
     @Option(name = "argument.target.member")

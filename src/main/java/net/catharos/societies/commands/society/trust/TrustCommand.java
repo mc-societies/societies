@@ -13,6 +13,7 @@ import net.catharos.societies.commands.RuleStep;
 @Permission("societies.trust")
 @Meta(@Entry(key = RuleStep.RULE, value = "trust"))
 @Sender(Member.class)
+//fixme
 public class TrustCommand implements Executor<Member> {
 
     @Option(name = "argument.target.member")
