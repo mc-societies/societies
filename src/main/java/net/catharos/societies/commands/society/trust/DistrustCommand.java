@@ -15,23 +15,26 @@ import net.catharos.societies.commands.RuleStep;
 @Permission("societies.distrust")
 @Meta(@Entry(key = RuleStep.RULE, value = "distrust"))
 @Sender(Member.class)
-//fixme
 public class DistrustCommand implements Executor<Member> {
 
     @Option(name = "argument.target.member")
     Member target;
 
-    private final Rank defaultRank;
     private final Rank normalDefaultRank;
 
     @Inject
-    public DistrustCommand(Rank defaultRank, Rank normalDefaultRank) {
-        this.defaultRank = defaultRank;
+    public DistrustCommand(Rank normalDefaultRank) {
         this.normalDefaultRank = normalDefaultRank;
     }
 
     @Override
     public void execute(CommandContext<Member> ctx, Member sender) {
+        if (!target.hasRank(normalDefaultRank)) {
+            sender.send("target-member.not-trusted", target.getName());
+            return;
+        }
+
         sender.removeRank(normalDefaultRank);
+        sender.send("target-member.distrusted", target.getName());
     }
 }
