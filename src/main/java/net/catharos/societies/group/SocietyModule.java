@@ -118,7 +118,8 @@ public class SocietyModule extends AbstractModule {
             Key<Rank> key = Key.get(Rank.class, Names.named(keyName));
             bind(RankSelector.class).toInstance(new RankSelector() {
                 @Override
-                public boolean is(Rank rank) {return rank.getName().equals(defaultRank);
+                public boolean is(Rank rank) {
+                    return rank.getName().equals(defaultRank);
                 }
             });
             bind(key).toProvider(DefaultRankProvider.class).in(Singleton.class);

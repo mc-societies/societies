@@ -6,8 +6,8 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.societies.bridge.ChatColor;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.ChatColor;
 
 
 /**

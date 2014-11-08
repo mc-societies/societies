@@ -6,7 +6,6 @@ import gnu.trove.map.hash.THashMap;
 import net.catharos.groups.Member;
 import net.catharos.groups.MemberCache;
 import net.catharos.societies.PlayerProvider;
-import org.bukkit.entity.Player;
 
 import java.util.Set;
 import java.util.UUID;
@@ -33,8 +32,8 @@ public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
 
     @Override
     public M getMember(String name) {
-        Player player = provider.getPlayer(name);
-        return members.get(player.getUniqueId());
+        UUID player = provider.getPlayer(name);
+        return members.get(player);
     }
 
     @Override

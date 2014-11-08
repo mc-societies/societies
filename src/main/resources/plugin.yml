@@ -1,4 +1,4 @@
-main: net.catharos.societies.launcher.SocietiesPlugin
+main: net.catharos.societies.bukkit.SocietiesPlugin
 name: Societies
 version: 0.1
 softdepend: [ Vault ]

@@ -4,8 +4,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.sender.Sender;
-import org.bukkit.ChatColor;
-
+import net.catharos.societies.bridge.ChatColor;
 
 /**
  * Represents a PreCommandStep

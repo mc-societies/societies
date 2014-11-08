@@ -117,6 +117,12 @@
             <version>1.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.engio</groupId>
+            <artifactId>mbassador</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
     </dependencies>
 
     <distributionManagement>
@@ -134,6 +140,11 @@
     </distributionManagement>
 
     <repositories>
+        <repository>
+            <id>ac-repo</id>
+            <url>https://raw.github.com/mazentheamazin/AccountsClient/mvn-repo/</url>
+        </repository>
+
         <repository>
             <id>md5</id>
             <url>http://repo.md-5.net/content/groups/public/</url>

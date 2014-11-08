@@ -6,7 +6,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.launcher.ReloadAction;
+import net.catharos.societies.ReloadAction;
 
 /**
  * Represents a RelationListCommand

@@ -27,9 +27,11 @@ import net.catharos.societies.group.SocietyException;
 import net.catharos.societies.member.MemberException;
 import net.catharos.societies.member.SocietyMember;
 import org.apache.logging.log4j.Logger;
-import org.bukkit.entity.Player;
 import org.joda.time.DateTime;
-import org.jooq.*;
+import org.jooq.Record1;
+import org.jooq.Record3;
+import org.jooq.Result;
+import org.jooq.Select;
 import org.jooq.types.UShort;
 
 import javax.annotation.Nullable;
@@ -105,13 +107,13 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         }
 
 
-        Player player = playerProvider.getPlayer(name);
+        UUID player = playerProvider.getPlayer(name);
 
         if (player == null) {
             return immediateFuture(null);
         }
 
-        return getMember(player.getUniqueId());
+        return getMember(player);
     }
 
     @Override
@@ -359,7 +361,8 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     }
 
     private Rank loadRank(Group group, Record3<byte[], String, Short> rankRecord) {
-        Rank rank = rankFactory.create(UUIDGen.toUUID(rankRecord.value1()), rankRecord.value2(), rankRecord.value3(), group);
+        Rank rank = rankFactory
+                .create(UUIDGen.toUUID(rankRecord.value1()), rankRecord.value2(), rankRecord.value3(), group);
         rank.setState(PREPARE);
 
         loadSettings(rank, rankRecord.value1(), queries.getQuery(SQLQueries.SELECT_RANK_SETTINGS));

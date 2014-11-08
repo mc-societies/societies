@@ -76,7 +76,7 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
                 while (parser.nextToken() != JsonToken.END_ARRAY) {
                     ranks.add(UUID.fromString(parser.getText()));
                 }
-            }  else if (fieldName.equals("settings")) {
+            } else if (fieldName.equals("settings")) {
                 readSettings(parser, settings);
             }
         }

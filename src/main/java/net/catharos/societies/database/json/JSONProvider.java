@@ -25,9 +25,8 @@ import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
 import net.catharos.societies.PlayerProvider;
+import net.catharos.societies.bridge.ChatColor;
 import org.apache.logging.log4j.Logger;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -194,13 +193,13 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
 
     @Override
     public ListenableFuture<M> getMember(String name) {
-        Player player = playerProvider.getPlayer(name);
+        UUID player = playerProvider.getPlayer(name);
 
         if (player == null) {
             return immediateFuture(null);
         }
 
-        return getMember(player.getUniqueId());
+        return getMember(player);
     }
 
     @Override

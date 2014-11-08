@@ -21,8 +21,8 @@ import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.member.SocietyMember;
 import org.apache.logging.log4j.Logger;
 
-import static org.bukkit.ChatColor.stripColor;
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
+import static net.catharos.societies.bridge.ChatColor.stripColor;
+import static net.catharos.societies.bridge.ChatColor.translateAlternateColorCodes;
 
 /**
  * Represents a CreateCommand

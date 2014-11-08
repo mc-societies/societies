@@ -7,7 +7,6 @@ import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.societies.member.SocietyMember;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +26,13 @@ public class WorldStep implements Executor<Sender> {
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
         if (sender instanceof SocietyMember) {
-            Player player = ((SocietyMember) sender).toPlayer();
+            SocietyMember societyMember = ((SocietyMember) sender);
 
-            if (player == null) {
+            if (societyMember.isAvailable()) {
                 return;
             }
 
-            if (disabledWorlds.contains(player.getWorld().getName())) {
+            if (disabledWorlds.contains(societyMember.getLocation().getWorld().getName())) {
                 ctx.cancel();
             }
         }

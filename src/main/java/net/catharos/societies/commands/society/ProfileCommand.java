@@ -54,7 +54,7 @@ public class ProfileCommand implements Executor<Sender> {
 
         Period inactivePeriod = new Interval(target.getLastActive(), DateTime.now()).toPeriod();
         Collection<Relation> relations = target.getRelations();
-        ArrayList<Relation> rivals =  new ArrayList<Relation>(relations.size());
+        ArrayList<Relation> rivals = new ArrayList<Relation>(relations.size());
 
         sender.send("profile.name", target.getName());
         sender.send("profile.uuid", target.getUUID());
@@ -72,7 +72,7 @@ public class ProfileCommand implements Executor<Sender> {
         sender.send("profile.allies");
         for (Relation relation : relations) {
             if (relation.getType() == Relation.Type.ALLIED) {
-                sender.send("profile.ally-format",  groupProvider.getGroup(relation.getOpposite(target.getUUID())));
+                sender.send("profile.ally-format", groupProvider.getGroup(relation.getOpposite(target.getUUID())));
             } else {
                 rivals.add(relation);
             }

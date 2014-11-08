@@ -4,12 +4,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.Group;
+import net.catharos.societies.bridge.Inventory;
+import net.catharos.societies.bridge.ItemStack;
+import net.catharos.societies.bridge.Location;
+import net.catharos.societies.bridge.Material;
 import net.catharos.societies.member.SocietyMember;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Named;
 import java.util.ArrayList;
@@ -73,7 +72,6 @@ public class TeleportController implements Runnable, Teleporter {
             TeleportState state = it.next();
 
             SocietyMember member = state.getMember();
-            Player player = member.toPlayer();
             Location target = state.getDestination();
 
             Group group = member.getGroup();
@@ -82,12 +80,12 @@ public class TeleportController implements Runnable, Teleporter {
                 continue;
             }
 
-            if (player == null) {
+            if (!member.isAvailable()) {
                 return;
             }
 
 
-            if (!isLocationEqual(player.getLocation(), state.getStartLocation(), 0.5)) {
+            if (!isLocationEqual(member.getLocation(), state.getStartLocation(), 0.5)) {
                 member.send("you.teleport-cancelled");
                 it.remove();
                 continue;
@@ -101,32 +99,32 @@ public class TeleportController implements Runnable, Teleporter {
 
                 it.remove();
 
-                int x = target.getBlockX();
-                int z = target.getBlockZ();
+                int x = target.getRoundedX();
+                int z = target.getRoundedZ();
 
                 if (blocks) {
-                    player.sendBlockChange(new Location(target.getWorld(), x + 1, target
-                            .getBlockY() - 1, z + 1), Material.GLASS, (byte) 0);
-                    player.sendBlockChange(new Location(target.getWorld(), x - 1, target
-                            .getBlockY() - 1, z - 1), Material.GLASS, (byte) 0);
-                    player.sendBlockChange(new Location(target.getWorld(), x + 1, target
-                            .getBlockY() - 1, z - 1), Material.GLASS, (byte) 0);
-                    player.sendBlockChange(new Location(target.getWorld(), x - 1, target
-                            .getBlockY() - 1, z + 1), Material.GLASS, (byte) 0);
+                    member.sendBlockChange(new Location(target.getWorld(), x + 1, target
+                            .getRoundedY() - 1, z + 1), Material.GLASS, (byte) 0);
+                    member.sendBlockChange(new Location(target.getWorld(), x - 1, target
+                            .getRoundedY() - 1, z - 1), Material.GLASS, (byte) 0);
+                    member.sendBlockChange(new Location(target.getWorld(), x + 1, target
+                            .getRoundedY() - 1, z - 1), Material.GLASS, (byte) 0);
+                    member.sendBlockChange(new Location(target.getWorld(), x - 1, target
+                            .getRoundedY() - 1, z + 1), Material.GLASS, (byte) 0);
                 }
 
                 if (!member.hasPermission("simpleclans.mod.keep-items")) {
-                    dropItems(player);
+                    dropItems(member);
                 }
 
-                player.teleport(target);
+                member.teleport(target);
 
                 member.send("you.at-home", group.getName());
             }
         }
     }
 
-    private void dropItems(Player player) {
+    private void dropItems(SocietyMember player) {
         if (!dropItems) {
             return;
         }
@@ -150,7 +148,7 @@ public class TeleportController implements Runnable, Teleporter {
 
 
             if ((whitelist && whitelisted.contains(material)) || (!whitelist && !blacklisted.contains(material))) {
-                player.getWorld().dropItemNaturally(player.getLocation(), item);
+                player.getWorld().dropItem(player.getLocation(), item);
                 inv.remove(item);
             }
         }
@@ -158,6 +156,6 @@ public class TeleportController implements Runnable, Teleporter {
 
     @Override
     public void teleport(final SocietyMember member, final Location target) {
-        states.add(new TeleportState(member, target, member.toPlayer().getLocation(), delay));
+        states.add(new TeleportState(member, target, member.getLocation(), delay));
     }
 }

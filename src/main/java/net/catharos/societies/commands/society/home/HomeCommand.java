@@ -10,12 +10,11 @@ import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import net.catharos.societies.bridge.Location;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 import net.catharos.societies.member.SocietyMember;
 import net.catharos.societies.teleport.TeleportController;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import java.util.Set;
 
@@ -117,9 +116,7 @@ public class HomeCommand implements Executor<SocietyMember> {
             }
 
             if (location == null) {
-                Player player = sender.toPlayer();
-                assert player != null : "Player not available!";
-                location = player.getLocation();
+                location = sender.getLocation();
             }
 
             Location currentHome = group.get(homeSetting);
@@ -167,10 +164,10 @@ public class HomeCommand implements Executor<SocietyMember> {
             Set<Member> members = group.getMembers();
 
             for (Member member : members) {
-                Player player = ((SocietyMember) member).toPlayer();
+                SocietyMember societyMember = ((SocietyMember) member);
 
-                if (player != null) {
-                    player.teleport(location);
+                if (societyMember != null) {
+                    societyMember.teleport(location);
                     sender.send("home.regrouped");
                 }
             }

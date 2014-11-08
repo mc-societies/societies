@@ -1,7 +1,7 @@
 package net.catharos.societies.teleport;
 
+import net.catharos.societies.bridge.Location;
 import net.catharos.societies.member.SocietyMember;
-import org.bukkit.Location;
 
 /**
  * Represents a TeleportState

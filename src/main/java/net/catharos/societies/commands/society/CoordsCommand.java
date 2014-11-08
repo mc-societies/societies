@@ -8,11 +8,10 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
+import net.catharos.societies.bridge.Location;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 import net.catharos.societies.member.SocietyMember;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import javax.inject.Provider;
 import java.text.DecimalFormat;
@@ -49,29 +48,30 @@ public class CoordsCommand implements Executor<SocietyMember> {
             return;
         }
 
-        Player senderPlayer = sender.toPlayer();
+        Location location = sender.getLocation();
 
-        assert senderPlayer != null;
-
-        Location location = senderPlayer.getLocation();
+        assert location != null;
 
         Table table = tableProvider.get();
 
         table.addForwardingRow(rowFactory.translated(true, "name", "distance", "coordinates", "world"));
 
         for (Member member : group.getMembers()) {
-            Player player = ((SocietyMember) member).toPlayer();
-            if (player == null) {
+            SocietyMember societyMember = ((SocietyMember) member);
+
+            Location memberLocation = societyMember.getLocation();
+
+            if (memberLocation == null) {
                 continue;
             }
 
-            Location memberLocation = player.getLocation();
             table.addRow(
                     member.getName(),
                     numberFormat.format(location.distance(memberLocation)),
-                    "X: " + memberLocation.getBlockX() + " Y: " + memberLocation.getBlockX() + " Z: " + memberLocation
-                            .getBlockZ(),
-                    memberLocation.getWorld().getName()
+                    "X: " + memberLocation.getRoundedX()
+                            + " Y: " + memberLocation.getRoundedY()
+                            + " Z: " + memberLocation.getRoundedZ(),
+                    memberLocation.getWorld()
             );
         }
 

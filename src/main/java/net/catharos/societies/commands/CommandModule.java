@@ -33,12 +33,12 @@ import net.catharos.lib.core.command.token.SpaceDelimiter;
 import net.catharos.lib.core.command.token.Tokenizer;
 import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.SocietiesModule;
+import net.catharos.societies.bridge.Location;
 import net.catharos.societies.bukkit.BukkitSystemSender;
 import net.catharos.societies.bukkit.LocationParser;
 import net.catharos.societies.commands.society.SocietyCommand;
 import net.catharos.societies.member.SocietyMember;
 import net.catharos.societies.setting.RulesSetting;
-import org.bukkit.Location;
 
 import java.util.Set;
 

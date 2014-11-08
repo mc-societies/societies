@@ -11,10 +11,13 @@ import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderHelper;
 import net.catharos.lib.core.i18n.Dictionary;
+import net.catharos.societies.bridge.Inventory;
+import net.catharos.societies.bridge.Location;
+import net.catharos.societies.bridge.Material;
+import net.catharos.societies.bridge.World;
 import net.catharos.societies.bukkit.BukkitUtil;
 import net.catharos.societies.member.locale.LocaleProvider;
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.MessageFormat;
@@ -62,12 +65,6 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
         return true;
     }
 
-    @Nullable
-    @Override
-    public Player toPlayer() {
-        return null;
-    }
-
     @Override
     public void send(String message) {
         System.out.println(directory.getTranslation(message));
@@ -102,5 +99,41 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
     @Override
     public EconomyResponse deposit(double amount) {
         return withdraw(amount);
+    }
+
+    @Override
+    public double getHealth() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public int getFoodLevel() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Nullable
+    @Override
+    public Location getLocation() {
+        return new Location(null, 0, 0, 0);
+    }
+
+    @Override
+    public World getWorld() {
+        return null;
+    }
+
+    @Override
+    public boolean teleport(Location location) {
+        return false;
+    }
+
+    @Override
+    public void sendBlockChange(Location location, Material material, byte b) {
+
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return null;
     }
 }

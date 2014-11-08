@@ -6,8 +6,8 @@ import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.SettingException;
 import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.Target;
-import org.bukkit.Location;
-import org.bukkit.World;
+import net.catharos.societies.bridge.Location;
+import net.catharos.societies.bridge.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -47,9 +47,9 @@ class LocationSetting extends Setting<Location> {
         DataOutputStream os = new DataOutputStream(out);
 
         try {
-            os.writeInt(value.getBlockX());
-            os.writeInt(value.getBlockY());
-            os.writeInt(value.getBlockZ());
+            os.writeInt(value.getRoundedX());
+            os.writeInt(value.getRoundedY());
+            os.writeInt(value.getRoundedZ());
         } catch (IOException e) {
             throw new SettingException(e);
         }

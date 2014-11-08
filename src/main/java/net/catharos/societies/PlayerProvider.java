@@ -1,8 +1,5 @@
 package net.catharos.societies;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-
 import java.util.UUID;
 
 /**
@@ -10,10 +7,10 @@ import java.util.UUID;
  */
 public interface PlayerProvider {
 
-    Player getPlayer(String name);
+    UUID getPlayer(String name);
 
-    Player getPlayer(UUID uuid);
+    boolean isAvailable(String name);
 
-    OfflinePlayer getOfflinePlayer(UUID uuid);
+    boolean isAvailable(UUID uuid);
 
 }

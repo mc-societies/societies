@@ -1,4 +1,4 @@
-package net.catharos.societies.launcher;
+package net.catharos.societies;
 
 /**
  * Represents a ReloadLauncherAction

@@ -1,6 +1,6 @@
 package net.catharos.societies;
 
-import org.bukkit.World;
+import net.catharos.societies.bridge.World;
 
 /**
  * Represents a WorldProvider

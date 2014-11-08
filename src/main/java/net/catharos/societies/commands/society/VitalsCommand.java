@@ -12,7 +12,6 @@ import net.catharos.societies.bukkit.PlayerState;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 import net.catharos.societies.member.SocietyMember;
-import org.bukkit.entity.Player;
 
 import javax.inject.Provider;
 
@@ -52,7 +51,7 @@ public class VitalsCommand implements Executor<Member> {
         table.addForwardingRow(rowFactory.translated(true, "name", "health", "armor", "weapons", "food"));
 
         for (Member member : group.getMembers()) {
-            Player player = ((SocietyMember) member).toPlayer();
+            SocietyMember player = ((SocietyMember) member);
             if (player == null) {
                 continue;
             }

@@ -16,8 +16,7 @@ public class LocaleModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(LocaleProvider.class).to(DynamicLocaleProvider.class);
-        bindNamed("fallback-provider", LocaleProvider.class).to(StaticLocaleProvider.class);
+        bind(LocaleProvider.class).to(StaticLocaleProvider.class);
 
         bindNamedInstance("default-locale", Locale.class, defaultLocale);
     }
