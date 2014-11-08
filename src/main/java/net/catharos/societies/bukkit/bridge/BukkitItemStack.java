@@ -23,7 +23,10 @@ public class BukkitItemStack implements ItemStack {
     }
 
     public static org.bukkit.inventory.ItemStack toBukkitItemStack(ItemStack itemStack) {
-        return new org.bukkit.inventory.ItemStack(org.bukkit.Material
-                .getMaterial(itemStack.getType().getID()), itemStack.getAmount());
+        return new org.bukkit.inventory.ItemStack(toBukkitMaterial(itemStack.getType()), itemStack.getAmount());
+    }
+
+    public static org.bukkit.Material toBukkitMaterial(Material material) {
+        return org.bukkit.Material.getMaterial(material.getID());
     }
 }

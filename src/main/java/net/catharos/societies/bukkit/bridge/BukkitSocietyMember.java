@@ -13,7 +13,6 @@ import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderHelper;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.NameProvider;
-import net.catharos.societies.PlayerProvider;
 import net.catharos.societies.bridge.Inventory;
 import net.catharos.societies.bridge.Location;
 import net.catharos.societies.bridge.Material;
@@ -23,6 +22,7 @@ import net.catharos.societies.member.SocietyMember;
 import net.catharos.societies.member.locale.LocaleProvider;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +36,7 @@ import java.util.UUID;
  */
 public class BukkitSocietyMember extends DefaultMember implements SocietyMember {
 
-    private final PlayerProvider playerProvider;
+    private final Server server;
     private final LocaleProvider localeProvider;
     private final Dictionary<String> directory;
     private final NameProvider nameProvider;
@@ -44,7 +44,6 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
 
     @Inject
     public BukkitSocietyMember(Provider<UUID> uuid,
-                               PlayerProvider playerProvider,
                                LocaleProvider localeProvider,
                                Dictionary<String> directory,
                                MemberGroupPublisher societyPublisher,
@@ -52,27 +51,28 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
                                MemberRankPublisher memberRankPublisher,
                                Economy economy,
                                MemberLastActivePublisher lastActivePublisher,
-                               MemberCreatedPublisher createdPublisher) {
+                               MemberCreatedPublisher createdPublisher,
+                               Server server) {
         this(uuid
-                .get(), playerProvider, localeProvider, directory, economy, societyPublisher, nameProvider, memberRankPublisher, lastActivePublisher, createdPublisher);
+                .get(), localeProvider, directory, economy, societyPublisher, nameProvider, memberRankPublisher, lastActivePublisher, createdPublisher, server);
     }
 
     @AssistedInject
     public BukkitSocietyMember(@Assisted UUID uuid,
-                               PlayerProvider playerProvider,
                                LocaleProvider localeProvider,
                                Dictionary<String> dictionary,
                                Economy economy, MemberGroupPublisher societyPublisher,
                                NameProvider nameProvider,
                                MemberRankPublisher memberRankPublisher,
                                MemberLastActivePublisher lastActivePublisher,
-                               MemberCreatedPublisher createdPublisher) {
+                               MemberCreatedPublisher createdPublisher,
+                               Server server) {
         super(uuid, societyPublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
-        this.playerProvider = playerProvider;
         this.localeProvider = localeProvider;
         this.directory = dictionary;
         this.economy = economy;
         this.nameProvider = nameProvider;
+        this.server = server;
     }
 
     @Override
@@ -139,7 +139,11 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
     }
 
     public Player toPlayer() {
-        return null; //fixme
+        Player player = server.getPlayer(getUUID());
+        if (player == null) {
+            throw new RuntimeException("Player not available!");
+        }
+        return player;
     }
 
     @Override
@@ -182,13 +186,13 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
 
     @Override
     public boolean teleport(Location location) {
-//        return toPlayer().teleport(new org.bukkit.Location(location.getWorld()));
-        return false;
+        return toPlayer().teleport(BukkitWorld.toBukkitLocation(server, location));
     }
 
     @Override
     public void sendBlockChange(Location location, Material material, byte b) {
-//        toPlayer().sendBlockChange(location, material, b);
+        toPlayer().sendBlockChange(BukkitWorld.toBukkitLocation(server, location), BukkitItemStack
+                .toBukkitMaterial(material), b);
     }
 
     @Override

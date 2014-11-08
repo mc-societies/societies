@@ -3,6 +3,9 @@ package net.catharos.societies.bukkit.bridge;
 import net.catharos.societies.bridge.ItemStack;
 import net.catharos.societies.bridge.Location;
 import net.catharos.societies.bridge.World;
+import org.bukkit.Server;
+
+import java.util.UUID;
 
 /**
  * Represents a BukkitWorld
@@ -22,6 +25,11 @@ public class BukkitWorld implements World {
     }
 
     @Override
+    public UUID getUUID() {
+        return world.getUID(); //fuck off bukkit!!
+    }
+
+    @Override
     public String getName() {
         return world.getName();
     }
@@ -29,4 +37,9 @@ public class BukkitWorld implements World {
     public static Location toLocation(org.bukkit.Location loc) {
         return new Location(new BukkitWorld(loc.getWorld()), loc.getX(), loc.getY(), loc.getZ());
     }
+
+    public static org.bukkit.Location toBukkitLocation(Server server, Location loc) {
+        return new org.bukkit.Location(server.getWorld(loc.getWorld().getUUID()), loc.getX(), loc.getY(), loc.getZ());
+    }
+
 }

@@ -21,6 +21,7 @@ public class BukkitInventory implements Inventory {
             itemStacks[i] = new BukkitItemStack(inventory.getContents()[i]);
 
         }
+
         return itemStacks;
     }
 
