@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 /**
  * All supported color values for chat
  */
+//fixme
 public enum ChatColor {
     /**
      * Represents black
