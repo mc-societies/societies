@@ -21,6 +21,7 @@ import java.util.concurrent.Callable;
 /**
  * Represents a JSONMemberPublisher
  */
+@SuppressWarnings("TypeParameterHidesVisibleType")
 public final class JSONMemberPublisher<M extends Member> implements
         MemberPublisher, MemberCreatedPublisher, MemberLastActivePublisher,
         MemberGroupPublisher, MemberRankPublisher, SettingPublisher {
@@ -76,6 +77,11 @@ public final class JSONMemberPublisher<M extends Member> implements
 
     @Override
     public <M extends Member> ListenableFuture<M> publishRank(M member, Rank rank) {
+        return publishMember(member);
+    }
+
+    @Override
+    public <M extends Member> ListenableFuture<M> dropRank(M member, Rank rank) {
         return publishMember(member);
     }
 }

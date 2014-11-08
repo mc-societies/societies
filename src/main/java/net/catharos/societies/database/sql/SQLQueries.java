@@ -59,7 +59,7 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Select<Record3<byte[], UShort, byte[]>>> SELECT_RANK_SETTINGS = QueryKey.create();
 
     public static final QueryKey<Insert> INSERT_SOCIETY_RANK = QueryKey.create();
-    public static final QueryKey<Query> DROP_SOCIETY_RANK = QueryKey.create();
+    public static final QueryKey<Query> DROP_RANK_IN_SOCIETIES = QueryKey.create();
 
     public static final QueryKey<Query> DROP_ORPHAN_SOCIETIES = QueryKey.create();
 
@@ -101,6 +101,8 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Insert> INSERT_MEMBER_RANK = QueryKey.create();
 
     public static final QueryKey<Query> DROP_MEMBER_RANK = QueryKey.create();
+
+    public static final QueryKey<Query> DROP_RANK_IN_MEMBERS = QueryKey.create();
 
     public static final QueryKey<Query> DROP_INACTIVE_MEMBERS = QueryKey.create();
 
@@ -261,7 +263,7 @@ class SQLQueries extends QueryProvider {
             }
         });
 
-        builder(DROP_SOCIETY_RANK, new QueryBuilder<Query>() {
+        builder(DROP_RANK_IN_SOCIETIES, new QueryBuilder<Query>() {
             @Override
             public Query create(DSLContext context) {
                 return context.delete(SOCIETIES_RANKS).where(SOCIETIES_RANKS.RANK.equal(DEFAULT_BYTE_ARRAY));
@@ -371,6 +373,15 @@ class SQLQueries extends QueryProvider {
         });
 
         builder(DROP_MEMBER_RANK, new QueryBuilder<Query>() {
+            @Override
+            public Query create(DSLContext context) {
+                return context.delete(MEMBERS_RANKS)
+                        .where(MEMBERS_RANKS.MEMBER.equal(DEFAULT_BYTE_ARRAY)
+                                .and(MEMBERS_RANKS.RANK.equal(DEFAULT_BYTE_ARRAY)));
+            }
+        });
+
+        builder(DROP_RANK_IN_MEMBERS, new QueryBuilder<Query>() {
             @Override
             public Query create(DSLContext context) {
                 return context.delete(MEMBERS_RANKS).where(MEMBERS_RANKS.RANK.equal(DEFAULT_BYTE_ARRAY));

@@ -70,15 +70,30 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher, Membe
     }
 
     @Override
+    public <M extends Member> ListenableFuture<M> dropRank(final M member, final Rank rank) {
+        return service.submit(new Callable<M>() {
+            @Override
+            public M call() throws Exception {
+                Query query;
+                query = queries.getQuery(SQLQueries.DROP_MEMBER_RANK);
+                query.bind(1, UUIDGen.toByteArray(member.getUUID()));
+                query.bind(2, UUIDGen.toByteArray(rank.getUUID()));
+                query.execute();
+                return member;
+            }
+        });
+    }
+
+    @Override
     public ListenableFuture<Rank> drop(final Rank rank) {
         return service.submit(new Callable<Rank>() {
             @Override
             public Rank call() throws Exception {
-                Query query = queries.getQuery(SQLQueries.DROP_SOCIETY_RANK);
+                Query query = queries.getQuery(SQLQueries.DROP_RANK_IN_SOCIETIES);
                 query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
                 query.execute();
 
-                query = queries.getQuery(SQLQueries.DROP_MEMBER_RANK);
+                query = queries.getQuery(SQLQueries.DROP_RANK_IN_MEMBERS);
                 query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
                 query.execute();
 
