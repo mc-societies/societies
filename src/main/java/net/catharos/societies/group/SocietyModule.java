@@ -60,10 +60,11 @@ public class SocietyModule extends AbstractModule {
 
         for (Config object : objectList) {
             String name = object.getString("name");
+            int priority = object.getInt("priority");
             UUID uuid = UUID.fromString(object.getString("uuid"));
             List<String> rules = object.getStringList("rules");
 
-            Rank rank = rankFactory.createStatic(uuid, name, 0);
+            Rank rank = rankFactory.createStatic(uuid, name, priority);
 
             for (String rule : rules) {
                 rank.addRule(rule);

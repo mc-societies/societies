@@ -47,23 +47,19 @@ public class LookupCommand implements Executor<Sender> {
             return;
         }
 
-        sender.send("Name: {0}", target.getName());
         Group group = target.getGroup();
-        if (group != null) {
-            sender.send("Society: {0}", target.getGroup().getName());
-        }
-        sender.send("UUID: {0}", target.getUUID());
+        Period inactive = new Interval(target.getLastActive(), DateTime.now()).toPeriod();
 
-        Period period = new Interval(target.getLastActive(), DateTime.now()).toPeriod();
-
-        sender.send("Join Date: {0}", target.getCreated().toString(dateTimeFormatter));
-        sender.send("Last Seen: {0}", target.getLastActive().toString(dateTimeFormatter));
-        sender.send("Inactive: {0}", periodFormatter.print(period));
-
-        sender.send("Ranks:");
+        sender.send("lookup.name", target.getName());
+        if (group != null) sender.send("lookup.society", group.getName());
+        sender.send("lookup.rank" + target.getRank());
+        sender.send("lookup.uuid", target.getUUID());
+        sender.send("lookup.join-date", target.getCreated().toString(dateTimeFormatter));
+        sender.send("lookup.last-seen", target.getLastActive().toString(dateTimeFormatter));
+        sender.send("lookup.inactive", periodFormatter.print(inactive));
+        sender.send("lookup.ranks");
         for (Rank rank : target.getRanks()) {
-            sender.send(" -" + rank.getName());
+            sender.send("lookup.rank-format", rank.getName());
         }
-
     }
 }

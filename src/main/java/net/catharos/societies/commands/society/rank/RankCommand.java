@@ -27,7 +27,7 @@ import java.util.Collection;
         RankCommand.RemoveCommand.class,
         RankCommand.ListCommand.class,
         RankCommand.AssignCommand.class,
-        RankCommand.DeAssignCommand.class,
+        RankCommand.DeassignCommand.class,
         RuleCommand.class
 })
 public class RankCommand {
@@ -205,7 +205,7 @@ public class RankCommand {
     @Permission("societies.rank.deassign")
     @Meta({@Entry(key = RuleStep.RULE, value = "rank.deassign"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(Member.class)
-    public static class DeAssignCommand implements Executor<Member> {
+    public static class DeassignCommand implements Executor<Member> {
 
         @Argument(name = "argument.rank")
         String rankName;

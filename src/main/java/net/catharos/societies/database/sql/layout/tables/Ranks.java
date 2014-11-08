@@ -11,7 +11,7 @@ package net.catharos.societies.database.sql.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Ranks extends org.jooq.impl.TableImpl<net.catharos.societies.database.sql.layout.tables.records.RanksRecord> {
 
-	private static final long serialVersionUID = -2139457347;
+	private static final long serialVersionUID = -117890173;
 
 	/**
 	 * The singleton instance of <code>societies.ranks</code>
@@ -35,6 +35,11 @@ public class Ranks extends org.jooq.impl.TableImpl<net.catharos.societies.databa
 	 * The column <code>societies.ranks.name</code>.
 	 */
 	public final org.jooq.TableField<net.catharos.societies.database.sql.layout.tables.records.RanksRecord, java.lang.String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR.length(45).nullable(false), this, "");
+
+	/**
+	 * The column <code>societies.ranks.priority</code>.
+	 */
+	public final org.jooq.TableField<net.catharos.societies.database.sql.layout.tables.records.RanksRecord, java.lang.Short> PRIORITY = createField("priority", org.jooq.impl.SQLDataType.SMALLINT.nullable(false), this, "");
 
 	/**
 	 * Create a <code>societies.ranks</code> table reference

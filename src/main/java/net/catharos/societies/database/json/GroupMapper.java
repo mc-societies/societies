@@ -17,7 +17,7 @@ import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.SettingProvider;
 import net.catharos.groups.setting.target.Target;
 import org.apache.logging.log4j.Logger;
-import org.javatuples.Triplet;
+import org.javatuples.Quartet;
 import org.joda.time.DateTime;
 
 import java.io.File;
@@ -62,7 +62,8 @@ public class GroupMapper extends AbstractMapper {
 
         GroupBuilder builder = builders.get();
 
-        List<Triplet<UUID, String, Table<Setting, Target, byte[]>>> rawRanks = Lists.newArrayList();
+        //beautify
+        List<Quartet<UUID, String, Table<Setting, Target, byte[]>, Integer>> rawRanks = Lists.newArrayList();
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String groupField = parser.getCurrentName();
@@ -93,7 +94,7 @@ public class GroupMapper extends AbstractMapper {
         //beatify
         Group group = builder.build();
 
-        for (Triplet<UUID, String, Table<Setting, Target, byte[]>> rank : rawRanks) {
+        for (Quartet<UUID, String, Table<Setting, Target, byte[]>, Integer> rank : rawRanks) {
             group.addRank(toRank(group, rank));
         }
 
@@ -126,10 +127,10 @@ public class GroupMapper extends AbstractMapper {
         generator.writeEndObject();
     }
 
-    private Rank toRank(Group group, Triplet<UUID, String, Table<Setting, Target, byte[]>> triplet) {
-        Rank rank = rankFactory.create(triplet.getValue0(), triplet.getValue1(), Rank.DEFAULT_PRIORITY, group);
+    private Rank toRank(Group group, Quartet<UUID, String, Table<Setting, Target, byte[]>, Integer> quartet) {
+        Rank rank = rankFactory.create(quartet.getValue0(), quartet.getValue1(), quartet.getValue3(), group);
 
-        for (Table.Cell<Setting, Target, byte[]> cell : triplet.getValue2().cellSet()) {
+        for (Table.Cell<Setting, Target, byte[]> cell : quartet.getValue2().cellSet()) {
             rank.set(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
         }
 
@@ -138,11 +139,12 @@ public class GroupMapper extends AbstractMapper {
         return rank;
     }
 
-    private Triplet<UUID, String, Table<Setting, Target, byte[]>> readRank(JsonParser parser) throws IOException {
+    private Quartet<UUID, String, Table<Setting, Target, byte[]>, Integer> readRank(JsonParser parser) throws IOException {
         validateObject(parser);
 
         UUID uuid = null;
         String name = null;
+        int priority = 0;
         Table<Setting, Target, byte[]> settings = HashBasedTable.create();
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
@@ -153,12 +155,14 @@ public class GroupMapper extends AbstractMapper {
                 uuid = UUID.fromString(parser.getText());
             } else if (fieldName.equals("name")) {
                 name = parser.getText();
+            } else if (fieldName.equals("priority")) {
+                priority = parser.getIntValue();
             } else if (fieldName.equals("settings")) {
                 readSettings(parser, settings);
             }
         }
 
-        return Triplet.with(uuid, name, settings);
+        return Quartet.with(uuid, name, settings, priority);
     }
 
     public void writeRank(JsonGenerator generator, Rank rank) throws IOException {
