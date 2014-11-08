@@ -191,7 +191,8 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     }
 
     private SocietyMember evaluateSingleMember(UUID uuid, Group predefined, MembersRecord record) {
-        SocietyMember member = memberFactory.create(UUIDGen.toUUID(record.getUuid()));
+        byte[] byteUUID = record.getUuid();
+        SocietyMember member = memberFactory.create(UUIDGen.toUUID(byteUUID));
 
         try {
             // Load society
@@ -216,7 +217,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
                     //Load ranks
                     Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_RANKS);
-                    query.bind(1, record.getUuid());
+                    query.bind(1, byteUUID);
 
                     for (Record1<byte[]> rankRecord : query.fetch()) {
                         UUID rankUUID = UUIDGen.toUUID(rankRecord.value1());
@@ -227,6 +228,9 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
                         }
                     }
                 }
+
+                //Load settings
+                loadSettings(member, byteUUID, queries.getQuery(SQLQueries.SELECT_SOCIETY_SETTINGS));
             }
 
         } finally {

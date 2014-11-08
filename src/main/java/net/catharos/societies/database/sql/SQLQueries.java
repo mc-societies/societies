@@ -84,6 +84,8 @@ class SQLQueries extends QueryProvider {
 
     public static final QueryKey<Select<MembersRecord>> SELECT_MEMBERS = QueryKey.create();
 
+    public static final QueryKey<Select<Record3<byte[], UShort, byte[]>>> SELECT_MEMBER_SETTINGS = QueryKey.create();
+
     public static final QueryKey<Insert<MembersRecord>> INSERT_MEMBER = QueryKey.create();
 
     public static final QueryKey<Update<MembersRecord>> UPDATE_MEMBER_SOCIETY = QueryKey.create();
@@ -214,6 +216,16 @@ class SQLQueries extends QueryProvider {
                         .select(SOCIETIES_SETTINGS.TARGET_UUID, SOCIETIES_SETTINGS.SETTING, SOCIETIES_SETTINGS.VALUE)
                         .from(SOCIETIES_SETTINGS)
                         .where(SOCIETIES_SETTINGS.SUBJECT_UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(SELECT_MEMBER_SETTINGS, new QueryBuilder<Select<Record3<byte[], UShort, byte[]>>>() {
+            @Override
+            public Select<Record3<byte[], UShort, byte[]>> create(DSLContext context) {
+                return context
+                        .select(MEMBER_SETTINGS.TARGET_UUID, MEMBER_SETTINGS.SETTING, MEMBER_SETTINGS.VALUE)
+                        .from(MEMBER_SETTINGS)
+                        .where(MEMBER_SETTINGS.SUBJECT_UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });
 
