@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Represents a EntityListener
  */
-public class EntityListener implements Listener {
+public class DamageListener implements Listener {
 
     private final MemberProvider<SocietyMember> provider;
     private final ArrayList disabledWorlds;
@@ -34,7 +34,7 @@ public class EntityListener implements Listener {
     private final Setting<Boolean> groupFF;
 
     @Inject
-    public EntityListener(MemberProvider<SocietyMember> provider,
+    public DamageListener(MemberProvider<SocietyMember> provider,
                           @Named("blacklisted-worlds") ArrayList disabledWorlds,
                           @Named("pvp.global-ff-forced") boolean globalFFForced,
                           @Named("pvp.save-civilians") boolean saveCivilians,
@@ -107,7 +107,7 @@ public class EntityListener implements Listener {
             // skip if globalff is on
             // group ff enabled, allow damage
 
-            if (globalFFForced || victim.get(personalFF) || victimGroup.get(groupFF)) {
+            if (globalFFForced || victim.getBoolean(personalFF) || victimGroup.getBoolean(groupFF)) {
                 return;
             }
 

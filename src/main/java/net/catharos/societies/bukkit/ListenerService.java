@@ -15,21 +15,21 @@ public class ListenerService extends AbstractService {
 
     private final Server server;
     private final Plugin plugin;
-    private final EntityListener entityListener;
+    private final DamageListener damageListener;
 
     @InjectLogger
     private Logger logger;
 
     @Inject
-    public ListenerService(Server server, Plugin plugin, EntityListener entityListener) {
+    public ListenerService(Server server, Plugin plugin, DamageListener damageListener) {
         this.server = server;
         this.plugin = plugin;
-        this.entityListener = entityListener;
+        this.damageListener = damageListener;
     }
 
     @Override
     public void start(LifecycleContext context) throws Exception {
         logger.info("Register event listeners...");
-        server.getPluginManager().registerEvents(entityListener, plugin);
+        server.getPluginManager().registerEvents(damageListener, plugin);
     }
 }

@@ -55,6 +55,9 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
         AlliesCommand.class,
         RivalsCommand.class,
 
+        FFCommand.class,
+        GroupFFCommand.class,
+
         VerifyCommand.class,
         UnVerifyCommand.class,
 

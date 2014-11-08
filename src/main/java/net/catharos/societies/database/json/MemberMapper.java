@@ -4,11 +4,18 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.google.common.base.Function;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.google.inject.Inject;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.MemberFactory;
 import net.catharos.groups.rank.Rank;
+import net.catharos.groups.setting.Setting;
+import net.catharos.groups.setting.SettingException;
+import net.catharos.groups.setting.SettingProvider;
+import net.catharos.groups.setting.target.Target;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 
 import java.io.File;
@@ -26,18 +33,19 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
     private final MemberFactory<M> memberFactory;
 
     @Inject
-    public MemberMapper(MemberFactory<M> memberFactory) {
+    public MemberMapper(Logger logger, SettingProvider settingProvider, MemberFactory<M> memberFactory) {
+        super(logger, settingProvider);
         this.memberFactory = memberFactory;
     }
 
     public M readMember(JsonParser parser, Function<UUID, Group> groupSupplier) throws IOException, ExecutionException, InterruptedException {
         parser.nextToken();
-        GroupMapper.validateObject(parser);
+        validateObject(parser);
 
         UUID uuid = null;
         DateTime created = null, lastActive = null;
-        short state = 0;
         Group group = null;
+        Table<Setting, Target, byte[]> settings = HashBasedTable.create();
 
         ArrayList<UUID> ranks = new ArrayList<UUID>();
 
@@ -49,8 +57,6 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
                 uuid = UUID.fromString(parser.getText());
             } else if (fieldName.equals("created")) {
                 created = new DateTime(parser.getLongValue());
-            } else if (fieldName.equals("state")) {
-                state = parser.getShortValue();
             } else if (fieldName.equals("society")) {
 
                 if (parser.getText().equals("null")) {
@@ -65,11 +71,13 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
             } else if (fieldName.equals("lastActive")) {
                 lastActive = new DateTime(parser.getLongValue());
             } else if (fieldName.equals("ranks")) {
-                GroupMapper.validateArray(parser);
+                validateArray(parser);
 
                 while (parser.nextToken() != JsonToken.END_ARRAY) {
                     ranks.add(UUID.fromString(parser.getText()));
                 }
+            }  else if (fieldName.equals("settings")) {
+                readSettings(parser, settings);
             }
         }
 
@@ -80,6 +88,19 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
         member.setCreated(created);
         member.setLastActive(lastActive);
         member.setGroup(group);
+
+        //beautify
+        for (Table.Cell<Setting, Target, byte[]> cell : settings.cellSet()) {
+            Setting setting = cell.getRowKey();
+            Target target = cell.getColumnKey();
+            byte[] value = cell.getValue();
+
+            try {
+                member.set(setting, target, setting.convert(group, target, value));
+            } catch (SettingException e) {
+                logger.warn("Failed to convert setting %s! Subject: %s Target: %s Value: %s", setting, group, target, value);
+            }
+        }
 
         if (group != null) {
             for (UUID rank : ranks) {

@@ -1,13 +1,12 @@
 package net.catharos.societies.commands.society;
 
 import net.catharos.groups.Group;
+import net.catharos.groups.Member;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
-import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.societies.commands.RuleStep;
-import net.catharos.societies.member.SocietyMember;
 import org.bukkit.ChatColor;
 
 /**
@@ -16,30 +15,22 @@ import org.bukkit.ChatColor;
 @Command(identifier = "command.tag")
 @Permission("societies.tag")
 @Meta(@Entry(key = RuleStep.RULE, value = "tag"))
-public class TagCommand implements Executor<Sender> {
+@Sender(Member.class)
+public class TagCommand implements Executor<Member> {
 
     @Argument(name = "argument.society.tag-new")
     String newTag;
 
-    @Option(name = "argument.target.society")
-    Group target;
-
     @Override
-    public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
-        if ((sender instanceof SocietyMember)) {
-            if (target == null) {
-                target = ((SocietyMember) sender).getGroup();
-            } else {
-                sender.send("society.not-found");
-            }
-        }
+    public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
+        Group group = sender.getGroup();
 
-        if (target == null) {
-            sender.send("target-society.not-specified");
+        if (group == null) {
+            sender.send("society.not-found");
             return;
         }
 
-        String sourceTag = ChatColor.stripColor(target.getTag());
+        String sourceTag = ChatColor.stripColor(group.getTag());
         String targetTag = ChatColor.stripColor(newTag);
 
 
@@ -48,7 +39,7 @@ public class TagCommand implements Executor<Sender> {
             return;
         }
 
-        target.setTag(newTag);
+        group.setTag(newTag);
         sender.send("target-society.tag-modified");
     }
 }
