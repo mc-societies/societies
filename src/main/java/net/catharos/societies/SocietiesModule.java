@@ -149,6 +149,8 @@ public class SocietiesModule extends AbstractServiceModule {
 
         install(new RequestModule());
 
+        bindNamed("fallback", NameProvider.class).to(MojangNameProvider.class);
+
         try {
             bindNamedInstance("translations-url", new URL(config.getString("translations-url")));
         } catch (MalformedURLException e) {

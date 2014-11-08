@@ -1,9 +1,7 @@
-- Profile/Lookup formatting
-- fast access player metadata -> player, getMember(Player player)
-- Get player name from external source if player is offline and there is no "offline player data"
 - Support sponge
   * remove bukkit dependencies
   * log support
+- events
 - wars/claiming
 - BulletinBoard
 - command options
@@ -12,7 +10,7 @@
 - Performance: Lazy loading of settings/ranks
 - cache levels (quick-living cache)
 - over-think publishers, collect publishers
-- cache relation targets
+
 
 Bukkit dependencies:
  * Player.getLocation()
@@ -34,3 +32,8 @@ Text renderer:
 
 Caching
 	* Pre-rendered listing output
+
+
+Optimization:
+ - fast access player metadata -> player, getMember(Player player)
+ - cache relation targets
