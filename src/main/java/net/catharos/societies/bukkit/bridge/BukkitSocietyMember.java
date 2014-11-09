@@ -37,6 +37,7 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
     private final Dictionary<String> directory;
     private final NameProvider nameProvider;
     private final Economy economy;
+    private final Materials materials;
 
     @Inject
     public BukkitSocietyMember(Provider<UUID> uuid,
@@ -48,9 +49,9 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
                                Economy economy,
                                MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher,
-                               Server server) {
+                               Server server, Materials materials) {
         this(uuid
-                .get(), localeProvider, directory, economy, societyPublisher, nameProvider, memberRankPublisher, lastActivePublisher, createdPublisher, server);
+                .get(), localeProvider, directory, economy, societyPublisher, nameProvider, memberRankPublisher, lastActivePublisher, createdPublisher, server, materials);
     }
 
     @AssistedInject
@@ -62,13 +63,14 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
                                MemberRankPublisher memberRankPublisher,
                                MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher,
-                               Server server) {
+                               Server server, Materials materials) {
         super(uuid, societyPublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
         this.localeProvider = localeProvider;
         this.directory = dictionary;
         this.economy = economy;
         this.nameProvider = nameProvider;
         this.server = server;
+        this.materials = materials;
     }
 
     @Override
@@ -193,6 +195,6 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
 
     @Override
     public Inventory getInventory() {
-        return new BukkitInventory(toPlayer().getInventory());
+        return new BukkitInventory(materials, toPlayer().getInventory());
     }
 }

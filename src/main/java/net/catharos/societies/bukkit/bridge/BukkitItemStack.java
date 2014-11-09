@@ -2,15 +2,19 @@ package net.catharos.societies.bukkit.bridge;
 
 import net.catharos.societies.bridge.ItemStack;
 import net.catharos.societies.bridge.Material;
+import net.catharos.societies.bridge.Materials;
 
 /**
  * Represents a BukkitItemStack
  */
 public class BukkitItemStack implements ItemStack {
 
+    private final Materials materials;
     private final org.bukkit.inventory.ItemStack itemStack;
 
-    public BukkitItemStack(org.bukkit.inventory.ItemStack itemStack) {this.itemStack = itemStack;}
+    public BukkitItemStack(Materials materials, org.bukkit.inventory.ItemStack itemStack) {
+        this.materials = materials;
+        this.itemStack = itemStack;}
 
     @Override
     public int getAmount() {
@@ -19,7 +23,7 @@ public class BukkitItemStack implements ItemStack {
 
     @Override
     public Material getType() {
-        return Material.getMaterial(itemStack.getType().getId());
+        return materials.getMaterial(itemStack.getType().getId());
     }
 
     public static org.bukkit.inventory.ItemStack toBukkitItemStack(ItemStack itemStack) {

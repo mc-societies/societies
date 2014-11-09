@@ -1,5 +1,4 @@
 - Support sponge
-  * remove bukkit dependencies
   * log support
 - events
 - wars/claiming

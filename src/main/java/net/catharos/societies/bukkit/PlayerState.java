@@ -1,48 +1,23 @@
 package net.catharos.societies.bukkit;
 
+import net.catharos.societies.bridge.ChatColor;
 import net.catharos.societies.bridge.Inventory;
 import net.catharos.societies.bridge.ItemStack;
-import net.catharos.societies.bridge.Material;
 import net.catharos.societies.bridge.Player;
-import org.bukkit.ChatColor;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
+
+import static net.catharos.societies.bridge.Materials.*;
 
 /**
  * Represents a PlayerState
  */
 public class PlayerState {
     private Player player;
-    private static final Map<Material, Integer> FOOD = new HashMap<Material, Integer>();
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.#");
     private static final ChatColor[] ARMOR_ORDER = new ChatColor[]{ChatColor.BLACK, ChatColor.GOLD, ChatColor.YELLOW, ChatColor.WHITE, ChatColor.GRAY, ChatColor.AQUA, ChatColor.RED};
-    private static Map<Material, Integer> WEAPONS = new HashMap<Material, Integer>();
 
-    static {
-        FOOD.put(Material.GRILLED_PORK, 8);
-        FOOD.put(Material.COOKED_FISH, 5);
-        FOOD.put(Material.COOKIE, 1);
-        FOOD.put(Material.CAKE, 12);
-        FOOD.put(Material.MUSHROOM_SOUP, 10);
-        FOOD.put(Material.BREAD, 5);
-        FOOD.put(Material.APPLE, 4);
-        FOOD.put(Material.GOLDEN_APPLE, 8);
-        FOOD.put(Material.RAW_BEEF, 3);
-        FOOD.put(Material.COOKED_BEEF, 8);
-        FOOD.put(Material.PORK, 3);
-        FOOD.put(Material.RAW_CHICKEN, 2);
-        FOOD.put(Material.COOKED_CHICKEN, 6);
-        FOOD.put(Material.ROTTEN_FLESH, 4);
-        FOOD.put(Material.MELON_STEM, 2);
-        //1.4
-        //potato;carrot;baked potato; golden carrot; carrot; pumpkin pie
-
-    }
-
-
-    public PlayerState(net.catharos.societies.bridge.Player player) {
+    public PlayerState(Player player) {
         this.player = player;
     }
 
@@ -57,7 +32,7 @@ public class PlayerState {
         ItemStack boots = inventory.getBoots();
 
         if (helmet != null) {
-            switch (helmet.getType()) {
+            switch (helmet.getType().getID()) {
                 case LEATHER_HELMET:
                     color = ARMOR_ORDER[1];
                     break;
@@ -82,7 +57,7 @@ public class PlayerState {
         color = ChatColor.BLACK;
 
         if (chestplate != null) {
-            switch (chestplate.getType()) {
+            switch (chestplate.getType().getID()) {
                 case LEATHER_CHESTPLATE:
                     color = ARMOR_ORDER[1];
                     break;
@@ -107,7 +82,7 @@ public class PlayerState {
         color = ChatColor.BLACK;
 
         if (leggings != null) {
-            switch (leggings.getType()) {
+            switch (leggings.getType().getID()) {
                 case LEATHER_LEGGINGS:
                     color = ARMOR_ORDER[1];
                     break;
@@ -132,7 +107,7 @@ public class PlayerState {
         color = ChatColor.BLACK;
 
         if (boots != null) {
-            switch (boots.getType()) {
+            switch (boots.getType().getID()) {
                 case LEATHER_BOOTS:
                     color = ARMOR_ORDER[1];
                     break;
@@ -167,10 +142,10 @@ public class PlayerState {
                 continue;
             }
 
-            String type = null;
-            ChatColor color = null;
+            String type;
+            ChatColor color;
 
-            switch (itemStack.getType()) {
+            switch (itemStack.getType().getID()) {
                 case WOOD_SWORD:
                     type = sword;
                     color = ChatColor.GOLD;
@@ -199,7 +174,7 @@ public class PlayerState {
                     return "Empty";
             }
 
-            if (type != null && color != null) {
+            if (type != null) {
                 weapons.append(color).append(type);
                 int amount = itemStack.getAmount();
                 if (amount > 1) {
@@ -221,11 +196,7 @@ public class PlayerState {
                 continue;
             }
 
-            Integer value = FOOD.get(itemStack.getType());
-
-            if (value == null) {
-                continue;
-            }
+            int value = itemStack.getType().getFoodLevel();
 
             food += value;
         }

@@ -22,7 +22,7 @@ import net.catharos.societies.member.SocietyMember;
 import org.apache.logging.log4j.Logger;
 
 import static net.catharos.societies.bridge.ChatColor.stripColor;
-import static net.catharos.societies.bridge.ChatColor.translateAlternateColorCodes;
+import static net.catharos.societies.bridge.ChatColor.translateString;
 
 /**
  * Represents a CreateCommand
@@ -81,7 +81,7 @@ public class CreateCommand implements Executor<Sender> {
         }
 
         name = stripColor(name).trim();
-        tag = translateAlternateColorCodes('&', tag);
+        tag = translateString('&', tag);
 
         Group group = groupFactory.create(name, tag);
         ListenableFuture<Group> future = publisher.publish(group);

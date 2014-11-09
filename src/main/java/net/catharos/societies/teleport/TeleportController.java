@@ -4,10 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.Group;
-import net.catharos.societies.bridge.Inventory;
-import net.catharos.societies.bridge.ItemStack;
-import net.catharos.societies.bridge.Location;
-import net.catharos.societies.bridge.Material;
+import net.catharos.societies.bridge.*;
 import net.catharos.societies.member.SocietyMember;
 
 import javax.inject.Named;
@@ -25,21 +22,21 @@ public class TeleportController implements Runnable, Teleporter {
 
     private final THashSet<TeleportState> states = new THashSet<TeleportState>();
     private final int delay;
-    private final boolean blocks;
     private final boolean dropItems;
+    private final Materials materials;
     private final Set<Material> whitelisted;
     private final Set<Material> blacklisted;
 
     @Inject
     public TeleportController(
             @Named("teleport.delay") int delay,
-            @Named("teleport.blocks") boolean blocks,
             @Named("teleport.drop-items") boolean dropItems,
             @Named("teleport.item-whitelist") ArrayList whitelisted,
-            @Named("teleport.item-blacklist") ArrayList blacklisted) {
+            @Named("teleport.item-blacklist") ArrayList blacklisted,
+            Materials materials) {
         this.delay = delay;
-        this.blocks = blocks;
         this.dropItems = dropItems;
+        this.materials = materials;
 
         this.whitelisted = toMaterialSet(whitelisted);
         this.blacklisted = toMaterialSet(blacklisted);
@@ -50,7 +47,7 @@ public class TeleportController implements Runnable, Teleporter {
         THashSet<Material> materials = new THashSet<Material>();
 
         for (String value : input) {
-            Material material = Material.valueOf(value);
+            Material material = this.materials.getMaterial(value);
 
             if (material != null) {
                 materials.add(material);
@@ -102,17 +99,6 @@ public class TeleportController implements Runnable, Teleporter {
                 int x = target.getRoundedX();
                 int z = target.getRoundedZ();
 
-                if (blocks) {
-                    member.sendBlockChange(new Location(target.getWorld(), x + 1, target
-                            .getRoundedY() - 1, z + 1), Material.GLASS, (byte) 0);
-                    member.sendBlockChange(new Location(target.getWorld(), x - 1, target
-                            .getRoundedY() - 1, z - 1), Material.GLASS, (byte) 0);
-                    member.sendBlockChange(new Location(target.getWorld(), x + 1, target
-                            .getRoundedY() - 1, z - 1), Material.GLASS, (byte) 0);
-                    member.sendBlockChange(new Location(target.getWorld(), x - 1, target
-                            .getRoundedY() - 1, z + 1), Material.GLASS, (byte) 0);
-                }
-
                 if (!member.hasPermission("simpleclans.mod.keep-items")) {
                     dropItems(member);
                 }
@@ -138,7 +124,7 @@ public class TeleportController implements Runnable, Teleporter {
                 continue;
             }
 
-            Material material = item.getType();
+            Material materials = item.getType();
 
             boolean whitelist = true;
 
@@ -147,7 +133,7 @@ public class TeleportController implements Runnable, Teleporter {
             }
 
 
-            if ((whitelist && whitelisted.contains(material)) || (!whitelist && !blacklisted.contains(material))) {
+            if ((whitelist && whitelisted.contains(materials)) || (!whitelist && !blacklisted.contains(materials))) {
                 player.getWorld().dropItem(player.getLocation(), item);
                 inv.remove(item);
             }
