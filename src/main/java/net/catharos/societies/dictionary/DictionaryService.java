@@ -1,4 +1,4 @@
-package net.catharos.societies;
+package net.catharos.societies.dictionary;
 
 import com.google.common.io.ByteStreams;
 import com.google.inject.Inject;

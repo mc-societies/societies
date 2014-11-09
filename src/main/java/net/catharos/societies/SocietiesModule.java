@@ -13,12 +13,14 @@ import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import net.catharos.lib.shank.config.ConfigModule;
 import net.catharos.lib.shank.config.TypeSafeConfigSource;
 import net.catharos.lib.shank.service.AbstractServiceModule;
+import net.catharos.societies.bridge.ReloadAction;
 import net.catharos.societies.bukkit.BukkitNameProvider;
-import net.catharos.societies.bukkit.BukkitPlayerProvider;
+import net.catharos.societies.bukkit.BukkitPlayerResolver;
 import net.catharos.societies.bukkit.SocietiesPlugin;
 import net.catharos.societies.commands.CommandModule;
 import net.catharos.societies.commands.FormatModule;
 import net.catharos.societies.database.DatabaseModule;
+import net.catharos.societies.dictionary.DictionaryModule;
 import net.catharos.societies.group.SocietyModule;
 import net.catharos.societies.member.MemberModule;
 import net.catharos.societies.member.locale.LocaleModule;
@@ -98,9 +100,6 @@ public class SocietiesModule extends AbstractServiceModule {
 
         bind(Logger.class).toInstance(logger);
 
-        // Register service
-        bindService().to(DictionaryService.class);
-
         // UUID provider
         bind(UUID.class).toProvider(TimeUUIDProvider.class);
 
@@ -130,7 +129,7 @@ public class SocietiesModule extends AbstractServiceModule {
         });
 
         // Player provider
-        bind(PlayerProvider.class).to(BukkitPlayerProvider.class);
+        bind(PlayerResolver.class).to(BukkitPlayerResolver.class);
 
         // Executor service for heavy work
         bind(WORKER_EXECUTOR).toInstance(MoreExecutors.listeningDecorator(Executors.newCachedThreadPool()));

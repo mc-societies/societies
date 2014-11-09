@@ -1,8 +1,8 @@
-package net.catharos.societies.bukkit;
+package net.catharos.societies;
 
 import gnu.trove.map.hash.TCharIntHashMap;
 import net.catharos.lib.core.command.format.WidthProvider;
-import org.bukkit.ChatColor;
+import net.catharos.societies.bridge.ChatColor;
 
 /**
  * Represents a MinecraftWidthProvider

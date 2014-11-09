@@ -3,6 +3,7 @@ package net.catharos.societies.bukkit;
 import com.google.inject.Inject;
 import net.catharos.lib.core.command.SystemSender;
 import net.catharos.lib.core.i18n.Dictionary;
+import net.catharos.societies.bridge.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 
 import java.text.MessageFormat;
@@ -29,7 +30,7 @@ public class BukkitSystemSender extends SystemSender {
 
     @Override
     public void send(String message, Object... args) {
-        BukkitUtil.argumentColorReset(args);
+        ChatColor.argumentColorReset(args);
         sender.sendMessage(MessageFormat.format(dictionary.getTranslation(message), args));
     }
 }

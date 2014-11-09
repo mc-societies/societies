@@ -5,7 +5,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ParsingException;
 import net.catharos.lib.core.command.parser.ArgumentParser;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.WorldProvider;
+import net.catharos.societies.bridge.WorldResolver;
 import net.catharos.societies.bridge.Location;
 import net.catharos.societies.bridge.World;
 import net.catharos.societies.member.SocietyMember;
@@ -16,11 +16,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LocationParser implements ArgumentParser<Location> {
 
-    private final WorldProvider worldProvider;
+    private final WorldResolver worldResolver;
 
     @Inject
-    public LocationParser(WorldProvider worldProvider) {
-        this.worldProvider = worldProvider;
+    public LocationParser(WorldResolver worldResolver) {
+        this.worldResolver = worldResolver;
     }
 
     @NotNull
@@ -59,7 +59,7 @@ public class LocationParser implements ArgumentParser<Location> {
         World world = null;
 
         if (worldName != null) {
-            world = worldProvider.getWorld(worldName);
+            world = worldResolver.getWorld(worldName);
         }
 
         if (world == null) {
@@ -72,7 +72,7 @@ public class LocationParser implements ArgumentParser<Location> {
                     world = societyMember.getLocation().getWorld();
                 }
             } else {
-                world = worldProvider.getDefaultWorld();
+                world = worldResolver.getDefaultWorld();
             }
         }
 

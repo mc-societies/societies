@@ -1,7 +1,5 @@
 package net.catharos.societies.bridge;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * Represents a Player
  */
@@ -11,7 +9,6 @@ public interface Player {
 
     int getFoodLevel();
 
-    @Nullable
     Location getLocation();
 
     World getWorld();

@@ -1,4 +1,4 @@
-package net.catharos.societies;
+package net.catharos.societies.dictionary;
 
 import com.google.inject.Key;
 import com.google.inject.Singleton;
@@ -6,14 +6,14 @@ import com.google.inject.TypeLiteral;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.core.i18n.MutableDictionary;
 import net.catharos.lib.core.i18n.StringDictionary;
-import net.catharos.lib.shank.AbstractModule;
+import net.catharos.lib.shank.service.AbstractServiceModule;
 
 import java.io.File;
 
 /**
  * Represents a DictionaryModule
  */
-public class DictionaryModule extends AbstractModule {
+public class DictionaryModule extends AbstractServiceModule {
 
     private final File dataDirectory;
 
@@ -23,6 +23,9 @@ public class DictionaryModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        // Register service
+        bindService().to(DictionaryService.class);
+
         bindNamedInstance("dictionary-directory", File.class, new File(dataDirectory, "translations"));
 
         Key<MutableDictionary<String>> dictionaryKey = Key.get(new TypeLiteral<MutableDictionary<String>>() {});

@@ -7,7 +7,7 @@ import net.catharos.lib.core.command.format.Formatter;
 import net.catharos.lib.core.command.format.WidthProvider;
 import net.catharos.lib.core.command.format.table.*;
 import net.catharos.lib.shank.AbstractModule;
-import net.catharos.societies.bukkit.MinecraftWidthProvider;
+import net.catharos.societies.MinecraftWidthProvider;
 
 /**
  * Represents a FormatModule

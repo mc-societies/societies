@@ -4,7 +4,7 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import net.catharos.groups.MemberFactory;
 import net.catharos.lib.shank.service.AbstractServiceModule;
-import net.catharos.societies.WorldProvider;
+import net.catharos.societies.bridge.WorldResolver;
 import net.catharos.societies.bridge.Scheduler;
 import net.catharos.societies.bukkit.bridge.BukkitSocietyMember;
 import net.catharos.societies.member.SocietyMember;
@@ -44,7 +44,7 @@ public class BukkitModule extends AbstractServiceModule {
         bind(ConsoleCommandSender.class).toInstance(server.getConsoleSender());
         bindNamed("default-world", World.class).toInstance(server.getWorlds().get(0));
 
-        bind(WorldProvider.class).to(BukkitWorldProvider.class);
+        bind(WorldResolver.class).to(BukkitWorldResolver.class);
 
 
         bind(Scheduler.class).to(net.catharos.societies.bukkit.bridge.BukkitScheduler.class);

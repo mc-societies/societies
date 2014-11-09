@@ -18,7 +18,7 @@ import net.catharos.lib.shank.logging.LoggingModule;
 import net.catharos.lib.shank.service.ServiceController;
 import net.catharos.lib.shank.service.ServiceModule;
 import net.catharos.lib.shank.service.lifecycle.Lifecycle;
-import net.catharos.societies.ReloadAction;
+import net.catharos.societies.bridge.ReloadAction;
 import net.catharos.societies.SocietiesModule;
 import net.catharos.societies.economy.DummyEconomy;
 import net.catharos.societies.group.OnlineGroupCache;

@@ -20,7 +20,7 @@ import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.lib.shank.logging.InjectLogger;
-import net.catharos.societies.PlayerProvider;
+import net.catharos.societies.PlayerResolver;
 import net.catharos.societies.database.sql.layout.tables.records.MembersRecord;
 import net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
@@ -60,7 +60,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     private final GroupFactory groupFactory;
     private final RankFactory rankFactory;
 
-    private final PlayerProvider playerProvider;
+    private final PlayerResolver playerResolver;
     private final SettingProvider settingProvider;
 
 
@@ -73,7 +73,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     @Inject
     public SQLProvider(SQLQueries queries,
                        ListeningExecutorService service,
-                       PlayerProvider playerProvider,
+                       PlayerResolver playerResolver,
                        MemberFactory<SocietyMember> memberFactory,
                        MemberPublisher memberPublisher,
                        GroupCache groupCache,
@@ -84,7 +84,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         this.queries = queries;
         this.service = service;
 
-        this.playerProvider = playerProvider;
+        this.playerResolver = playerResolver;
         this.memberFactory = memberFactory;
         this.memberPublisher = memberPublisher;
         this.groupCache = groupCache;
@@ -107,7 +107,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         }
 
 
-        UUID player = playerProvider.getPlayer(name);
+        UUID player = playerResolver.getPlayer(name);
 
         if (player == null) {
             return immediateFuture(null);

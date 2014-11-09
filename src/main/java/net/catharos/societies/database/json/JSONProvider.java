@@ -24,7 +24,7 @@ import net.catharos.lib.core.uuid.UUIDStorage;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
-import net.catharos.societies.PlayerProvider;
+import net.catharos.societies.PlayerResolver;
 import net.catharos.societies.bridge.ChatColor;
 import org.apache.logging.log4j.Logger;
 
@@ -83,7 +83,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         members.addIndex((Index<M>) HashIndex.onAttribute(MEMBER_UUID));
     }
 
-    private final PlayerProvider playerProvider;
+    private final PlayerResolver playerResolver;
     private final GroupMapper groupMapper;
     private final MemberMapper<M> mapper;
     private final UUIDStorage memberStorage;
@@ -97,14 +97,14 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     private Logger logger;
 
     @Inject
-    public JSONProvider(PlayerProvider playerProvider,
+    public JSONProvider(PlayerResolver playerResolver,
                         MemberMapper<M> mapper,
                         @Named("group-root") File groupRoot,
                         @Named("member-root") File memberRoot,
                         GroupMapper groupMapper,
                         MemberPublisher memberPublisher,
                         MemberFactory<M> memberFactory) {
-        this.playerProvider = playerProvider;
+        this.playerResolver = playerResolver;
         this.mapper = mapper;
         this.groupMapper = groupMapper;
         this.memberPublisher = memberPublisher;
@@ -193,7 +193,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
 
     @Override
     public ListenableFuture<M> getMember(String name) {
-        UUID player = playerProvider.getPlayer(name);
+        UUID player = playerResolver.getPlayer(name);
 
         if (player == null) {
             return immediateFuture(null);

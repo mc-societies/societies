@@ -126,6 +126,16 @@ public enum ChatColor {
         this.toString = new String(new char[]{COLOR_CHAR, code});
     }
 
+    public static void argumentColorReset(Object[] args) {
+        for (int i = 0, length = args.length; i < length; i++) {
+            Object arg = args[i];
+
+            if (arg instanceof String) {
+                args[i] = arg + org.bukkit.ChatColor.RESET.toString();
+            }
+        }
+    }
+
     /**
      * Gets the char value associated with this color
      *

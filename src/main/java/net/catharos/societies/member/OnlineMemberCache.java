@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import gnu.trove.map.hash.THashMap;
 import net.catharos.groups.Member;
 import net.catharos.groups.MemberCache;
-import net.catharos.societies.PlayerProvider;
+import net.catharos.societies.PlayerResolver;
 
 import java.util.Set;
 import java.util.UUID;
@@ -18,10 +18,10 @@ public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
 
     private final THashMap<UUID, M> members = new THashMap<UUID, M>();
 
-    private final PlayerProvider provider;
+    private final PlayerResolver provider;
 
     @Inject
-    public OnlineMemberCache(PlayerProvider provider) {
+    public OnlineMemberCache(PlayerResolver provider) {
         this.provider = provider;
     }
 

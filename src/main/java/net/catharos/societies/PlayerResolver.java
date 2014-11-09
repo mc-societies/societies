@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * Represents a PlayerProvider
  */
-public interface PlayerProvider {
+public interface PlayerResolver {
 
     UUID getPlayer(String name);
 

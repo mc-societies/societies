@@ -13,11 +13,7 @@ import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderHelper;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.NameProvider;
-import net.catharos.societies.bridge.Inventory;
-import net.catharos.societies.bridge.Location;
-import net.catharos.societies.bridge.Material;
-import net.catharos.societies.bridge.World;
-import net.catharos.societies.bukkit.BukkitUtil;
+import net.catharos.societies.bridge.*;
 import net.catharos.societies.member.SocietyMember;
 import net.catharos.societies.member.locale.LocaleProvider;
 import net.milkbowl.vault.economy.Economy;
@@ -116,7 +112,7 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
             return;
         }
 
-        BukkitUtil.argumentColorReset(args);
+        ChatColor.argumentColorReset(args);
 
         player.sendMessage(MessageFormat.format(directory.getTranslation(message), args));
     }

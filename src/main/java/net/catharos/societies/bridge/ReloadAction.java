@@ -1,4 +1,4 @@
-package net.catharos.societies;
+package net.catharos.societies.bridge;
 
 /**
  * Represents a ReloadLauncherAction
