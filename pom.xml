@@ -140,10 +140,6 @@
     </distributionManagement>
 
     <repositories>
-        <repository>
-            <id>ac-repo</id>
-            <url>https://raw.github.com/mazentheamazin/AccountsClient/mvn-repo/</url>
-        </repository>
 
         <repository>
             <id>md5</id>

@@ -1,6 +1,4 @@
-- Support sponge
-  * log support
-- events
+- events (mbassador)
 - wars/claiming
 - BulletinBoard
 - command options
@@ -9,7 +7,7 @@
 - Performance: Lazy loading of settings/ranks
 - cache levels (quick-living cache)
 - over-think publishers, collect publishers
-
+- log support
 
 Bukkit dependencies:
  * Player.getLocation()
