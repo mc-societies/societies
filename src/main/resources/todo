@@ -1,3 +1,4 @@
+- chat integration
 - events (mbassador)
 - wars/claiming
 - BulletinBoard
@@ -8,6 +9,7 @@
 - cache levels (quick-living cache)
 - over-think publishers, collect publishers
 - log support
+- future api
 
 Bukkit dependencies:
  * Player.getLocation()

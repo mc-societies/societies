@@ -63,6 +63,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
 
 
     {
+
         groups.addIndex(HashIndex.onAttribute(GROUP_UUID));
 
         groups.addIndex(HashIndex.onAttribute(GROUP_TAG));
