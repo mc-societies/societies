@@ -3,7 +3,6 @@ package net.catharos.societies.dictionary;
 import com.google.common.io.ByteStreams;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.typesafe.config.*;
 import net.catharos.lib.core.i18n.MutableDictionary;
 import net.catharos.lib.core.util.ZipUtils;
 import net.catharos.lib.shank.logging.InjectLogger;
@@ -17,6 +16,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Properties;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -70,8 +70,9 @@ class DictionaryService extends AbstractService {
                     String lang = name.substring(0, name.length() - "general.properties".length() - 1);
 
                     InputStreamReader reader = new InputStreamReader(stream);
-                    ConfigParseOptions options = ConfigParseOptions.defaults().setSyntax(ConfigSyntax.PROPERTIES);
-                    Config config = ConfigFactory.parseReader(new BufferedReader(reader), options);
+
+                    Properties properties = new Properties();
+                    properties.load(new BufferedReader(reader));
 
                     File output = new File(directory, name);
 
@@ -84,12 +85,14 @@ class DictionaryService extends AbstractService {
 //                    IOUtils.copy(stream, new FileOutputStream(output));
 
                     if (output.exists()) {
-                        config = ConfigFactory.parseFile(output).withFallback(config);
+                        Properties current = new Properties();
+                        current.load(new BufferedReader(new FileReader(output)));
+                        properties.putAll(current);
                     }
 
-                    for (Map.Entry<String, ConfigValue> langEntry : config.entrySet()) {
+                    for (Map.Entry<Object, Object> entry : properties.entrySet()) {
                         dictionary
-                                .addTranslation(lang, langEntry.getKey(), langEntry.getValue().unwrapped().toString());
+                                .addTranslation(lang, entry.getKey().toString(), entry.getValue().toString());
                     }
 
                     loaded.add(lang);

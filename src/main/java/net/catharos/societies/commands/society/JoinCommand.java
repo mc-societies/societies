@@ -1,6 +1,7 @@
 package net.catharos.societies.commands.society;
 
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
@@ -44,6 +45,7 @@ public class JoinCommand implements Executor<Member> {
     private Logger logger;
 
 
+    @Inject
     public JoinCommand(Dictionary<String> dictionary, RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
         this.dictionary = dictionary;
         this.requests = requests;

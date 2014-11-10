@@ -23,6 +23,10 @@ public class RuleStep implements Executor<Sender> {
 
         String rule = ctx.getCommand().get(RULE);
 
+        if (rule == null) {
+            return;
+        }
+
         if (!member.hasRule(rule)) {
             sender.send("no-rule");
             ctx.cancel();
