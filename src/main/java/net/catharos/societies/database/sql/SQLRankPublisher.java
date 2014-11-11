@@ -1,5 +1,6 @@
 package net.catharos.societies.database.sql;
 
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -29,6 +30,10 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher, Membe
 
     @Override
     public ListenableFuture<Rank> publish(final Rank rank) {
+        if (rank.isStatic()) {
+            return Futures.immediateFuture(rank);
+        }
+
         return service.submit(new Callable<Rank>() {
             @Override
             public Rank call() throws Exception {
@@ -43,6 +48,10 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher, Membe
 
     @Override
     public ListenableFuture<Group> publishRank(final Group group, final Rank rank) {
+        if (rank.isStatic()) {
+            return Futures.immediateFuture(group);
+        }
+
         return service.submit(new Callable<Group>() {
             @Override
             public Group call() throws Exception {
@@ -86,6 +95,10 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher, Membe
 
     @Override
     public ListenableFuture<Rank> drop(final Rank rank) {
+        if (rank.isStatic()) {
+            return Futures.immediateFuture(rank);
+        }
+
         return service.submit(new Callable<Rank>() {
             @Override
             public Rank call() throws Exception {

@@ -4,10 +4,12 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.typesafe.config.Config;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupFactory;
 import net.catharos.groups.publisher.GroupPublisher;
+import net.catharos.groups.rank.Rank;
 import net.catharos.groups.validate.NameValidator;
 import net.catharos.groups.validate.TagValidator;
 import net.catharos.groups.validate.ValidateResult;
@@ -42,6 +44,8 @@ public class CreateCommand implements Executor<Sender> {
     private final NameValidator nameValidator;
     private final TagValidator tagValidator;
     private final double price;
+    private final Rank superRank;
+
 
     @InjectLogger
     private Logger logger;
@@ -50,11 +54,13 @@ public class CreateCommand implements Executor<Sender> {
     public CreateCommand(GroupFactory groupFactory,
                          GroupPublisher publisher,
                          NameValidator nameValidator, TagValidator tagValidator,
-                         Config config) {
+                         Config config,
+                         @Named("super-default-rank") Rank superRank) {
         this.groupFactory = groupFactory;
         this.publisher = publisher;
         this.nameValidator = nameValidator;
         this.tagValidator = tagValidator;
+        this.superRank = superRank;
         this.price = config.getDouble("economy.creation-price");
     }
 
@@ -95,7 +101,10 @@ public class CreateCommand implements Executor<Sender> {
                 }
 
                 if (sender instanceof SocietyMember) {
-                    result.addMember(((SocietyMember) sender));
+                    SocietyMember societyMember = (SocietyMember) sender;
+
+                    result.addMember(societyMember);
+                    societyMember.addRank(superRank);
                 }
 
                 sender.send("society.created", name, tag);

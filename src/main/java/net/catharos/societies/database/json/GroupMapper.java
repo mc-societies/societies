@@ -94,6 +94,8 @@ public class GroupMapper extends AbstractMapper {
         //beatify
         Group group = builder.build();
 
+        group.complete(false);
+
         for (Quartet<UUID, String, Table<Setting, Target, byte[]>, Integer> rank : rawRanks) {
             group.addRank(toRank(group, rank));
         }
@@ -166,6 +168,10 @@ public class GroupMapper extends AbstractMapper {
     }
 
     public void writeRank(JsonGenerator generator, Rank rank) throws IOException {
+        if (rank.isStatic()) {
+            return;
+        }
+
         generator.writeStartObject();
 
         generator.writeStringField("uuid", rank.getUUID().toString());

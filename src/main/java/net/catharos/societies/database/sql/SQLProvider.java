@@ -196,6 +196,8 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         byte[] byteUUID = record.getUuid();
         SocietyMember member = memberFactory.create(UUIDGen.toUUID(byteUUID));
 
+        member.complete(false);
+
         try {
             // Load society
             byte[] rawSociety = record.getSociety();
@@ -311,6 +313,8 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         byte[] uuid = record.getUuid();
         Group group = groupFactory
                 .create(UUIDGen.toUUID(uuid), record.getName(), record.getTag(), new DateTime(record.getCreated()));
+
+        group.complete(false);
 
         try {
             // Load members

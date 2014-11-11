@@ -85,6 +85,8 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
 
         M member = memberFactory.create(uuid);
 
+        member.complete(false);
+
         member.setCreated(created);
         member.setLastActive(lastActive);
         member.setGroup(group);

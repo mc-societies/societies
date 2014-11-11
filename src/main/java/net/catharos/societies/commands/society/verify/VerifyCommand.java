@@ -21,6 +21,6 @@ public class VerifyCommand implements Executor<Sender> {
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {
         target.verify(true);
-        sender.send("target-society.verified");
+        sender.send("target-society.verified", target.getTag());
     }
 }
