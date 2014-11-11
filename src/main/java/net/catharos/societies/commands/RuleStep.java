@@ -27,7 +27,7 @@ public class RuleStep implements Executor<Sender> {
             return;
         }
 
-        if (!member.hasRule(rule)) {
+        if (!member.hasRule("*") && !member.hasRule(rule)) {
             sender.send("no-rule");
             ctx.cancel();
         }

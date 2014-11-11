@@ -111,7 +111,7 @@ public class CommandModule extends AbstractModule {
 
         bindNamed("system-sender", Sender.class).to(BukkitSystemSender.class);
 
-        addRule("create", 0x0);
+        addRule("*", 0x0);
         addRule("invite", 0x1);
         addRule("join", 0x2);
         addRule("leave", 0x3);

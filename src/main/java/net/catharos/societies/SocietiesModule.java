@@ -63,6 +63,7 @@ public class SocietiesModule extends AbstractServiceModule {
 //        binder().disableCircularProxies();
 
         ConfigParseOptions parseOptions = ConfigParseOptions.defaults()
+                .setAllowMissing(false)
                 .setSyntax(ConfigSyntax.CONF);
 
         Config defaultConfig = ConfigFactory

@@ -2,11 +2,13 @@ package net.catharos.societies.member;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import net.catharos.groups.DefaultMember;
 import net.catharos.groups.publisher.MemberCreatedPublisher;
 import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.groups.publisher.MemberLastActivePublisher;
 import net.catharos.groups.publisher.MemberRankPublisher;
+import net.catharos.groups.rank.Rank;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderHelper;
@@ -35,8 +37,9 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
                                MemberGroupPublisher societyPublisher,
                                MemberRankPublisher memberRankPublisher,
                                MemberLastActivePublisher lastActivePublisher,
-                               MemberCreatedPublisher createdPublisher) {
-        super(uuid.get(), societyPublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
+                               MemberCreatedPublisher createdPublisher,
+                               @Named("default-rank") Rank defaultRank) {
+        super(uuid.get(), societyPublisher, memberRankPublisher, lastActivePublisher, createdPublisher, defaultRank);
         this.localeProvider = localeProvider;
         this.directory = dictionary;
     }

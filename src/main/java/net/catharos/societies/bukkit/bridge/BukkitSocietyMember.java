@@ -3,11 +3,13 @@ package net.catharos.societies.bukkit.bridge;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import com.google.inject.name.Named;
 import net.catharos.groups.DefaultMember;
 import net.catharos.groups.publisher.MemberCreatedPublisher;
 import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.groups.publisher.MemberLastActivePublisher;
 import net.catharos.groups.publisher.MemberRankPublisher;
+import net.catharos.groups.rank.Rank;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderHelper;
@@ -49,9 +51,10 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
                                Economy economy,
                                MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher,
-                               Server server, Materials materials) {
-        this(uuid
-                .get(), localeProvider, directory, economy, societyPublisher, nameProvider, memberRankPublisher, lastActivePublisher, createdPublisher, server, materials);
+                               Server server, Materials materials,
+                               @Named("default-rank") Rank defaultRank) {
+        this(uuid.get(), localeProvider, directory, economy, societyPublisher, nameProvider, memberRankPublisher,
+                lastActivePublisher, createdPublisher, server, materials, defaultRank);
     }
 
     @AssistedInject
@@ -63,8 +66,9 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
                                MemberRankPublisher memberRankPublisher,
                                MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher,
-                               Server server, Materials materials) {
-        super(uuid, societyPublisher, memberRankPublisher, lastActivePublisher, createdPublisher);
+                               Server server, Materials materials,
+                               @Named("default-rank") Rank defaultRank) {
+        super(uuid, societyPublisher, memberRankPublisher, lastActivePublisher, createdPublisher, defaultRank);
         this.localeProvider = localeProvider;
         this.directory = dictionary;
         this.economy = economy;
