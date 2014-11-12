@@ -63,7 +63,7 @@ public class GroupMapper extends AbstractMapper {
         GroupBuilder builder = builders.get();
 
         //beautify
-        List<Quartet<UUID, String, Table<Setting, Target, byte[]>, Integer>> rawRanks = Lists.newArrayList();
+        List<Quartet<UUID, String, Table<Setting, Target, String>, Integer>> rawRanks = Lists.newArrayList();
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String groupField = parser.getCurrentName();
@@ -96,7 +96,7 @@ public class GroupMapper extends AbstractMapper {
 
         group.complete(false);
 
-        for (Quartet<UUID, String, Table<Setting, Target, byte[]>, Integer> rank : rawRanks) {
+        for (Quartet<UUID, String, Table<Setting, Target, String>, Integer> rank : rawRanks) {
             group.addRank(toRank(group, rank));
         }
 
@@ -129,10 +129,10 @@ public class GroupMapper extends AbstractMapper {
         generator.writeEndObject();
     }
 
-    private Rank toRank(Group group, Quartet<UUID, String, Table<Setting, Target, byte[]>, Integer> quartet) {
+    private Rank toRank(Group group, Quartet<UUID, String, Table<Setting, Target, String>, Integer> quartet) {
         Rank rank = rankFactory.create(quartet.getValue0(), quartet.getValue1(), quartet.getValue3(), group);
 
-        for (Table.Cell<Setting, Target, byte[]> cell : quartet.getValue2().cellSet()) {
+        for (Table.Cell<Setting, Target, String> cell : quartet.getValue2().cellSet()) {
             rank.set(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
         }
 
@@ -141,13 +141,13 @@ public class GroupMapper extends AbstractMapper {
         return rank;
     }
 
-    private Quartet<UUID, String, Table<Setting, Target, byte[]>, Integer> readRank(JsonParser parser) throws IOException {
+    private Quartet<UUID, String, Table<Setting, Target, String>, Integer> readRank(JsonParser parser) throws IOException {
         validateObject(parser);
 
         UUID uuid = null;
         String name = null;
         int priority = 0;
-        Table<Setting, Target, byte[]> settings = HashBasedTable.create();
+        Table<Setting, Target, String> settings = HashBasedTable.create();
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String fieldName = parser.getCurrentName();

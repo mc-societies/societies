@@ -45,7 +45,7 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
         UUID uuid = null;
         DateTime created = null, lastActive = null;
         Group group = null;
-        Table<Setting, Target, byte[]> settings = HashBasedTable.create();
+        Table<Setting, Target, String> settings = HashBasedTable.create();
 
         ArrayList<UUID> ranks = new ArrayList<UUID>();
 
@@ -92,13 +92,13 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
         member.setGroup(group);
 
         //beautify
-        for (Table.Cell<Setting, Target, byte[]> cell : settings.cellSet()) {
+        for (Table.Cell<Setting, Target, String> cell : settings.cellSet()) {
             Setting setting = cell.getRowKey();
             Target target = cell.getColumnKey();
-            byte[] value = cell.getValue();
+            String value = cell.getValue();
 
             try {
-                member.set(setting, target, setting.convert(group, target, value));
+                member.set(setting, target, setting.convertFromString(group, target, value));
             } catch (SettingException e) {
                 logger.warn("Failed to convert setting %s! Subject: %s Target: %s Value: %s", setting, group, target, value);
             }

@@ -22,11 +22,11 @@ public class Location extends Vector3d {
         this.roll = roll;
     }
 
-    public double getPitch() {
+    public float getPitch() {
         return pitch;
     }
 
-    public double getYaw() {
+    public float getYaw() {
         return yaw;
     }
 

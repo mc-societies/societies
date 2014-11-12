@@ -1,6 +1,7 @@
 package net.catharos.societies.setting;
 
 import net.catharos.groups.setting.Setting;
+import net.catharos.groups.setting.SettingException;
 import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.Target;
 import org.jetbrains.annotations.Nullable;
@@ -26,5 +27,19 @@ public class BooleanSetting extends Setting<Boolean> {
         }
 
         return new byte[]{1};
+    }
+
+    @Override
+    public Boolean convertFromString(Subject subject, Target target, String value) throws SettingException {
+        return Boolean.parseBoolean(value);
+    }
+
+    @Override
+    public String convertToString(Subject subject, Target target, @Nullable Boolean value) throws SettingException {
+        if (value == null) {
+            return Boolean.FALSE.toString();
+        }
+
+        return value.toString();
     }
 }

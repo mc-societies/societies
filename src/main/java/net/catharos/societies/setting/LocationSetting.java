@@ -8,6 +8,7 @@ import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.Target;
 import net.catharos.societies.bridge.Location;
 import net.catharos.societies.bridge.World;
+import net.catharos.societies.bridge.WorldResolver;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -18,12 +19,14 @@ import java.io.*;
 class LocationSetting extends Setting<Location> {
     public static final int ID = 0x0;
 
-    private final World world;
+    private final WorldResolver worldResolver;
+    private final World defaultWorld;
 
     @Inject
-    public LocationSetting(@Named("default-world") World world) {
+    public LocationSetting(WorldResolver worldResolver, @Named("default-world") World defaultWorld) {
         super(ID);
-        this.world = world;
+        this.worldResolver = worldResolver;
+        this.defaultWorld = defaultWorld;
     }
 
     @Override
@@ -31,7 +34,9 @@ class LocationSetting extends Setting<Location> {
         DataInputStream is = new DataInputStream(new ByteArrayInputStream(value));
 
         try {
-            return new Location(world, is.readInt(), is.readInt(), is.readInt());
+            World world = worldResolver.getWorld(is.readUTF());
+            return new Location(world == null ? defaultWorld : world,
+                    is.readDouble(), is.readDouble(), is.readDouble(), is.readFloat(), is.readFloat(), is.readFloat());
         } catch (IOException e) {
             throw new SettingException(e);
         }
@@ -47,9 +52,14 @@ class LocationSetting extends Setting<Location> {
         DataOutputStream os = new DataOutputStream(out);
 
         try {
-            os.writeInt(value.getRoundedX());
-            os.writeInt(value.getRoundedY());
-            os.writeInt(value.getRoundedZ());
+            os.writeUTF(value.getWorld().getName());
+            os.writeDouble(value.getX());
+            os.writeDouble(value.getY());
+            os.writeDouble(value.getZ());
+
+            os.writeFloat(value.getYaw());
+            os.writeFloat(value.getPitch());
+            os.writeFloat(value.getRoll());
         } catch (IOException e) {
             throw new SettingException(e);
         }

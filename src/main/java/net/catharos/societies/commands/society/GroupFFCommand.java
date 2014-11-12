@@ -12,8 +12,8 @@ import net.catharos.societies.commands.RuleStep;
 /**
  * Represents a RelationListCommand
  */
-@Command(identifier = "command.ff")
-@Permission("societies.ff")
+@Command(identifier = "command.group-ff")
+@Permission("societies.group-ff")
 @Meta(@Entry(key = RuleStep.RULE, value = "ff"))
 @Sender(Member.class)
 public class GroupFFCommand implements Executor<Member> {

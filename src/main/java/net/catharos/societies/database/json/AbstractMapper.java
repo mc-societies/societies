@@ -3,7 +3,6 @@ package net.catharos.societies.database.json;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Table;
-import com.migcomponents.migbase64.Base64;
 import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.SettingException;
 import net.catharos.groups.setting.SettingProvider;
@@ -48,7 +47,7 @@ public class AbstractMapper {
         return factory.createGenerator(writer);
     }
 
-    public void readSettings(JsonParser parser, Table<Setting, Target, byte[]> settings) throws IOException {
+    public void readSettings(JsonParser parser, Table<Setting, Target, String> settings) throws IOException {
         validateArray(parser);
 
         while (parser.nextToken() != JsonToken.END_ARRAY) {
@@ -56,7 +55,7 @@ public class AbstractMapper {
 
             Target target = null;
             Setting setting = null;
-            byte[] value = null;
+            String value = null;
 
             while (parser.nextToken() != JsonToken.END_OBJECT) {
                 String settingField = parser.getCurrentName();
@@ -67,7 +66,7 @@ public class AbstractMapper {
                 } else if (settingField.equals("setting")) {
                     setting = settingProvider.getSetting(parser.getIntValue());
                 } else if (settingField.equals("value")) {
-                    value = parser.getBinaryValue();
+                    value = parser.getText();
                 }
             }
 
@@ -90,19 +89,19 @@ public class AbstractMapper {
             Setting<Object> setting = CastSafe.toGeneric(cell.getRowKey());
             Object value = cell.getValue();
 
-            byte[] convert;
+           String result;
 
             try {
-                convert = setting.convert(subject, target, value);
+                result = setting.convertToString(subject, target, value);
             } catch (SettingException e) {
-                logger.warn("Failed to convert setting %s! Subject: %s Target: %s Value: %s", setting, subject, target, value);
+                logger.warn("Failed to result setting %s! Subject: %s Target: %s Value: %s", setting, subject, target, value);
                 continue;
             }
 
             generator.writeStartObject();
             generator.writeStringField("target", target.getUUID().toString());
             generator.writeNumberField("setting", setting.getID());
-            generator.writeStringField("value", Base64.encodeToString(convert, false));
+            generator.writeStringField("value", result);
             generator.writeEndObject();
         }
         generator.writeEndArray();
