@@ -66,7 +66,13 @@ public class RankCommand {
                 return;
             }
 
-            name = ChatColor.stripColor(name);
+            name = ChatColor.stripColor(name.trim());
+
+
+            if (group.getRank(name) != null) {
+                sender.send("rank.exists-already", name);
+                return;
+            }
 
             Rank rank = rankFactory.create(name, priority, group);
 

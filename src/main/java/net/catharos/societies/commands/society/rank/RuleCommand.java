@@ -61,9 +61,9 @@ public class RuleCommand {
 
             for (Table.Cell<Setting, Target, Object> cell : rank.getSettings().cellSet()) {
                 if (cell.getRowKey() instanceof RulesSetting) {
-                    sender.send(((RulesSetting) cell.getRowKey()).getRule());
+                    RulesSetting ruleSetting = (RulesSetting) cell.getRowKey();
+                    sender.send("rank.rules.list-format", ruleSetting.getRule());
                 }
-
             }
         }
 
@@ -114,6 +114,8 @@ public class RuleCommand {
             }
 
             rank.set(setting, true);
+
+            sender.send("rank.rules.assigned", rule, rank.getName());
         }
     }
 
@@ -162,6 +164,8 @@ public class RuleCommand {
             }
 
             rank.remove(setting);
+
+            sender.send("rank.rules.removed", rule, rank.getName());
 
         }
     }

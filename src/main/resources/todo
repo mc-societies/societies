@@ -1,4 +1,4 @@
-- avoid duplicate ranks (groups, rules?)
+- alternative to base64 (direct location -> string)
 - chat integration
 - events (mbassador)
 - wars/claiming
@@ -11,6 +11,7 @@
 - over-think publishers, collect publishers
 - log support
 - future api
+- Command library: extract information from context and inject them to fields
 
 Bukkit dependencies:
  * Player.getLocation()
