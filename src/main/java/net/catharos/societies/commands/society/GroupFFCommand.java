@@ -1,5 +1,6 @@
 package net.catharos.societies.commands.society;
 
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
@@ -20,6 +21,7 @@ public class GroupFFCommand implements Executor<Member> {
 
     private final Setting<Boolean> groupFF;
 
+    @Inject
     public GroupFFCommand(@Named("group-friendly-fire") Setting<Boolean> groupFF) {
         this.groupFF = groupFF;
     }
@@ -34,7 +36,7 @@ public class GroupFFCommand implements Executor<Member> {
         }
 
         boolean ff = group.getBoolean(groupFF);
-        sender.set(groupFF, !ff);
-        sender.send("group-ff.toggled", ff ? "ff.allow" : "ff.deny");
+        group.set(groupFF, !ff);
+        sender.send("group-ff.toggled", !ff ? "ff.allow" : "ff.deny");
     }
 }

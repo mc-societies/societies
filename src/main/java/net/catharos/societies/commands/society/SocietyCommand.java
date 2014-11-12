@@ -4,9 +4,13 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.societies.commands.ThreadTestCommand;
 import net.catharos.societies.commands.society.home.HomeCommand;
+import net.catharos.societies.commands.society.promote.DemoteCommand;
+import net.catharos.societies.commands.society.promote.PromoteCommand;
 import net.catharos.societies.commands.society.rank.RankCommand;
 import net.catharos.societies.commands.society.relation.AlliesCommand;
 import net.catharos.societies.commands.society.relation.RivalsCommand;
+import net.catharos.societies.commands.society.trust.DistrustCommand;
+import net.catharos.societies.commands.society.trust.TrustCommand;
 import net.catharos.societies.commands.society.verify.DisproveCommand;
 import net.catharos.societies.commands.society.verify.VerifyCommand;
 import net.catharos.societies.commands.society.vote.AbstainCommand;
@@ -29,8 +33,11 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
         RosterCommand.class,
         ListCommand.class,
 
-//        TrustCommand.class,
-//        UnTrustCommand.class,
+        TrustCommand.class,
+        DistrustCommand.class,
+
+        PromoteCommand.class,
+        DemoteCommand.class,
 
         JoinCommand.class,
         InviteCommand.class,
@@ -39,7 +46,6 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
         AlliancesCommand.class,
         RivalriesCommand.class,
 
-        JoinCommand.class,
 //        FastJoinCommand.class,
         LeaveCommand.class,
 

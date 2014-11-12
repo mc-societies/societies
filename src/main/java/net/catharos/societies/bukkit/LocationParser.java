@@ -5,11 +5,10 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ParsingException;
 import net.catharos.lib.core.command.parser.ArgumentParser;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.bridge.WorldResolver;
 import net.catharos.societies.bridge.Location;
 import net.catharos.societies.bridge.World;
+import net.catharos.societies.bridge.WorldResolver;
 import net.catharos.societies.member.SocietyMember;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a LocationParser
@@ -23,7 +22,6 @@ public class LocationParser implements ArgumentParser<Location> {
         this.worldResolver = worldResolver;
     }
 
-    @NotNull
     @Override
     public Location parse(String input, CommandContext<?> ctx) throws ParsingException {
         String[] parts = input.split(",");

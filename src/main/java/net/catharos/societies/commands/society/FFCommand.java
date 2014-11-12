@@ -1,5 +1,6 @@
 package net.catharos.societies.commands.society;
 
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.groups.Member;
 import net.catharos.groups.setting.Setting;
@@ -19,6 +20,7 @@ public class FFCommand implements Executor<Member> {
 
     private final Setting<Boolean> personalFF;
 
+    @Inject
     public FFCommand(@Named("personal-friendly-fire") Setting<Boolean> personalFF) {
         this.personalFF = personalFF;
     }
@@ -27,6 +29,6 @@ public class FFCommand implements Executor<Member> {
     public void execute(CommandContext<Member> ctx, Member sender) {
         boolean ff = sender.getBoolean(personalFF);
         sender.set(personalFF, !ff);
-        sender.send("personal-ff.toggled", ff ? "ff.allow" : "ff.auto");
+        sender.send("personal-ff.toggled", !ff ? "ff.allow" : "ff.auto");
     }
 }

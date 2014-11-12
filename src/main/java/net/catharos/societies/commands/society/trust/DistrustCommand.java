@@ -1,6 +1,7 @@
 package net.catharos.societies.commands.society.trust;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import net.catharos.groups.Member;
 import net.catharos.groups.rank.Rank;
 import net.catharos.lib.core.command.CommandContext;
@@ -23,7 +24,7 @@ public class DistrustCommand implements Executor<Member> {
     private final Rank normalDefaultRank;
 
     @Inject
-    public DistrustCommand(Rank normalDefaultRank) {
+    public DistrustCommand(@Named("normal-default-rank") Rank normalDefaultRank) {
         this.normalDefaultRank = normalDefaultRank;
     }
 
@@ -34,7 +35,7 @@ public class DistrustCommand implements Executor<Member> {
             return;
         }
 
-        sender.removeRank(normalDefaultRank);
+        target.removeRank(normalDefaultRank);
         sender.send("target-member.distrusted", target.getName());
     }
 }

@@ -53,7 +53,7 @@ public class BackupCommand implements Executor<Sender> {
     }
 
     @Override
-    public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
+    public void execute(CommandContext<Sender> ctx, final Sender sender) throws ExecuteException {
 
         final UUIDStorage groupStorage = new UUIDStorage(new File(output, "groups"), "json");
         final UUIDStorage memberStorage = new UUIDStorage(new File(output, "members"), "json");
@@ -70,6 +70,8 @@ public class BackupCommand implements Executor<Sender> {
                         logger.catching(e);
                     }
                 }
+
+                sender.send("backup.groups-finished");
             }
 
             @Override
@@ -91,6 +93,8 @@ public class BackupCommand implements Executor<Sender> {
                         logger.catching(e);
                     }
                 }
+
+                sender.send("backup.members-finished");
             }
 
             @Override

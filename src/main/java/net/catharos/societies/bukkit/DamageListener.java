@@ -103,11 +103,19 @@ public class DamageListener implements Listener {
         Group victimGroup = victim.getGroup();
 
         if (victimGroup != null && attackerGroup != null) {
+
+            // ally clan, deny damage
+            if (victimGroup.getRelation(attackerGroup).getType() == Relation.Type.ALLIED) {
+                event.setCancelled(true);
+            }
+
             // personal ff enabled, allow damage
             // skip if globalff is on
             // group ff enabled, allow damage
 
-            if (globalFFForced || victim.getBoolean(personalFF) || victimGroup.getBoolean(groupFF)) {
+            boolean personalFF = victim.getBoolean(this.personalFF);
+            boolean groupFF = victimGroup.getBoolean(this.groupFF);
+            if (globalFFForced || personalFF || groupFF) {
                 return;
             }
 
@@ -118,11 +126,6 @@ public class DamageListener implements Listener {
                 return;
             }
 
-            // ally clan, deny damage
-
-            if (victimGroup.getRelation(attackerGroup).getType() == Relation.Type.ALLIED) {
-                event.setCancelled(true);
-            }
         } else {
             // not part of a clan - check if safeCivilians is set
             // ignore setting if he has a specific permissions

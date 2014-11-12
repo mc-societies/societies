@@ -54,9 +54,11 @@ public class ProfileCommand implements Executor<Sender> {
 
         Period inactivePeriod = new Interval(target.getLastActive(), DateTime.now()).toPeriod();
         Collection<Relation> relations = target.getRelations();
+        ArrayList<Relation> allies = new ArrayList<Relation>(relations.size());
         ArrayList<Relation> rivals = new ArrayList<Relation>(relations.size());
 
         sender.send("profile.name", target.getName());
+        sender.send("profile.tag", target.getTag());
         sender.send("profile.uuid", target.getUUID());
         sender.send("profile.last-active", target.getLastActive().toString(dateTimeFormatter));
         sender.send("profile.inactive", periodFormatter.print(inactivePeriod));
@@ -69,18 +71,27 @@ public class ProfileCommand implements Executor<Sender> {
             }
         }
 
-        sender.send("profile.allies");
         for (Relation relation : relations) {
             if (relation.getType() == Relation.Type.ALLIED) {
-                sender.send("profile.ally-format", groupProvider.getGroup(relation.getOpposite(target.getUUID())));
+                allies.add(relation);
             } else {
                 rivals.add(relation);
             }
         }
 
-        sender.send("profile.rivals");
-        for (Relation relation : rivals) {
-            sender.send("profile.rival-format", groupProvider.getGroup(relation.getOpposite(target.getUUID())));
+
+        if (!allies.isEmpty()) {
+            sender.send("profile.allies");
+            for (Relation ally : allies) {
+                sender.send("profile.ally-format", groupProvider.getGroup(ally.getOpposite(target.getUUID())));
+            }
+        }
+
+        if (!rivals.isEmpty()) {
+            sender.send("profile.rivals");
+            for (Relation relation : rivals) {
+                sender.send("profile.rival-format", groupProvider.getGroup(relation.getOpposite(target.getUUID())));
+            }
         }
     }
 }

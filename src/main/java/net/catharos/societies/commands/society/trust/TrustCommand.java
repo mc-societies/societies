@@ -1,6 +1,7 @@
 package net.catharos.societies.commands.society.trust;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import net.catharos.groups.Member;
 import net.catharos.groups.rank.Rank;
 import net.catharos.lib.core.command.CommandContext;
@@ -23,7 +24,7 @@ public class TrustCommand implements Executor<Member> {
     private final Rank normalDefaultRank;
 
     @Inject
-    public TrustCommand(Rank normalDefaultRank) {
+    public TrustCommand(@Named("normal-default-rank") Rank normalDefaultRank) {
         this.normalDefaultRank = normalDefaultRank;
     }
 
@@ -33,7 +34,8 @@ public class TrustCommand implements Executor<Member> {
             sender.send("target-member.already-trusted", target.getName());
             return;
         }
-        sender.addRank(normalDefaultRank);
+
+        target.addRank(normalDefaultRank);
         sender.send("target-member.trusted", target.getName());
     }
 }

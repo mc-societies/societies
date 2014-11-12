@@ -31,7 +31,7 @@ public class TagCommand implements Executor<Member> {
         }
 
         String sourceTag = ChatColor.stripColor(group.getTag());
-        String targetTag = ChatColor.stripColor(newTag);
+        String targetTag = ChatColor.stripUserColor(newTag);
 
 
         if (!sourceTag.equals(targetTag)) {

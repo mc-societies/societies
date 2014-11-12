@@ -1,4 +1,17 @@
-- alternative to base64 (direct location -> string)
+- relations target uuid
+- request opponents must be online
+- ignore caption join/find society
+- list tags
+- delete society if last one leaves
+- if leader leaves choose another one
+- no two societies
+- ff.auto ff.deny
+- command threads
+- last seen online
+- promote/trust message for receiver
+- assign rank target
+- /rank create problem
+- invite/join translations
 - chat integration
 - events (mbassador)
 - wars/claiming

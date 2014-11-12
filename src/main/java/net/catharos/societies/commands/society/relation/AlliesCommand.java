@@ -103,6 +103,7 @@ public class AlliesCommand extends ListCommand {
         @InjectLogger
         private Logger logger;
 
+        @Inject
         public AddCommand(RelationFactory factory, RequestFactory<Choices> requests) {
             this.factory = factory;
             this.requests = requests;
@@ -117,7 +118,7 @@ public class AlliesCommand extends ListCommand {
                 return;
             }
 
-            Request<Choices> request = requests.create(sender, "requests.allies", new SetInvolved(group.getMembers()));
+            Request<Choices> request = requests.create(sender, "requests.allies", new SetInvolved(target.getMembers()));
             request.start();
 
             addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {

@@ -52,7 +52,7 @@ public class LookupCommand implements Executor<Sender> {
 
         sender.send("lookup.name", target.getName());
         if (group != null) sender.send("lookup.society", group.getName());
-        sender.send("lookup.rank" + target.getRank());
+        sender.send("lookup.rank", target.getRank().getName());
         sender.send("lookup.uuid", target.getUUID());
         sender.send("lookup.join-date", target.getCreated().toString(dateTimeFormatter));
         sender.send("lookup.last-seen", target.getLastActive().toString(dateTimeFormatter));
