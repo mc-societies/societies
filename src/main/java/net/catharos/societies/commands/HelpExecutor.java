@@ -29,11 +29,15 @@ class HelpExecutor<S extends Sender> implements Executor<S> {
         help.append(command.getIdentifier());
         help.append(" [OPTIONS] [ARGUMENTS]\n");
 
-        help.append("Options:\n");
-        help.append(arguments(command, true).render("help", ctx.getPage()));
+        if (!command.getOptions().isEmpty()) {
+            help.append("Options:\n");
+            help.append(arguments(command, true).render("options", ctx.getPage()));
+        }
 
-        help.append("\nArguments:\n");
-        help.append(arguments(command, false).render("help", ctx.getPage()));
+        if (!command.getArguments().isEmpty()) {
+            help.append("\nArguments:\n");
+            help.append(arguments(command, false).render("arguments", ctx.getPage()));
+        }
 
         sender.send(help);
     }

@@ -1,0 +1,29 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+
+    <id>libraries</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <unpack>false</unpack>
+
+            <excludes>
+                <exclude>com.google.guava:guava</exclude>
+
+                <exclude>org.bukkit:bukkit</exclude>
+                <exclude>org.bukkit:craftbukkit</exclude>
+                <exclude>org.spigotmc:spigot-api</exclude>
+
+                <exclude>org.jooq:jooq-codegen</exclude>
+
+                <exclude>org.hamcrest:*</exclude>
+                <exclude>junit:junit</exclude>
+                <exclude>org.mockito:mockito*</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
+</assembly>
