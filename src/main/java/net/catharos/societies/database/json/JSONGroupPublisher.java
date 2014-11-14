@@ -15,6 +15,8 @@ import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.uuid.UUIDStorage;
+import net.catharos.lib.shank.logging.InjectLogger;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
@@ -39,6 +41,10 @@ public final class JSONGroupPublisher<M extends Member> implements
     private final GroupMapper mapper;
     private final ListeningExecutorService service;
     private final JSONProvider<M> provider;
+
+    @InjectLogger
+    private Logger logger;
+
 
     @Inject
     public JSONGroupPublisher(@Named("group-root") File groupRoot, GroupMapper mapper, ListeningExecutorService service, JSONProvider<M> provider) {
@@ -73,8 +79,12 @@ public final class JSONGroupPublisher<M extends Member> implements
 
 
     private Group publish0(final Group group) throws IOException {
-        provider.groups.add(group);
-        mapper.writeGroup(group, uuidStorage.getFile(group.getUUID()));
+        try {
+            provider.groups.add(group);
+            mapper.writeGroup(group, uuidStorage.getFile(group.getUUID()));
+        } catch (Exception e) {
+            logger.catching(e);
+        }
         return group;
     }
 
