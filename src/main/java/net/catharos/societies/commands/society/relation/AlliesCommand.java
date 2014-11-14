@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import javax.inject.Provider;
+import java.util.Set;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 
@@ -114,7 +115,16 @@ public class AlliesCommand extends ListCommand {
                 return;
             }
 
-            SetInvolved involved = new SetInvolved(target.getMembers());
+            Set<Member> participants = target.getMembers("vote.allies");
+            int online = Members.onlineMembers(participants);
+
+            //todo
+            if (online < 1) {
+                sender.send("participants.not-available");
+                return;
+            }
+
+            SetInvolved involved = new SetInvolved(participants);
             Request<Choices> request = requests.create(sender, involved, new AlliesRequestMessenger());
             request.start();
 

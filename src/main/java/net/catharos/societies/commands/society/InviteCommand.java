@@ -10,7 +10,6 @@ import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
-import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.member.SocietyMember;
@@ -36,7 +35,6 @@ public class InviteCommand implements Executor<Member> {
 
     public static final String FAILED = "Invite failed! %s";
 
-    private final Dictionary<String> dictionary;
     private final RequestFactory<Choices> requests;
     private final int maxSize;
 
@@ -44,8 +42,7 @@ public class InviteCommand implements Executor<Member> {
     private Logger logger;
 
     @Inject
-    public InviteCommand(Dictionary<String> dictionary, RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
-        this.dictionary = dictionary;
+    public InviteCommand( RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
         this.requests = requests;
         this.maxSize = maxSize;
     }
@@ -64,6 +61,11 @@ public class InviteCommand implements Executor<Member> {
             return;
         }
 
+        if (!target.isAvailable()) {
+            sender.send("target-member.not-available");
+            return;
+        }
+
         Request<Choices> request = requests.create(sender, new SingleInvolved(target), new InviteRequestMessenger(group));
         request.start();
 
@@ -77,8 +79,8 @@ public class InviteCommand implements Executor<Member> {
                 switch (result.getChoice()) {
                     case ACCEPT:
                         group.addMember(target);
-                        target.send("You've been added to {0}!", group.getName());
-                        sender.send(target.getName() + " is not a member of your society!");
+                        target.send("target-member.society-added", group.getName());
+                        sender.send("society.member-added", target.getName());
                         break;
                     case DENY:
                     case ABSTAIN:

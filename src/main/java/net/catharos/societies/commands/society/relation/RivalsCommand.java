@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import javax.inject.Provider;
 
+import java.util.Set;
+
 import static com.google.common.util.concurrent.Futures.addCallback;
 
 /**
@@ -82,7 +84,16 @@ public class RivalsCommand extends ListCommand {
                 return;
             }
 
-            Request<Choices> request = requests.create(sender, new SetInvolved(group.getMembers()), new RivalsRequestMessenger());
+            Set<Member> participants = group.getMembers("vote.rivals");
+            int online = Members.onlineMembers(participants);
+
+            //todo
+            if (online < 1) {
+                sender.send("participants.not-available");
+                return;
+            }
+
+            Request<Choices> request = requests.create(sender, new SetInvolved(participants), new RivalsRequestMessenger());
             request.start();
 
             addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {

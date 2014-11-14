@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
+import net.catharos.groups.Members;
 import net.catharos.groups.request.*;
 import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
@@ -54,7 +55,14 @@ public class JoinCommand implements Executor<Member> {
             return;
         }
 
-        Set<Member> participants = target.getMembers();
+        Set<Member> participants = target.getMembers("vote.join");
+        int online = Members.onlineMembers(participants);
+
+        //todo
+        if (online < 1) {
+            sender.send("participants.not-available");
+            return;
+        }
 
         Request<Choices> request = requests.create(sender, new SetInvolved(participants), new JoinRequestMessenger());
         request.start();

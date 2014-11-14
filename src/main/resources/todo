@@ -1,8 +1,4 @@
-- request opponents must be online
-- ignore caption join/find society
-- invite/join translations
-
-(- ff.auto ff.deny profile.active lookup.online)
++(- ff.auto ff.deny profile.active lookup.online)
 
 - /rank create problem ??
 
