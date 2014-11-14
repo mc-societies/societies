@@ -41,7 +41,7 @@ class GroupHelpExecutor<S extends Sender> implements Executor<S> {
         sender.send(help);
     }
 
-    public void execute(GroupCommand<S> command, S sender, LinkedList<Command> pre, Table table) {
+    public void execute(GroupCommand<S> command, S sender, LinkedList<Command> stack, Table table) {
 
         if (!command.getSenderClass().isInstance(sender)) {
             return;
@@ -57,19 +57,19 @@ class GroupHelpExecutor<S extends Sender> implements Executor<S> {
             if (cmd instanceof ExecutableCommand) {
                 ExecutableCommand executableCommand = (ExecutableCommand) cmd;
 
-                append(builder, executableCommand, pre);
+                append(builder, executableCommand, stack);
                 appendDesc(builder, cmd);
 
                 table.addRow(builder);
             } else {
-                append(builder, cmd, pre);
+                append(builder, cmd, stack);
                 appendDesc(builder, cmd);
 
                 table.addRow(builder);
 
-                pre.push(cmd);
-                execute(((GroupCommand<S>) cmd), sender, pre, table);
-                pre.pop();
+                stack.push(cmd);
+                execute(((GroupCommand<S>) cmd), sender, stack, table);
+                stack.pop();
             }
         }
     }
@@ -96,11 +96,11 @@ class GroupHelpExecutor<S extends Sender> implements Executor<S> {
         List<Argument> arguments = command.getArguments();
 
         for (Argument argument : arguments) {
-            builder.append(' ').append(argument.getName());
+            builder.append(" [").append(argument.getName()).append(']');
         }
 
         for (Argument option : command.getOptions().values()) {
-            builder.append(" [--").append(option.getName()).append("]");
+            builder.append(" [--").append(option.getName()).append(']');
         }
 
         return builder;

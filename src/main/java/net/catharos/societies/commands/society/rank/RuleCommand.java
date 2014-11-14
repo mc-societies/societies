@@ -40,7 +40,7 @@ public class RuleCommand {
     @Sender(Member.class)
     public static class ListCommand implements Executor<Member> {
 
-        @Argument(name = "argument.rank.name", description = "The name of the new rank")
+        @Argument(name = "argument.rank", description = "The name of the new rank")
         String name;
 
         @Override
@@ -79,7 +79,7 @@ public class RuleCommand {
     @Sender(Member.class)
     public static class AssignCommand implements Executor<Member> {
 
-        @Argument(name = "argument.rank.name", description = "The name of the new rank")
+        @Argument(name = "argument.rank", description = "The name of the new rank")
         String name;
 
 
@@ -129,7 +129,7 @@ public class RuleCommand {
     @Sender(Member.class)
     public static class RemoveCommand implements Executor<Member> {
 
-        @Argument(name = "argument.rank.name", description = "The name of the new rank")
+        @Argument(name = "argument.rank", description = "The name of the new rank")
         String name;
 
         @Argument(name = "argument.rank.rule")

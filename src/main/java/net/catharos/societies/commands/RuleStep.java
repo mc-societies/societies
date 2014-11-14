@@ -27,6 +27,12 @@ public class RuleStep implements Executor<Sender> {
             return;
         }
 
+        if (!member.hasGroup()) {
+            sender.send("society.not-found");
+            ctx.cancel();
+            return;
+        }
+
         if (!member.hasRule("*") && !member.hasRule(rule)) {
             sender.send("no-rule");
             ctx.cancel();

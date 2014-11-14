@@ -6,3 +6,6 @@ authors:
     - p000ison
 commands:
   society:
+    aliases: [ societies, s ]
+    description: Society main command
+    usage: None

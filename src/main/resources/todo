@@ -1,31 +1,21 @@
-+(- ff.auto ff.deny profile.active lookup.online)
-
-- /rank create problem ??
+(- ff.auto ff.deny profile.active lookup.online)
 
 - extended chat integration
 
 - events (mbassador)
 
+- add descriptions
+- list only accessible commands in help
+- split in modules
 - wars/claiming
 - BulletinBoard
 - command options
     * list only verified
     * coords sort
-- Performance: Lazy loading of settings/ranks
-- cache levels (quick-living cache)
 - over-think publishers, collect publishers
 - log support
-- future api (FutureSupplier with predefined exception handlers)
-- Command library: extract information from context and inject them to fields
-
-Bukkit dependencies:
- * Player.getLocation()
- * Player.sendMessage(...); +
- * Server.getWorld(...);
- * Server.getScheduler();
- * Server.getConsoleCommandSender();
- * ChatColor
- * JavaPlugin
+- future api (FutureSupplier with predefined exception handlers) jdeferred
+- Command library: aliases, extract information from context and inject them to fields
 
 Config:
    Settings:
@@ -34,12 +24,14 @@ Config:
         kill-weights.civilian
 
 Text renderer:
-	* Tree like structure
+    * Tree like structure
 
-Caching
-	* Pre-rendered listing output
 
 
 Optimization:
- - fast access player metadata -> player, getMember(Player player)
- - cache relation targets
+- fast access player metadata -> player, getMember(Player player)
+- cache relation targets
+- cache levels (quick-living cache)
+- Lazy loading of settings/ranks
+- Caching
+    * Pre-rendered listing output

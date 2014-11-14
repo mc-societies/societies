@@ -68,7 +68,7 @@ public enum ChatColor {
             Object arg = args[i];
 
             if (arg instanceof String) {
-                args[i] = arg + org.bukkit.ChatColor.RESET.toString();
+                args[i] = arg + RESET.toString();
             }
         }
     }

@@ -25,7 +25,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Provider;
-import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -118,9 +117,7 @@ public class BukkitSocietyMember extends DefaultMember implements SocietyMember 
             return;
         }
 
-        ChatColor.argumentColorReset(args);
-
-        player.sendMessage(MessageFormat.format(directory.getTranslation(message), args));
+        player.sendMessage(directory.getTranslation(message, args));
     }
 
     @Override
