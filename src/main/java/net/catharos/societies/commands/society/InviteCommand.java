@@ -5,10 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
-import net.catharos.groups.request.DefaultRequestResult;
-import net.catharos.groups.request.Request;
-import net.catharos.groups.request.RequestFactory;
-import net.catharos.groups.request.SingleInvolved;
+import net.catharos.groups.request.*;
 import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
@@ -17,6 +14,7 @@ import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.request.ChoiceRequestMessenger;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -66,8 +64,7 @@ public class InviteCommand implements Executor<Member> {
             return;
         }
 
-        String name = dictionary.getTranslation("requests.invite", new Object[]{sender.getName(), group.getName()});
-        Request<Choices> request = requests.create(sender, name, new SingleInvolved(target));
+        Request<Choices> request = requests.create(sender, new SingleInvolved(target), new InviteRequestMessenger(group));
         request.start();
 
         addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
@@ -96,5 +93,29 @@ public class InviteCommand implements Executor<Member> {
                 logger.catching(t);
             }
         });
+    }
+
+    //todo
+    private static class InviteRequestMessenger extends ChoiceRequestMessenger {
+
+        private final Group group;
+
+        private InviteRequestMessenger(Group group) {this.group = group;}
+
+        @Override
+        public void start(Request<Choices> request, Participant participant) {
+            request.getSupplier().send("requests.invite-started");
+            participant.send("requests.invite", participant.getName(), group.getName());
+        }
+
+        @Override
+        public void end(Participant participant, Request<Choices> request) {
+            participant.send("requests.invite-end", participant.getName());
+        }
+
+        @Override
+        public void cancelled(Participant participant, Request<Choices> request) {
+            end(participant, request);
+        }
     }
 }

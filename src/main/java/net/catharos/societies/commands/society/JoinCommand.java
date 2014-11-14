@@ -5,10 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
-import net.catharos.groups.request.DefaultRequestResult;
-import net.catharos.groups.request.Request;
-import net.catharos.groups.request.RequestFactory;
-import net.catharos.groups.request.SetInvolved;
+import net.catharos.groups.request.*;
 import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
@@ -16,8 +13,8 @@ import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
-import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.shank.logging.InjectLogger;
+import net.catharos.societies.request.ChoiceRequestMessenger;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +34,6 @@ public class JoinCommand implements Executor<Member> {
     @Argument(name = "argument.target.society")
     Group target;
 
-    private final Dictionary<String> dictionary;
     private final RequestFactory<Choices> requests;
     private final int maxSize;
 
@@ -46,8 +42,7 @@ public class JoinCommand implements Executor<Member> {
 
 
     @Inject
-    public JoinCommand(Dictionary<String> dictionary, RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
-        this.dictionary = dictionary;
+    public JoinCommand(RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
         this.requests = requests;
         this.maxSize = maxSize;
     }
@@ -60,8 +55,8 @@ public class JoinCommand implements Executor<Member> {
         }
 
         Set<Member> participants = target.getMembers();
-        String name = dictionary.getTranslation("requests.join", new Object[]{sender.getName()});
-        Request<Choices> request = requests.create(sender, name, new SetInvolved(participants));
+
+        Request<Choices> request = requests.create(sender, new SetInvolved(participants), new JoinRequestMessenger());
         request.start();
 
         addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
@@ -74,10 +69,12 @@ public class JoinCommand implements Executor<Member> {
                 switch (result.getChoice()) {
                     case ACCEPT:
                         target.addMember(sender);
-                        sender.send("You successfully joined {0}.", target.getName());
+                        sender.send("you.joined", target.getName());
                         break;
                     case DENY:
+                    case CANCELLED:
                     case ABSTAIN:
+                        sender.send("you.join-failed", target.getName());
                         break;
                 }
             }
@@ -87,5 +84,25 @@ public class JoinCommand implements Executor<Member> {
                 logger.catching(t);
             }
         });
+    }
+
+    //todo
+    private static class JoinRequestMessenger extends ChoiceRequestMessenger {
+
+        @Override
+        public void start(Request<Choices> request, Participant participant) {
+            request.getSupplier().send("requests.join-started");
+            participant.send("requests.join", participant.getName());
+        }
+
+        @Override
+        public void end(Participant participant, Request<Choices> request) {
+            participant.send("requests.join-end", participant.getName());
+        }
+
+        @Override
+        public void cancelled(Participant participant, Request<Choices> request) {
+            end(participant, request);
+        }
     }
 }

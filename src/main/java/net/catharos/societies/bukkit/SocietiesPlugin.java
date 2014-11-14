@@ -11,7 +11,6 @@ import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import net.catharos.groups.Group;
-import net.catharos.groups.Member;
 import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.Commands;
 import net.catharos.lib.core.command.sender.Sender;
@@ -19,8 +18,8 @@ import net.catharos.lib.shank.logging.LoggingModule;
 import net.catharos.lib.shank.service.ServiceController;
 import net.catharos.lib.shank.service.ServiceModule;
 import net.catharos.lib.shank.service.lifecycle.Lifecycle;
-import net.catharos.societies.bridge.ReloadAction;
 import net.catharos.societies.SocietiesModule;
+import net.catharos.societies.bridge.ReloadAction;
 import net.catharos.societies.economy.DummyEconomy;
 import net.catharos.societies.group.OnlineGroupCache;
 import net.catharos.societies.member.OnlineMemberCache;
@@ -108,8 +107,6 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
         groupCache = injector.getInstance(OnlineGroupCache.class);
         systemSender = injector.getInstance(Key.get(Sender.class, Names.named("system-sender")));
 
-        injector.getInstance(Key.get(new TypeLiteral<MemberProvider<? extends Member>>() {}));
-
         serviceController.invoke(Lifecycle.STARTING);
     }
 
@@ -122,7 +119,7 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
         ListeningExecutorService service = injector.getInstance(ListeningExecutorService.class);
 
         try {
-            service.awaitTermination(1000, TimeUnit.MILLISECONDS);
+            service.awaitTermination(5000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             // Nobody fucking cares!
             logger.catching(e);

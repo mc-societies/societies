@@ -3,10 +3,7 @@ package net.catharos.societies.commands.society.relation;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.inject.Inject;
 import net.catharos.groups.*;
-import net.catharos.groups.request.DefaultRequestResult;
-import net.catharos.groups.request.Request;
-import net.catharos.groups.request.RequestFactory;
-import net.catharos.groups.request.SetInvolved;
+import net.catharos.groups.request.*;
 import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
@@ -17,6 +14,7 @@ import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.request.ChoiceRequestMessenger;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -116,7 +114,8 @@ public class AlliesCommand extends ListCommand {
                 return;
             }
 
-            Request<Choices> request = requests.create(sender, "requests.allies", new SetInvolved(target.getMembers()));
+            SetInvolved involved = new SetInvolved(target.getMembers());
+            Request<Choices> request = requests.create(sender, involved, new AlliesRequestMessenger());
             request.start();
 
             addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
@@ -145,8 +144,26 @@ public class AlliesCommand extends ListCommand {
                     logger.catching(t);
                 }
             });
+        }
 
+        //todo
+        private static class AlliesRequestMessenger extends ChoiceRequestMessenger {
 
+            @Override
+            public void start(Request<Choices> request, Participant participant) {
+                request.getSupplier().send("requests.allies-started");
+                participant.send("requests.allies");
+            }
+
+            @Override
+            public void end(Participant participant, Request<Choices> request) {
+                participant.send("requests.allies-end", participant.getName());
+            }
+
+            @Override
+            public void cancelled(Participant participant, Request<Choices> request) {
+                end(participant, request);
+            }
         }
     }
 
