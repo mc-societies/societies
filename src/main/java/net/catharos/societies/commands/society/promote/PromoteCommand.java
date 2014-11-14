@@ -12,7 +12,7 @@ import net.catharos.societies.commands.RuleStep;
 /**
  * Represents a RelationListCommand
  */
-@Command(identifier = "command.promote")
+@Command(identifier = "command.promote", async = true)
 @Permission("societies.promote")
 @Meta(@Entry(key = RuleStep.RULE, value = "promote"))
 @Sender(Member.class)
@@ -37,5 +37,6 @@ public class PromoteCommand implements Executor<Member> {
 
         target.addRank(normalDefaultRank);
         sender.send("target-member.promoted", target.getName());
+        target.send("you.promoted-by", sender.getName());
     }
 }

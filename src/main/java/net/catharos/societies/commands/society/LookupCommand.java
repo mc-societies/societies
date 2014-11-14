@@ -19,13 +19,12 @@ import org.joda.time.format.PeriodFormatter;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "command.lookup")
+@Command(identifier = "command.lookup", async = true)
 @Permission("societies.lookup")
 public class LookupCommand implements Executor<Sender> {
 
     @Option(name = "argument.target.member")
     Member target;
-
 
     private final DateTimeFormatter dateTimeFormatter;
     private final PeriodFormatter periodFormatter;
@@ -51,12 +50,15 @@ public class LookupCommand implements Executor<Sender> {
         Period inactive = new Interval(target.getLastActive(), DateTime.now()).toPeriod();
 
         sender.send("lookup.name", target.getName());
-        if (group != null) sender.send("lookup.society", group.getName());
+        if (group != null) {
+            sender.send("lookup.society", group.getName());
+            sender.send("lookup.society-tag", group.getTag());
+        }
         sender.send("lookup.rank", target.getRank().getName());
         sender.send("lookup.uuid", target.getUUID());
         sender.send("lookup.join-date", target.getCreated().toString(dateTimeFormatter));
         sender.send("lookup.last-seen", target.getLastActive().toString(dateTimeFormatter));
-        sender.send("lookup.inactive", periodFormatter.print(inactive));
+        sender.send("lookup.inactive", target.isAvailable() ? ":lookup.online" : periodFormatter.print(inactive));
         sender.send("lookup.ranks");
         for (Rank rank : target.getRanks()) {
             sender.send("lookup.rank-format", rank.getName());

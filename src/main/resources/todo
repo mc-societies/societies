@@ -1,17 +1,11 @@
-- relations target uuid
 - request opponents must be online
 - ignore caption join/find society
-- list tags
-- delete society if last one leaves
-- if leader leaves choose another one
-- no two societies
-- ff.auto ff.deny
-- command threads
-- last seen online
-- promote/trust message for receiver
-- assign rank target
-- /rank create problem
 - invite/join translations
+
+(- ff.auto ff.deny profile.active lookup.online)
+
+- /rank create problem ??
+
 - chat integration
 - events (mbassador)
 - wars/claiming
@@ -23,12 +17,12 @@
 - cache levels (quick-living cache)
 - over-think publishers, collect publishers
 - log support
-- future api
+- future api (FutureSupplier with predefined exception handlers)
 - Command library: extract information from context and inject them to fields
 
 Bukkit dependencies:
  * Player.getLocation()
- * Player.sendMessage(...);
+ * Player.sendMessage(...); +
  * Server.getWorld(...);
  * Server.getScheduler();
  * Server.getConsoleCommandSender();

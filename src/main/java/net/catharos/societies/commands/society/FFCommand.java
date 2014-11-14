@@ -29,6 +29,6 @@ public class FFCommand implements Executor<Member> {
     public void execute(CommandContext<Member> ctx, Member sender) {
         boolean ff = sender.getBoolean(personalFF);
         sender.set(personalFF, !ff);
-        sender.send("personal-ff.toggled", !ff ? "ff.allow" : "ff.auto");
+        sender.send("personal-ff.toggled", !ff ? ":ff.allow" : ":ff.auto");
     }
 }

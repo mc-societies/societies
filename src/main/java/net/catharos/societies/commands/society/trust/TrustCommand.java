@@ -12,7 +12,7 @@ import net.catharos.societies.commands.RuleStep;
 /**
  * Represents a RelationListCommand
  */
-@Command(identifier = "command.trust")
+@Command(identifier = "command.trust", async = true)
 @Permission("societies.trust")
 @Meta(@Entry(key = RuleStep.RULE, value = "trust"))
 @Sender(Member.class)
@@ -37,5 +37,6 @@ public class TrustCommand implements Executor<Member> {
 
         target.addRank(normalDefaultRank);
         sender.send("target-member.trusted", target.getName());
+        target.send("you.trusted-by", sender.getName());
     }
 }

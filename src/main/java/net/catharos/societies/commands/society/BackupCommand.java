@@ -29,7 +29,7 @@ import java.util.Set;
 /**
  * Represents a RelationListCommand
  */
-@Command(identifier = "command.backup")
+@Command(identifier = "command.backup", async = true)
 @Permission("societies.backup")
 public class BackupCommand implements Executor<Sender> {
 

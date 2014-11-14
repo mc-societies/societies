@@ -12,7 +12,7 @@ import net.catharos.societies.commands.RuleStep;
 /**
  * Represents a RelationListCommand
  */
-@Command(identifier = "command.demote")
+@Command(identifier = "command.demote", async = true)
 @Permission("societies.demote")
 @Meta(@Entry(key = RuleStep.RULE, value = "demote"))
 @Sender(Member.class)
@@ -37,5 +37,6 @@ public class DemoteCommand implements Executor<Member> {
 
         target.removeRank(normalDefaultRank);
         sender.send("target-member.demoted", target.getName());
+        target.send("you.demoted-by", sender.getName());
     }
 }

@@ -11,7 +11,7 @@ import net.catharos.lib.core.command.sender.Sender;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "command.disprove")
+@Command(identifier = "command.disprove", async = true)
 @Permission("societies.disprove")
 public class DisproveCommand implements Executor<Sender> {
 

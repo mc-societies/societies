@@ -12,7 +12,7 @@ import net.catharos.societies.commands.RuleStep;
 /**
  * Represents a RelationListCommand
  */
-@Command(identifier = "command.distrust")
+@Command(identifier = "command.distrust", async = true)
 @Permission("societies.distrust")
 @Meta(@Entry(key = RuleStep.RULE, value = "distrust"))
 @Sender(Member.class)
@@ -37,5 +37,6 @@ public class DistrustCommand implements Executor<Member> {
 
         target.removeRank(normalDefaultRank);
         sender.send("target-member.distrusted", target.getName());
+        target.send("you.distrusted-by", sender.getName());
     }
 }

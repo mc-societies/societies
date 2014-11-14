@@ -8,6 +8,7 @@ import com.google.inject.name.Named;
 import com.typesafe.config.Config;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupFactory;
+import net.catharos.groups.Member;
 import net.catharos.groups.publisher.GroupPublisher;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.validate.NameValidator;
@@ -66,6 +67,13 @@ public class CreateCommand implements Executor<Sender> {
 
     @Override
     public void execute(CommandContext<Sender> ctx, final Sender sender) {
+        if (sender instanceof Member) {
+            if (((SocietyMember) sender).hasGroup()) {
+                sender.send("society.already-member");
+                return;
+            }
+        }
+
         ValidateResult nameResult = nameValidator.validateName(name);
 
 

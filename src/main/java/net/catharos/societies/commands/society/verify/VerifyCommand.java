@@ -11,7 +11,7 @@ import net.catharos.lib.core.command.sender.Sender;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "command.verify")
+@Command(identifier = "command.verify", async = true)
 @Permission("societies.verify")
 public class VerifyCommand implements Executor<Sender> {
 

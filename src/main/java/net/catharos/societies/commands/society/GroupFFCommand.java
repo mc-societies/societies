@@ -37,6 +37,6 @@ public class GroupFFCommand implements Executor<Member> {
 
         boolean ff = group.getBoolean(groupFF);
         group.set(groupFF, !ff);
-        sender.send("group-ff.toggled", !ff ? "ff.allow" : "ff.deny");
+        sender.send("group-ff.toggled", !ff ? ":ff.allow" : ":ff.deny");
     }
 }

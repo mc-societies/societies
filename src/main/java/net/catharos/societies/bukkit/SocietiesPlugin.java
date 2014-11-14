@@ -11,6 +11,7 @@ import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import net.catharos.groups.Group;
+import net.catharos.groups.Member;
 import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.Commands;
 import net.catharos.lib.core.command.sender.Sender;
@@ -106,6 +107,8 @@ public class SocietiesPlugin extends JavaPlugin implements Listener, ReloadActio
         memberCache = injector.getInstance(Key.get(new TypeLiteral<OnlineMemberCache<SocietyMember>>() {}));
         groupCache = injector.getInstance(OnlineGroupCache.class);
         systemSender = injector.getInstance(Key.get(Sender.class, Names.named("system-sender")));
+
+        injector.getInstance(Key.get(new TypeLiteral<MemberProvider<? extends Member>>() {}));
 
         serviceController.invoke(Lifecycle.STARTING);
     }

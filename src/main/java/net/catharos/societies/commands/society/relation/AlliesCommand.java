@@ -2,10 +2,7 @@ package net.catharos.societies.commands.society.relation;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.inject.Inject;
-import net.catharos.groups.Group;
-import net.catharos.groups.Member;
-import net.catharos.groups.Relation;
-import net.catharos.groups.RelationFactory;
+import net.catharos.groups.*;
 import net.catharos.groups.request.DefaultRequestResult;
 import net.catharos.groups.request.Request;
 import net.catharos.groups.request.RequestFactory;
@@ -19,6 +16,7 @@ import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
+import net.catharos.societies.member.SocietyMember;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,8 +45,8 @@ public class AlliesCommand extends ListCommand {
     public static final Relation.Type TYPE = Relation.Type.ALLIED;
 
     @Inject
-    public AlliesCommand(Provider<Table> tableProvider) {
-        super(tableProvider);
+    public AlliesCommand(Provider<Table> tableProvider, MemberProvider<SocietyMember> memberProvider) {
+        super(tableProvider, memberProvider);
     }
 
     @Override
@@ -60,7 +58,7 @@ public class AlliesCommand extends ListCommand {
     // Remove
     //================================================================================
 
-    @Command(identifier = "command.allies.remove")
+    @Command(identifier = "command.allies.remove", async = true)
     @Permission("societies.allies.remove")
     @Sender(Member.class)
     @Meta({@Entry(key = RuleStep.RULE, value = "allies.remove"), @Entry(key = VerifyStep.VERIFY)})

@@ -11,7 +11,7 @@ import net.catharos.societies.commands.RuleStep;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "command.kick")
+@Command(identifier = "command.kick", async = true)
 @Permission("societies.kick")
 @Meta(@Entry(key = RuleStep.RULE, value = "kick"))
 @Sender(Member.class)
@@ -25,7 +25,7 @@ public class KickCommand implements Executor<Member> {
         Group group = target.getGroup();
 
         if (group == null || !target.getGroup().equals(sender.getGroup())) {
-            sender.send("member.not-same-group", target.getName());
+            sender.send("target-member.not-same-group", target.getName());
             return;
         }
 

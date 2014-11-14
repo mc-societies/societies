@@ -176,11 +176,14 @@ public class RankCommand {
     // Assign
     //================================================================================
 
-    @Command(identifier = "command.rank.assign")
+    @Command(identifier = "command.rank.assign", async = true)
     @Permission("societies.rank.assign")
     @Meta({@Entry(key = RuleStep.RULE, value = "rank.assign"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(Member.class)
     public static class AssignCommand implements Executor<Member> {
+
+        @Argument(name = "argument.target.member")
+        Member target;
 
         @Argument(name = "argument.rank")
         String rankName;
@@ -194,6 +197,11 @@ public class RankCommand {
                 return;
             }
 
+            if (!group.equals(target.getGroup())) {
+                sender.send("target-member.not-same-group", target.getName());
+                return;
+            }
+
             Rank rank = group.getRank(rankName);
 
             if (rank == null) {
@@ -201,9 +209,10 @@ public class RankCommand {
                 return;
             }
 
-            sender.addRank(rank);
+            target.addRank(rank);
 
             sender.send("rank.assigned", rank.getName(), sender.getName());
+            target.send("you.rank-assigned", rank.getName());
         }
     }
 

@@ -23,7 +23,7 @@ import java.util.Collection;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "command.profile")
+@Command(identifier = "command.profile", async = true)
 @Permission("societies.profile")
 public class ProfileCommand implements Executor<Sender> {
 
@@ -61,7 +61,7 @@ public class ProfileCommand implements Executor<Sender> {
         sender.send("profile.tag", target.getTag());
         sender.send("profile.uuid", target.getUUID());
         sender.send("profile.last-active", target.getLastActive().toString(dateTimeFormatter));
-        sender.send("profile.inactive", periodFormatter.print(inactivePeriod));
+        sender.send("profile.inactive", target.isActive() ? ":profile.active" : periodFormatter.print(inactivePeriod));
         sender.send("profile.founded", target.getCreated().toString(dateTimeFormatter));
         sender.send("profile.members");
 

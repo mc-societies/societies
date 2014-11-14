@@ -27,7 +27,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
 /**
  * Represents a InviteCommand
  */
-@Command(identifier = "command.invite")
+@Command(identifier = "command.invite", async = true)
 @Permission("societies.invite")
 @Meta(@Entry(key = RuleStep.RULE, value = "invite"))
 @Sender(Member.class)

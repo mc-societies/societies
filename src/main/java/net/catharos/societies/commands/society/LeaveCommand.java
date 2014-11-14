@@ -20,8 +20,14 @@ public class LeaveCommand implements Executor<SocietyMember> {
 
         if (group != null) {
             group.removeMember(sender);
-            String name = group.getName();
-            sender.send("you.society-left", name, name);
+
+            if (group.size() == 1) {
+                //fixme drop group
+                //fixme if last leader leaves choose another one
+                return;
+            }
+
+            sender.send("you.society-left",  group.getName());
             return;
         }
 
