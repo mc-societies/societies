@@ -11,7 +11,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
-import net.catharos.societies.bridge.ChatColor;
+import net.catharos.bridge.ChatColor;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 

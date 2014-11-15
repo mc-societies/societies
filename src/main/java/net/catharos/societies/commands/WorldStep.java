@@ -6,7 +6,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 
 import java.util.ArrayList;
 import java.util.List;

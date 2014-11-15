@@ -1,13 +1,13 @@
-package net.catharos.societies.bukkit;
+package net.catharos.societies;
 
-import net.catharos.societies.bridge.ChatColor;
-import net.catharos.societies.bridge.Inventory;
-import net.catharos.societies.bridge.ItemStack;
-import net.catharos.societies.bridge.Player;
+import net.catharos.bridge.ChatColor;
+import net.catharos.bridge.Inventory;
+import net.catharos.bridge.ItemStack;
+import net.catharos.bridge.Player;
 
 import java.text.DecimalFormat;
 
-import static net.catharos.societies.bridge.Materials.*;
+import static net.catharos.bridge.Materials.*;
 
 /**
  * Represents a PlayerState

@@ -5,7 +5,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 
 /**
  * Represents a AbandonCommand

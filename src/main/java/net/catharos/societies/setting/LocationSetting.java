@@ -6,9 +6,9 @@ import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.SettingException;
 import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.Target;
-import net.catharos.societies.bridge.Location;
-import net.catharos.societies.bridge.World;
-import net.catharos.societies.bridge.WorldResolver;
+import net.catharos.bridge.Location;
+import net.catharos.bridge.World;
+import net.catharos.bridge.WorldResolver;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;

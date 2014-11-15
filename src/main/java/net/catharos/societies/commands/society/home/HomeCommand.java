@@ -10,10 +10,10 @@ import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
-import net.catharos.societies.bridge.Location;
+import net.catharos.bridge.Location;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.teleport.TeleportController;
 
 import java.util.Set;

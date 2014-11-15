@@ -13,7 +13,7 @@ import net.catharos.lib.database.data.queue.Queue;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.group.OnlineGroupCache;
 import net.catharos.societies.member.OnlineMemberCache;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 import org.jooq.SQLDialect;
 
 import java.util.concurrent.TimeUnit;

@@ -13,7 +13,7 @@ import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.request.ChoiceRequestMessenger;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;

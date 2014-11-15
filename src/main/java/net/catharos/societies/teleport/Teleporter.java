@@ -1,7 +1,7 @@
 package net.catharos.societies.teleport;
 
-import net.catharos.societies.bridge.Location;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.bridge.Location;
+import net.catharos.societies.api.member.SocietyMember;
 
 /**
  * Represents a Teleporter

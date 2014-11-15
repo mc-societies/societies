@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.groups.validate.TagValidator;
 import net.catharos.groups.validate.ValidateResult;
-import net.catharos.societies.bridge.ChatColor;
+import net.catharos.bridge.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;

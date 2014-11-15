@@ -3,7 +3,7 @@ package net.catharos.societies.teleport;
 import com.google.inject.Inject;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
-import net.catharos.societies.bridge.Scheduler;
+import net.catharos.bridge.Scheduler;
 
 /**
  * Represents a TeleportService

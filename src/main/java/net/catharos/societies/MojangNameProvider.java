@@ -11,6 +11,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.name.Named;
 import gnu.trove.map.hash.THashMap;
 import net.catharos.lib.shank.logging.InjectLogger;
+import net.catharos.societies.api.NameProvider;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;

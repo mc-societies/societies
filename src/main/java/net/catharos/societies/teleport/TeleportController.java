@@ -3,9 +3,9 @@ package net.catharos.societies.teleport;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import gnu.trove.set.hash.THashSet;
+import net.catharos.bridge.*;
 import net.catharos.groups.Group;
-import net.catharos.societies.bridge.*;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 
 import javax.inject.Named;
 import java.util.ArrayList;

@@ -18,13 +18,28 @@
 - Command library: aliases, extract information from context and inject them to fields
 
 Config:
-   Settings:
         kill-weights.rival
         kill-weights.neutral
         kill-weights.civilian
+        min-size-to-set-ally
+        rival-limit-percent
+        unrivable-societies
+        trust-members-by-default
+        show-unverified-on-list
+        new-society-verification-required
+        replace-spawn
+        default-color
+        chat
 
 Text renderer:
     * Tree like structure
+
+Modules:
+        societies-api
+        societies
+        bridge
+        bukkit-pier
+        sponge-pier
 
 
 

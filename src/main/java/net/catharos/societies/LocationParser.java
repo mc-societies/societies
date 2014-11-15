@@ -1,14 +1,14 @@
-package net.catharos.societies.bukkit;
+package net.catharos.societies;
 
 import com.google.inject.Inject;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ParsingException;
 import net.catharos.lib.core.command.parser.ArgumentParser;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.bridge.Location;
-import net.catharos.societies.bridge.World;
-import net.catharos.societies.bridge.WorldResolver;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.bridge.Location;
+import net.catharos.bridge.World;
+import net.catharos.bridge.WorldResolver;
+import net.catharos.societies.api.member.SocietyMember;
 
 /**
  * Represents a LocationParser

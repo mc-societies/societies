@@ -19,7 +19,7 @@ import net.catharos.lib.core.uuid.UUIDStorage;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.database.json.GroupMapper;
 import net.catharos.societies.database.json.MemberMapper;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;

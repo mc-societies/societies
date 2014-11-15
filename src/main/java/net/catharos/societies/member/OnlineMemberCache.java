@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import gnu.trove.map.hash.THashMap;
 import net.catharos.groups.Member;
 import net.catharos.groups.MemberCache;
-import net.catharos.societies.PlayerResolver;
+import net.catharos.societies.api.PlayerResolver;
 
 import java.util.Set;
 import java.util.UUID;

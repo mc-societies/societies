@@ -6,7 +6,7 @@ import net.catharos.groups.GroupProvider;
 import net.catharos.groups.MemberProvider;
 import net.catharos.groups.publisher.*;
 import net.catharos.lib.shank.service.AbstractServiceModule;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 
 /**
  * Represents a MemberProviderModule

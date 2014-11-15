@@ -21,11 +21,11 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.shank.logging.InjectLogger;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 import org.apache.logging.log4j.Logger;
 
-import static net.catharos.societies.bridge.ChatColor.stripColor;
-import static net.catharos.societies.bridge.ChatColor.translateString;
+import static net.catharos.bridge.ChatColor.stripColor;
+import static net.catharos.bridge.ChatColor.translateString;
 
 /**
  * Represents a CreateCommand

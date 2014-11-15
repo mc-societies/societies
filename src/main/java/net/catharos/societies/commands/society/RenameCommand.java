@@ -9,7 +9,7 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 
 /**
  * Represents a AbandonCommand

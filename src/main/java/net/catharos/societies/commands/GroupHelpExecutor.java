@@ -5,7 +5,7 @@ import net.catharos.lib.core.command.*;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.bridge.ChatColor;
+import net.catharos.bridge.ChatColor;
 
 import javax.inject.Provider;
 import java.util.Iterator;

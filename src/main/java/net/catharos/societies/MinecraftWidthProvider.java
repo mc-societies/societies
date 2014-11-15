@@ -2,7 +2,7 @@ package net.catharos.societies;
 
 import gnu.trove.map.hash.TCharIntHashMap;
 import net.catharos.lib.core.command.format.WidthProvider;
-import net.catharos.societies.bridge.ChatColor;
+import net.catharos.bridge.ChatColor;
 
 /**
  * Represents a MinecraftWidthProvider

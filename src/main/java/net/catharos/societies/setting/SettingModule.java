@@ -8,7 +8,7 @@ import net.catharos.groups.setting.CollectiveSettingProvider;
 import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.SettingProvider;
 import net.catharos.lib.shank.AbstractModule;
-import net.catharos.societies.bridge.Location;
+import net.catharos.bridge.Location;
 
 /**
  * Represents a SettingModule

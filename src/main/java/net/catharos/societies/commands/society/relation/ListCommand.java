@@ -9,7 +9,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.shank.logging.InjectLogger;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Provider;

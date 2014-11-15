@@ -8,10 +8,10 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
-import net.catharos.societies.bridge.Location;
+import net.catharos.bridge.Location;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 
 import javax.inject.Provider;
 import java.text.DecimalFormat;

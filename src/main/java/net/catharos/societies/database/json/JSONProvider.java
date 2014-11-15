@@ -24,8 +24,8 @@ import net.catharos.lib.core.uuid.UUIDStorage;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
-import net.catharos.societies.PlayerResolver;
-import net.catharos.societies.bridge.ChatColor;
+import net.catharos.societies.api.PlayerResolver;
+import net.catharos.bridge.ChatColor;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;

@@ -4,7 +4,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.*;
@@ -20,12 +19,12 @@ import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.lib.shank.logging.InjectLogger;
-import net.catharos.societies.PlayerResolver;
+import net.catharos.societies.api.PlayerResolver;
+import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.database.sql.layout.tables.records.MembersRecord;
 import net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
 import net.catharos.societies.member.MemberException;
-import net.catharos.societies.member.SocietyMember;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.jooq.Record1;
@@ -42,6 +41,7 @@ import java.util.concurrent.ExecutionException;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.Futures.transform;
+import static com.google.common.util.concurrent.MoreExecutors.*;
 import static net.catharos.societies.database.sql.SQLQueries.*;
 
 /**
@@ -206,7 +206,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
                 // Load group if necessary
                 if (predefined == null) {
                     try {
-                        predefined = getGroup(UUIDGen.toUUID(rawSociety), member, MoreExecutors.sameThreadExecutor())
+                        predefined = getGroup(UUIDGen.toUUID(rawSociety), member, listeningDecorator(newDirectExecutorService()))
                                 .get();
                     } catch (InterruptedException e) {
                         throw new MemberException(uuid, e, "Failed to set group of member!");
@@ -330,7 +330,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
                     if (predefined != null && predefined.getUUID().equals(memberUUID)) {
                         memberToAdd = predefined;
                     } else {
-                        memberToAdd = getMember(memberUUID, group, MoreExecutors.sameThreadExecutor()).get();
+                        memberToAdd = getMember(memberUUID, group, listeningDecorator(newDirectExecutorService())).get();
                     }
 
                     group.addMember(memberToAdd);

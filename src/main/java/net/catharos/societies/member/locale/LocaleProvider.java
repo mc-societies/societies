@@ -1,6 +1,6 @@
 package net.catharos.societies.member.locale;
 
-import net.catharos.societies.member.SocietyMember;
+import net.catharos.societies.api.member.SocietyMember;
 
 import java.util.Locale;
 

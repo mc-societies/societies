@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * Represents a DummyEconomy
  */
+@SuppressWarnings("deprecation")
 public class DummyEconomy extends AbstractEconomy {
 
     private NumberFormat currencyInstance = NumberFormat.getCurrencyInstance();

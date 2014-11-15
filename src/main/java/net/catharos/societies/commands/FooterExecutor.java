@@ -1,13 +1,15 @@
 package net.catharos.societies.commands;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
+import net.catharos.bridge.ChatColor;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.bridge.ChatColor;
 import org.apache.commons.lang3.StringUtils;
+
+import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 
 
 /**
@@ -31,7 +33,7 @@ class FooterExecutor implements Executor<Sender> {
                 public void run() {
                     send(sender, length);
                 }
-            }, MoreExecutors.sameThreadExecutor());
+            }, listeningDecorator(newDirectExecutorService()));
         } else {
             send(sender, length);
         }

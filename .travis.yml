@@ -10,4 +10,4 @@ deploy:
   on:
     tags: true
     all_branches: true
-    repo: Catharos/Societies
+    repo: Catharos/societies

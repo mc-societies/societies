@@ -3,7 +3,7 @@ package net.catharos.societies;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.lib.core.i18n.DefaultDictionary;
-import net.catharos.societies.bridge.ChatColor;
+import net.catharos.bridge.ChatColor;
 
 import java.util.Locale;
 

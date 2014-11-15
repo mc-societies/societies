@@ -4,12 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.catharos</groupId>
+    <groupId>net.catharos.societies</groupId>
     <artifactId>societies</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
-
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -47,30 +46,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.7.9-R0.1-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.7.9-R0.1-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
             <groupId>net.catharos.lib</groupId>
             <artifactId>lib-core</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -86,11 +61,6 @@
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
             <version>1.10</version>
-        </dependency>
-        <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.4</version>
         </dependency>
 
         <dependency>
@@ -123,6 +93,24 @@
             <version>1.2.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.9</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>net.catharos.societies</groupId>
+            <artifactId>societies-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.catharos.bridge</groupId>
+            <artifactId>bridge</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>
@@ -140,12 +128,6 @@
     </distributionManagement>
 
     <repositories>
-
-        <repository>
-            <id>md5</id>
-            <url>http://repo.md-5.net/content/groups/public/</url>
-        </repository>
-
         <repository>
             <id>frederik-schmitt-releases</id>
             <url>http://repo.frederik-schmitt.de/content/repositories/oss-releases</url>
@@ -153,16 +135,6 @@
         <repository>
             <id>frederik-schmitt-snapshots</id>
             <url>http://repo.frederik-schmitt.de/content/repositories/oss-snapshots</url>
-        </repository>
-
-        <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public/</url>
-        </repository>
-
-        <repository>
-            <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
         </repository>
     </repositories>
 
@@ -177,94 +149,6 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <minimizeJar>true</minimizeJar>
-                            <artifactSet>
-                                <includes>
-                                    <include>com.google.guava:guava</include>
-                                </includes>
-                            </artifactSet>
-                            <relocations>
-                                <relocation>
-                                    <pattern>com.google.common</pattern>
-                                    <shadedPattern>net.catharos.societies.libs.guava</shadedPattern>
-                                </relocation>
-                            </relocations>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-                    <descriptor>src/assembly/assembly.xml</descriptor>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!--<plugin>-->
-            <!--<groupId>com.github.wvengen</groupId>-->
-            <!--<artifactId>proguard-maven-plugin</artifactId>-->
-            <!--<version>2.0.8</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<phase>package</phase>-->
-            <!--<goals>-->
-            <!--<goal>proguard</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--<injar>${project.build.finalName}.jar</injar>-->
-            <!--<outjar>${project.build.finalName}-slim.jar</outjar>-->
-            <!--<options>-->
-            <!--<option>-keep public class net.catharos.societies.bukkit.SocietiesPlugin</option>-->
-            <!--<option>-dontoptimize</option>-->
-            <!--<option>-dontnote</option>-->
-            <!--<option>-dontwarn org.apache.commons.configuration.**</option>-->
-            <!--<option>-dontwarn org.apache.**</option>-->
-            <!--<option>-dontwarn org.bukkit.**</option>-->
-            <!--<option>-dontwarn org.junit.**</option>-->
-            <!--<option>-dontwarn com.mysql.**</option>-->
-            <!--<option>-dontwarn com.mysql.**</option>-->
-            <!--<option>-dontwarn com.zaxxer.**</option>-->
-            <!--<option>-dontwarn javassist.util.**</option>-->
-            <!--<option>-dontwarn org.reflections.**</option>-->
-            <!--<option>-dontwarn org.joda.time.**</option>-->
-            <!--<option>-dontwarn org.jooq.**</option>-->
-            <!--<option>-dontwarn org.mockito.**</option>-->
-            <!--<option>-dontwarn org.slf4j.**</option>-->
-            <!--</options>-->
-
-            <!--<obfuscate>false</obfuscate>-->
-            <!--<libs>-->
-            <!--<lib>${java.home}/lib/rt.jar</lib>-->
-            <!--</libs>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
-
-
         </plugins>
     </build>
 </project>

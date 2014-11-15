@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderProvider;
+import net.catharos.societies.api.member.SocietyMember;
 import org.jetbrains.annotations.Nullable;
 
 /**

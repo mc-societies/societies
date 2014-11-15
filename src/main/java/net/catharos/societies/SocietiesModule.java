@@ -13,10 +13,7 @@ import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import net.catharos.lib.shank.config.ConfigModule;
 import net.catharos.lib.shank.config.TypeSafeConfigSource;
 import net.catharos.lib.shank.service.AbstractServiceModule;
-import net.catharos.societies.bridge.ReloadAction;
-import net.catharos.societies.bukkit.BukkitNameProvider;
-import net.catharos.societies.bukkit.BukkitPlayerResolver;
-import net.catharos.societies.bukkit.SocietiesPlugin;
+import net.catharos.societies.api.NameProvider;
 import net.catharos.societies.commands.CommandModule;
 import net.catharos.societies.commands.FormatModule;
 import net.catharos.societies.database.DatabaseModule;
@@ -129,9 +126,6 @@ public class SocietiesModule extends AbstractServiceModule {
             }
         });
 
-        // Player provider
-        bind(PlayerResolver.class).to(BukkitPlayerResolver.class);
-
         // Executor service for heavy work
         bind(WORKER_EXECUTOR).toInstance(MoreExecutors.listeningDecorator(Executors.newCachedThreadPool()));
 
@@ -140,9 +134,6 @@ public class SocietiesModule extends AbstractServiceModule {
         // Chat rendering
         install(new FormatModule());
 
-        bind(NameProvider.class).to(BukkitNameProvider.class);
-
-        bind(ReloadAction.class).to(SocietiesPlugin.class);
 
         install(new TeleportModule(config.getBoolean("teleport.enabled")));
 

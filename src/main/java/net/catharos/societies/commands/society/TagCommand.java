@@ -6,7 +6,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
-import net.catharos.societies.bridge.ChatColor;
+import net.catharos.bridge.ChatColor;
 import net.catharos.societies.commands.RuleStep;
 
 /**

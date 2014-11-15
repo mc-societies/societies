@@ -8,15 +8,13 @@ import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import gnu.trove.set.hash.THashSet;
+import net.catharos.bridge.Location;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.command.GroupParser;
 import net.catharos.groups.command.MemberParser;
 import net.catharos.groups.setting.Setting;
-import net.catharos.lib.core.command.Command;
-import net.catharos.lib.core.command.CommandPipeline;
-import net.catharos.lib.core.command.DefaultCommandPipeline;
-import net.catharos.lib.core.command.Executor;
+import net.catharos.lib.core.command.*;
 import net.catharos.lib.core.command.format.pagination.DefaultPaginator;
 import net.catharos.lib.core.command.format.pagination.Paginator;
 import net.catharos.lib.core.command.parser.ArgumentParser;
@@ -32,17 +30,16 @@ import net.catharos.lib.core.command.token.DelimiterTokenizer;
 import net.catharos.lib.core.command.token.SpaceDelimiter;
 import net.catharos.lib.core.command.token.Tokenizer;
 import net.catharos.lib.shank.AbstractModule;
+import net.catharos.societies.LocationParser;
 import net.catharos.societies.SocietiesModule;
-import net.catharos.societies.bridge.Location;
-import net.catharos.societies.bukkit.BukkitSystemSender;
-import net.catharos.societies.bukkit.LocationParser;
+import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.commands.society.SocietyCommand;
-import net.catharos.societies.member.SocietyMember;
 import net.catharos.societies.setting.RulesSetting;
 
 import java.util.Set;
 
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static com.google.inject.name.Names.named;
 
@@ -96,7 +93,7 @@ public class CommandModule extends AbstractModule {
         bind(InstanceFactory.class).to(InjectorInstanceFactory.class);
 
         // Sync/Async command executors
-        bindNamedInstance("sync-executor", ListeningExecutorService.class, sameThreadExecutor());
+        bindNamedInstance("sync-executor", ListeningExecutorService.class, listeningDecorator(newDirectExecutorService()));
         bindNamed("async-executor", ListeningExecutorService.class).to(SocietiesModule.WORKER_EXECUTOR);
 //        bindNamedInstance("async-executor", ListeningExecutorService.class, sameThreadExecutor());
 
@@ -109,7 +106,7 @@ public class CommandModule extends AbstractModule {
         beforePipeline().addBinding().to(WorldStep.class);
         afterPipeline().addBinding().to(FooterExecutor.class);
 
-        bindNamed("system-sender", Sender.class).to(BukkitSystemSender.class);
+        bindNamed("system-sender", Sender.class).to(SystemSender.class);
 
         addRule("*", 0x0);
         addRule("invite", 0x1);
