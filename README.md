@@ -1,4 +1,4 @@
-![build](https://api.travis-ci.org/Catharos/Societies.png) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/societies/localized.png)](https://crowdin.com/project/societies)
+![build](https://api.travis-ci.org/Catharos/societies.png) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/societies/localized.png)](https://crowdin.com/project/societies)
 
 ## Motivation
 
