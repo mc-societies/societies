@@ -1,10 +1,12 @@
 package net.catharos.societies.commands.society;
 
 import net.catharos.groups.Group;
+import net.catharos.groups.Member;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
+import net.catharos.lib.core.command.reflect.Sender;
 import net.catharos.societies.api.member.SocietyMember;
 
 /**
@@ -12,6 +14,7 @@ import net.catharos.societies.api.member.SocietyMember;
  */
 @Command(identifier = "command.leave")
 @Permission("societies.leave")
+@Sender(Member.class)
 public class LeaveCommand implements Executor<SocietyMember> {
 
     @Override

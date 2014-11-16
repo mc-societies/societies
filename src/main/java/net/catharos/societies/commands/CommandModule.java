@@ -157,8 +157,12 @@ public class CommandModule extends AbstractModule {
 
         commands.add(analyser.analyse(SocietyCommand.class));
 
+
+
         return commands;
     }
+
+
 
     public MapBinder<Class<?>, ArgumentParser<?>> parsers() {
         return newMapBinder(binder(),

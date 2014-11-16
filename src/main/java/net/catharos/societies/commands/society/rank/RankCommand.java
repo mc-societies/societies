@@ -30,6 +30,7 @@ import java.util.Collection;
         RankCommand.DeassignCommand.class,
         RuleCommand.class
 })
+@Sender(Member.class)
 public class RankCommand {
 
     //================================================================================

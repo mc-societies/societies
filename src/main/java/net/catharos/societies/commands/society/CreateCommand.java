@@ -19,7 +19,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
-import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.core.command.reflect.Sender;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.api.member.SocietyMember;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +32,8 @@ import static net.catharos.bridge.ChatColor.translateString;
  */
 @Command(identifier = "command.create")
 @Permission("societies.create")
-public class CreateCommand implements Executor<Sender> {
+@Sender(Member.class)
+public class CreateCommand implements Executor<Member> {
 
     @Argument(name = "argument.society.name")
     String name;
@@ -66,12 +67,11 @@ public class CreateCommand implements Executor<Sender> {
     }
 
     @Override
-    public void execute(CommandContext<Sender> ctx, final Sender sender) {
-        if (sender instanceof Member) {
-            if (((SocietyMember) sender).hasGroup()) {
-                sender.send("society.already-member");
-                return;
-            }
+    public void execute(CommandContext<Member> ctx, final Member sender) {
+
+        if (sender.hasGroup()) {
+            sender.send("society.already-member");
+            return;
         }
 
         ValidateResult nameResult = nameValidator.validateName(name);
@@ -127,12 +127,12 @@ public class CreateCommand implements Executor<Sender> {
 
     }
 
-    private class SenderWithdrawer implements Sender.Executor<SocietyMember, Boolean> {
+    private class SenderWithdrawer implements net.catharos.lib.core.command.sender.Sender.Executor<SocietyMember, Boolean> {
         @Override
         public Boolean execute(SocietyMember sender) {return sender.withdraw(price).transactionSuccess(); }
 
         @Override
-        public Boolean defaultValue(Sender sender) {
+        public Boolean defaultValue(net.catharos.lib.core.command.sender.Sender sender) {
             return true;
         }
     }
