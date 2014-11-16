@@ -42,6 +42,11 @@ public class OnlineGroupCache implements GroupCache {
         return null;
     }
 
+    @Override
+    public int size() {
+        return -1;
+    }
+
     public Group clear(UUID uuid) {
         return this.groups.remove(uuid);
     }

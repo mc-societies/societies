@@ -6,6 +6,7 @@ import com.google.inject.name.Named;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.Members;
+import net.catharos.groups.rank.Rank;
 import net.catharos.groups.request.*;
 import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
@@ -35,6 +36,8 @@ public class JoinCommand implements Executor<Member> {
     @Argument(name = "argument.target.society")
     Group target;
 
+    private final boolean trustDefault;
+    private final Rank normalDefaultRank;
     private final RequestFactory<Choices> requests;
     private final int maxSize;
 
@@ -43,7 +46,11 @@ public class JoinCommand implements Executor<Member> {
 
 
     @Inject
-    public JoinCommand(RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
+    public JoinCommand(@Named("trust.trust-members-by-default") boolean trustDefault,
+                       @Named("normal-default-rank") Rank normalDefaultRank,
+                       RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
+        this.trustDefault = trustDefault;
+        this.normalDefaultRank = normalDefaultRank;
         this.requests = requests;
         this.maxSize = maxSize;
     }
@@ -77,6 +84,11 @@ public class JoinCommand implements Executor<Member> {
                 switch (result.getChoice()) {
                     case ACCEPT:
                         target.addMember(sender);
+
+                        if (trustDefault) {
+                            target.addRank(normalDefaultRank);
+                        }
+
                         sender.send("you.joined", target.getName());
                         break;
                     case DENY:

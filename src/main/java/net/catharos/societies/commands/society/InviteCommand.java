@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
+import net.catharos.groups.rank.Rank;
 import net.catharos.groups.request.*;
 import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
@@ -35,6 +36,8 @@ public class InviteCommand implements Executor<Member> {
 
     public static final String FAILED = "Invite failed! %s";
 
+    private final boolean trustDefault;
+    private final Rank normalDefaultRank;
     private final RequestFactory<Choices> requests;
     private final int maxSize;
 
@@ -42,7 +45,12 @@ public class InviteCommand implements Executor<Member> {
     private Logger logger;
 
     @Inject
-    public InviteCommand( RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
+    public InviteCommand(@Named("trust.trust-members-by-default") boolean trustDefault,
+                         @Named("normal-default-rank") Rank normalDefaultRank,
+                         RequestFactory<Choices> requests,
+                         @Named("society.max-size") int maxSize) {
+        this.trustDefault = trustDefault;
+        this.normalDefaultRank = normalDefaultRank;
         this.requests = requests;
         this.maxSize = maxSize;
     }
@@ -79,6 +87,11 @@ public class InviteCommand implements Executor<Member> {
                 switch (result.getChoice()) {
                     case ACCEPT:
                         group.addMember(target);
+
+                        if (trustDefault) {
+                            target.addRank(normalDefaultRank);
+                        }
+
                         target.send("target-member.society-added", group.getName());
                         sender.send("society.member-added", target.getName());
                         break;

@@ -1,6 +1,7 @@
 package net.catharos.societies.commands;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
@@ -62,7 +63,7 @@ public class CommandModule extends AbstractModule {
         bindNamedInstance("table-header", String.class, "Societies {3} - page {0}/{1} - {2} entries");
         bindNamedInstance("padding", int.class, 2);
         bind(Paginator.class).to(DefaultPaginator.class);
-        bindNamedInstance("entires-per-page", int.class, 9);
+        bindNamed("entires-per-page", int.class).to(Key.get(Integer.class, Names.named("chat.tables.max-rows-pre-page")));
 
         // Group parser
         bind(new TypeLiteral<ArgumentParser<Group>>() {}).to(GroupParser.class);

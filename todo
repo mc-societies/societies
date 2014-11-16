@@ -1,16 +1,6 @@
-Config:
-        min-size-to-set-ally
-        rival-limit-percent
-        unrivable-societies
-        trust-members-by-default
-        show-unverified-on-list
-        new-society-verification-required
-        replace-spawn
-        default-color
-        chat.*
+Fix request translations
 
-
-Cache libraries
+Minimize libraries
 
 Add command descriptions
 
@@ -46,6 +36,10 @@ Claiming & Wars:
 Full release ------------------------------------------------------------------------------------
 
 bulletin board:
+        * Config:   bulletin-board {
+                      color = "GREY"
+                      show-on-login = false
+                    }
 
 
 
@@ -60,9 +54,10 @@ bulletin board:
 
 Other stuff:
 
+Inject config settings correctly
+Purge inactive-members from json source
 Add events (mbassador)
 Command options:
-        * list only verified
         * coords sort
 Better log support
 Better future api (FutureSupplier with predefined exception handlers) jdeferred

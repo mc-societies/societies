@@ -29,6 +29,7 @@ class SQLQueries extends QueryProvider {
 
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETIES = QueryKey.create();
 
+    public static final QueryKey<Select<Record1<Integer>>> SELECT_SOCIETIES_AMOUNT = QueryKey.create();
 
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETY_BY_UUID = QueryKey.create();
 
@@ -124,6 +125,13 @@ class SQLQueries extends QueryProvider {
             public Select<SocietiesRecord> create(DSLContext context) {
                 return context.
                         selectFrom(SOCIETIES);
+            }
+        });
+
+        builder(SELECT_SOCIETIES_AMOUNT, new QueryBuilder<Select<Record1<Integer>>>() {
+            @Override
+            public Select<Record1<Integer>> create(DSLContext context) {
+                return context.selectCount().from(SOCIETIES);
             }
         });
 

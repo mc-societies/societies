@@ -178,6 +178,11 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     }
 
     @Override
+    public ListenableFuture<Integer> size() {
+        return Futures.immediateFuture(groups.size());
+    }
+
+    @Override
     public ListenableFuture<M> getMember(UUID uuid) {
         Query<M> query = (Query<M>) equal(MEMBER_UUID, uuid);
         ResultSet<M> retrieve = members.retrieve(query);

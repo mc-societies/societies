@@ -41,7 +41,8 @@ import java.util.concurrent.ExecutionException;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.Futures.transform;
-import static com.google.common.util.concurrent.MoreExecutors.*;
+import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static net.catharos.societies.database.sql.SQLQueries.*;
 
 /**
@@ -206,7 +207,8 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
                 // Load group if necessary
                 if (predefined == null) {
                     try {
-                        predefined = getGroup(UUIDGen.toUUID(rawSociety), member, listeningDecorator(newDirectExecutorService()))
+                        predefined = getGroup(UUIDGen
+                                .toUUID(rawSociety), member, listeningDecorator(newDirectExecutorService()))
                                 .get();
                     } catch (InterruptedException e) {
                         throw new MemberException(uuid, e, "Failed to set group of member!");
@@ -330,7 +332,8 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
                     if (predefined != null && predefined.getUUID().equals(memberUUID)) {
                         memberToAdd = predefined;
                     } else {
-                        memberToAdd = getMember(memberUUID, group, listeningDecorator(newDirectExecutorService())).get();
+                        memberToAdd = getMember(memberUUID, group, listeningDecorator(newDirectExecutorService()))
+                                .get();
                     }
 
                     group.addMember(memberToAdd);
@@ -446,6 +449,23 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     @Override
     public ListenableFuture<Set<Group>> getGroups() {
         return evaluateMultipleGroups(queries.query(service, SELECT_SOCIETIES));
+    }
+
+    @Override
+    public ListenableFuture<Integer> size() {
+        return transform(queries
+                .query(service, SQLQueries.SELECT_SOCIETIES_AMOUNT), new Function<Result<Record1<Integer>>, Integer>() {
+
+            @Nullable
+            @Override
+            public Integer apply(@Nullable Result<Record1<Integer>> input) {
+                if (input == null) {
+                    return -1;
+                }
+
+                return Iterables.getOnlyElement(input).value1();
+            }
+        });
     }
 
 

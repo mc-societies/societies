@@ -2,6 +2,7 @@ package net.catharos.societies.commands.society.relation;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import net.catharos.groups.*;
 import net.catharos.groups.request.*;
 import net.catharos.groups.request.simple.Choices;
@@ -94,6 +95,7 @@ public class AlliesCommand extends ListCommand {
         @Argument(name = "argument.target.society")
         Group target;
 
+        private final int minSize;
         private final RelationFactory factory;
         private final RequestFactory<Choices> requests;
 
@@ -101,7 +103,10 @@ public class AlliesCommand extends ListCommand {
         private Logger logger;
 
         @Inject
-        public AddCommand(RelationFactory factory, RequestFactory<Choices> requests) {
+        public AddCommand(@Named("relations.min-size-to-set-ally") int minSize,
+                          RelationFactory factory,
+                          RequestFactory<Choices> requests) {
+            this.minSize = minSize;
             this.factory = factory;
             this.requests = requests;
         }
@@ -112,6 +117,11 @@ public class AlliesCommand extends ListCommand {
 
             if (group == null) {
                 sender.send("society.not-found");
+                return;
+            }
+
+            if (group.size() < minSize) {
+                sender.send("society.too-small");
                 return;
             }
 
