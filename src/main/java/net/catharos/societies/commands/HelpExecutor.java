@@ -26,8 +26,20 @@ class HelpExecutor<S extends Sender> implements Executor<S> {
     private void displayHelp(CommandContext<S> ctx, S sender, ExecutableCommand<S> command) {
         StringBuilder help = new StringBuilder();
 
-        help.append(command.getIdentifier());
-        help.append(" [OPTIONS] [ARGUMENTS]\n");
+        StringBuilder commandFormat = new StringBuilder();
+
+        //todo create iterator
+        for (Command<S> cmd = command; cmd != null; cmd = cmd.getParent()) {
+            if (cmd.getIdentifier() == null || cmd.getIdentifier().isEmpty()) {
+                continue;
+            }
+            commandFormat.insert(0, cmd.getIdentifier() + " ");
+        }
+
+        commandFormat.insert(0, '/');
+
+        help.append(commandFormat.toString());
+        help.append("[OPTIONS] [ARGUMENTS]\n");
 
         if (!command.getOptions().isEmpty()) {
             help.append("Options:\n");
