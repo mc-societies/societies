@@ -1,26 +1,4 @@
-(- ff.auto ff.deny profile.active lookup.online)
-
-- extended chat integration
-
-- events (mbassador)
-
-- add descriptions
-- list only accessible commands in help
-- split in modules
-- wars/claiming
-- BulletinBoard
-- command options
-    * list only verified
-    * coords sort
-- over-think publishers, collect publishers
-- log support
-- future api (FutureSupplier with predefined exception handlers) jdeferred
-- Command library: aliases, extract information from context and inject them to fields
-
 Config:
-        kill-weights.rival
-        kill-weights.neutral
-        kill-weights.civilian
         min-size-to-set-ally
         rival-limit-percent
         unrivable-societies
@@ -29,24 +7,76 @@ Config:
         new-society-verification-required
         replace-spawn
         default-color
-        chat
-
-Text renderer:
-    * Tree like structure
-
-Modules:
-        societies-api
-        societies
-        bridge
-        bukkit-pier
-        sponge-pier
+        chat.*
 
 
+Cache libraries
+
+Add command descriptions
+
+Converter:
+        * SimpleClans
+        * SimpleClans2
+        * Factions
+
+Beta release ------------------------------------------------------------------------------------
+
+Chat JSON Formatting:
+        * Text, Score, Selector, Translate
+        * You can start with a root object or directly with an extra array
+        * Escaping
+        * Colors/Format options
+        * clickEvent, hoverEvent, insertion
+
+Scoreboards:
+        * Display current society
+        * Display nearest members
+
+Kill statistics:
+        * KDR
+        * Config:
+                - kill-weights.rival
+                - kill-weights.neutral
+                - kill-weights.civilian
+
+Claiming & Wars:
+        Scoreboards:
+                * Display current territory
+
+Full release ------------------------------------------------------------------------------------
+
+bulletin board:
+
+
+
+
+
+
+
+
+
+
+
+
+Other stuff:
+
+Add events (mbassador)
+Command options:
+        * list only verified
+        * coords sort
+Better log support
+Better future api (FutureSupplier with predefined exception handlers) jdeferred
+
+Command library:
+         * aliases, extract information from context and inject them to fields
 
 Optimization:
-- fast access player metadata -> player, getMember(Player player)
-- cache relation targets
-- cache levels (quick-living cache)
-- Lazy loading of settings/ranks
-- Caching
-    * Pre-rendered listing output
+        * fast access player metadata -> player, getMember(Player player)
+        * cache relation targets
+        * cache levels (quick-living cache)
+        * Lazy loading of settings/ranks
+        * Caching:
+                * Pre-rendered listing output -> list only accessible commands in command help
+
+Text renderer:
+        * Tree like structure
