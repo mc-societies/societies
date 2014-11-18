@@ -30,22 +30,21 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher, Membe
 
     @Override
     public ListenableFuture<Rank> publish(final Rank rank) {
-        if (rank.isStatic()) {
-            return Futures.immediateFuture(rank);
-        }
-
         return service.submit(new Callable<Rank>() {
             @Override
             public Rank call() throws Exception {
                 byte[] uuid = UUIDGen.toByteArray(rank.getUUID());
                 String name = rank.getName();
+                int priority = rank.getPriority();
 
                 Insert<RanksRecord> query = queries.getQuery(SQLQueries.INSERT_RANK);
 
                 query.bind(1, uuid);
                 query.bind(2, name);
-                query.bind(3, uuid);
-                query.bind(4, name);
+                query.bind(3, priority);
+                query.bind(4, uuid);
+                query.bind(5, name);
+                query.bind(6, priority);
                 query.execute();
                 return rank;
             }
@@ -101,10 +100,6 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher, Membe
 
     @Override
     public ListenableFuture<Rank> drop(final Rank rank) {
-        if (rank.isStatic()) {
-            return Futures.immediateFuture(rank);
-        }
-
         return service.submit(new Callable<Rank>() {
             @Override
             public Rank call() throws Exception {
