@@ -467,23 +467,4 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
             }
         });
     }
-
-
-    //================================================================================
-    // Drop
-    //================================================================================
-
-//    @Override
-//    public ListenableFuture<?> drop(final Group group) {
-//        return service.submit(new Runnable() {
-//            @Override
-//            public void run() {
-//                Query query = queries.getQuery(SQLQueries.DROP_SOCIETY_BY_UUID);
-//
-//                query.bind(1, UUIDGen.toByteArray(group.getUUID()));
-//
-//                query.execute();
-//            }
-//        });
-//    }
 }

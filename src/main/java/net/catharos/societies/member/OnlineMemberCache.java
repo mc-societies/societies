@@ -3,12 +3,15 @@ package net.catharos.societies.member;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import gnu.trove.map.hash.THashMap;
+import net.catharos.groups.Group;
+import net.catharos.groups.GroupProvider;
 import net.catharos.groups.Member;
 import net.catharos.groups.MemberCache;
 import net.catharos.societies.api.PlayerResolver;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Represents a OnlineCacheMemberProvider
@@ -18,16 +21,38 @@ public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
 
     private final THashMap<UUID, M> members = new THashMap<UUID, M>();
 
+    private final GroupProvider groupProvider;
     private final PlayerResolver provider;
 
     @Inject
-    public OnlineMemberCache(PlayerResolver provider) {
+    public OnlineMemberCache(GroupProvider groupProvider, PlayerResolver provider) {
+        this.groupProvider = groupProvider;
         this.provider = provider;
     }
 
     @Override
     public M getMember(UUID uuid) {
-        return members.get(uuid);
+        M member = members.get(uuid);
+
+        if (member == null) {
+            return null;
+        }
+
+        //fixme group is maybe out of date
+        Group group = member.getGroup();
+
+        if (group != null) {
+            member.complete(false);
+            try {
+                member.setGroup(groupProvider.getGroup(group.getUUID()).get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            member.complete();
+        }
+        return member;
     }
 
     @Override

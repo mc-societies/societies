@@ -13,6 +13,7 @@ import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.uuid.UUIDStorage;
 import net.catharos.lib.shank.logging.InjectLogger;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
@@ -26,29 +27,32 @@ import java.util.concurrent.Callable;
 @SuppressWarnings("TypeParameterHidesVisibleType")
 public final class JSONMemberPublisher<M extends Member> implements
         MemberPublisher, MemberCreatedPublisher, MemberLastActivePublisher,
-        MemberGroupPublisher, MemberRankPublisher, SettingPublisher {
+        MemberGroupPublisher, MemberRankPublisher, SettingPublisher, MemberDropPublisher {
 
     private final UUIDStorage uuidStorage;
     private final MemberMapper<?> mapper;
     private final ListeningExecutorService service;
+    private final JSONProvider<Member> provider;
 
     @InjectLogger
     private Logger logger;
 
     @Inject
-    public JSONMemberPublisher(@Named("member-root") File memberRoot, MemberMapper<M> mapper, ListeningExecutorService service) {
+    public JSONMemberPublisher(@Named("member-root") File memberRoot, MemberMapper<M> mapper, ListeningExecutorService service, JSONProvider<Member> provider) {
+        this.provider = provider;
         this.uuidStorage = new UUIDStorage(memberRoot, "json");
         this.mapper = mapper;
         this.service = service;
     }
 
 
-    private <T extends Member> ListenableFuture<T> publishMember(final T member) {
-        return service.submit(new Callable<T>() {
+    private <M extends Member> ListenableFuture<M> publishMember(final M member) {
+        return service.submit(new Callable<M>() {
 
             @Override
-            public T call() throws Exception {
+            public M call() throws Exception {
                 try {
+                    provider.members.add(member);
                     mapper.writeMember(member, uuidStorage.getFile(member.getUUID()));
                 } catch (Exception e) {
                     logger.catching(e);
@@ -92,5 +96,20 @@ public final class JSONMemberPublisher<M extends Member> implements
     @Override
     public <M extends Member> ListenableFuture<M> dropRank(M member, Rank rank) {
         return publishMember(member);
+    }
+
+    @Override
+    public <M extends Member> ListenableFuture<M> drop(final M member) {
+        return service.submit(new Callable<M>() {
+
+            @Override
+            public M call() throws Exception {
+                provider.members.remove(member);
+
+                File file = uuidStorage.getFile(member.getUUID());
+                FileUtils.forceDelete(file);
+                return member;
+            }
+        });
     }
 }

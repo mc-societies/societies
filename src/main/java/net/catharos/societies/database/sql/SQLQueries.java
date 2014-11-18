@@ -294,7 +294,11 @@ class SQLQueries extends QueryProvider {
             @Override
             public Insert<RanksRecord> create(DSLContext context) {
                 return context.insertInto(RANKS)
-                        .values(DEFAULT_BYTE_ARRAY, DEFAULT_STRING);
+                        .values(DEFAULT_BYTE_ARRAY, DEFAULT_STRING, DEFAULT_SHORT)
+                        .onDuplicateKeyUpdate()
+                        .set(RANKS.UUID, DEFAULT_BYTE_ARRAY)
+                        .set(RANKS.NAME, DEFAULT_STRING)
+                        .set(RANKS.PRIORITY, DEFAULT_SHORT);
             }
         });
 

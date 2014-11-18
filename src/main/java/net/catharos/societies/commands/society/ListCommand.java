@@ -69,11 +69,11 @@ public class ListCommand implements Executor<Sender> {
 
                 Table table = tableProvider.get();
 
-                table.addRow("Society", "Members");
+                table.addRow("Society", "Tag", "Members");
 
                 for (Group group : result) {
                     if ((!verified && showUnverified) || group.isVerified()) {
-                        table.addRow(group.getName(), Integer.toString(group.getMembers().size()));
+                        table.addRow(group.getName(), group.getTag(), Integer.toString(group.getMembers().size()));
                     }
                 }
 

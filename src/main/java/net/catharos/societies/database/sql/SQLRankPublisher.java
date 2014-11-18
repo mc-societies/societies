@@ -37,9 +37,15 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher, Membe
         return service.submit(new Callable<Rank>() {
             @Override
             public Rank call() throws Exception {
+                byte[] uuid = UUIDGen.toByteArray(rank.getUUID());
+                String name = rank.getName();
+
                 Insert<RanksRecord> query = queries.getQuery(SQLQueries.INSERT_RANK);
-                query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
-                query.bind(2, rank.getName());
+
+                query.bind(1, uuid);
+                query.bind(2, name);
+                query.bind(3, uuid);
+                query.bind(4, name);
                 query.execute();
                 return rank;
             }

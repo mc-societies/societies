@@ -30,6 +30,7 @@ public class SQLModule extends AbstractServiceModule {
     @Override
     protected void configure() {
         bindService().to(CleanupService.class);
+        bindService().to(RankService.class);
 
         bindNamedString(RemoteDatabase.DB_DATASOURCE_CLASS, "com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
 
@@ -45,7 +46,6 @@ public class SQLModule extends AbstractServiceModule {
 
         bind(Database.class).to(RemoteDatabase.class);
         bind(DSLProvider.class).to(RemoteDatabase.class);
-        install(new SQLModule(cache));
 
 
         bind(SQLQueries.class);
@@ -93,6 +93,8 @@ public class SQLModule extends AbstractServiceModule {
         // Rank publishers
         bind(RankPublisher.class).to(rankKey);
         bind(RankDropPublisher.class).to(rankKey);
+
+
 
     }
 }

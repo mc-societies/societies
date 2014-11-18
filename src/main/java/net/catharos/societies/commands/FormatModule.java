@@ -16,7 +16,8 @@ public class FormatModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(Table.class).to(DefaultTable.class);
+        bind(Table.class).to(FormattedTable.class);
+        bindNamed("clean", Table.class).to(DefaultTable.class);
         bind(WidthProvider.class).toInstance(new MinecraftWidthProvider());
 
         install(new FactoryModuleBuilder()

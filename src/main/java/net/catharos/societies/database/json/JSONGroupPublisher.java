@@ -16,6 +16,7 @@ import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.uuid.UUIDStorage;
 import net.catharos.lib.shank.logging.InjectLogger;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
@@ -30,12 +31,13 @@ import static com.googlecode.cqengine.query.QueryFactory.or;
 /**
  * Represents a JSONMemberPublisher
  */
-public final class JSONGroupPublisher<M extends Member> implements
+final class JSONGroupPublisher<M extends Member> implements
         GroupPublisher,
         GroupNamePublisher, GroupCreatedPublisher,
         GroupRankPublisher,
         RankPublisher, RankDropPublisher,
-        SettingPublisher {
+        SettingPublisher,
+        GroupDropPublisher {
 
     private final UUIDStorage uuidStorage;
     private final GroupMapper mapper;
@@ -143,5 +145,20 @@ public final class JSONGroupPublisher<M extends Member> implements
     @Override
     public <V> void publish(Subject subject, Target target, Setting<V> setting, @Nullable V value) {
         defaultPublish(((Group) subject));
+    }
+
+    @Override
+    public ListenableFuture<Group> drop(final Group group) {
+        return service.submit(new Callable<Group>() {
+
+            @Override
+            public Group call() throws Exception {
+                provider.groups.remove(group);
+
+                File file = uuidStorage.getFile(group.getUUID());
+                FileUtils.forceDelete(file);
+                return group;
+            }
+        });
     }
 }

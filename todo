@@ -1,11 +1,5 @@
 Fix request translations
 
-Drop societies on leave
-
-Minimize libraries
-
-Add command descriptions
-
 Converter:
         * SimpleClans
         * SimpleClans2
@@ -56,6 +50,7 @@ bulletin board:
 
 Other stuff:
 
+Minimize libraries
 Inject config settings correctly
 Purge inactive-members from json source
 Add events (mbassador)
