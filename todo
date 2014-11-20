@@ -1,14 +1,5 @@
 Fix request translations
 
-Soft depend vault
-
-Group balanceSetting
-
-Converter:
-        * SimpleClans
-        * SimpleClans2
-        * Factions
-
 Beta release ------------------------------------------------------------------------------------
 
 Chat JSON Formatting:
@@ -21,6 +12,9 @@ Chat JSON Formatting:
 Scoreboards:
         * Display current society
         * Display nearest members
+
+Converter:
+        * Factions
 
 Kill statistics:
         * KDR

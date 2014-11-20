@@ -86,7 +86,7 @@ public class DummyEconomy extends AbstractEconomy {
     }
 
     private EconomyResponse response() {
-        return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED, "Dummy!");
+        return new EconomyResponse(0, 0, EconomyResponse.ResponseType.SUCCESS, "Dummy!");
     }
 
     @Override

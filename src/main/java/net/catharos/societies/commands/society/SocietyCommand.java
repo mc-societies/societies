@@ -3,6 +3,9 @@ package net.catharos.societies.commands.society;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.societies.commands.ThreadTestCommand;
+import net.catharos.societies.commands.society.balance.BalanceCommand;
+import net.catharos.societies.commands.society.balance.DepositCommand;
+import net.catharos.societies.commands.society.balance.WithdrawCommand;
 import net.catharos.societies.commands.society.home.HomeCommand;
 import net.catharos.societies.commands.society.promote.DemoteCommand;
 import net.catharos.societies.commands.society.promote.PromoteCommand;
@@ -63,6 +66,10 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
 
         FFCommand.class,
         GroupFFCommand.class,
+
+        BalanceCommand.class,
+        DepositCommand.class,
+        WithdrawCommand.class,
 
         VerifyCommand.class,
         DisproveCommand.class,
