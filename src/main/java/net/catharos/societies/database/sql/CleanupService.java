@@ -39,17 +39,17 @@ class CleanupService extends AbstractService {
         query = queries.getQuery(SQLQueries.DROP_INACTIVE_MEMBERS);
         query.bind(1, new Timestamp(current - memberMillis));
         int members = query.execute();
-        logger.info("Dropped %s members because of inactivity.", members);
+        logger.info("Dropped {0} members because of inactivity.", members);
 
 
         query = queries.getQuery(SQLQueries.DROP_ORPHAN_SOCIETIES);
         int societies = query.execute();
-        logger.info("Dropped %s societies because of inactivity.", societies);
+        logger.info("Dropped {0} societies because of inactivity.", societies);
 
         // Delete rank orphans
         query = queries.getQuery(SQLQueries.DROP_RANK_ORPHANS);
         int ranks = query.execute();
-        logger.info("Dropped %s ranks because of inactivity.", ranks);
+        logger.info("Dropped {0} ranks because of inactivity.", ranks);
     }
 
     @Override

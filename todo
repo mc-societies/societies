@@ -2,7 +2,7 @@ Fix request translations
 
 Soft depend vault
 
-Group balance
+Group balanceSetting
 
 Converter:
         * SimpleClans

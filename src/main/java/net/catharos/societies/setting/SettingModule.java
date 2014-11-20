@@ -28,14 +28,18 @@ public class SettingModule extends AbstractModule {
 
 
         BooleanSetting ffSetting = new BooleanSetting(0x4);
+        DoubleSetting balanceSetting = new DoubleSetting(0x5);
+
         bindNamed("personal-friendly-fire", new TypeLiteral<Setting<Boolean>>() {}).toInstance(ffSetting);
         bindNamed("group-friendly-fire", new TypeLiteral<Setting<Boolean>>() {}).toInstance(ffSetting);
+        bindNamed("group-balance", new TypeLiteral<Setting<Double>>() {}).toInstance(balanceSetting);
+
 
         settings.addBinding(LocationSetting.ID).to(LocationSetting.class);
         settings.addBinding(RelationSetting.ID).to(RelationSetting.class);
         settings.addBinding(VerifySetting.ID).to(VerifySetting.class);
         settings.addBinding(0x4).toInstance(ffSetting);
-
+        settings.addBinding(0x5).toInstance(balanceSetting);
         //todo verify ids
     }
 

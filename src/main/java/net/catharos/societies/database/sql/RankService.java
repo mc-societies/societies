@@ -33,7 +33,7 @@ public class RankService extends AbstractService {
     public void init(LifecycleContext context) throws Exception {
         for (Rank rank : ranks) {
             rankPublisher.publish(rank);
-            logger.info("Inserting rank %s in database...", rank.getName());
+            logger.info("Inserting rank {0} in database...", rank.getName());
         }
     }
 }
