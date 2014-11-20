@@ -11,9 +11,9 @@ import net.catharos.lib.database.data.DataWorker;
 import net.catharos.lib.database.data.queue.DefaultQueue;
 import net.catharos.lib.database.data.queue.Queue;
 import net.catharos.lib.shank.service.AbstractServiceModule;
+import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.group.OnlineGroupCache;
 import net.catharos.societies.member.OnlineMemberCache;
-import net.catharos.societies.api.member.SocietyMember;
 import org.jooq.SQLDialect;
 
 import java.util.concurrent.TimeUnit;
@@ -29,6 +29,7 @@ public class SQLModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
+        bindService().to(TablesService.class);
         bindService().to(CleanupService.class);
         bindService().to(RankService.class);
 
@@ -93,7 +94,6 @@ public class SQLModule extends AbstractServiceModule {
         // Rank publishers
         bind(RankPublisher.class).to(rankKey);
         bind(RankDropPublisher.class).to(rankKey);
-
 
 
     }
