@@ -1,5 +1,9 @@
 Fix request translations
 
+Soft depend vault
+
+Group balance
+
 Converter:
         * SimpleClans
         * SimpleClans2
@@ -50,6 +54,7 @@ bulletin board:
 
 Other stuff:
 
+Past groups
 Minimize libraries
 Inject config settings correctly
 Purge inactive-members from json source

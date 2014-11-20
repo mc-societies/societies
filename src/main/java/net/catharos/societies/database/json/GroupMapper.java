@@ -77,8 +77,6 @@ public class GroupMapper extends AbstractMapper {
                 builder.setTag(parser.getText());
             } else if (groupField.equals("created")) {
                 builder.setCreated(new DateTime(parser.getLongValue()));
-            } else if (groupField.equals("state")) {
-                builder.setState(parser.getShortValue());
             } else if (groupField.equals("settings")) {
                 readSettings(parser, builder.getSettings());
             } else if (groupField.equals("ranks")) {

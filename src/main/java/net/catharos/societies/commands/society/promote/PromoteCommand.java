@@ -21,21 +21,21 @@ public class PromoteCommand implements Executor<Member> {
     @Option(name = "argument.target.member")
     Member target;
 
-    private final Rank normalDefaultRank;
+    private final Rank superDefaultRank;
 
     @Inject
-    public PromoteCommand(@Named("super-default-rank") Rank normalDefaultRank) {
-        this.normalDefaultRank = normalDefaultRank;
+    public PromoteCommand(@Named("super-default-rank") Rank superDefaultRank) {
+        this.superDefaultRank = superDefaultRank;
     }
 
     @Override
     public void execute(CommandContext<Member> ctx, Member sender) {
-        if (target.hasRank(normalDefaultRank)) {
+        if (target.hasRank(superDefaultRank)) {
             sender.send("target-member.already-promoted", target.getName());
             return;
         }
 
-        target.addRank(normalDefaultRank);
+        target.addRank(superDefaultRank);
         sender.send("target-member.promoted", target.getName());
         target.send("you.promoted-by", sender.getName());
     }
