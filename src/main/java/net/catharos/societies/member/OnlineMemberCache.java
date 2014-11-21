@@ -7,6 +7,7 @@ import net.catharos.groups.Group;
 import net.catharos.groups.GroupProvider;
 import net.catharos.groups.Member;
 import net.catharos.groups.MemberCache;
+import net.catharos.groups.rank.Rank;
 import net.catharos.societies.api.PlayerResolver;
 
 import java.util.Set;
@@ -38,7 +39,7 @@ public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
             return null;
         }
 
-        //fixme group is maybe out of date
+        //fixme group is maybe out of date: Currently, update group and ranks!
         Group group = member.getGroup();
 
         if (group != null) {
@@ -50,6 +51,13 @@ public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+
+            for (Rank rank : member.getRanks()) {
+                if (group.getRank(rank.getUUID()) == null) {
+                    member.removeRank(rank);
+                }
+            }
+
             member.complete();
         }
         return member;
