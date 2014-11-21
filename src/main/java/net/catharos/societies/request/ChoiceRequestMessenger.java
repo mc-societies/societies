@@ -10,10 +10,16 @@ import net.catharos.groups.request.simple.Choices;
  */
 public class ChoiceRequestMessenger implements RequestMessenger<Choices> {
 
-    @Override
     public void start(Request<Choices> request, Participant participant) {
         request.getSupplier().send("request.started");
         participant.send("request.started");
+    }
+
+    @Override
+    public void start(Request<Choices> request) {
+        for (Participant participant : request.getRecipients()) {
+            start(request, participant);
+        }
     }
 
     @Override
@@ -41,28 +47,20 @@ public class ChoiceRequestMessenger implements RequestMessenger<Choices> {
         participant.send(msg, participant.getName(), choice, request);
     }
 
-    public void end(Participant participant, Request<Choices> request) {
+    public void end(Participant participant, Request<Choices> request, Choices choice) {
         request.getSupplier().send("request.finished");
         participant.send("request.finished");
     }
 
-    public void cancelled(Participant participant, Request<Choices> request) {
-        request.getSupplier().send("request.cancelled");
-        participant.send("request.cancelled");
-    }
-
-
     @Override
-    public final void end(Request<Choices> request) {
+    public void end(Request<Choices> request, Choices choice) {
         for (Participant participant : request.getRecipients()) {
-            end(participant, request);
+            end(participant, request, choice);
         }
     }
 
     @Override
-    public final void cancelled(Request<Choices> request) {
-        for (Participant participant : request.getRecipients()) {
-            cancelled(participant, request);
-        }
+    public void cancelled(Request<Choices> request) {
+        end(request, Choices.CANCELLED);
     }
 }

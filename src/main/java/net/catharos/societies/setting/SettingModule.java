@@ -3,12 +3,12 @@ package net.catharos.societies.setting;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.name.Names;
+import net.catharos.bridge.Location;
 import net.catharos.groups.Relation;
 import net.catharos.groups.setting.CollectiveSettingProvider;
 import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.SettingProvider;
 import net.catharos.lib.shank.AbstractModule;
-import net.catharos.bridge.Location;
 
 /**
  * Represents a SettingModule
@@ -18,30 +18,32 @@ public class SettingModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(SettingProvider.class).to(CollectiveSettingProvider.class);
-        MapBinder<Integer, Setting> settings = MapBinder
-                .newMapBinder(binder(), Integer.class, Setting.class, Names.named("settings"));
 
-
-        bindNamed("home", new TypeLiteral<Setting<Location>>() {}).to(LocationSetting.class);
-        bind(new TypeLiteral<Setting<Relation>>() {}).to(RelationSetting.class);
-        bindNamed("verify", new TypeLiteral<Setting<Boolean>>() {}).to(VerifySetting.class);
-
-
-        BooleanSetting ffSetting = new BooleanSetting(0x4);
-        DoubleSetting balanceSetting = new DoubleSetting(0x5);
-
-        bindNamed("personal-friendly-fire", new TypeLiteral<Setting<Boolean>>() {}).toInstance(ffSetting);
-        bindNamed("group-friendly-fire", new TypeLiteral<Setting<Boolean>>() {}).toInstance(ffSetting);
-        bindNamed("group-balance", new TypeLiteral<Setting<Double>>() {}).toInstance(balanceSetting);
-
-
-        settings.addBinding(LocationSetting.ID).to(LocationSetting.class);
-        settings.addBinding(RelationSetting.ID).to(RelationSetting.class);
-        settings.addBinding(VerifySetting.ID).to(VerifySetting.class);
-        settings.addBinding(0x4).toInstance(ffSetting);
-        settings.addBinding(0x5).toInstance(balanceSetting);
-        //todo verify ids
+        bind(LocationSetting.ID, "home", new TypeLiteral<Setting<Location>>() {}, LocationSetting.class);
+        bind(RelationSetting.ID, new TypeLiteral<Setting<Relation>>() {}, new RelationSetting());
+        bind(VerifySetting.ID, "verify", new TypeLiteral<Setting<Boolean>>() {}, new VerifySetting());
+        bind(0x4, "personal-friendly-fire", new TypeLiteral<Setting<Boolean>>() {}, new BooleanSetting(0x4));
+        bind(0x5, "group-friendly-fire", new TypeLiteral<Setting<Boolean>>() {}, new BooleanSetting(0x4));
+        bind(0x6, "group-balance", new TypeLiteral<Setting<Double>>() {}, new DoubleSetting(0x6));
     }
 
+    public <T> void bind(int id, String name, TypeLiteral<Setting<T>> type, Setting<T> setting) {
+        bindNamed(name, type).toInstance(setting);
+        settings().addBinding(id).toInstance(setting);
+    }
+
+    public <T> void bind(int id, String name, TypeLiteral<Setting<T>> type, Class<? extends Setting<T>> setting) {
+        bindNamed(name, type).to(setting);
+        settings().addBinding(id).to(setting);
+    }
+
+    public <T> void bind(int id, TypeLiteral<Setting<T>> type, Setting<T> setting) {
+        bind(type).toInstance(setting);
+        settings().addBinding(id).toInstance(setting);
+    }
+
+    private MapBinder<Integer, Setting> settings() {
+        return MapBinder.newMapBinder(binder(), Integer.class, Setting.class, Names.named("settings"));
+    }
 
 }

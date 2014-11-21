@@ -91,14 +91,13 @@ public class RivalsCommand extends ListCommand {
             Set<Member> participants = group.getMembers("vote.rivals");
             int online = Members.onlineMembers(participants);
 
-            //todo
             if (online < 1) {
                 sender.send("participants.not-available");
                 return;
             }
 
             Request<Choices> request = requests
-                    .create(sender, new SetInvolved(participants), new RivalsRequestMessenger());
+                    .create(sender, new SetInvolved(participants), new RivalsRequestMessenger(group, target));
             request.start();
 
             addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
@@ -108,14 +107,8 @@ public class RivalsCommand extends ListCommand {
                         return;
                     }
 
-                    switch (result.getChoice()) {
-                        case ACCEPT:
-                            group.removeRelation(target);
-                            sender.send("rivals.removed", target.getName());
-                            break;
-                        case DENY:
-                        case ABSTAIN:
-                            break;
+                    if (result.getChoice().success()) {
+                        group.removeRelation(target);
                     }
                 }
 
@@ -126,23 +119,46 @@ public class RivalsCommand extends ListCommand {
             });
         }
 
-        //todo
         private static class RivalsRequestMessenger extends ChoiceRequestMessenger {
+
+            private final Group initiator;
+            private final Group opponent;
+
+            private RivalsRequestMessenger(Group initiator, Group opponent) {
+                this.initiator = initiator;
+                this.opponent = opponent;
+            }
+
+            @Override
+            public void start(Request<Choices> request) {
+                request.getSupplier().send("requests.rivals.asked-end", opponent.getTag());
+                super.start(request);
+            }
 
             @Override
             public void start(Request<Choices> request, Participant participant) {
-                request.getSupplier().send("requests.rivals-started");
-                participant.send("requests.rivals");
+                participant.send("requests.rivals.ask-end", initiator.getTag());
             }
 
             @Override
-            public void end(Participant participant, Request<Choices> request) {
-                participant.send("requests.rivals-end", participant.getName());
+            public void end(Request<Choices> request, Choices choice) {
+                if (choice.success()) {
+                    request.getSupplier().send("requests.rivals.ended", opponent.getTag());
+                } else {
+                    request.getSupplier().send("requests.rivals.failed", opponent.getTag());
+                }
+
+                super.end(request, choice);
             }
 
             @Override
-            public void cancelled(Participant participant, Request<Choices> request) {
-                end(participant, request);
+            public void end(Participant participant, Request<Choices> request, Choices choice) {
+
+                if (choice.success()) {
+                    participant.send("requests.rivals.ended", initiator.getTag());
+                } else {
+                    participant.send("requests.rivals.failed", initiator.getTag());
+                }
             }
         }
     }

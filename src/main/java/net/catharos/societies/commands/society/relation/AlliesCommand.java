@@ -12,9 +12,9 @@ import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.lib.shank.logging.InjectLogger;
+import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
-import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.request.ChoiceRequestMessenger;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -128,14 +128,13 @@ public class AlliesCommand extends ListCommand {
             Set<Member> participants = target.getMembers("vote.allies");
             int online = Members.onlineMembers(participants);
 
-            //todo
             if (online < 1) {
                 sender.send("participants.not-available");
                 return;
             }
 
             SetInvolved involved = new SetInvolved(participants);
-            Request<Choices> request = requests.create(sender, involved, new AlliesRequestMessenger());
+            Request<Choices> request = requests.create(sender, involved, new AlliesRequestMessenger(group, target));
             request.start();
 
             addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
@@ -145,17 +144,9 @@ public class AlliesCommand extends ListCommand {
                         return;
                     }
 
-                    switch (result.getChoice()) {
-                        case ACCEPT:
-                            Relation relation = factory.create(group, target, TYPE);
-
-                            group.setRelation(target, relation);
-
-                            sender.send("allies.added", target.getName());
-                            break;
-                        case DENY:
-                        case ABSTAIN:
-                            break;
+                    if (result.getChoice().success()) {
+                        Relation relation = factory.create(group, target, TYPE);
+                        group.setRelation(target, relation);
                     }
                 }
 
@@ -166,26 +157,47 @@ public class AlliesCommand extends ListCommand {
             });
         }
 
-        //todo
         private static class AlliesRequestMessenger extends ChoiceRequestMessenger {
+
+            private final Group initiator;
+            private final Group opponent;
+
+            private AlliesRequestMessenger(Group initiator, Group opponent) {
+                this.initiator = initiator;
+                this.opponent = opponent;
+            }
+
+            @Override
+            public void start(Request<Choices> request) {
+                request.getSupplier().send("requests.allies.asked-start", opponent.getTag());
+                super.start(request);
+            }
 
             @Override
             public void start(Request<Choices> request, Participant participant) {
-                request.getSupplier().send("requests.allies-started");
-                participant.send("requests.allies");
+                participant.send("requests.allies.ask-start", initiator.getTag());
             }
 
             @Override
-            public void end(Participant participant, Request<Choices> request) {
-                participant.send("requests.allies-end", participant.getName());
+            public void end(Request<Choices> request, Choices choice) {
+                if (choice.success()) {
+                    request.getSupplier().send("requests.allies.started", opponent.getTag());
+                } else {
+                    request.getSupplier().send("requests.allies.failed", opponent.getTag());
+                }
+
+                super.end(request, choice);
             }
 
             @Override
-            public void cancelled(Participant participant, Request<Choices> request) {
-                end(participant, request);
+            public void end(Participant participant, Request<Choices> request, Choices choice) {
+
+                if (choice.success()) {
+                    participant.send("requests.allies.started", initiator.getTag());
+                } else {
+                    participant.send("requests.allies.failed", initiator.getTag());
+                }
             }
         }
     }
-
-
 }

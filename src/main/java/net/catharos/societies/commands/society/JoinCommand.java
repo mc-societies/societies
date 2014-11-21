@@ -65,13 +65,13 @@ public class JoinCommand implements Executor<Member> {
         Set<Member> participants = target.getMembers("vote.join");
         int online = Members.onlineMembers(participants);
 
-        //todo
         if (online < 1) {
             sender.send("participants.not-available");
             return;
         }
 
-        Request<Choices> request = requests.create(sender, new SetInvolved(participants), new JoinRequestMessenger());
+        final Request<Choices> request = requests
+                .create(sender, new SetInvolved(participants), new JoinRequestMessenger(target));
         request.start();
 
         addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
@@ -81,21 +81,13 @@ public class JoinCommand implements Executor<Member> {
                     return;
                 }
 
-                switch (result.getChoice()) {
-                    case ACCEPT:
-                        target.addMember(sender);
+                if (result.getChoice().success()) {
+                    target.addMember(sender);
 
-                        if (trustDefault) {
-                            target.addRank(normalDefaultRank);
-                        }
+                    if (trustDefault) {
+                        target.addRank(normalDefaultRank);
+                    }
 
-                        sender.send("you.joined", target.getName());
-                        break;
-                    case DENY:
-                    case CANCELLED:
-                    case ABSTAIN:
-                        sender.send("you.join-failed", target.getName());
-                        break;
                 }
             }
 
@@ -106,23 +98,44 @@ public class JoinCommand implements Executor<Member> {
         });
     }
 
-    //todo
     private static class JoinRequestMessenger extends ChoiceRequestMessenger {
+
+        private final Group group;
+
+        private JoinRequestMessenger(Group group) {this.group = group;}
+
+
+        @Override
+        public void start(Request<Choices> request) {
+            request.getSupplier().send("join.started", group.getTag());
+            super.start(request);
+        }
 
         @Override
         public void start(Request<Choices> request, Participant participant) {
-            request.getSupplier().send("requests.join-started");
-            participant.send("requests.join", participant.getName());
+            participant.send("join.member-requests", participant.getName());
         }
 
         @Override
-        public void end(Participant participant, Request<Choices> request) {
-            participant.send("requests.join-end", participant.getName());
+        public void end(Request<Choices> request, Choices choice) {
+            if (choice.success()) {
+                request.getSupplier().send("you-joined");
+            } else {
+                request.getSupplier().send("you-failed");
+            }
+
+            super.end(request, choice);
         }
 
         @Override
-        public void cancelled(Participant participant, Request<Choices> request) {
-            end(participant, request);
+        public void end(Participant participant, Request<Choices> request, Choices choice) {
+            if (choice.success()) {
+                participant.send("member-joined", participant.getName());
+            } else {
+                participant.send("member-failed", participant.getName());
+            }
+
+
         }
     }
 }

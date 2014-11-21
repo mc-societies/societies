@@ -12,8 +12,8 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.shank.logging.InjectLogger;
-import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.api.member.SocietyMember;
+import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.request.ChoiceRequestMessenger;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -74,7 +74,8 @@ public class InviteCommand implements Executor<Member> {
             return;
         }
 
-        Request<Choices> request = requests.create(sender, new SingleInvolved(target), new InviteRequestMessenger(group));
+        Request<Choices> request = requests
+                .create(sender, new SingleInvolved(target), new InviteRequestMessenger(group, target));
         request.start();
 
         addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
@@ -84,22 +85,12 @@ public class InviteCommand implements Executor<Member> {
                     return;
                 }
 
-                switch (result.getChoice()) {
-                    case ACCEPT:
-                        group.addMember(target);
+                if (result.getChoice().success()) {
+                    group.addMember(target);
 
-                        if (trustDefault) {
-                            target.addRank(normalDefaultRank);
-                        }
-
-                        target.send("target-member.society-added", group.getName());
-                        sender.send("society.member-added", target.getName());
-                        break;
-                    case DENY:
-                    case ABSTAIN:
-                        target.send(FAILED);
-                        sender.send(FAILED);
-                        break;
+                    if (trustDefault) {
+                        target.addRank(normalDefaultRank);
+                    }
                 }
             }
 
@@ -110,27 +101,46 @@ public class InviteCommand implements Executor<Member> {
         });
     }
 
-    //todo
     private static class InviteRequestMessenger extends ChoiceRequestMessenger {
 
         private final Group group;
+        private final Member target;
 
-        private InviteRequestMessenger(Group group) {this.group = group;}
+        private InviteRequestMessenger(Group group, Member target) {
+            this.group = group;
+            this.target = target;
+        }
+
+        @Override
+        public void start(Request<Choices> request) {
+            request.getSupplier().send("invite.started");
+            super.start(request);
+        }
 
         @Override
         public void start(Request<Choices> request, Participant participant) {
-            request.getSupplier().send("requests.invite-started");
-            participant.send("requests.invite", participant.getName(), group.getName());
+            participant.send("invite.member-invites", participant.getName(), group.getTag());
         }
 
         @Override
-        public void end(Participant participant, Request<Choices> request) {
-            participant.send("requests.invite-end", participant.getName());
+        public void end(Request<Choices> request, Choices choice) {
+
+            if (choice.success()) {
+                request.getSupplier().send("member-joined", target.getName());
+            } else {
+                request.getSupplier().send("member-failed", target.getName());
+            }
+
+            super.end(request, choice);
         }
 
         @Override
-        public void cancelled(Participant participant, Request<Choices> request) {
-            end(participant, request);
+        public void end(Participant participant, Request<Choices> request, Choices choice) {
+            if (choice.success()) {
+                participant.send("you-joined", group.getTag());
+            } else {
+                participant.send("you-failed", group.getTag());
+            }
         }
     }
 }

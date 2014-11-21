@@ -29,7 +29,7 @@ class HelpExecutor<S extends Sender> implements Executor<S> {
 
         StringBuilder commandFormat = new StringBuilder();
 
-        //todo create iterator
+        //beautify create iterator
         for (Command<S> cmd = command; cmd != null; cmd = cmd.getParent()) {
             if (cmd.getIdentifier() == null || cmd.getIdentifier().isEmpty()) {
                 continue;
