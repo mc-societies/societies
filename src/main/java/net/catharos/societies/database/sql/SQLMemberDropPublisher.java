@@ -13,6 +13,7 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SQLMemberDropPublisher
  */
+//todo needed?
 class SQLMemberDropPublisher extends AbstractPublisher implements MemberDropPublisher {
 
     @Inject

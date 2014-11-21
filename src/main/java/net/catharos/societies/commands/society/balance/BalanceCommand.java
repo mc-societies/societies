@@ -37,6 +37,7 @@ public class BalanceCommand implements Executor<Member> {
 
         double balance = group.getDouble(balanceSetting);
 
+
         sender.send("balance-current", balance);
     }
 }

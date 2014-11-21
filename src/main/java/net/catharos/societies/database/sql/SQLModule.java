@@ -11,6 +11,7 @@ import net.catharos.lib.database.data.DataWorker;
 import net.catharos.lib.database.data.queue.DefaultQueue;
 import net.catharos.lib.database.data.queue.Queue;
 import net.catharos.lib.shank.service.AbstractServiceModule;
+import net.catharos.societies.api.lock.Locker;
 import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.group.OnlineGroupCache;
 import net.catharos.societies.member.OnlineMemberCache;
@@ -95,6 +96,6 @@ public class SQLModule extends AbstractServiceModule {
         bind(RankPublisher.class).to(rankKey);
         bind(RankDropPublisher.class).to(rankKey);
 
-
+        bind(Locker.class).to(SQLLocker.class);
     }
 }

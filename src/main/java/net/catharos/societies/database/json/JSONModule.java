@@ -6,6 +6,8 @@ import net.catharos.groups.GroupProvider;
 import net.catharos.groups.MemberProvider;
 import net.catharos.groups.publisher.*;
 import net.catharos.lib.shank.service.AbstractServiceModule;
+import net.catharos.societies.api.lock.DummyLocker;
+import net.catharos.societies.api.lock.Locker;
 import net.catharos.societies.api.member.SocietyMember;
 
 /**
@@ -51,6 +53,9 @@ public class JSONModule extends AbstractServiceModule {
         // Rank publishers
         bind(RankPublisher.class).to(groupPublisher);
         bind(RankDropPublisher.class).to(groupPublisher);
+
+
+        bind(Locker.class).to(DummyLocker.class);
     }
 
 

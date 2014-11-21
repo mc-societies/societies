@@ -1,5 +1,3 @@
-Lock API (balance)
-
 synchronize method (sql -> execute all update insert queries again, json -> rewrite)
 
 Beta release ------------------------------------------------------------------------------------

@@ -11,13 +11,16 @@ import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.societies.api.lock.Locker;
 import net.catharos.societies.api.member.SocietyMember;
 import net.milkbowl.vault.economy.EconomyResponse;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Represents a RelationListCommand
  */
-@Command(identifier = "command.withdraw")
+@Command(identifier = "command.withdraw", async = true)
 @Permission("societies.withdraw")
 @Sender(Member.class)
 public class WithdrawCommand implements Executor<Member> {
@@ -25,10 +28,12 @@ public class WithdrawCommand implements Executor<Member> {
     @Argument(name = "argument.withdraw")
     double withdraw;
 
+    private final Locker locker;
     private final Setting<Double> balanceSetting;
 
     @Inject
-    public WithdrawCommand(@Named("group-balance") Setting<Double> balanceSetting) {
+    public WithdrawCommand(Locker locker, @Named("group-balance") Setting<Double> balanceSetting) {
+        this.locker = locker;
         this.balanceSetting = balanceSetting;
     }
 
@@ -38,6 +43,14 @@ public class WithdrawCommand implements Executor<Member> {
 
         if (group == null) {
             sender.send("society.not-found");
+            return;
+        }
+
+        try {
+            if (locker.lock(0).get()) return;
+        } catch (InterruptedException e) {
+            return;
+        } catch (ExecutionException e) {
             return;
         }
 
@@ -61,5 +74,13 @@ public class WithdrawCommand implements Executor<Member> {
         }
 
         sender.send("withdraw-successfully", withdraw);
+
+        try {
+            locker.unlock(0).get();
+        } catch (InterruptedException e) {
+            return;
+        } catch (ExecutionException e) {
+            return;
+        }
     }
 }

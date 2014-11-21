@@ -11,16 +11,21 @@ import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.societies.api.lock.Locker;
 import net.catharos.societies.api.member.SocietyMember;
 import net.milkbowl.vault.economy.EconomyResponse;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Represents a RelationListCommand
  */
-@Command(identifier = "command.deposit")
+@Command(identifier = "command.deposit", async = true)
 @Permission("societies.deposit")
 @Sender(Member.class)
 public class DepositCommand implements Executor<Member> {
+
+    private final Locker locker;
 
     @Argument(name = "argument.deposit")
     double deposit;
@@ -28,7 +33,8 @@ public class DepositCommand implements Executor<Member> {
     private final Setting<Double> balanceSetting;
 
     @Inject
-    public DepositCommand(@Named("group-balance") Setting<Double> balanceSetting) {
+    public DepositCommand(Locker locker, @Named("group-balance") Setting<Double> balanceSetting) {
+        this.locker = locker;
         this.balanceSetting = balanceSetting;
     }
 
@@ -38,6 +44,14 @@ public class DepositCommand implements Executor<Member> {
 
         if (group == null) {
             sender.send("society.not-found");
+            return;
+        }
+
+        try {
+            if (locker.lock(0).get()) return;
+        } catch (InterruptedException e) {
+           return;
+        } catch (ExecutionException e) {
             return;
         }
 
@@ -54,5 +68,14 @@ public class DepositCommand implements Executor<Member> {
         group.set(balanceSetting, balance + response.amount);
 
         sender.send("deposit-successfully", response.amount);
+
+
+        try {
+            locker.unlock(0).get();
+        } catch (InterruptedException e) {
+            return;
+        } catch (ExecutionException e) {
+            return;
+        }
     }
 }

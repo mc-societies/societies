@@ -49,6 +49,11 @@ public class Tables {
 	public static final net.catharos.societies.database.sql.layout.tables.Societies SOCIETIES = net.catharos.societies.database.sql.layout.tables.Societies.SOCIETIES;
 
 	/**
+	 * The table societies.societies_locks
+	 */
+	public static final net.catharos.societies.database.sql.layout.tables.SocietiesLocks SOCIETIES_LOCKS = net.catharos.societies.database.sql.layout.tables.SocietiesLocks.SOCIETIES_LOCKS;
+
+	/**
 	 * The table societies.societies_ranks
 	 */
 	public static final net.catharos.societies.database.sql.layout.tables.SocietiesRanks SOCIETIES_RANKS = net.catharos.societies.database.sql.layout.tables.SocietiesRanks.SOCIETIES_RANKS;

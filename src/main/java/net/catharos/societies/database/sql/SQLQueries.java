@@ -5,10 +5,7 @@ import com.google.inject.Singleton;
 import net.catharos.lib.database.DSLProvider;
 import net.catharos.lib.database.QueryKey;
 import net.catharos.lib.database.QueryProvider;
-import net.catharos.societies.database.sql.layout.tables.records.MembersRecord;
-import net.catharos.societies.database.sql.layout.tables.records.RanksRecord;
-import net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord;
-import net.catharos.societies.database.sql.layout.tables.records.SocietiesSettingsRecord;
+import net.catharos.societies.database.sql.layout.tables.records.*;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.types.UShort;
@@ -106,6 +103,14 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Query> DROP_RANK_IN_MEMBERS = QueryKey.create();
 
     public static final QueryKey<Query> DROP_INACTIVE_MEMBERS = QueryKey.create();
+
+
+
+    public static final QueryKey<Insert<SocietiesLocksRecord>> INSERT_LOCK = QueryKey.create();
+
+    public static final QueryKey<Query> DROP_LOCK = QueryKey.create();
+
+    public static final QueryKey<Select<SocietiesLocksRecord>> SELECT_LOCK = QueryKey.create();
 
 
     @Inject
@@ -426,5 +431,30 @@ class SQLQueries extends QueryProvider {
             }
         });
 
+        //================================================================================
+        // Locks
+        //================================================================================
+
+
+        builder(INSERT_LOCK, new QueryBuilder<Insert<SocietiesLocksRecord>>() {
+            @Override
+            public Insert<SocietiesLocksRecord> create(DSLContext context) {
+                return context.insertInto(SOCIETIES_LOCKS).set(SOCIETIES_LOCKS.ID, DEFAULT_SHORT).onDuplicateKeyIgnore();
+            }
+        });
+
+        builder(DROP_LOCK, new QueryBuilder<Query>() {
+            @Override
+            public Query create(DSLContext context) {
+                return context.delete(SOCIETIES_LOCKS).where(SOCIETIES_LOCKS.ID.equal(DEFAULT_SHORT));
+            }
+        });
+
+        builder(SELECT_LOCK, new QueryBuilder<Select<SocietiesLocksRecord>>() {
+            @Override
+            public Select<SocietiesLocksRecord> create(DSLContext context) {
+                return context.selectFrom(SOCIETIES_LOCKS).where(SOCIETIES_LOCKS.ID.equal(DEFAULT_SHORT));
+            }
+        });
     }
 }
