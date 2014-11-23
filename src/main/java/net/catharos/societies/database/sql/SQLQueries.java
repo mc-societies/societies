@@ -105,7 +105,6 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Query> DROP_INACTIVE_MEMBERS = QueryKey.create();
 
 
-
     public static final QueryKey<Insert<SocietiesLocksRecord>> INSERT_LOCK = QueryKey.create();
 
     public static final QueryKey<Query> DROP_LOCK = QueryKey.create();
@@ -185,7 +184,8 @@ class SQLQueries extends QueryProvider {
                         .set(SOCIETIES.UUID, DEFAULT_BYTE_ARRAY)
                         .set(SOCIETIES.NAME, DEFAULT_STRING)
                         .set(SOCIETIES.TAG, DEFAULT_STRING)
-                        .set(SOCIETIES.CLEAN_TAG, DEFAULT_STRING).onDuplicateKeyIgnore();
+                        .set(SOCIETIES.CLEAN_TAG, DEFAULT_STRING)
+                        .set(SOCIETIES.CREATED, DEFAULT_TIMESTAMP).onDuplicateKeyIgnore();
             }
         });
 
@@ -439,7 +439,8 @@ class SQLQueries extends QueryProvider {
         builder(INSERT_LOCK, new QueryBuilder<Insert<SocietiesLocksRecord>>() {
             @Override
             public Insert<SocietiesLocksRecord> create(DSLContext context) {
-                return context.insertInto(SOCIETIES_LOCKS).set(SOCIETIES_LOCKS.ID, DEFAULT_SHORT).onDuplicateKeyIgnore();
+                return context.insertInto(SOCIETIES_LOCKS).set(SOCIETIES_LOCKS.ID, DEFAULT_SHORT)
+                        .onDuplicateKeyIgnore();
             }
         });
 
