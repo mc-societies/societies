@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SocietyModifier
  */
-class SQLMemberGroupPublisher extends AbstractPublisher implements MemberGroupPublisher {
+class SQLMemberGroupPublisher extends AbstractPublisher implements MemberGroupPublisher<Member> {
 
     @Inject
     public SQLMemberGroupPublisher(ListeningExecutorService service, SQLQueries queries) {
@@ -24,10 +24,10 @@ class SQLMemberGroupPublisher extends AbstractPublisher implements MemberGroupPu
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> publishGroup(final M member, final Group group) {
-        return service.submit(new Callable<M>() {
+    public ListenableFuture<Member> publishGroup(final Member member, final Group group) {
+        return service.submit(new Callable<Member>() {
             @Override
-            public M call() throws Exception {
+            public Member call() throws Exception {
                 Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_SOCIETY);
 
                 UUID uuid = null;

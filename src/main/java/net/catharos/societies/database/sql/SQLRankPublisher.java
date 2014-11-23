@@ -21,7 +21,7 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SQLGroupRankPublisher
  */
-class SQLRankPublisher extends AbstractPublisher implements RankPublisher, MemberRankPublisher, GroupRankPublisher, RankDropPublisher {
+class SQLRankPublisher<M extends Member> extends AbstractPublisher implements RankPublisher, MemberRankPublisher<M>, GroupRankPublisher, RankDropPublisher {
 
     @Inject
     public SQLRankPublisher(ListeningExecutorService service, SQLQueries queries) {
@@ -70,7 +70,7 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher, Membe
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> publishRank(final M member, final Rank rank) {
+    public ListenableFuture<M> publishRank(final M member, final Rank rank) {
         return service.submit(new Callable<M>() {
             @Override
             public M call() throws Exception {
@@ -84,7 +84,7 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher, Membe
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> dropRank(final M member, final Rank rank) {
+    public ListenableFuture<M> dropRank(final M member, final Rank rank) {
         return service.submit(new Callable<M>() {
             @Override
             public M call() throws Exception {

@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SocietyNameUpdater
  */
-class SQLMemberCreatedPublisher extends AbstractPublisher implements MemberCreatedPublisher {
+class SQLMemberCreatedPublisher extends AbstractPublisher implements MemberCreatedPublisher<Member> {
 
     @Inject
     public SQLMemberCreatedPublisher(ListeningExecutorService service, SQLQueries queries) {
@@ -24,10 +24,10 @@ class SQLMemberCreatedPublisher extends AbstractPublisher implements MemberCreat
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> publishCreated(final M member, final DateTime created) {
-        return service.submit(new Callable<M>() {
+    public ListenableFuture<Member> publishCreated(final Member member, final DateTime created) {
+        return service.submit(new Callable<Member>() {
             @Override
-            public M call() throws Exception {
+            public Member call() throws Exception {
                 Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_CREATED);
 
                 query.bind(1, UUIDGen.toByteArray(member.getUUID()));

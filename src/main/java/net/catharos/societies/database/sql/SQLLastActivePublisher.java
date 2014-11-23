@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SocietyNameUpdater
  */
-class SQLLastActivePublisher extends AbstractPublisher implements MemberLastActivePublisher {
+class SQLLastActivePublisher extends AbstractPublisher implements MemberLastActivePublisher<Member> {
 
     @Inject
     public SQLLastActivePublisher(ListeningExecutorService service, SQLQueries queries) {
@@ -24,10 +24,10 @@ class SQLLastActivePublisher extends AbstractPublisher implements MemberLastActi
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> publishLastActive(final M member, final DateTime date) {
-        return service.submit(new Callable<M>() {
+    public ListenableFuture<Member> publishLastActive(final Member member, final DateTime date) {
+        return service.submit(new Callable<Member>() {
             @Override
-            public M call() throws Exception {
+            public Member call() throws Exception {
                 Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_LAST_ACTIVE);
 
                 query.bind(1, UUIDGen.toByteArray(member.getUUID()));

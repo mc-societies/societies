@@ -22,10 +22,10 @@ class SQLMemberPublisher extends AbstractPublisher implements MemberPublisher {
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> publish(final M member) {
-        return service.submit(new Callable<M>() {
+    public ListenableFuture<Member> publish(final Member member) {
+        return service.submit(new Callable<Member>() {
             @Override
-            public M call() throws Exception {
+            public Member call() throws Exception {
                 Insert<MembersRecord> query = queries.getQuery(SQLQueries.INSERT_MEMBER);
 
                 query.bind(1, UUIDGen.toByteArray(member.getUUID()));

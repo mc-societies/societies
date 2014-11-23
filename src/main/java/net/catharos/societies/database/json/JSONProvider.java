@@ -18,6 +18,7 @@ import com.googlecode.cqengine.index.suffix.SuffixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.resultset.ResultSet;
 import gnu.trove.map.hash.THashMap;
+import net.catharos.bridge.ChatColor;
 import net.catharos.groups.*;
 import net.catharos.groups.publisher.MemberPublisher;
 import net.catharos.lib.core.uuid.UUIDStorage;
@@ -25,7 +26,6 @@ import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
 import net.catharos.societies.api.PlayerResolver;
-import net.catharos.bridge.ChatColor;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
@@ -90,7 +90,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     private final UUIDStorage memberStorage;
     private final UUIDStorage groupStorage;
 
-    private final MemberPublisher memberPublisher;
+    private MemberPublisher memberPublisher;
 
     private final MemberFactory<M> memberFactory;
 
@@ -103,15 +103,18 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
                         @Named("group-root") File groupRoot,
                         @Named("member-root") File memberRoot,
                         GroupMapper groupMapper,
-                        MemberPublisher memberPublisher,
                         MemberFactory<M> memberFactory) {
         this.playerResolver = playerResolver;
         this.mapper = mapper;
         this.groupMapper = groupMapper;
-        this.memberPublisher = memberPublisher;
         this.memberFactory = memberFactory;
         this.groupStorage = new UUIDStorage(groupRoot, "json");
         this.memberStorage = new UUIDStorage(memberRoot, "json");
+    }
+
+    @Inject
+    public void publisher(MemberPublisher memberPublisher) {  //beautify
+        this.memberPublisher = memberPublisher;
     }
 
     @Override

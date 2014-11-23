@@ -13,6 +13,7 @@ import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.Target;
 import net.catharos.lib.core.uuid.UUIDStorage;
 import net.catharos.lib.shank.logging.InjectLogger;
+import net.catharos.societies.api.member.SocietyMember;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -25,34 +26,33 @@ import java.util.concurrent.Callable;
  * Represents a JSONMemberPublisher
  */
 @SuppressWarnings("TypeParameterHidesVisibleType")
-public final class JSONMemberPublisher<M extends Member> implements
+public final class JSONMemberPublisher implements
         MemberPublisher, MemberCreatedPublisher, MemberLastActivePublisher,
         MemberGroupPublisher, MemberRankPublisher, SettingPublisher, MemberDropPublisher {
 
     private final UUIDStorage uuidStorage;
     private final MemberMapper<?> mapper;
     private final ListeningExecutorService service;
-    private final JSONProvider<Member> provider;
+    private final JSONProvider<SocietyMember> provider;
 
     @InjectLogger
     private Logger logger;
 
     @Inject
-    public JSONMemberPublisher(@Named("member-root") File memberRoot, MemberMapper<M> mapper, ListeningExecutorService service, JSONProvider<Member> provider) {
+    public JSONMemberPublisher(@Named("member-root") File memberRoot, MemberMapper<SocietyMember> mapper, ListeningExecutorService service, JSONProvider<SocietyMember> provider) {
         this.provider = provider;
         this.uuidStorage = new UUIDStorage(memberRoot, "json");
         this.mapper = mapper;
         this.service = service;
     }
 
-
-    private <M extends Member> ListenableFuture<M> publishMember(final M member) {
-        return service.submit(new Callable<M>() {
+    private ListenableFuture<Member> publishMember(final Member member) {
+        return service.submit(new Callable<Member>() {
 
             @Override
-            public M call() throws Exception {
+            public Member call() throws Exception {
                 try {
-                    provider.members.add(member);
+                    provider.members.add((SocietyMember) member);//beautify cast?
                     mapper.writeMember(member, uuidStorage.getFile(member.getUUID()));
                 } catch (Exception e) {
                     logger.catching(e);
@@ -69,41 +69,41 @@ public final class JSONMemberPublisher<M extends Member> implements
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> publish(M member) {
+    public ListenableFuture<Member> publish(Member member) {
         return publishMember(member);
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> publishCreated(M member, DateTime created) {
+    public ListenableFuture<Member> publishCreated(Member member, DateTime created) {
         return publishMember(member);
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> publishGroup(M member, Group group) {
+    public ListenableFuture<Member> publishGroup(Member member, Group group) {
         return publishMember(member);
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> publishLastActive(M member, DateTime date) {
+    public ListenableFuture<Member> publishLastActive(Member member, DateTime date) {
         return publishMember(member);
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> publishRank(M member, Rank rank) {
+    public ListenableFuture<Member> publishRank(Member member, Rank rank) {
         return publishMember(member);
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> dropRank(M member, Rank rank) {
+    public ListenableFuture<Member> dropRank(Member member, Rank rank) {
         return publishMember(member);
     }
 
     @Override
-    public <M extends Member> ListenableFuture<M> drop(final M member) {
-        return service.submit(new Callable<M>() {
+    public ListenableFuture<Member> drop(final Member member) {
+        return service.submit(new Callable<Member>() {
 
             @Override
-            public M call() throws Exception {
+            public Member call() throws Exception {
                 provider.members.remove(member);
 
                 File file = uuidStorage.getFile(member.getUUID());

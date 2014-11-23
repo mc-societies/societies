@@ -26,6 +26,8 @@ public class JSONModule extends AbstractServiceModule {
         // Member provider
         bind(new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(provider);
 
+//        bind(new TypeLiteral<MemberProvider<Member>>() {}).to(CastSafe.<Key<? extends MemberProvider<Member>>>toGeneric(provider);
+
         // Group provider
         bind(GroupProvider.class).to(provider);
 
@@ -40,8 +42,8 @@ public class JSONModule extends AbstractServiceModule {
         bind(GroupRankPublisher.class).to(groupPublisher);
 
 
-        Key<JSONMemberPublisher<SocietyMember>> memberPublisher = Key
-                .get(new TypeLiteral<JSONMemberPublisher<SocietyMember>>() {});
+        Key<JSONMemberPublisher> memberPublisher = Key
+                .get(new TypeLiteral<JSONMemberPublisher>() {});
 
         // Member Publishers
         bind(MemberPublisher.class).to(memberPublisher);
