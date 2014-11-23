@@ -77,6 +77,9 @@ public class SocietyModule extends AbstractModule {
     }
 
     private static interface RankSelector {
+
+        String getName();
+
         boolean is(Rank rank);
     }
 
@@ -99,7 +102,7 @@ public class SocietyModule extends AbstractModule {
                 }
             }
 
-            return null;
+            throw new RuntimeException("Failed to find rank " + selector.getName() + "!");
         }
     }
 
@@ -117,6 +120,11 @@ public class SocietyModule extends AbstractModule {
         protected void configure() {
             Key<Rank> key = Key.get(Rank.class, Names.named(keyName));
             bind(RankSelector.class).toInstance(new RankSelector() {
+                @Override
+                public String getName() {
+                    return defaultRank;
+                }
+
                 @Override
                 public boolean is(Rank rank) {
                     return rank.getName().equals(defaultRank);
