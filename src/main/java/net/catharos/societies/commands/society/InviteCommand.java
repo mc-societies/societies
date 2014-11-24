@@ -64,6 +64,11 @@ public class InviteCommand implements Executor<Member> {
             return;
         }
 
+        if (target.getGroup() != null) {
+            sender.send("target-member.already-member");
+            return;
+        }
+
         if (maxSize >= 0 && group.size() >= maxSize) {
             sender.send("society.reached-max-size");
             return;

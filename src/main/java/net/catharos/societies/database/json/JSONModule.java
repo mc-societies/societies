@@ -40,17 +40,18 @@ public class JSONModule extends AbstractServiceModule {
         bind(GroupCreatedPublisher.class).to(groupPublisher);
         bind(SettingPublisher.class).to(groupPublisher);
         bind(GroupRankPublisher.class).to(groupPublisher);
-
+        bind(GroupDropPublisher.class).to(groupPublisher);
 
         Key<JSONMemberPublisher> memberPublisher = Key
                 .get(new TypeLiteral<JSONMemberPublisher>() {});
 
         // Member Publishers
-        bind(MemberPublisher.class).to(memberPublisher);
+        bind(MemberPublisher.class).to(provider);
         bind(MemberGroupPublisher.class).to(memberPublisher);
         bind(MemberCreatedPublisher.class).to(memberPublisher);
         bind(MemberLastActivePublisher.class).to(memberPublisher);
         bind(MemberRankPublisher.class).to(memberPublisher);
+        bind(MemberDropPublisher.class).to(provider);
 
         // Rank publishers
         bind(RankPublisher.class).to(groupPublisher);

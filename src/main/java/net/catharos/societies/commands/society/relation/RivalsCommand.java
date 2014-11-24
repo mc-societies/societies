@@ -88,6 +88,11 @@ public class RivalsCommand extends ListCommand {
                 return;
             }
 
+            if (group.hasRelation(target)) {
+                sender.send("socity.already-relation");
+                return;
+            }
+
             Set<Member> participants = group.getMembers("vote.rivals");
             int online = Members.onlineMembers(participants);
 
@@ -207,6 +212,11 @@ public class RivalsCommand extends ListCommand {
                 return;
             }
 
+            if (group.hasRelation(target)) {
+                sender.send("socity.already-relation");
+                return;
+            }
+
             if (group.size() < minSize) {
                 sender.send("society.too-small");
                 return;
@@ -239,6 +249,7 @@ public class RivalsCommand extends ListCommand {
             group.setRelation(target, relation);
 
             sender.send("rivals.added", target.getName());
+            //todo target information
         }
     }
 

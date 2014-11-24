@@ -145,6 +145,8 @@ public class CommandModule extends AbstractModule {
         addRule("vote.join", 0x70);
         addRule("vote.allies", 0x71);
         addRule("vote.rivals", 0x72);
+
+        addRule("leader", 0x80);
     }
 
     private void addRule(String rule, int id) {

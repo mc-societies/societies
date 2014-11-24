@@ -3,8 +3,8 @@ package net.catharos.societies.database.json;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -20,12 +20,15 @@ import com.googlecode.cqengine.resultset.ResultSet;
 import gnu.trove.map.hash.THashMap;
 import net.catharos.bridge.ChatColor;
 import net.catharos.groups.*;
+import net.catharos.groups.publisher.MemberDropPublisher;
 import net.catharos.groups.publisher.MemberPublisher;
+import net.catharos.lib.core.util.CastSafe;
 import net.catharos.lib.core.uuid.UUIDStorage;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
 import net.catharos.societies.api.PlayerResolver;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
@@ -33,6 +36,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.googlecode.cqengine.query.QueryFactory.contains;
@@ -42,7 +46,7 @@ import static com.googlecode.cqengine.query.QueryFactory.equal;
  * Represents a JSONProvider
  */
 @Singleton
-public class JSONProvider<M extends Member> extends AbstractService implements MemberProvider<M>, GroupProvider {
+public class JSONProvider<M extends Member> extends AbstractService implements MemberProvider<M>, GroupProvider, MemberPublisher, MemberDropPublisher {
 
     IndexedCollection<Group> groups = CQEngine.newInstance();
 
@@ -81,7 +85,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
 
 
     {
-        members.addIndex((Index<M>) HashIndex.onAttribute(MEMBER_UUID));
+        members.addIndex(CastSafe.<Index<M>>toGeneric(HashIndex.onAttribute(MEMBER_UUID)));
     }
 
     private final PlayerResolver playerResolver;
@@ -89,6 +93,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     private final MemberMapper<M> mapper;
     private final UUIDStorage memberStorage;
     private final UUIDStorage groupStorage;
+    private final ListeningExecutorService service;
 
     private MemberPublisher memberPublisher;
 
@@ -103,10 +108,11 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
                         @Named("group-root") File groupRoot,
                         @Named("member-root") File memberRoot,
                         GroupMapper groupMapper,
-                        MemberFactory<M> memberFactory) {
+                        ListeningExecutorService service, MemberFactory<M> memberFactory) {
         this.playerResolver = playerResolver;
         this.mapper = mapper;
         this.groupMapper = groupMapper;
+        this.service = service;
         this.memberFactory = memberFactory;
         this.groupStorage = new UUIDStorage(groupRoot, "json");
         this.memberStorage = new UUIDStorage(memberRoot, "json");
@@ -161,7 +167,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         Query<Group> query = equal(GROUP_UUID, uuid);
         ResultSet<Group> retrieve = groups.retrieve(query);
 
-        return Futures.immediateFuture(Iterables.getOnlyElement(retrieve, null));
+        return immediateFuture(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override
@@ -171,18 +177,18 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         ResultSet<Group> retrieve = groups.retrieve(query);
 
         Set<Group> result = Sets.newHashSet(retrieve);
-        return Futures.immediateFuture(result);
+        return immediateFuture(result);
     }
 
     @Override
     public ListenableFuture<Set<Group>> getGroups() {
         Set<Group> result = Sets.newHashSet(groups);
-        return Futures.immediateFuture(result);
+        return immediateFuture(result);
     }
 
     @Override
     public ListenableFuture<Integer> size() {
-        return Futures.immediateFuture(groups.size());
+        return immediateFuture(groups.size());
     }
 
     @Override
@@ -197,7 +203,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
             return immediateFuture(member);
         }
 
-        return Futures.immediateFuture(Iterables.getOnlyElement(retrieve, null));
+        return immediateFuture(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override
@@ -214,6 +220,39 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     @Override
     public ListenableFuture<Set<M>> getMembers() {
         Set<M> result = Collections.unmodifiableSet(members);
-        return Futures.immediateFuture(result);
+        return immediateFuture(result);
+    }
+
+    @Override
+    public ListenableFuture<Member> publish(final Member member) {
+        return service.submit(new Callable<Member>() {
+
+            @Override
+            public Member call() throws Exception {
+                try {
+                    members.add((M) member);//beautify cast?
+                    mapper.writeMember(member, memberStorage.getFile(member.getUUID()));
+                } catch (Exception e) {
+                    logger.catching(e);
+                }
+
+                return member;
+            }
+        });
+    }
+
+    @Override
+    public ListenableFuture drop(final Member member) {
+        return service.submit(new Callable<Member>() {
+
+            @Override
+            public Member call() throws Exception {
+                members.remove(member);
+
+                File file = memberStorage.getFile(member.getUUID());
+                FileUtils.forceDelete(file);
+                return member;
+            }
+        });
     }
 }

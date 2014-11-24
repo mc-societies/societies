@@ -76,8 +76,14 @@ public class AlliesCommand extends ListCommand {
                 return;
             }
 
+            if (group.hasRelation(target)) {
+                sender.send("socity.already-relation");
+                return;
+            }
+
             group.removeRelation(target);
 
+            //todo target information
             sender.send("allies.removed", target.getName());
         }
     }
@@ -117,6 +123,11 @@ public class AlliesCommand extends ListCommand {
 
             if (group == null) {
                 sender.send("society.not-found");
+                return;
+            }
+
+            if (group.hasRelation(target)) {
+                sender.send("socity.already-relation");
                 return;
             }
 

@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
  * Represents a SQLMemberDropPublisher
  */
 //todo needed?
-class SQLMemberDropPublisher<M extends Member> extends AbstractPublisher implements MemberDropPublisher<M> {
+class SQLMemberDropPublisher extends AbstractPublisher implements MemberDropPublisher<Member> {
 
     @Inject
     public SQLMemberDropPublisher(ListeningExecutorService service, SQLQueries queries) {
@@ -22,10 +22,10 @@ class SQLMemberDropPublisher<M extends Member> extends AbstractPublisher impleme
     }
 
     @Override
-    public ListenableFuture<M> drop(final M member) {
-        return service.submit(new Callable<M>() {
+    public ListenableFuture<Member> drop(final Member member) {
+        return service.submit(new Callable<Member>() {
             @Override
-            public M call() throws Exception {
+            public Member call() throws Exception {
                 Query query = queries.getQuery(SQLQueries.DROP_MEMBER_BY_UUID);
 
                 query.bind(1, UUIDGen.toByteArray(member.getUUID()));

@@ -1,11 +1,13 @@
 package net.catharos.societies.commands.society.rank;
 
+import com.google.common.base.Function;
 import com.google.inject.Inject;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.publisher.RankPublisher;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;
+import net.catharos.lib.core.collections.IterableUtils;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
@@ -15,8 +17,10 @@ import net.catharos.bridge.ChatColor;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 
+import javax.annotation.Nullable;
 import javax.inject.Provider;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Represents a RankCommand
@@ -212,7 +216,10 @@ public class RankCommand {
 
             target.addRank(rank);
 
-            sender.send("rank.assigned", rank.getName(), sender.getName());
+            if (!sender.equals(target)) {
+                sender.send("rank.assigned", rank.getName(), sender.getName());
+            }
+
             target.send("you.rank-assigned", rank.getName());
         }
     }
@@ -222,6 +229,9 @@ public class RankCommand {
     @Meta({@Entry(key = RuleStep.RULE, value = "rank.deassign"), @Entry(key = VerifyStep.VERIFY)})
     @Sender(Member.class)
     public static class DeassignCommand implements Executor<Member> {
+
+        @Argument(name = "argument.target.member")
+        Member target;
 
         @Argument(name = "argument.rank")
         String rankName;
@@ -235,6 +245,11 @@ public class RankCommand {
                 return;
             }
 
+            if (!group.equals(target.getGroup())) {
+                sender.send("target-member.not-same-group", target.getName());
+                return;
+            }
+
             Rank rank = group.getRank(rankName);
 
             if (rank == null) {
@@ -242,9 +257,29 @@ public class RankCommand {
                 return;
             }
 
-            sender.removeRank(rank);
+            Set<Member> leaders = group.getMembers("leader");
 
-            sender.send("rank.deassigned", rank.getName(), sender.getName());
+            //beautify
+            if (leaders.size() == 1) {
+                Collection<Rank> leaderRanks = group.getRanks("leader");
+                String leaderRanksString = IterableUtils.toString(leaderRanks, new Function<Rank, String>() {
+                    @Nullable
+                    @Override
+                    public String apply(Rank input) {
+                        return input.getName();
+                    }
+                });
+                sender.send("you.assign-leader-first", leaderRanksString);
+                return;
+            }
+
+            target.removeRank(rank);
+
+            if (!sender.equals(target)) {
+                sender.send("rank.assigned", rank.getName(), sender.getName());
+            }
+
+            target.send("you.rank-deassigned", rank.getName(), sender.getName());
         }
     }
 }

@@ -36,13 +36,6 @@ public class LeaveCommand implements Executor<SocietyMember> {
         Group group = sender.getGroup();
 
         if (group != null) {
-            group.removeMember(sender);
-
-            if (group.size() == 1) {
-                dropGroup.drop(group);
-                return;
-            }
-
             Set<Member> leaders = group.getMembers("leader");
 
             if (leaders.size() == 1) {
@@ -56,6 +49,13 @@ public class LeaveCommand implements Executor<SocietyMember> {
                 });
                 sender.send("you.assign-leader-first", leaderRanksString);
                 return;
+            }
+
+
+            group.removeMember(sender);
+
+            if (group.size() == 0) {
+                dropGroup.drop(group);
             }
 
             sender.send("you.society-left", group.getName());
