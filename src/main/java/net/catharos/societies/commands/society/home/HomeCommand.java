@@ -26,7 +26,7 @@ import java.util.Set;
 @Children({
         HomeCommand.SetHomeCommand.class,
         HomeCommand.RegroupCommand.class,
-        HomeCommand.RemoveHomeCommand.class
+//        HomeCommand.RemoveHomeCommand.class
 })
 @Meta({@Entry(key = RuleStep.RULE, value = "home.teleport"), @Entry(key = VerifyStep.VERIFY)})
 @Sender(value = SocietyMember.class)

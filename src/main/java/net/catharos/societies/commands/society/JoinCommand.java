@@ -38,6 +38,7 @@ public class JoinCommand implements Executor<Member> {
 
     private final boolean trustDefault;
     private final Rank normalDefaultRank;
+    private final Rank superRank;
     private final RequestFactory<Choices> requests;
     private final int maxSize;
 
@@ -48,17 +49,33 @@ public class JoinCommand implements Executor<Member> {
     @Inject
     public JoinCommand(@Named("trust.trust-members-by-default") boolean trustDefault,
                        @Named("normal-default-rank") Rank normalDefaultRank,
+                       @Named("super-default-rank") Rank superRank,
                        RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
         this.trustDefault = trustDefault;
         this.normalDefaultRank = normalDefaultRank;
+        this.superRank = superRank;
         this.requests = requests;
         this.maxSize = maxSize;
     }
 
     @Override
     public void execute(CommandContext<Member> ctx, final Member sender) {
+        if (sender.hasGroup()) {
+            sender.send("society.already-member");
+            return;
+        }
+
         if (maxSize >= 0 && target.size() >= maxSize) {
             sender.send("society.other-reached-max-size", target.getName());
+            return;
+        }
+
+        //allow to fix empty groups
+        if (target.size() == 0) {
+            target.addMember(sender);
+
+            target.addRank(superRank);
+            target.addRank(normalDefaultRank);
             return;
         }
 
@@ -66,7 +83,7 @@ public class JoinCommand implements Executor<Member> {
         int online = Members.onlineMembers(participants);
 
         if (online < 1) {
-            sender.send("participants.not-available");
+            sender.send("target-participants.not-available");
             return;
         }
 

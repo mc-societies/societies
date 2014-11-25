@@ -39,7 +39,8 @@ public class TagCommand implements Executor<Member> {
             return;
         }
 
-        group.setTag(newTag);
+
+        group.setTag(ChatColor.translateString(newTag));
         sender.send("target-society.tag-modified");
     }
 }

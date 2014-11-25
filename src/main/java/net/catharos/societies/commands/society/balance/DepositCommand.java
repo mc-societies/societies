@@ -16,6 +16,7 @@ import net.catharos.societies.api.member.SocietyMember;
 import net.milkbowl.vault.economy.EconomyResponse;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Represents a RelationListCommand
@@ -32,6 +33,8 @@ public class DepositCommand implements Executor<Member> {
 
     private final Setting<Double> balanceSetting;
 
+    static final ReentrantLock lock = new ReentrantLock();
+
     @Inject
     public DepositCommand(Locker locker, @Named("group-balance") Setting<Double> balanceSetting) {
         this.locker = locker;
@@ -47,29 +50,35 @@ public class DepositCommand implements Executor<Member> {
             return;
         }
 
+        lock.lock();
         try {
-            if (locker.lock(0).get()) return;
+            if (!locker.lock(0).get()) return;
+
+            SocietyMember societyMember = (SocietyMember) sender;
+
+            EconomyResponse response = societyMember.withdraw(deposit);
+
+            if (!response.transactionSuccess()) {
+                sender.send("deposit-failed");
+                return;
+            }
+
+            double balance = group.getDouble(balanceSetting);
+            group.set(balanceSetting, balance + response.amount);
+
+            sender.send("deposit-successfully", response.amount);
+
         } catch (InterruptedException e) {
-           return;
+            return;
         } catch (ExecutionException e) {
             return;
+        } finally {
+            unlock();
+            lock.unlock();
         }
+    }
 
-        SocietyMember societyMember = (SocietyMember) sender;
-
-        EconomyResponse response = societyMember.withdraw(deposit);
-
-        if (!response.transactionSuccess()) {
-            sender.send("deposit-failed");
-            return;
-        }
-
-        double balance = group.getDouble(balanceSetting);
-        group.set(balanceSetting, balance + response.amount);
-
-        sender.send("deposit-successfully", response.amount);
-
-
+    private void unlock() {
         try {
             locker.unlock(0).get();
         } catch (InterruptedException e) {

@@ -49,7 +49,9 @@ public class DistrustCommand implements Executor<Member> {
         }
 
         target.removeRank(normalDefaultRank);
-        sender.send("target-member.distrusted", target.getName());
+        if (!target.equals(sender)) {
+            sender.send("target-member.distrusted", target.getName());
+        }
         target.send("you.distrusted-by", sender.getName());
     }
 }

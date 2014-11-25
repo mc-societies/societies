@@ -49,7 +49,9 @@ public class TrustCommand implements Executor<Member> {
         }
 
         target.addRank(normalDefaultRank);
-        sender.send("target-member.trusted", target.getName());
+        if (!target.equals(sender)) {
+            sender.send("target-member.trusted", target.getName());
+        }
         target.send("you.trusted-by", sender.getName());
     }
 }

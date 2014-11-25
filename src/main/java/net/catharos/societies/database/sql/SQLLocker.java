@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import net.catharos.societies.api.lock.Locker;
 import org.jooq.Query;
 import org.jooq.Select;
@@ -15,7 +16,10 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SQLLocker
  */
+@Singleton
 public class SQLLocker extends AbstractPublisher implements Locker {
+
+//todo    private final TIntObjectHashMap<ReentrantLock> locks = new TIntObjectHashMap<ReentrantLock>();
 
     @Inject
     public SQLLocker(ListeningExecutorService service, SQLQueries queries) {

@@ -64,7 +64,7 @@ public class InviteCommand implements Executor<Member> {
             return;
         }
 
-        if (target.getGroup() != null) {
+        if (target.hasGroup()) {
             sender.send("target-member.already-member");
             return;
         }

@@ -1,12 +1,19 @@
 package net.catharos.societies.commands.society;
 
+import com.google.common.base.Function;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
+import net.catharos.groups.rank.Rank;
+import net.catharos.lib.core.collections.IterableUtils;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.societies.commands.RuleStep;
+
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * Represents a SocietyProfile
@@ -26,6 +33,21 @@ public class KickCommand implements Executor<Member> {
 
         if (group == null || !target.getGroup().equals(sender.getGroup())) {
             sender.send("target-member.not-same-group", target.getName());
+            return;
+        }
+
+        Set<Member> leaders = group.getMembers("leader");
+
+        if (leaders.size() == 1 && group.size() > 1) {
+            Collection<Rank> leaderRanks = group.getRanks("leader");
+            String leaderRanksString = IterableUtils.toString(leaderRanks, new Function<Rank, String>() {
+                @Nullable
+                @Override
+                public String apply(Rank input) {
+                    return input.getName();
+                }
+            });
+            sender.send("you.assign-leader-first", leaderRanksString);
             return;
         }
 

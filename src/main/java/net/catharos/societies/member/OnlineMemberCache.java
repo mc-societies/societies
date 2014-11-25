@@ -60,6 +60,7 @@ public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
 
             member.complete();
         }
+
         return member;
     }
 

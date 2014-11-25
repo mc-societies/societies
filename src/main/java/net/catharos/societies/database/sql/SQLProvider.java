@@ -204,6 +204,9 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
             byte[] rawSociety = record.getSociety();
 
             if (rawSociety != null && rawSociety.length == UUIDGen.UUID_LENGTH) {
+
+                memberCache.cache(member);
+
                 // Load group if necessary
                 if (predefined == null) {
                     try {
@@ -243,8 +246,6 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
             // Finished
             member.complete();
         }
-
-        memberCache.cache(member);
 
         return member;
     }
@@ -324,6 +325,8 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
             query.bind(1, uuid);
 
+            groupCache.cache(group);
+
             for (Record1<byte[]> member : query.fetch()) {
                 try {
                     UUID memberUUID = UUIDGen.toUUID(member.value1());
@@ -361,8 +364,6 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
             // Finished
             group.complete();
         }
-
-        groupCache.cache(group);
 
         return group;
     }

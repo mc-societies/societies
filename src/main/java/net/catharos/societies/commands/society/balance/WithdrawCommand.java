@@ -46,35 +46,44 @@ public class WithdrawCommand implements Executor<Member> {
             return;
         }
 
+        //beautify
+        DepositCommand.lock.lock();
         try {
-            if (locker.lock(0).get()) return;
+            if (!locker.lock(0).get()) return;
+
+            SocietyMember societyMember = (SocietyMember) sender;
+
+            double balance = group.getDouble(balanceSetting);
+
+            if (balance < withdraw) {
+                sender.send("withdraw-failed");
+                return;
+            }
+
+            group.set(balanceSetting, balance - withdraw);
+
+
+            EconomyResponse response = societyMember.deposit(withdraw);
+
+            if (!response.transactionSuccess()) {
+                sender.send("withdraw-failed");
+                return;
+            }
+
+            sender.send("withdraw-successfully", withdraw);
+
+
         } catch (InterruptedException e) {
             return;
         } catch (ExecutionException e) {
             return;
+        } finally {
+            unlock();
+            DepositCommand.lock.unlock();
         }
+    }
 
-        SocietyMember societyMember = (SocietyMember) sender;
-
-        double balance = group.getDouble(balanceSetting);
-
-        if (balance < withdraw) {
-            sender.send("withdraw-failed");
-            return;
-        }
-
-        group.set(balanceSetting, balance - withdraw);
-
-
-        EconomyResponse response = societyMember.deposit(withdraw);
-
-        if (!response.transactionSuccess()) {
-            sender.send("withdraw-failed");
-            return;
-        }
-
-        sender.send("withdraw-successfully", withdraw);
-
+    private void unlock() {
         try {
             locker.unlock(0).get();
         } catch (InterruptedException e) {

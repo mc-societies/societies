@@ -2,7 +2,6 @@ package net.catharos.societies.commands.society;
 
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.instance.Children;
-import net.catharos.societies.commands.ThreadTestCommand;
 import net.catharos.societies.commands.society.balance.BalanceCommand;
 import net.catharos.societies.commands.society.balance.DepositCommand;
 import net.catharos.societies.commands.society.balance.WithdrawCommand;
@@ -75,8 +74,8 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
         DisproveCommand.class,
 
         ReloadCommand.class,
-        BackupCommand.class,
-        ThreadTestCommand.class
+        BackupCommand.class
+//        ThreadTestCommand.class
 })
 public class SocietyCommand {
 }

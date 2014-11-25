@@ -1,5 +1,3 @@
-synchronize method (sql -> execute all update insert queries again, json -> rewrite)
-
 Beta release ------------------------------------------------------------------------------------
 
 Chat JSON Formatting:
@@ -48,7 +46,6 @@ bulletin board:
 
 Other stuff:
 
-Test bank integration
 Past groups
 Minimize libraries
 Inject config settings correctly

@@ -140,7 +140,7 @@ public class AlliesCommand extends ListCommand {
             int online = Members.onlineMembers(participants);
 
             if (online < 1) {
-                sender.send("participants.not-available");
+                sender.send("target-participants.not-available");
                 return;
             }
 
