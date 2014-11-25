@@ -23,7 +23,7 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
 /**
  * Represents a SocietyCommand
  */
-@Command(identifier = "society")
+@Command(identifier = "societies")
 @Children({
         CreateCommand.class,
         TagCommand.class,
