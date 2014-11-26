@@ -54,14 +54,13 @@ public class LookupCommand implements Executor<Sender> {
             sender.send("lookup.society", group.getName());
             sender.send("lookup.society-tag", group.getTag());
         }
-        sender.send("lookup.rank", target.getRank().getName());
+        Rank defaultRank = target.getRank();
+        if (defaultRank != null) {
+            sender.send("lookup.rank", defaultRank.getName());
+        }
         sender.send("lookup.uuid", target.getUUID());
         sender.send("lookup.join-date", target.getCreated().toString(dateTimeFormatter));
         sender.send("lookup.last-seen", target.getLastActive().toString(dateTimeFormatter));
         sender.send("lookup.inactive", target.isAvailable() ? ":lookup.online" : periodFormatter.print(inactive));
-        sender.send("lookup.ranks");
-        for (Rank rank : target.getRanks()) {
-            sender.send("lookup.rank-format", rank.getName());
-        }
     }
 }

@@ -12,7 +12,6 @@ import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.lib.shank.logging.InjectLogger;
-import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 import net.catharos.societies.request.ChoiceRequestMessenger;
@@ -45,8 +44,8 @@ public class AlliesCommand extends ListCommand {
     public static final Relation.Type TYPE = Relation.Type.ALLIED;
 
     @Inject
-    public AlliesCommand(Provider<Table> tableProvider, MemberProvider<SocietyMember> memberProvider) {
-        super(tableProvider, memberProvider);
+    public AlliesCommand(Provider<Table> tableProvider, GroupProvider groupProvider) {
+        super(tableProvider, groupProvider);
     }
 
     @Override
@@ -73,11 +72,6 @@ public class AlliesCommand extends ListCommand {
 
             if (group == null) {
                 sender.send("society.not-found");
-                return;
-            }
-
-            if (group.hasRelation(target)) {
-                sender.send("socity.already-relation");
                 return;
             }
 

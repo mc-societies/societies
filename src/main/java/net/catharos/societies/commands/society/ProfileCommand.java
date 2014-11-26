@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupProvider;
 import net.catharos.groups.Member;
-import net.catharos.groups.Relation;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
@@ -16,9 +15,6 @@ import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.PeriodFormatter;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Represents a SocietyProfile
@@ -53,9 +49,6 @@ public class ProfileCommand implements Executor<Sender> {
         }
 
         Period inactivePeriod = new Interval(target.getLastActive(), DateTime.now()).toPeriod();
-        Collection<Relation> relations = target.getRelations();
-        ArrayList<Relation> allies = new ArrayList<Relation>(relations.size());
-        ArrayList<Relation> rivals = new ArrayList<Relation>(relations.size());
 
         sender.send("profile.name", target.getName());
         sender.send("profile.tag", target.getTag());
@@ -68,29 +61,6 @@ public class ProfileCommand implements Executor<Sender> {
         for (Member member : target.getMembers()) {
             if (member.isAvailable()) {
                 sender.send("profile.member-format", member.getName());
-            }
-        }
-
-        for (Relation relation : relations) {
-            if (relation.getType() == Relation.Type.ALLIED) {
-                allies.add(relation);
-            } else {
-                rivals.add(relation);
-            }
-        }
-
-
-        if (!allies.isEmpty()) {
-            sender.send("profile.allies");
-            for (Relation ally : allies) {
-                sender.send("profile.ally-format", groupProvider.getGroup(ally.getOpposite(target.getUUID())));
-            }
-        }
-
-        if (!rivals.isEmpty()) {
-            sender.send("profile.rivals");
-            for (Relation relation : rivals) {
-                sender.send("profile.rival-format", groupProvider.getGroup(relation.getOpposite(target.getUUID())));
             }
         }
     }

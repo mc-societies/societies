@@ -14,7 +14,6 @@ import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import net.catharos.lib.shank.logging.InjectLogger;
-import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 import net.catharos.societies.request.ChoiceRequestMessenger;
@@ -49,8 +48,8 @@ public class RivalsCommand extends ListCommand {
     public static final Relation.Type TYPE = Relation.Type.RIVALED;
 
     @Inject
-    public RivalsCommand(Provider<Table> tableProvider, MemberProvider<SocietyMember> memberProvider) {
-        super(tableProvider, memberProvider);
+    public RivalsCommand(Provider<Table> tableProvider, GroupProvider groupProvider) {
+        super(tableProvider, groupProvider);
     }
 
     @Override
@@ -88,12 +87,7 @@ public class RivalsCommand extends ListCommand {
                 return;
             }
 
-            if (group.hasRelation(target)) {
-                sender.send("socity.already-relation");
-                return;
-            }
-
-            Set<Member> participants = group.getMembers("vote.rivals");
+            Set<Member> participants = target.getMembers("vote.rivals");
             int online = Members.countOnline(participants);
 
             if (online < 1) {
@@ -193,7 +187,7 @@ public class RivalsCommand extends ListCommand {
         @Inject
         public AddCommand(@Named("relations.min-size-to-set-rival") int minSize,
                           @Named("relations.unrivable-societies") ArrayList unrivable,
-                          @Named("relations.rival-limit-percent") double rivalsLimit,
+                          @Named("relations.rival-limit-percent") int rivalsLimit,
                           GroupProvider groupProvider,
                           RelationFactory factory) {
             this.minSize = minSize;

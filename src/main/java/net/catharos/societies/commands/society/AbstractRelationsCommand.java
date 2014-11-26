@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 import javax.inject.Provider;
 import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -77,7 +78,8 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
                             Group relationGroup = null;
 
                             try {
-                                relationGroup = groupProvider.getGroup(relation.getTarget()).get();
+                                UUID target = relation.getOpposite(group.getUUID());
+                                relationGroup = groupProvider.getGroup(target).get();
                             } catch (InterruptedException e) {
                                 logger.catching(e);
                             } catch (ExecutionException e) {
@@ -88,7 +90,7 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
                                 continue;
                             }
 
-                            rivals.append(relationGroup.getTag()).append(" + ");
+                            rivals.append(relationGroup.getTag()).append(" + ");  //fixme don't add at the end
                         }
                     }
 

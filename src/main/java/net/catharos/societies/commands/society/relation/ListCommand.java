@@ -1,15 +1,11 @@
 package net.catharos.societies.commands.society.relation;
 
-import net.catharos.groups.Group;
-import net.catharos.groups.Member;
-import net.catharos.groups.MemberProvider;
-import net.catharos.groups.Relation;
+import net.catharos.groups.*;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.shank.logging.InjectLogger;
-import net.catharos.societies.api.member.SocietyMember;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Provider;
@@ -22,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 abstract class ListCommand implements Executor<Member> {
 
     private final Provider<Table> tableProvider;
-    private final MemberProvider<SocietyMember> memberProvider;
+    private final GroupProvider groupProvider;
 
     @Option(name = "argument.page")
     int page;
@@ -30,9 +26,9 @@ abstract class ListCommand implements Executor<Member> {
     @InjectLogger
     private Logger logger;
 
-    public ListCommand(Provider<Table> tableProvider, MemberProvider<SocietyMember> memberProvider) {
+    public ListCommand(Provider<Table> tableProvider, GroupProvider groupProvider) {
         this.tableProvider = tableProvider;
-        this.memberProvider = memberProvider;
+        this.groupProvider = groupProvider;
     }
 
     @Override
@@ -54,9 +50,12 @@ abstract class ListCommand implements Executor<Member> {
         Table table = tableProvider.get();
 
         for (Relation relation : relations) {
-            Member member;
+            if (relation.getType() != getType()) {
+                continue;
+            }
+            Group target;
             try {
-                member = memberProvider.getMember(relation.getOpposite(group.getUUID())).get();
+                target = groupProvider.getGroup(relation.getOpposite(group.getUUID())).get();
             } catch (InterruptedException e) {
                 logger.catching(e);
                 continue;
@@ -65,7 +64,7 @@ abstract class ListCommand implements Executor<Member> {
                 continue;
             }
 
-            table.addRow(member);
+            table.addForwardingRow(target);
         }
 
         sender.send(table.render(ctx.getName(), page));

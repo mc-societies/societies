@@ -81,7 +81,6 @@ public class TeleportController implements Runnable, Teleporter {
                 return;
             }
 
-
             if (!isLocationEqual(member.getLocation(), state.getStartLocation(), 0.5)) {
                 member.send("you.teleport-cancelled");
                 it.remove();

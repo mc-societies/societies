@@ -48,7 +48,7 @@ public class CreateCommand implements Executor<Member> {
     private final double price;
     private final Rank superRank;
     private final Rank defaultRank;
-    private final boolean autoVerify;
+    private final boolean verificationRequired;
 
 
     @InjectLogger
@@ -61,14 +61,14 @@ public class CreateCommand implements Executor<Member> {
                          Config config,
                          @Named("super-default-rank") Rank superRank,
                          @Named("normal-default-rank") Rank defaultRank,
-                         @Named("verification.new-society-verification-required") boolean autoVerify) {
+                         @Named("verification.new-society-verification-required") boolean verificationRequired) {
         this.groupFactory = groupFactory;
         this.publisher = publisher;
         this.nameValidator = nameValidator;
         this.tagValidator = tagValidator;
         this.superRank = superRank;
         this.defaultRank = defaultRank;
-        this.autoVerify = autoVerify;
+        this.verificationRequired = verificationRequired;
         this.price = config.getDouble("economy.creation-price");
     }
 
@@ -105,7 +105,7 @@ public class CreateCommand implements Executor<Member> {
 
         Group group = groupFactory.create(name, tag);
 
-        if (autoVerify) {
+        if (!verificationRequired) {
             group.verify(true);
         }
 
