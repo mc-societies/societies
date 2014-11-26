@@ -80,7 +80,7 @@ public class InviteCommand implements Executor<Member> {
         }
 
         Request<Choices> request = requests
-                .create(sender, new SingleInvolved(target), new InviteRequestMessenger(group, target));
+                .create(sender, new SingleInvolved(target), new InviteRequestMessenger(sender, group, target));
         request.start();
 
         addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
@@ -108,23 +108,25 @@ public class InviteCommand implements Executor<Member> {
 
     private static class InviteRequestMessenger extends ChoiceRequestMessenger {
 
+        private final Member initiator;
         private final Group group;
         private final Member target;
 
-        private InviteRequestMessenger(Group group, Member target) {
+        private InviteRequestMessenger(Member initiator, Group group, Member target) {
+            this.initiator = initiator;
             this.group = group;
             this.target = target;
         }
 
         @Override
         public void start(Request<Choices> request) {
-            request.getSupplier().send("invite.started");
+            request.getSupplier().send("invite.started", target.getName());
             super.start(request);
         }
 
         @Override
         public void start(Request<Choices> request, Participant participant) {
-            participant.send("invite.member-invites", participant.getName(), group.getTag());
+            participant.send("invite.member-invites", initiator.getName(), group.getTag());
         }
 
         @Override

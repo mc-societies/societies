@@ -80,7 +80,7 @@ public class JoinCommand implements Executor<Member> {
         }
 
         Set<Member> participants = target.getMembers("vote.join");
-        int online = Members.onlineMembers(participants);
+        int online = Members.countOnline(participants);  //fixme participants should only contain online players
 
         if (online < 1) {
             sender.send("target-participants.not-available");

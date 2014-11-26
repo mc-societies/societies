@@ -94,7 +94,7 @@ public class RivalsCommand extends ListCommand {
             }
 
             Set<Member> participants = group.getMembers("vote.rivals");
-            int online = Members.onlineMembers(participants);
+            int online = Members.countOnline(participants);
 
             if (online < 1) {
                 sender.send("target-participants.not-available");

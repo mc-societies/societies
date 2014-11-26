@@ -137,7 +137,7 @@ public class AlliesCommand extends ListCommand {
             }
 
             Set<Member> participants = target.getMembers("vote.allies");
-            int online = Members.onlineMembers(participants);
+            int online = Members.countOnline(participants);
 
             if (online < 1) {
                 sender.send("target-participants.not-available");

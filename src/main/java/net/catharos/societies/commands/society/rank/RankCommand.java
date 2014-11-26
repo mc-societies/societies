@@ -2,6 +2,7 @@ package net.catharos.societies.commands.society.rank;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
+import net.catharos.bridge.ChatColor;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.publisher.RankPublisher;
@@ -13,7 +14,6 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
-import net.catharos.bridge.ChatColor;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 
@@ -260,17 +260,19 @@ public class RankCommand {
             Set<Member> leaders = group.getMembers("leader");
 
             //beautify
-            if (leaders.size() == 1) {
-                Collection<Rank> leaderRanks = group.getRanks("leader");
-                String leaderRanksString = IterableUtils.toString(leaderRanks, new Function<Rank, String>() {
-                    @Nullable
-                    @Override
-                    public String apply(Rank input) {
-                        return input.getName();
-                    }
-                });
-                sender.send("you.assign-leader-first", leaderRanksString);
-                return;
+            if (leaders.contains(target)) {
+                if (leaders.size() == 1) {
+                    Collection<Rank> leaderRanks = group.getRanks("leader");
+                    String leaderRanksString = IterableUtils.toString(leaderRanks, new Function<Rank, String>() {
+                        @Nullable
+                        @Override
+                        public String apply(Rank input) {
+                            return input.getName();
+                        }
+                    });
+                    sender.send("you.assign-leader-first", leaderRanksString);
+                    return;
+                }
             }
 
             target.removeRank(rank);

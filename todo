@@ -1,5 +1,9 @@
+Scoreboard Teams
+
 Beta release ------------------------------------------------------------------------------------
-Add events (mbassador)
+Events:
+    * GroupDropEvent
+    * GroupCreateEvent
 
 Chat JSON Formatting:
         * Text, Score, Selector, Translate

@@ -200,12 +200,12 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         member.complete(false);
 
         try {
+            memberCache.cache(member);
+
             // Load society
             byte[] rawSociety = record.getSociety();
 
             if (rawSociety != null && rawSociety.length == UUIDGen.UUID_LENGTH) {
-
-                memberCache.cache(member);
 
                 // Load group if necessary
                 if (predefined == null) {
@@ -242,6 +242,9 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
                 loadSettings(member, byteUUID, queries.getQuery(SQLQueries.SELECT_SOCIETY_SETTINGS));
             }
 
+        } catch (RuntimeException e) {
+            memberCache.clear(member);
+            throw e;
         } finally {
             // Finished
             member.complete();
@@ -320,12 +323,12 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         group.complete(false);
 
         try {
+            groupCache.cache(group);
+
             // Load members
             Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_SOCIETY_MEMBERS);
 
             query.bind(1, uuid);
-
-            groupCache.cache(group);
 
             for (Record1<byte[]> member : query.fetch()) {
                 try {
@@ -360,6 +363,9 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
                 group.addRank(rank);
             }
 
+        } catch (RuntimeException e) {
+            groupCache.clear(group);
+            throw e;
         } finally {
             // Finished
             group.complete();

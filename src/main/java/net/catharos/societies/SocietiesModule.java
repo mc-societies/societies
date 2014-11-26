@@ -8,6 +8,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.typesafe.config.*;
+import net.catharos.groups.event.EventController;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
 import net.catharos.lib.shank.config.ConfigModule;
@@ -151,6 +152,8 @@ public class SocietiesModule extends AbstractServiceModule {
         } catch (MalformedURLException e) {
             logger.catching(e);
         }
+
+        bind(EventController.class).to(DefaultEventController.class);
     }
 
     @Singleton

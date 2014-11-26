@@ -5,6 +5,7 @@ import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import net.catharos.bridge.*;
 import net.catharos.groups.DefaultMember;
+import net.catharos.groups.event.EventController;
 import net.catharos.groups.publisher.MemberCreatedPublisher;
 import net.catharos.groups.publisher.MemberGroupPublisher;
 import net.catharos.groups.publisher.MemberLastActivePublisher;
@@ -39,8 +40,9 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
                                MemberRankPublisher memberRankPublisher,
                                MemberLastActivePublisher lastActivePublisher,
                                MemberCreatedPublisher createdPublisher,
-                               @Named("default-rank") Rank defaultRank) {
-        super(uuid.get(), societyPublisher, memberRankPublisher, lastActivePublisher, createdPublisher, defaultRank);
+                               @Named("default-rank") Rank defaultRank,
+                               EventController eventController) {
+        super(uuid.get(), societyPublisher, memberRankPublisher, lastActivePublisher, createdPublisher, defaultRank, eventController);
         this.localeProvider = localeProvider;
         this.directory = dictionary;
     }

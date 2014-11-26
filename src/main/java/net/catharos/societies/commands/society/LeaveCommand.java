@@ -38,17 +38,19 @@ public class LeaveCommand implements Executor<SocietyMember> {
         if (group != null) {
             Set<Member> leaders = group.getMembers("leader");
 
-            if (leaders.size() == 1 && group.size() > 1) {
-                Collection<Rank> leaderRanks = group.getRanks("leader");
-                String leaderRanksString = IterableUtils.toString(leaderRanks, new Function<Rank, String>() {
-                    @Nullable
-                    @Override
-                    public String apply(Rank input) {
-                        return input.getName();
-                    }
-                });
-                sender.send("you.assign-leader-first", leaderRanksString);
-                return;
+            if (leaders.contains(sender)) {
+                if (leaders.size() == 1 && group.size() > 1) {
+                    Collection<Rank> leaderRanks = group.getRanks("leader");
+                    String leaderRanksString = IterableUtils.toString(leaderRanks, new Function<Rank, String>() {
+                        @Nullable
+                        @Override
+                        public String apply(Rank input) {
+                            return input.getName();
+                        }
+                    });
+                    sender.send("you.assign-leader-first", leaderRanksString);
+                    return;
+                }
             }
 
 
@@ -62,6 +64,6 @@ public class LeaveCommand implements Executor<SocietyMember> {
             return;
         }
 
-        sender.send("society.not.found!");
+        sender.send("society.not.found");
     }
 }
