@@ -12,22 +12,28 @@ import org.flywaydb.core.Flyway;
 /**
  * Represents a TablesService
  */
-public class TablesService extends AbstractService {
+public class MigrationService extends AbstractService {
 
     private final Database database;
+    private final ClassLoader classLoader;
+
 
     @InjectLogger
     private Logger logger;
 
 
     @Inject
-    public TablesService(Database database) {this.database = database;}
+    public MigrationService(Database database, ClassLoader classLoader) {
+        this.database = database;
+        this.classLoader = classLoader;
+    }
 
     @Override
     public void init(LifecycleContext context) throws Exception {
         logger.info("Generation database tables...");
 
         Flyway flyway = new Flyway();
+        flyway.setClassLoader(classLoader);
         flyway.setDataSource(database.getDataSource());
         logger.info("Applied {0} migrations!", flyway.migrate());
     }

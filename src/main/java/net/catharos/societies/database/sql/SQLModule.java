@@ -34,7 +34,7 @@ public class SQLModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
-        bindService().to(TablesService.class);
+        bindService().to(MigrationService.class);
         bindService().to(CleanupService.class);
         bindService().to(RankService.class);
 
