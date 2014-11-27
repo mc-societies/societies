@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import net.catharos.lib.database.Database;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
+import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
 import org.apache.logging.log4j.Logger;
 import org.flywaydb.core.Flyway;
 
@@ -23,7 +24,7 @@ public class TablesService extends AbstractService {
     public TablesService(Database database) {this.database = database;}
 
     @Override
-    public void init(Object context) throws Exception {
+    public void init(LifecycleContext context) throws Exception {
         logger.info("Generation database tables...");
 
         Flyway flyway = new Flyway();
