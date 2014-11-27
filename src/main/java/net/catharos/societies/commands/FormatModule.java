@@ -2,6 +2,7 @@ package net.catharos.societies.commands;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
+import net.catharos.bridge.ChatColor;
 import net.catharos.lib.core.command.format.DefaultFormatter;
 import net.catharos.lib.core.command.format.Formatter;
 import net.catharos.lib.core.command.format.WidthProvider;
@@ -18,6 +19,7 @@ public class FormatModule extends AbstractModule {
     protected void configure() {
         bind(Table.class).to(FormattedTable.class);
         bindNamed("clean", Table.class).to(DefaultTable.class);
+        bindNamedString("append", ChatColor.RESET.toString());
         bind(WidthProvider.class).toInstance(new MinecraftWidthProvider());
 
         install(new FactoryModuleBuilder()

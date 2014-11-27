@@ -65,37 +65,41 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
                 table.addForwardingRow(rowFactory.translated(true, "society", getType().getName()));
 
                 for (Group group : result) {
-                    Collection<Relation> relations = group.getRelations();
+                    Collection<Relation> relations = group.getRelations(getType());
 
                     if (relations.isEmpty()) {
                         continue;
                     }
 
-                    StringBuilder rivals = new StringBuilder();
+                    StringBuilder relationsString = new StringBuilder();
 
                     for (Relation relation : relations) {
-                        if (relation.getType() == getType()) {
-                            Group relationGroup = null;
 
-                            try {
-                                UUID target = relation.getOpposite(group.getUUID());
-                                relationGroup = groupProvider.getGroup(target).get();
-                            } catch (InterruptedException e) {
-                                logger.catching(e);
-                            } catch (ExecutionException e) {
-                                logger.catching(e);
-                            }
+                        Group relationGroup = null;
 
-                            if (relationGroup == null) {
-                                continue;
-                            }
-
-                            rivals.append(relationGroup.getTag()).append(" + ");  //fixme don't add at the end
+                        try {
+                            UUID target = relation.getOpposite(group.getUUID());
+                            relationGroup = groupProvider.getGroup(target).get();
+                        } catch (InterruptedException e) {
+                            logger.catching(e);
+                        } catch (ExecutionException e) {
+                            logger.catching(e);
                         }
+
+                        if (relationGroup == null) {
+                            continue;
+                        }
+
+                        relationsString.append(relationGroup.getTag()).append(" + ");
                     }
 
+                    int length = relationsString.length();
 
-                    table.addRow(group.getName(), rivals);
+                    if (length > 3) {
+                        relationsString.delete(length - 3, length);
+                    }
+
+                    table.addRow(group.getName(), relationsString);
                 }
 
                 sender.send(table.render(ctx.getName(), page));
