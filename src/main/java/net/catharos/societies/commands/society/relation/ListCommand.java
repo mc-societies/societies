@@ -1,6 +1,9 @@
 package net.catharos.societies.commands.society.relation;
 
-import net.catharos.groups.*;
+import net.catharos.groups.Group;
+import net.catharos.groups.GroupProvider;
+import net.catharos.groups.Member;
+import net.catharos.groups.Relation;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
@@ -40,7 +43,7 @@ abstract class ListCommand implements Executor<Member> {
             return;
         }
 
-        Collection<Relation> relations = group.getRelations();
+        Collection<Relation> relations = group.getRelations(getType());
 
         if (relations.isEmpty()) {
             sender.send("relations.not-found");
@@ -50,9 +53,6 @@ abstract class ListCommand implements Executor<Member> {
         Table table = tableProvider.get();
 
         for (Relation relation : relations) {
-            if (relation.getType() != getType()) {
-                continue;
-            }
             Group target;
             try {
                 target = groupProvider.getGroup(relation.getOpposite(group.getUUID())).get();

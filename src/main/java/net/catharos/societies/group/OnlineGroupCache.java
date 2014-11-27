@@ -3,7 +3,7 @@ package net.catharos.societies.group;
 import com.google.inject.Singleton;
 import gnu.trove.map.hash.THashMap;
 import net.catharos.groups.Group;
-import net.catharos.groups.GroupCache;
+import net.catharos.groups.cache.GroupCache;
 import net.catharos.groups.Member;
 
 import java.util.Set;

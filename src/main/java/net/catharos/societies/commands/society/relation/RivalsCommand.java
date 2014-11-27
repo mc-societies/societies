@@ -87,17 +87,20 @@ public class RivalsCommand extends ListCommand {
                 return;
             }
 
-            Set<Member> participants = target.getMembers("vote.rivals");
-            int online = Members.countOnline(participants);
+            Set<Member> participants = Members.onlineMembers(target.getMembers("vote.rivals"));
 
-            if (online < 1) {
+            if (participants.size() < 1) {
                 sender.send("target-participants.not-available");
                 return;
             }
 
             Request<Choices> request = requests
                     .create(sender, new SetInvolved(participants), new RivalsRequestMessenger(group, target));
-            request.start();
+
+            if (!request.start()) {
+                sender.send("requests.participants-not-ready");
+                return;
+            }
 
             addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
                 @Override
@@ -142,7 +145,7 @@ public class RivalsCommand extends ListCommand {
             @Override
             public void end(Request<Choices> request, Choices choice) {
                 if (choice.success()) {
-                    request.getSupplier().send("requests.rivals.ended", opponent.getTag());
+//                    request.getSupplier().send("requests.rivals.ended", opponent.getTag());
                 } else {
                     request.getSupplier().send("requests.rivals.failed", opponent.getTag());
                 }
@@ -154,7 +157,16 @@ public class RivalsCommand extends ListCommand {
             public void end(Participant participant, Request<Choices> request, Choices choice) {
 
                 if (choice.success()) {
-                    participant.send("requests.rivals.ended", initiator.getTag());
+//                    participant.send("requests.rivals.ended", initiator.getTag());
+
+                    for (Member member : opponent.getMembers()) {
+                        member.send("requests.rivals.ended", initiator.getTag());
+                    }
+
+                    for (Member member : initiator.getMembers()) {
+                        member.send("requests.rivals.ended", opponent.getTag());
+                    }
+
                 } else {
                     participant.send("requests.rivals.failed", initiator.getTag());
                 }
@@ -242,8 +254,15 @@ public class RivalsCommand extends ListCommand {
 
             group.setRelation(target, relation);
 
-            sender.send("rivals.added", target.getName());
-            //todo target information
+            sender.send("rivals.added", target.getTag());
+
+            for (Member member : target.getMembers()) {
+                member.send("rivals.started", group.getTag());
+            }
+
+            for (Member member : group.getMembers()) {
+                member.send("rivals.started", target.getTag());
+            }
         }
     }
 

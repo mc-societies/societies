@@ -26,56 +26,52 @@ import net.catharos.societies.commands.society.vote.DenyCommand;
 @Command(identifier = "societies")
 @Children({
         CreateCommand.class,
-        TagCommand.class,
-//        RenameCommand.class,
-        ProfileCommand.class,
-        LookupCommand.class,
-        CoordsCommand.class,
-        VitalsCommand.class,
-        RosterCommand.class,
         ListCommand.class,
 
-        TrustCommand.class,
-        DistrustCommand.class,
-
-        PromoteCommand.class,
-        DemoteCommand.class,
+        ProfileCommand.class,
+        LookupCommand.class,
 
         JoinCommand.class,
         InviteCommand.class,
-        KickCommand.class,
+
+        CoordsCommand.class,
+        VitalsCommand.class,
+        RosterCommand.class,
+
+        TrustCommand.class,
+        DistrustCommand.class,
+        PromoteCommand.class,
+        DemoteCommand.class,
 
         AlliancesCommand.class,
         RivalriesCommand.class,
 
-//        FastJoinCommand.class,
+        FFCommand.class,
+        GroupFFCommand.class,
+        TagCommand.class,
+        KickCommand.class,
         LeaveCommand.class,
+
+        AlliesCommand.class,
+        RivalsCommand.class,
+
+        HomeCommand.class,
+        RankCommand.class,
+
+        BalanceCommand.class,
+        DepositCommand.class,
+        WithdrawCommand.class,
 
         AcceptCommand.class,
         DenyCommand.class,
         AbstainCommand.class,
         CancelCommand.class,
 
-        HomeCommand.class,
-
-        RankCommand.class,
-
-        AlliesCommand.class,
-        RivalsCommand.class,
-
-        FFCommand.class,
-        GroupFFCommand.class,
-
-        BalanceCommand.class,
-        DepositCommand.class,
-        WithdrawCommand.class,
-
         VerifyCommand.class,
         DisproveCommand.class,
 
         ReloadCommand.class,
         BackupCommand.class
-//        ThreadTestCommand.class
 })
 public class SocietyCommand {
 }

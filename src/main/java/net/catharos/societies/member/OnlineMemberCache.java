@@ -6,7 +6,7 @@ import gnu.trove.map.hash.THashMap;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupProvider;
 import net.catharos.groups.Member;
-import net.catharos.groups.MemberCache;
+import net.catharos.groups.cache.MemberCache;
 import net.catharos.groups.rank.Rank;
 import net.catharos.societies.api.PlayerResolver;
 

@@ -7,6 +7,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.groups.*;
+import net.catharos.groups.cache.GroupCache;
+import net.catharos.groups.cache.MemberCache;
 import net.catharos.groups.publisher.MemberPublisher;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.rank.RankFactory;

@@ -79,17 +79,20 @@ public class JoinCommand implements Executor<Member> {
             return;
         }
 
-        Set<Member> participants = target.getMembers("vote.join");
-        int online = Members.countOnline(participants);  //fixme participants should only contain online players
+        Set<Member> participants = Members.onlineMembers(target.getMembers("vote.join"));
 
-        if (online < 1) {
+        if (participants.size() < 1) {
             sender.send("target-participants.not-available");
             return;
         }
 
         final Request<Choices> request = requests
                 .create(sender, new SetInvolved(participants), new JoinRequestMessenger(target));
-        request.start();
+
+        if (!request.start()) {
+            sender.send("requests.participants-not-ready");
+            return;
+        }
 
         addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
             @Override

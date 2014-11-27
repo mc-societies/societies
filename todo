@@ -1,55 +1,9 @@
-ListCommand: reset colors at end of line
-AlliesCommand list get tag, message if there are none
+ListCommand: reset colors at end of line      X
+AlliesCommand list get tag, message if there are none      X
 
-allies/rivals remove, add broadcast in opponent society
-
-sort commands
-
-request timeout
-
-block tnt damage
+allies/rivals remove, add broadcast in opponent society    X
 
 requests do no work with no caching
-
-[21:31:08 INFO]: UUID of player Drehverschluss is 115a7c52-6b62-4cf5-81b8-1cdf294e86c7
-[21:31:08 ERROR]: RuntimeException while executing runnable com.google.common.util.concurrent.Futures$6@4524c896 with executor INSTANCE
-java.util.concurrent.RejectedExecutionException: Task com.google.common.util.concurrent.ListenableFutureTask@6f2e6e66 rejected from java.util.concurrent.ThreadPoolExecutor@56d69ec6[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 1]
-	at java.util.concurrent.ThreadPoolExecutor$AbortPolicy.rejectedExecution(ThreadPoolExecutor.java:2047) ~[?:1.8.0_25]
-	at java.util.concurrent.ThreadPoolExecutor.reject(ThreadPoolExecutor.java:823) ~[?:1.8.0_25]
-	at java.util.concurrent.ThreadPoolExecutor.execute(ThreadPoolExecutor.java:1369) ~[?:1.8.0_25]
-	at com.google.common.util.concurrent.MoreExecutors$ListeningDecorator.execute(MoreExecutors.java:550) ~[guava-18.0.jar:?]
-	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134) ~[?:1.8.0_25]
-	at com.google.common.util.concurrent.AbstractListeningExecutorService.submit(AbstractListeningExecutorService.java:58) ~[guava-18.0.jar:?]
-	at net.catharos.societies.database.json.JSONProvider.publish(JSONProvider.java:228) ~[societies.jar:?]
-	at net.catharos.societies.database.json.JSONMemberPublisher.publishLastActive(JSONMemberPublisher.java:51) ~[societies.jar:?]
-	at net.catharos.groups.DefaultMember.setLastActive(DefaultMember.java:171) ~[lib-groups.jar:?]
-	at net.catharos.groups.DefaultMember.activate(DefaultMember.java:163) ~[lib-groups.jar:?]
-	at net.catharos.societies.bukkit.listener.JoinListener$1.onSuccess(JoinListener.java:48) ~[?:?]
-	at net.catharos.societies.bukkit.listener.JoinListener$1.onSuccess(JoinListener.java:44) ~[?:?]
-	at com.google.common.util.concurrent.Futures$6.run(Futures.java:1319) ~[guava-18.0.jar:?]
-	at com.google.common.util.concurrent.MoreExecutors$DirectExecutor.execute(MoreExecutors.java:457) ~[guava-18.0.jar:?]
-	at com.google.common.util.concurrent.Futures$ImmediateFuture.addListener(Futures.java:106) [guava-18.0.jar:?]
-	at com.google.common.util.concurrent.Futures.addCallback(Futures.java:1322) [guava-18.0.jar:?]
-	at com.google.common.util.concurrent.Futures.addCallback(Futures.java:1258) [guava-18.0.jar:?]
-	at net.catharos.societies.bukkit.listener.JoinListener.onPlayerJoin(JoinListener.java:44) [societies-bukkit-plugin.jar:1.9]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_25]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_25]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_25]
-	at java.lang.reflect.Method.invoke(Method.java:483) ~[?:1.8.0_25]
-	at org.bukkit.plugin.java.JavaPluginLoader$1.execute(JavaPluginLoader.java:298) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at org.bukkit.plugin.RegisteredListener.callEvent(RegisteredListener.java:62) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at org.bukkit.plugin.SimplePluginManager.fireEvent(SimplePluginManager.java:509) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at org.bukkit.plugin.SimplePluginManager.callEvent(SimplePluginManager.java:494) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at net.minecraft.server.v1_7_R4.PlayerList.attemptLogin(PlayerList.java:400) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at net.minecraft.server.v1_7_R4.LoginListener.c(LoginListener.java:98) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at net.minecraft.server.v1_7_R4.LoginListener.a(LoginListener.java:44) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at net.minecraft.server.v1_7_R4.NetworkManager.a(NetworkManager.java:189) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at net.minecraft.server.v1_7_R4.ServerConnection.c(ServerConnection.java:81) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at net.minecraft.server.v1_7_R4.MinecraftServer.v(MinecraftServer.java:734) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at net.minecraft.server.v1_7_R4.DedicatedServer.v(DedicatedServer.java:289) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at net.minecraft.server.v1_7_R4.MinecraftServer.u(MinecraftServer.java:584) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at net.minecraft.server.v1_7_R4.MinecraftServer.run(MinecraftServer.java:490) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
-	at net.minecraft.server.v1_7_R4.ThreadServerApplication.run(SourceFile:628) [spigot.jar:git-Spigot-1.7.9-R0.2-205-g3633afe]
 
 
 Beta release ------------------------------------------------------------------------------------
@@ -95,6 +49,7 @@ bulletin board:
 ----------------------------------------------------------------------------------------------------
 
 Other stuff:
+Request timeout
 Past groups
 Minimize libraries
 Inject config settings correctly

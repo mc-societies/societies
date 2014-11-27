@@ -77,8 +77,15 @@ public class AlliesCommand extends ListCommand {
 
             group.removeRelation(target);
 
-            //todo target information
             sender.send("allies.removed", target.getName());
+
+            for (Member member : target.getMembers()) {
+                member.send("allies.ended", group.getTag());
+            }
+
+            for (Member member : group.getMembers()) {
+                member.send("allies.ended", target.getTag());
+            }
         }
     }
 
@@ -130,17 +137,19 @@ public class AlliesCommand extends ListCommand {
                 return;
             }
 
-            Set<Member> participants = target.getMembers("vote.allies");
-            int online = Members.countOnline(participants);
+            Set<Member> participants = Members.onlineMembers(target.getMembers("vote.allies"));
 
-            if (online < 1) {
+            if (participants.size() < 1) {
                 sender.send("target-participants.not-available");
                 return;
             }
 
             SetInvolved involved = new SetInvolved(participants);
             Request<Choices> request = requests.create(sender, involved, new AlliesRequestMessenger(group, target));
-            request.start();
+            if (!request.start()) {
+                sender.send("requests.participants-not-ready");
+                return;
+            }
 
             addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
                 @Override
@@ -186,7 +195,7 @@ public class AlliesCommand extends ListCommand {
             @Override
             public void end(Request<Choices> request, Choices choice) {
                 if (choice.success()) {
-                    request.getSupplier().send("requests.allies.started", opponent.getTag());
+//                    request.getSupplier().send("requests.allies.started", opponent.getTag());
                 } else {
                     request.getSupplier().send("requests.allies.failed", opponent.getTag());
                 }
@@ -198,7 +207,16 @@ public class AlliesCommand extends ListCommand {
             public void end(Participant participant, Request<Choices> request, Choices choice) {
 
                 if (choice.success()) {
-                    participant.send("requests.allies.started", initiator.getTag());
+//                    participant.send("requests.allies.started", initiator.getTag());
+
+                    for (Member member : opponent.getMembers()) {
+                        member.send("requests.allies.started", initiator.getTag());
+                    }
+
+                    for (Member member : initiator.getMembers()) {
+                        member.send("requests.allies.started", opponent.getTag());
+                    }
+
                 } else {
                     participant.send("requests.allies.failed", initiator.getTag());
                 }

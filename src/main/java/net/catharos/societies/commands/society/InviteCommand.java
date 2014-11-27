@@ -81,7 +81,11 @@ public class InviteCommand implements Executor<Member> {
 
         Request<Choices> request = requests
                 .create(sender, new SingleInvolved(target), new InviteRequestMessenger(sender, group, target));
-        request.start();
+
+        if (!request.start()) {
+            sender.send("requests.participants-not-ready");
+            return;
+        }
 
         addCallback(request.result(), new FutureCallback<DefaultRequestResult<Choices>>() {
             @Override
