@@ -2,7 +2,7 @@ package net.catharos.societies.member.locale;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import net.catharos.societies.api.member.SocietyMember;
+import net.catharos.bridge.Player;
 
 import java.util.Locale;
 
@@ -17,7 +17,7 @@ class StaticLocaleProvider implements LocaleProvider {
     public StaticLocaleProvider(@Named("default-locale") Locale locale) {this.locale = locale;}
 
     @Override
-    public Locale provide(SocietyMember member) {
+    public Locale provide(Player member) {
         return locale;
     }
 }

@@ -1,5 +1,6 @@
 package net.catharos.societies.database.sql;
 
+import net.catharos.groups.AbstractMemberHeart;
 import net.catharos.groups.Group;
 import net.catharos.groups.MemberHeart;
 import net.catharos.groups.rank.Rank;
@@ -11,7 +12,7 @@ import java.util.Set;
 /**
  * Represents a SQLMember
  */
-public abstract class SQLMemberHearth implements MemberHeart {
+public class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
 
     @Override
     public Set<Rank> getRanks() {

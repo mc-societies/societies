@@ -77,11 +77,11 @@ public class TeleportController implements Runnable, Teleporter {
                 continue;
             }
 
-            if (!member.getExtension(Player.class).isAvailable()) {
+            if (!member.get(Player.class).isAvailable()) {
                 return;
             }
 
-            if (!isLocationEqual(member.getExtension(Player.class).getLocation(), state.getStartLocation(), 0.5)) {
+            if (!isLocationEqual(member.get(Player.class).getLocation(), state.getStartLocation(), 0.5)) {
                 member.send("you.teleport-cancelled");
                 it.remove();
                 continue;
@@ -99,10 +99,10 @@ public class TeleportController implements Runnable, Teleporter {
                 int z = target.getRoundedZ();
 
                 if (!member.hasPermission("simpleclans.mod.keep-items")) {
-                    dropItems(member.getExtension(Player.class));
+                    dropItems(member.get(Player.class));
                 }
 
-                member.getExtension(Player.class).teleport(target);
+                member.get(Player.class).teleport(target);
 
                 member.send("you.at-home", group.getName());
             }
@@ -141,6 +141,6 @@ public class TeleportController implements Runnable, Teleporter {
 
     @Override
     public void teleport(final Member member, final Location target) {
-        states.add(new TeleportState(member, target, member.getExtension(Player.class).getLocation(), delay));
+        states.add(new TeleportState(member, target, member.get(Player.class).getLocation(), delay));
     }
 }

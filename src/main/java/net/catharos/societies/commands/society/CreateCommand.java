@@ -95,8 +95,8 @@ public class CreateCommand implements Executor<Member> {
             return;
         }
 
-        if (sender.hasExtension(EconomyParticipant.class)) {
-            if (!sender.getExtension(EconomyParticipant.class).withdraw(price).transactionSuccess()) {
+        if (sender.has(EconomyParticipant.class)) {
+            if (!sender.get(EconomyParticipant.class).withdraw(price).transactionSuccess()) {
                 sender.send("economy.not-enough-money");
             }
         }

@@ -1,6 +1,7 @@
 package net.catharos.societies.commands.society;
 
 import com.google.inject.Inject;
+import net.catharos.bridge.Player;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.rank.Rank;
@@ -10,7 +11,6 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.api.member.SocietyMember;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;
@@ -62,7 +62,7 @@ public class LookupCommand implements Executor<Sender> {
         sender.send("lookup.uuid", target.getUUID());
         sender.send("lookup.join-date", target.getCreated().toString(dateTimeFormatter));
         sender.send("lookup.last-seen", target.getLastActive().toString(dateTimeFormatter));
-        sender.send("lookup.inactive", target.getExtension(SocietyMember.class)
+        sender.send("lookup.inactive", target.get(Player.class)
                 .isAvailable() ? ":lookup.online" : periodFormatter.print(inactive));
     }
 }

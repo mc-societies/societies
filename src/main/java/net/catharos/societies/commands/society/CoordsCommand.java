@@ -10,7 +10,6 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
-import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 
@@ -49,7 +48,7 @@ public class CoordsCommand implements Executor<Member> {
             return;
         }
 
-        Location location = sender.getExtension(Player.class).getLocation();
+        Location location = sender.get(Player.class).getLocation();
 
         assert location != null;
 
@@ -58,9 +57,7 @@ public class CoordsCommand implements Executor<Member> {
         table.addForwardingRow(rowFactory.translated(true, "name", "distance", "coordinates", "world"));
 
         for (Member member : group.getMembers()) {
-            SocietyMember societyMember = ((SocietyMember) member);
-
-            Location memberLocation = societyMember.getLocation();
+            Location memberLocation = member.get(Player.class).getLocation();
 
             if (memberLocation == null) {
                 continue;

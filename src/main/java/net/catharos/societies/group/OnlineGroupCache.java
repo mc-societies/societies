@@ -64,7 +64,7 @@ public class OnlineGroupCache implements GroupCache {
                 continue;
             }
 
-            if (member.getExtension(Player.class).isAvailable()) {
+            if (member.get(Player.class).isAvailable()) {
                 return;
             }
         }

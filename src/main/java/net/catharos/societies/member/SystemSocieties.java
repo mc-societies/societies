@@ -5,7 +5,7 @@ import net.catharos.bridge.*;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.i18n.Dictionary;
-import net.catharos.societies.api.member.SocietyMember;
+import net.catharos.societies.api.economy.EconomyParticipant;
 import net.catharos.societies.member.locale.LocaleProvider;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.jetbrains.annotations.Nullable;
@@ -16,14 +16,14 @@ import java.util.Locale;
 /**
  * Represents a ConsoleSocietyMember
  */
-class SystemSocietyMember implements SocietyMember, Sender {
+class SystemSocieties implements Player, EconomyParticipant, Sender {
 
     private final LocaleProvider localeProvider;
     private final Dictionary<String> directory;
 
     @Inject
-    public SystemSocietyMember(LocaleProvider localeProvider,
-                               Dictionary<String> dictionary) {
+    public SystemSocieties(LocaleProvider localeProvider,
+                           Dictionary<String> dictionary) {
         this.localeProvider = localeProvider;
         this.directory = dictionary;
     }

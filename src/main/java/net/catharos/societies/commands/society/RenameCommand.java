@@ -1,5 +1,6 @@
 package net.catharos.societies.commands.society;
 
+import net.catharos.bridge.Player;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.lib.core.command.CommandContext;
@@ -10,7 +11,6 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.api.member.SocietyMember;
 
 /**
  * Represents a AbandonCommand
@@ -27,7 +27,7 @@ public class RenameCommand implements Executor<Sender> {
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
-        if ((sender instanceof SocietyMember)) {
+        if ((sender instanceof Player)) {
             if (target == null) {
                 target = ((Member) sender).getGroup();
             } else {

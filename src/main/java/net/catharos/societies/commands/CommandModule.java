@@ -10,6 +10,7 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.bridge.Location;
+import net.catharos.bridge.Player;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.command.GroupParser;
@@ -33,7 +34,6 @@ import net.catharos.lib.core.command.token.Tokenizer;
 import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.LocationParser;
 import net.catharos.societies.SocietiesModule;
-import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.commands.society.SocietyCommand;
 import net.catharos.societies.setting.RulesSetting;
 
@@ -75,7 +75,7 @@ public class CommandModule extends AbstractModule {
 //                bind(new TypeLiteral<ArgumentParser<SocietyMember>>() {}).to(TargetParser.class);
         parsers().addBinding(Sender.class).to(TargetParser.class);
         parsers().addBinding(Member.class).to(new TypeLiteral<MemberParser>() {});
-        parsers().addBinding(SocietyMember.class).to(new TypeLiteral<MemberParser>() {});
+        parsers().addBinding(Player.class).to(new TypeLiteral<MemberParser>() {});
 
 
         // Exception handler

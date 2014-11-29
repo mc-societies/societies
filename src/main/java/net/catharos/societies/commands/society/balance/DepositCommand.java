@@ -11,8 +11,8 @@ import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.societies.api.economy.EconomyParticipant;
 import net.catharos.societies.api.lock.Locker;
-import net.catharos.societies.api.member.SocietyMember;
 import net.milkbowl.vault.economy.EconomyResponse;
 
 import java.util.concurrent.ExecutionException;
@@ -54,9 +54,9 @@ public class DepositCommand implements Executor<Member> {
         try {
             if (!locker.lock(0).get()) return;
 
-            SocietyMember societyMember = (SocietyMember) sender;
+            EconomyParticipant economy = sender.get(EconomyParticipant.class);
 
-            EconomyResponse response = societyMember.withdraw(deposit);
+            EconomyResponse response = economy.withdraw(deposit);
 
             if (!response.transactionSuccess()) {
                 sender.send("deposit-failed");

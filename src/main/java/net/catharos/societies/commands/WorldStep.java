@@ -2,11 +2,12 @@ package net.catharos.societies.commands;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import net.catharos.bridge.Player;
+import net.catharos.groups.Member;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.societies.api.member.SocietyMember;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +26,15 @@ public class WorldStep implements Executor<Sender> {
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
-        if (sender instanceof SocietyMember) {
-            SocietyMember societyMember = ((SocietyMember) sender);
+        if (sender instanceof Member) {
+            Member member = ((Member) sender);
 
-            if (societyMember.isAvailable()) {
+            Player player = member.get(Player.class);
+            if (player.isAvailable()) {
                 return;
             }
 
-            if (disabledWorlds.contains(societyMember.getLocation().getWorld().getName())) {
+            if (disabledWorlds.contains(player.getLocation().getWorld().getName())) {
                 ctx.cancel();
             }
         }

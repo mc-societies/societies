@@ -1,6 +1,7 @@
 package net.catharos.societies.commands.society;
 
 import com.google.inject.Inject;
+import net.catharos.bridge.Player;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.lib.core.command.CommandContext;
@@ -9,7 +10,6 @@ import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.societies.PlayerState;
-import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 
@@ -51,7 +51,7 @@ public class VitalsCommand implements Executor<Member> {
         table.addForwardingRow(rowFactory.translated(true, "name", "health", "armor", "weapons", "food"));
 
         for (Member member : group.getMembers()) {
-            SocietyMember player = ((SocietyMember) member);
+            Player player = member.get(Player.class);
             if (player == null) {
                 continue;
             }

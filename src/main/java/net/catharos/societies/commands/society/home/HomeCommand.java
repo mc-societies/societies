@@ -12,7 +12,6 @@ import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
-import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
 import net.catharos.societies.teleport.TeleportController;
@@ -117,7 +116,7 @@ public class HomeCommand implements Executor<Member> {
             }
 
             if (location == null) {
-                location = sender.getExtension(Player.class).getLocation();
+                location = sender.get(Player.class).getLocation();
             }
 
             Location currentHome = group.get(homeSetting);
@@ -165,12 +164,8 @@ public class HomeCommand implements Executor<Member> {
             Set<Member> members = group.getMembers();
 
             for (Member member : members) {
-                SocietyMember societyMember = ((SocietyMember) member);
-
-                if (societyMember != null) {
-                    societyMember.teleport(location);
-                    sender.send("home.regrouped");
-                }
+                member.get(Player.class).teleport(location);
+                sender.send("home.regrouped");
             }
         }
     }

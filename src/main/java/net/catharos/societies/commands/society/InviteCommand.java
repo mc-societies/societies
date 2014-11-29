@@ -3,6 +3,7 @@ package net.catharos.societies.commands.society;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import net.catharos.bridge.Player;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.rank.Rank;
@@ -12,7 +13,6 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.shank.logging.InjectLogger;
-import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.request.ChoiceRequestMessenger;
 import org.apache.logging.log4j.Logger;
@@ -33,8 +33,6 @@ public class InviteCommand implements Executor<Member> {
 
     @Argument(name = "argument.target.member")
     Member target;
-
-    public static final String FAILED = "Invite failed! %s";
 
     private final boolean trustDefault;
     private final Rank normalDefaultRank;
@@ -74,7 +72,7 @@ public class InviteCommand implements Executor<Member> {
             return;
         }
 
-        if (!target.getExtension(SocietyMember.class).isAvailable()) {
+        if (!target.get(Player.class).isAvailable()) {
             sender.send("target-member.not-available");
             return;
         }
