@@ -12,6 +12,7 @@ import net.catharos.groups.request.simple.Choices;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
+import net.catharos.lib.shank.config.ConfigSetting;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.request.ChoiceRequestMessenger;
@@ -43,10 +44,10 @@ public class InviteCommand implements Executor<Member> {
     private Logger logger;
 
     @Inject
-    public InviteCommand(@Named("trust.trust-members-by-default") boolean trustDefault,
+    public InviteCommand(@ConfigSetting("trust.trust-members-by-default") boolean trustDefault,
                          @Named("normal-default-rank") Rank normalDefaultRank,
                          RequestFactory<Choices> requests,
-                         @Named("society.max-size") int maxSize) {
+                         @ConfigSetting("society.max-size") int maxSize) {
         this.trustDefault = trustDefault;
         this.normalDefaultRank = normalDefaultRank;
         this.requests = requests;

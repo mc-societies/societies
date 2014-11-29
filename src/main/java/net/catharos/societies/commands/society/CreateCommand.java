@@ -20,6 +20,7 @@ import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.lib.shank.config.ConfigSetting;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.api.economy.EconomyParticipant;
 import org.apache.logging.log4j.Logger;
@@ -61,7 +62,7 @@ public class CreateCommand implements Executor<Member> {
                          Config config,
                          @Named("super-default-rank") Rank superRank,
                          @Named("normal-default-rank") Rank defaultRank,
-                         @Named("verification.new-society-verification-required") boolean verificationRequired) {
+                         @ConfigSetting("verification-required") boolean verificationRequired) {
         this.groupFactory = groupFactory;
         this.publisher = publisher;
         this.nameValidator = nameValidator;

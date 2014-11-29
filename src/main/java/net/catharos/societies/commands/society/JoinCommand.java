@@ -14,6 +14,7 @@ import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
+import net.catharos.lib.shank.config.ConfigSetting;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.api.Members;
 import net.catharos.societies.request.ChoiceRequestMessenger;
@@ -47,10 +48,10 @@ public class JoinCommand implements Executor<Member> {
 
 
     @Inject
-    public JoinCommand(@Named("trust.trust-members-by-default") boolean trustDefault,
+    public JoinCommand(@ConfigSetting("trust.trust-members-by-default") boolean trustDefault,
                        @Named("normal-default-rank") Rank normalDefaultRank,
                        @Named("super-default-rank") Rank superRank,
-                       RequestFactory<Choices> requests, @Named("society.max-size") int maxSize) {
+                       RequestFactory<Choices> requests, @ConfigSetting("society.max-size") int maxSize) {
         this.trustDefault = trustDefault;
         this.normalDefaultRank = normalDefaultRank;
         this.superRank = superRank;

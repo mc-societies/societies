@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import net.catharos.groups.Group;
 import net.catharos.groups.GroupProvider;
 import net.catharos.lib.core.command.CommandContext;
@@ -14,6 +13,7 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.shank.config.ConfigSetting;
 import net.catharos.lib.shank.logging.InjectLogger;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +37,7 @@ public class ListCommand implements Executor<Sender> {
     private Logger logger;
 
     @Inject
-    public ListCommand(@Named("verification.show-unverified") boolean showUnverified, GroupProvider groupProvider, Provider<Table> tableProvider) {
+    public ListCommand(@ConfigSetting("verification.show-unverified") boolean showUnverified, GroupProvider groupProvider, Provider<Table> tableProvider) {
         this.showUnverified = showUnverified;
         this.groupProvider = groupProvider;
         this.tableProvider = tableProvider;

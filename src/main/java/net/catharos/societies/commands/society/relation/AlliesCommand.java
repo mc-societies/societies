@@ -2,7 +2,6 @@ package net.catharos.societies.commands.society.relation;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import net.catharos.groups.*;
 import net.catharos.groups.request.*;
 import net.catharos.groups.request.simple.Choices;
@@ -11,6 +10,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import net.catharos.lib.shank.config.ConfigSetting;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.api.Members;
 import net.catharos.societies.commands.RuleStep;
@@ -111,7 +111,7 @@ public class AlliesCommand extends ListCommand {
         private Logger logger;
 
         @Inject
-        public AddCommand(@Named("relations.min-size-to-set-ally") int minSize,
+        public AddCommand(@ConfigSetting("relations.min-size-to-set-ally") int minSize,
                           RelationFactory factory,
                           RequestFactory<Choices> requests) {
             this.minSize = minSize;

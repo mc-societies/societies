@@ -2,7 +2,6 @@ package net.catharos.societies.commands.society.relation;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.bridge.ChatColor;
 import net.catharos.groups.*;
@@ -13,6 +12,7 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import net.catharos.lib.shank.config.ConfigSetting;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.api.Members;
 import net.catharos.societies.commands.RuleStep;
@@ -198,9 +198,9 @@ public class RivalsCommand extends ListCommand {
         private Logger logger;
 
         @Inject
-        public AddCommand(@Named("relations.min-size-to-set-rival") int minSize,
-                          @Named("relations.unrivable-societies") ArrayList unrivable,
-                          @Named("relations.rival-limit-percent") int rivalsLimit,
+        public AddCommand(@ConfigSetting("relations.min-size-to-set-rival") int minSize,
+                          @ConfigSetting("relations.unrivable-societies") ArrayList unrivable,
+                          @ConfigSetting("relations.rival-limit-percent") int rivalsLimit,
                           GroupProvider groupProvider,
                           RelationFactory factory) {
             this.minSize = minSize;

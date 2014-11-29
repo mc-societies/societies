@@ -51,6 +51,18 @@ public class ConfigModule extends AbstractModule {
         bind("pvp.save-civilians", "pvp.save-civilians", boolean.class);
 
         bind("home.replace-spawn", "society.home.replace-spawn", boolean.class);
+
+        bind("verification-required", "verification.new-society-verification-required", boolean.class);
+
+        bind("relations.min-size-to-set-rival", "relations.min-size-to-set-rival", int.class);
+        bind("relations.unrivable-societies", "relations.unrivable-societies", new TypeLiteral<List<String>>() {});
+        bind("relations.rival-limit-percent", "relations.rival-limit-percent", int.class);
+
+        bind("relations.min-size-to-set-ally", "relations.min-size-to-set-ally", int.class);
+        bind("trust.trust-members-by-default", "trust.trust-members-by-default", boolean.class);
+        bind("society.max-size", "society.max-size", int.class);
+        bind("verification.show-unverified", "verification.show-unverified", boolean.class);
+
     }
 
     public void bindNamed(String key, String setting, Class clazz) {
