@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import net.catharos.groups.MemberProvider;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.command.sender.SenderProvider;
-import net.catharos.societies.api.member.SocietyMember;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -13,10 +12,10 @@ import org.jetbrains.annotations.Nullable;
  */
 class SenderAdapter implements SenderProvider {
 
-    private final MemberProvider<SocietyMember> memberProvider;
+    private final MemberProvider memberProvider;
 
     @Inject
-    public SenderAdapter(MemberProvider<SocietyMember> memberProvider) {this.memberProvider = memberProvider;}
+    public SenderAdapter(MemberProvider memberProvider) {this.memberProvider = memberProvider;}
 
     @Nullable
     @Override

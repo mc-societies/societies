@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SocietyNameUpdater
  */
-class SQLMemberCreatedPublisher extends AbstractPublisher implements MemberCreatedPublisher<Member> {
+class SQLMemberCreatedPublisher extends AbstractPublisher implements MemberCreatedPublisher {
 
     @Inject
     public SQLMemberCreatedPublisher(ListeningExecutorService service, SQLQueries queries) {

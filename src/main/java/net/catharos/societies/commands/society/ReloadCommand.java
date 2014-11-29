@@ -1,12 +1,12 @@
 package net.catharos.societies.commands.society;
 
 import com.google.inject.Inject;
+import net.catharos.bridge.ReloadAction;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.bridge.ReloadAction;
 
 /**
  * Represents a RelationListCommand

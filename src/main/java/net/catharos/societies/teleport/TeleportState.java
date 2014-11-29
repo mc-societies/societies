@@ -1,21 +1,21 @@
 package net.catharos.societies.teleport;
 
 import net.catharos.bridge.Location;
-import net.catharos.societies.api.member.SocietyMember;
+import net.catharos.groups.Member;
 
 /**
  * Represents a TeleportState
  */
 public class TeleportState {
 
-    private final SocietyMember member;
+    private final Member member;
     private final Location destination;
 
     private final Location startLocation;
 
     private int counter;
 
-    public TeleportState(SocietyMember member, Location destination, Location startLocation, int counter) {
+    public TeleportState(Member member, Location destination, Location startLocation, int counter) {
         this.member = member;
         this.destination = destination;
         this.startLocation = startLocation;
@@ -30,7 +30,7 @@ public class TeleportState {
         this.counter--;
     }
 
-    public SocietyMember getMember() {
+    public Member getMember() {
         return member;
     }
 

@@ -1,12 +1,12 @@
 package net.catharos.societies.teleport;
 
 import net.catharos.bridge.Location;
-import net.catharos.societies.api.member.SocietyMember;
+import net.catharos.groups.Member;
 
 /**
  * Represents a Teleporter
  */
 public interface Teleporter {
 
-    void teleport(final SocietyMember member, final Location target);
+    void teleport(final Member member, final Location target);
 }

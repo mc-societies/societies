@@ -32,7 +32,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
 public class InviteCommand implements Executor<Member> {
 
     @Argument(name = "argument.target.member")
-    SocietyMember target;
+    Member target;
 
     public static final String FAILED = "Invite failed! %s";
 
@@ -74,7 +74,7 @@ public class InviteCommand implements Executor<Member> {
             return;
         }
 
-        if (!target.isAvailable()) {
+        if (!target.getExtension(SocietyMember.class).isAvailable()) {
             sender.send("target-member.not-available");
             return;
         }

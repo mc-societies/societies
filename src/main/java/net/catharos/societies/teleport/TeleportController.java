@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.bridge.*;
 import net.catharos.groups.Group;
-import net.catharos.societies.api.member.SocietyMember;
+import net.catharos.groups.Member;
 
 import javax.inject.Named;
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class TeleportController implements Runnable, Teleporter {
         for (Iterator<TeleportState> it = states.iterator(); it.hasNext(); ) {
             TeleportState state = it.next();
 
-            SocietyMember member = state.getMember();
+            Member member = state.getMember();
             Location target = state.getDestination();
 
             Group group = member.getGroup();
@@ -77,11 +77,11 @@ public class TeleportController implements Runnable, Teleporter {
                 continue;
             }
 
-            if (!member.isAvailable()) {
+            if (!member.getExtension(Player.class).isAvailable()) {
                 return;
             }
 
-            if (!isLocationEqual(member.getLocation(), state.getStartLocation(), 0.5)) {
+            if (!isLocationEqual(member.getExtension(Player.class).getLocation(), state.getStartLocation(), 0.5)) {
                 member.send("you.teleport-cancelled");
                 it.remove();
                 continue;
@@ -99,17 +99,17 @@ public class TeleportController implements Runnable, Teleporter {
                 int z = target.getRoundedZ();
 
                 if (!member.hasPermission("simpleclans.mod.keep-items")) {
-                    dropItems(member);
+                    dropItems(member.getExtension(Player.class));
                 }
 
-                member.teleport(target);
+                member.getExtension(Player.class).teleport(target);
 
                 member.send("you.at-home", group.getName());
             }
         }
     }
 
-    private void dropItems(SocietyMember player) {
+    private void dropItems(Player player) {
         if (!dropItems) {
             return;
         }
@@ -140,7 +140,7 @@ public class TeleportController implements Runnable, Teleporter {
     }
 
     @Override
-    public void teleport(final SocietyMember member, final Location target) {
-        states.add(new TeleportState(member, target, member.getLocation(), delay));
+    public void teleport(final Member member, final Location target) {
+        states.add(new TeleportState(member, target, member.getExtension(Player.class).getLocation(), delay));
     }
 }

@@ -1,7 +1,7 @@
 package net.catharos.societies.teleport;
 
 import net.catharos.bridge.Location;
-import net.catharos.societies.api.member.SocietyMember;
+import net.catharos.groups.Member;
 
 
 /**
@@ -9,7 +9,7 @@ import net.catharos.societies.api.member.SocietyMember;
  */
 public class DisabledTeleporter implements Teleporter {
     @Override
-    public void teleport(SocietyMember member, Location target) {
+    public void teleport(Member member, Location target) {
         member.send("teleport.disabled");
     }
 }

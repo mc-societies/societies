@@ -19,7 +19,6 @@ import net.catharos.lib.core.uuid.UUIDStorage;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.database.json.GroupMapper;
 import net.catharos.societies.database.json.MemberMapper;
-import net.catharos.societies.api.member.SocietyMember;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
@@ -37,15 +36,15 @@ public class BackupCommand implements Executor<Sender> {
     File output;
 
     private final GroupMapper groupMapper;
-    private final MemberMapper<?> memberMapper;
-    private final MemberProvider<?> memberProvider;
+    private final MemberMapper memberMapper;
+    private final MemberProvider memberProvider;
     private final GroupProvider groupProvider;
 
     @InjectLogger
     private Logger logger;
 
     @Inject
-    public BackupCommand(GroupMapper groupMapper, MemberMapper<SocietyMember> memberMapper, MemberProvider<SocietyMember> memberProvider, GroupProvider groupProvider) {
+    public BackupCommand(GroupMapper groupMapper, MemberMapper memberMapper, MemberProvider memberProvider, GroupProvider groupProvider) {
         this.groupMapper = groupMapper;
         this.memberMapper = memberMapper;
         this.memberProvider = memberProvider;

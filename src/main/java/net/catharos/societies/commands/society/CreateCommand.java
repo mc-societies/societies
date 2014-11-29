@@ -21,7 +21,7 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
 import net.catharos.lib.shank.logging.InjectLogger;
-import net.catharos.societies.api.member.SocietyMember;
+import net.catharos.societies.api.economy.EconomyParticipant;
 import org.apache.logging.log4j.Logger;
 
 import static net.catharos.bridge.ChatColor.stripColor;
@@ -95,9 +95,10 @@ public class CreateCommand implements Executor<Member> {
             return;
         }
 
-        if (!sender.as(new SenderWithdrawer(), SocietyMember.class)) {
-            sender.send("economy.not-enough-money");
-            return;
+        if (sender.hasExtension(EconomyParticipant.class)) {
+            if (!sender.getExtension(EconomyParticipant.class).withdraw(price).transactionSuccess()) {
+                sender.send("economy.not-enough-money");
+            }
         }
 
         name = stripColor(name).trim();
@@ -119,13 +120,13 @@ public class CreateCommand implements Executor<Member> {
                     return;
                 }
 
-                if (sender instanceof SocietyMember) {
-                    SocietyMember societyMember = (SocietyMember) sender;
+//                if (sender instanceof Member) {
+//                    Member societyMember = sender;
 
-                    result.addMember(societyMember);
-                    societyMember.addRank(defaultRank);
-                    societyMember.addRank(superRank);
-                }
+                result.addMember(sender);
+                sender.addRank(defaultRank);
+                sender.addRank(superRank);
+//                }
 
                 sender.send("society.created", name, tag);
             }
@@ -137,15 +138,5 @@ public class CreateCommand implements Executor<Member> {
         });
 
 
-    }
-
-    private class SenderWithdrawer implements net.catharos.lib.core.command.sender.Sender.Executor<SocietyMember, Boolean> {
-        @Override
-        public Boolean execute(SocietyMember sender) {return sender.withdraw(price).transactionSuccess(); }
-
-        @Override
-        public Boolean defaultValue(net.catharos.lib.core.command.sender.Sender sender) {
-            return true;
-        }
     }
 }

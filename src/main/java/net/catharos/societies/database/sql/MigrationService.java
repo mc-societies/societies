@@ -17,10 +17,8 @@ public class MigrationService extends AbstractService {
     private final Database database;
     private final ClassLoader classLoader;
 
-
     @InjectLogger
     private Logger logger;
-
 
     @Inject
     public MigrationService(Database database, ClassLoader classLoader) {
@@ -30,6 +28,12 @@ public class MigrationService extends AbstractService {
 
     @Override
     public void init(LifecycleContext context) throws Exception {
+        try {
+            database.initDatabase();
+        } catch (RuntimeException e) {
+            logger.fatal("Failed to connect to database! {0}", e.getMessage());
+            return;
+        }
         logger.info("Generation database tables...");
 
         Flyway flyway = new Flyway();

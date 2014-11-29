@@ -8,7 +8,6 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.googlecode.cqengine.query.Query;
 import net.catharos.groups.Group;
-import net.catharos.groups.Member;
 import net.catharos.groups.publisher.*;
 import net.catharos.groups.rank.Rank;
 import net.catharos.groups.setting.Setting;
@@ -31,7 +30,7 @@ import static com.googlecode.cqengine.query.QueryFactory.or;
 /**
  * Represents a JSONMemberPublisher
  */
-final class JSONGroupPublisher<M extends Member> implements
+final class JSONGroupPublisher implements
         GroupPublisher,
         GroupNamePublisher, GroupCreatedPublisher,
         GroupRankPublisher,
@@ -42,14 +41,14 @@ final class JSONGroupPublisher<M extends Member> implements
     private final UUIDStorage uuidStorage;
     private final GroupMapper mapper;
     private final ListeningExecutorService service;
-    private final JSONProvider<M> provider;
+    private final JSONProvider provider;
 
     @InjectLogger
     private Logger logger;
 
 
     @Inject
-    public JSONGroupPublisher(@Named("group-root") File groupRoot, GroupMapper mapper, ListeningExecutorService service, JSONProvider<M> provider) {
+    public JSONGroupPublisher(@Named("group-root") File groupRoot, GroupMapper mapper, ListeningExecutorService service, JSONProvider provider) {
         this.provider = provider;
         this.uuidStorage = new UUIDStorage(groupRoot, "json");
         this.mapper = mapper;

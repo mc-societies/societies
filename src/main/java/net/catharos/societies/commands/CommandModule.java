@@ -63,7 +63,8 @@ public class CommandModule extends AbstractModule {
         bindNamedInstance("table-header", String.class, "Societies {3} - page {0}/{1} - {2} entries");
         bindNamedInstance("padding", int.class, 2);
         bind(Paginator.class).to(DefaultPaginator.class);
-        bindNamed("entires-per-page", int.class).to(Key.get(Integer.class, Names.named("chat.tables.max-rows-pre-page")));
+        bindNamed("entires-per-page", int.class)
+                .to(Key.get(Integer.class, Names.named("chat.tables.max-rows-pre-page")));
 
         // Group parser
         bind(new TypeLiteral<ArgumentParser<Group>>() {}).to(GroupParser.class);
@@ -73,8 +74,8 @@ public class CommandModule extends AbstractModule {
         // Member parser
 //                bind(new TypeLiteral<ArgumentParser<SocietyMember>>() {}).to(TargetParser.class);
         parsers().addBinding(Sender.class).to(TargetParser.class);
-        parsers().addBinding(Member.class).to(new TypeLiteral<MemberParser<SocietyMember>>() {});
-        parsers().addBinding(SocietyMember.class).to(new TypeLiteral<MemberParser<SocietyMember>>() {});
+        parsers().addBinding(Member.class).to(new TypeLiteral<MemberParser>() {});
+        parsers().addBinding(SocietyMember.class).to(new TypeLiteral<MemberParser>() {});
 
 
         // Exception handler
@@ -161,10 +162,8 @@ public class CommandModule extends AbstractModule {
         commands.add(analyser.analyse(SocietyCommand.class));
 
 
-
         return commands;
     }
-
 
 
     public MapBinder<Class<?>, ArgumentParser<?>> parsers() {

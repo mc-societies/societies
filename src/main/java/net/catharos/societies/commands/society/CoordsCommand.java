@@ -1,6 +1,8 @@
 package net.catharos.societies.commands.society;
 
 import com.google.inject.Inject;
+import net.catharos.bridge.Location;
+import net.catharos.bridge.Player;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.lib.core.command.CommandContext;
@@ -8,10 +10,9 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
-import net.catharos.bridge.Location;
+import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
-import net.catharos.societies.api.member.SocietyMember;
 
 import javax.inject.Provider;
 import java.text.DecimalFormat;
@@ -22,8 +23,8 @@ import java.text.DecimalFormat;
 @Command(identifier = "command.coords")
 @Permission("societies.coords")
 @Meta({@Entry(key = RuleStep.RULE, value = "coords"), @Entry(key = VerifyStep.VERIFY)})
-@Sender(SocietyMember.class)
-public class CoordsCommand implements Executor<SocietyMember> {
+@Sender(Member.class)
+public class CoordsCommand implements Executor<Member> {
 
     private final Provider<Table> tableProvider;
     private final RowFactory rowFactory;
@@ -40,7 +41,7 @@ public class CoordsCommand implements Executor<SocietyMember> {
     }
 
     @Override
-    public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
+    public void execute(CommandContext<Member> ctx, Member sender) {
         Group group = sender.getGroup();
 
         if (group == null) {
@@ -48,7 +49,7 @@ public class CoordsCommand implements Executor<SocietyMember> {
             return;
         }
 
-        Location location = sender.getLocation();
+        Location location = sender.getExtension(Player.class).getLocation();
 
         assert location != null;
 

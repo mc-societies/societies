@@ -12,7 +12,6 @@ import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
-import net.catharos.societies.api.member.SocietyMember;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -24,7 +23,7 @@ import java.util.Set;
 @Command(identifier = "command.leave")
 @Permission("societies.leave")
 @Sender(Member.class)
-public class LeaveCommand implements Executor<SocietyMember> {
+public class LeaveCommand implements Executor<Member> {
 
     private final GroupDropPublisher dropGroup;
 
@@ -32,7 +31,7 @@ public class LeaveCommand implements Executor<SocietyMember> {
     public LeaveCommand(GroupDropPublisher dropGroup) {this.dropGroup = dropGroup;}
 
     @Override
-    public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) {
+    public void execute(CommandContext<Member> ctx, Member sender) {
         Group group = sender.getGroup();
 
         if (group != null) {

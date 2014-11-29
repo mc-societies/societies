@@ -5,8 +5,8 @@ import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.core.i18n.MutableDictionary;
-import net.catharos.societies.StringDictionary;
 import net.catharos.lib.shank.service.AbstractServiceModule;
+import net.catharos.societies.StringDictionary;
 
 import java.io.File;
 

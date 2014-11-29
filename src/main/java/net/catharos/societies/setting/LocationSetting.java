@@ -2,13 +2,13 @@ package net.catharos.societies.setting;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import net.catharos.bridge.Location;
+import net.catharos.bridge.World;
+import net.catharos.bridge.WorldResolver;
 import net.catharos.groups.setting.Setting;
 import net.catharos.groups.setting.SettingException;
 import net.catharos.groups.setting.subject.Subject;
 import net.catharos.groups.setting.target.Target;
-import net.catharos.bridge.Location;
-import net.catharos.bridge.World;
-import net.catharos.bridge.WorldResolver;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;

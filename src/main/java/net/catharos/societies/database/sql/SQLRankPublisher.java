@@ -21,7 +21,7 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SQLGroupRankPublisher
  */
-class SQLRankPublisher<M extends Member> extends AbstractPublisher implements RankPublisher, MemberRankPublisher<M>, GroupRankPublisher, RankDropPublisher {
+class SQLRankPublisher extends AbstractPublisher implements RankPublisher, MemberRankPublisher, GroupRankPublisher, RankDropPublisher {
 
     @Inject
     public SQLRankPublisher(ListeningExecutorService service, SQLQueries queries) {
@@ -70,10 +70,10 @@ class SQLRankPublisher<M extends Member> extends AbstractPublisher implements Ra
     }
 
     @Override
-    public ListenableFuture<M> publishRank(final M member, final Rank rank) {
-        return service.submit(new Callable<M>() {
+    public ListenableFuture<Member> publishRank(final Member member, final Rank rank) {
+        return service.submit(new Callable<Member>() {
             @Override
-            public M call() throws Exception {
+            public Member call() throws Exception {
                 Insert query = queries.getQuery(SQLQueries.INSERT_MEMBER_RANK);
                 query.bind(1, UUIDGen.toByteArray(member.getUUID()));
                 query.bind(2, UUIDGen.toByteArray(rank.getUUID()));
@@ -84,10 +84,10 @@ class SQLRankPublisher<M extends Member> extends AbstractPublisher implements Ra
     }
 
     @Override
-    public ListenableFuture<M> dropRank(final M member, final Rank rank) {
-        return service.submit(new Callable<M>() {
+    public ListenableFuture<Member> dropRank(final Member member, final Rank rank) {
+        return service.submit(new Callable<Member>() {
             @Override
-            public M call() throws Exception {
+            public Member call() throws Exception {
                 Query query;
                 query = queries.getQuery(SQLQueries.DROP_MEMBER_RANK);
                 query.bind(1, UUIDGen.toByteArray(member.getUUID()));

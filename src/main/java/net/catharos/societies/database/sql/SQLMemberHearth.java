@@ -1,22 +1,17 @@
 package net.catharos.societies.database.sql;
 
 import net.catharos.groups.Group;
-import net.catharos.groups.MemoryMember;
+import net.catharos.groups.MemberHeart;
 import net.catharos.groups.rank.Rank;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Represents a SQLMember
  */
-public abstract class SQLMember extends MemoryMember {
-
-    public SQLMember(UUID uuid) {
-        super(uuid);
-    }
+public abstract class SQLMemberHearth implements MemberHeart {
 
     @Override
     public Set<Rank> getRanks() {
@@ -67,11 +62,6 @@ public abstract class SQLMember extends MemoryMember {
     @Override
     public void setGroup(@Nullable Group group) {
 
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return false;
     }
 
     @Override

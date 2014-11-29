@@ -46,7 +46,7 @@ import static com.googlecode.cqengine.query.QueryFactory.equal;
  * Represents a JSONProvider
  */
 @Singleton
-public class JSONProvider<M extends Member> extends AbstractService implements MemberProvider<M>, GroupProvider, MemberPublisher, MemberDropPublisher {
+public class JSONProvider extends AbstractService implements MemberProvider, GroupProvider, MemberPublisher, MemberDropPublisher {
 
     IndexedCollection<Group> groups = CQEngine.newInstance();
 
@@ -76,39 +76,39 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
         groups.addIndex(HashIndex.onAttribute(GROUP_CLEAN_TAG));
     }
 
-    IndexedCollection<M> members = CQEngine.newInstance();
+    IndexedCollection<Member> members = CQEngine.newInstance();
 
-    public final Attribute<Member, UUID> MEMBER_UUID = new SimpleAttribute<Member, UUID>("group_uuid") {
+    public final Attribute<net.catharos.groups.Member, UUID> MEMBER_UUID = new SimpleAttribute<net.catharos.groups.Member, UUID>("group_uuid") {
         @Override
-        public UUID getValue(Member member) { return member.getUUID(); }
+        public UUID getValue(net.catharos.groups.Member member) { return member.getUUID(); }
     };
 
 
     {
-        members.addIndex(CastSafe.<Index<M>>toGeneric(HashIndex.onAttribute(MEMBER_UUID)));
+        members.addIndex(CastSafe.<Index<Member>>toGeneric(HashIndex.onAttribute(MEMBER_UUID)));
     }
 
     private final PlayerResolver playerResolver;
     private final GroupMapper groupMapper;
-    private final MemberMapper<M> mapper;
+    private final MemberMapper mapper;
     private final UUIDStorage memberStorage;
     private final UUIDStorage groupStorage;
     private final ListeningExecutorService service;
 
     private MemberPublisher memberPublisher;
 
-    private final MemberFactory<M> memberFactory;
+    private final MemberFactory memberFactory;
 
     @InjectLogger
     private Logger logger;
 
     @Inject
     public JSONProvider(PlayerResolver playerResolver,
-                        MemberMapper<M> mapper,
+                        MemberMapper mapper,
                         @Named("group-root") File groupRoot,
                         @Named("member-root") File memberRoot,
                         GroupMapper groupMapper,
-                        ListeningExecutorService service, MemberFactory<M> memberFactory) {
+                        ListeningExecutorService service, MemberFactory memberFactory) {
         this.playerResolver = playerResolver;
         this.mapper = mapper;
         this.groupMapper = groupMapper;
@@ -192,12 +192,12 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     }
 
     @Override
-    public ListenableFuture<M> getMember(UUID uuid) {
-        Query<M> query = (Query<M>) equal(MEMBER_UUID, uuid);
-        ResultSet<M> retrieve = members.retrieve(query);
+    public ListenableFuture<Member> getMember(UUID uuid) {
+        Query<Member> query = (Query<Member>) equal(MEMBER_UUID, uuid);
+        ResultSet<Member> retrieve = members.retrieve(query);
 
         if (retrieve.isEmpty()) {
-            M member = memberFactory.create(uuid);
+            Member member = memberFactory.create(uuid);
             memberPublisher.publish(member);
             members.add(member);
             return immediateFuture(member);
@@ -207,7 +207,7 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     }
 
     @Override
-    public ListenableFuture<M> getMember(String name) {
+    public ListenableFuture<Member> getMember(String name) {
         UUID player = playerResolver.getPlayer(name);
 
         if (player == null) {
@@ -218,19 +218,19 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     }
 
     @Override
-    public ListenableFuture<Set<M>> getMembers() {
-        Set<M> result = Collections.unmodifiableSet(members);
+    public ListenableFuture<Set<Member>> getMembers() {
+        Set<Member> result = Collections.unmodifiableSet(members);
         return immediateFuture(result);
     }
 
     @Override
-    public ListenableFuture<Member> publish(final Member member) {
-        return service.submit(new Callable<Member>() {
+    public ListenableFuture<net.catharos.groups.Member> publish(final net.catharos.groups.Member member) {
+        return service.submit(new Callable<net.catharos.groups.Member>() {
 
             @Override
-            public Member call() throws Exception {
+            public net.catharos.groups.Member call() throws Exception {
                 try {
-                    members.add((M) member);//beautify cast?
+                    members.add((Member) member);//beautify cast?
                     mapper.writeMember(member, memberStorage.getFile(member.getUUID()));
                 } catch (Exception e) {
                     logger.catching(e);
@@ -242,11 +242,11 @@ public class JSONProvider<M extends Member> extends AbstractService implements M
     }
 
     @Override
-    public ListenableFuture drop(final Member member) {
-        return service.submit(new Callable<Member>() {
+    public ListenableFuture drop(final net.catharos.groups.Member member) {
+        return service.submit(new Callable<net.catharos.groups.Member>() {
 
             @Override
-            public Member call() throws Exception {
+            public net.catharos.groups.Member call() throws Exception {
                 members.remove(member);
 
                 File file = memberStorage.getFile(member.getUUID());

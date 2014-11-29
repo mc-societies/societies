@@ -8,7 +8,6 @@ import net.catharos.groups.publisher.*;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.api.lock.DummyLocker;
 import net.catharos.societies.api.lock.Locker;
-import net.catharos.societies.api.member.SocietyMember;
 
 /**
  * Represents a MemberProviderModule
@@ -17,22 +16,22 @@ public class JSONModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
-        Key<JSONProvider<SocietyMember>> provider = Key.get(new TypeLiteral<JSONProvider<SocietyMember>>() {});
+        Key<JSONProvider> provider = Key.get(new TypeLiteral<JSONProvider>() {});
 
         bindService().to(provider);
 
-        bind(new TypeLiteral<MemberMapper<SocietyMember>>() {});
+        bind(MemberMapper.class);
 
         // Member provider
-        bind(new TypeLiteral<MemberProvider<SocietyMember>>() {}).to(provider);
+        bind(MemberProvider.class).to(provider);
 
 //        bind(new TypeLiteral<MemberProvider<Member>>() {}).to(CastSafe.<Key<? extends MemberProvider<Member>>>toGeneric(provider);
 
         // Group provider
         bind(GroupProvider.class).to(provider);
 
-        Key<JSONGroupPublisher<SocietyMember>> groupPublisher = Key
-                .get(new TypeLiteral<JSONGroupPublisher<SocietyMember>>() {});
+        Key<JSONGroupPublisher> groupPublisher = Key
+                .get(new TypeLiteral<JSONGroupPublisher>() {});
 
         // Group Publishers
         bind(GroupPublisher.class).to(groupPublisher);

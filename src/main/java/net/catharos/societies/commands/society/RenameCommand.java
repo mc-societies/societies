@@ -1,6 +1,7 @@
 package net.catharos.societies.commands.society;
 
 import net.catharos.groups.Group;
+import net.catharos.groups.Member;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
@@ -28,7 +29,7 @@ public class RenameCommand implements Executor<Sender> {
     public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
         if ((sender instanceof SocietyMember)) {
             if (target == null) {
-                target = ((SocietyMember) sender).getGroup();
+                target = ((Member) sender).getGroup();
             } else {
                 sender.send("society.not-found");
             }

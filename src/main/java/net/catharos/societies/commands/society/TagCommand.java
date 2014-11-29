@@ -1,12 +1,12 @@
 package net.catharos.societies.commands.society;
 
+import net.catharos.bridge.ChatColor;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
-import net.catharos.bridge.ChatColor;
 import net.catharos.societies.commands.RuleStep;
 
 /**

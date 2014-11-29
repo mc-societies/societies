@@ -1,10 +1,10 @@
 package net.catharos.societies.commands;
 
+import net.catharos.bridge.ChatColor;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.bridge.ChatColor;
 
 /**
  * Represents a PreCommandStep

@@ -18,9 +18,9 @@ import java.util.concurrent.ExecutionException;
  * Represents a OnlineCacheMemberProvider
  */
 @Singleton
-public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
+public class OnlineMemberCache implements MemberCache {
 
-    private final THashMap<UUID, M> members = new THashMap<UUID, M>();
+    private final THashMap<UUID, Member> members = new THashMap<UUID, Member>();
 
     private final GroupProvider groupProvider;
     private final PlayerResolver provider;
@@ -32,8 +32,8 @@ public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
     }
 
     @Override
-    public M getMember(UUID uuid) {
-        M member = members.get(uuid);
+    public Member getMember(UUID uuid) {
+        Member member = members.get(uuid);
 
         if (member == null) {
             return null;
@@ -65,27 +65,27 @@ public class OnlineMemberCache<M extends Member> implements MemberCache<M> {
     }
 
     @Override
-    public M getMember(String name) {
+    public Member getMember(String name) {
         UUID player = provider.getPlayer(name);
         return members.get(player);
     }
 
     @Override
-    public Set<M> getMembers() {
+    public Set<Member> getMembers() {
         return null;
     }
 
-    public M clear(UUID uuid) {
+    public Member clear(UUID uuid) {
         return this.members.remove(uuid);
     }
 
     @Override
-    public boolean cache(M member) {
+    public boolean cache(Member member) {
         return members.put(member.getUUID(), member) == null;
     }
 
     @Override
-    public M clear(M member) {
+    public Member clear(Member member) {
         return this.clear(member.getUUID());
     }
 }

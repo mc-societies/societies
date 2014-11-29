@@ -10,6 +10,8 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.societies.api.Groups;
+import net.catharos.societies.api.member.SocietyMember;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;
@@ -54,12 +56,13 @@ public class ProfileCommand implements Executor<Sender> {
         sender.send("profile.tag", target.getTag());
         sender.send("profile.uuid", target.getUUID());
         sender.send("profile.last-active", target.getLastActive().toString(dateTimeFormatter));
-        sender.send("profile.inactive", target.isActive() ? ":profile.active" : periodFormatter.print(inactivePeriod));
+        sender.send("profile.inactive", Groups.isActive(target.getMembers()) ? ":profile.active" : periodFormatter
+                .print(inactivePeriod));
         sender.send("profile.founded", target.getCreated().toString(dateTimeFormatter));
         sender.send("profile.members");
 
         for (Member member : target.getMembers()) {
-            if (member.isAvailable()) {
+            if (member.getExtension(SocietyMember.class).isAvailable()) {
                 sender.send("profile.member-format", member.getName());
             }
         }

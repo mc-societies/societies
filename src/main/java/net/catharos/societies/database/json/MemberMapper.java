@@ -28,17 +28,17 @@ import java.util.concurrent.ExecutionException;
 /**
  * Represents a GroupConverter
  */
-public class MemberMapper<M extends Member> extends AbstractMapper {
+public class MemberMapper extends AbstractMapper {
 
-    private final MemberFactory<M> memberFactory;
+    private final MemberFactory memberFactory;
 
     @Inject
-    public MemberMapper(Logger logger, SettingProvider settingProvider, MemberFactory<M> memberFactory) {
+    public MemberMapper(Logger logger, SettingProvider settingProvider, MemberFactory memberFactory) {
         super(logger, settingProvider);
         this.memberFactory = memberFactory;
     }
 
-    public M readMember(JsonParser parser, Function<UUID, Group> groupSupplier) throws IOException, ExecutionException, InterruptedException {
+    public Member readMember(JsonParser parser, Function<UUID, Group> groupSupplier) throws IOException, ExecutionException, InterruptedException {
         parser.nextToken();
         validateObject(parser);
 
@@ -83,7 +83,7 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
 
         //Create member
 
-        M member = memberFactory.create(uuid);
+        Member member = memberFactory.create(uuid);
 
         member.complete(false);
 
@@ -139,9 +139,9 @@ public class MemberMapper<M extends Member> extends AbstractMapper {
         generator.writeEndObject();
     }
 
-    public M readMember(File file, Function<UUID, Group> groupSupplier) throws IOException, ExecutionException, InterruptedException {
+    public Member readMember(File file, Function<UUID, Group> groupSupplier) throws IOException, ExecutionException, InterruptedException {
         JsonParser parser = createParser(file);
-        M output = readMember(parser, groupSupplier);
+        Member output = readMember(parser, groupSupplier);
         parser.close();
         return output;
     }

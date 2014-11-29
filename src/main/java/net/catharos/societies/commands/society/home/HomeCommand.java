@@ -2,6 +2,8 @@ package net.catharos.societies.commands.society.home;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import net.catharos.bridge.Location;
+import net.catharos.bridge.Player;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.setting.Setting;
@@ -10,10 +12,9 @@ import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
-import net.catharos.bridge.Location;
+import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.commands.RuleStep;
 import net.catharos.societies.commands.VerifyStep;
-import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.teleport.TeleportController;
 
 import java.util.Set;
@@ -29,8 +30,8 @@ import java.util.Set;
 //        HomeCommand.RemoveHomeCommand.class
 })
 @Meta({@Entry(key = RuleStep.RULE, value = "home.teleport"), @Entry(key = VerifyStep.VERIFY)})
-@Sender(value = SocietyMember.class)
-public class HomeCommand implements Executor<SocietyMember> {
+@Sender(Member.class)
+public class HomeCommand implements Executor<Member> {
 
     private final Setting<Location> homeSetting;
 
@@ -43,7 +44,7 @@ public class HomeCommand implements Executor<SocietyMember> {
     }
 
     @Override
-    public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) throws ExecuteException {
+    public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
         Group group = sender.getGroup();
 
         if (group == null) {
@@ -66,7 +67,7 @@ public class HomeCommand implements Executor<SocietyMember> {
     @Command(identifier = "command.home.remove", async = true)
     @Permission("societies.home.remove")
     @Meta({@Entry(key = RuleStep.RULE, value = "home.remove"), @Entry(key = VerifyStep.VERIFY)})
-    @Sender(value = SocietyMember.class)
+    @Sender(Member.class)
     public static class RemoveHomeCommand implements Executor<Member> {
 
         private final Setting<Location> homeSetting;
@@ -93,8 +94,8 @@ public class HomeCommand implements Executor<SocietyMember> {
     @Command(identifier = "command.home.set")
     @Permission("societies.home.set")
     @Meta({@Entry(key = RuleStep.RULE, value = "home.set"), @Entry(key = VerifyStep.VERIFY)})
-    @Sender(value = SocietyMember.class)
-    public static class SetHomeCommand implements Executor<SocietyMember> {
+    @Sender(Member.class)
+    public static class SetHomeCommand implements Executor<Member> {
 
         @Option(name = "argument.location")
         Location location;
@@ -107,7 +108,7 @@ public class HomeCommand implements Executor<SocietyMember> {
         }
 
         @Override
-        public void execute(CommandContext<SocietyMember> ctx, SocietyMember sender) throws ExecuteException {
+        public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
             Group group = sender.getGroup();
 
             if (group == null) {
@@ -116,7 +117,7 @@ public class HomeCommand implements Executor<SocietyMember> {
             }
 
             if (location == null) {
-                location = sender.getLocation();
+                location = sender.getExtension(Player.class).getLocation();
             }
 
             Location currentHome = group.get(homeSetting);
@@ -135,7 +136,7 @@ public class HomeCommand implements Executor<SocietyMember> {
     @Command(identifier = "command.home.regroup")
     @Permission("societies.home.regroup")
     @Meta({@Entry(key = RuleStep.RULE, value = "home.regroup"), @Entry(key = VerifyStep.VERIFY)})
-    @Sender(value = SocietyMember.class)
+    @Sender(Member.class)
     public static class RegroupCommand implements Executor<Member> {
 
         private final Setting<Location> homeSetting;

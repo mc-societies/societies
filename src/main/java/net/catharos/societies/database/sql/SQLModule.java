@@ -2,7 +2,8 @@ package net.catharos.societies.database.sql;
 
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
-import net.catharos.groups.*;
+import net.catharos.groups.GroupProvider;
+import net.catharos.groups.MemberProvider;
 import net.catharos.groups.cache.GroupCache;
 import net.catharos.groups.cache.MemberCache;
 import net.catharos.groups.cache.NaughtyGroupCache;
@@ -16,7 +17,6 @@ import net.catharos.lib.database.data.queue.DefaultQueue;
 import net.catharos.lib.database.data.queue.Queue;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.api.lock.Locker;
-import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.group.OnlineGroupCache;
 import net.catharos.societies.member.OnlineMemberCache;
 import org.jooq.SQLDialect;
@@ -60,14 +60,12 @@ public class SQLModule extends AbstractServiceModule {
 
         // Member provider
         if (cache) {
-            bind(new TypeLiteral<MemberCache<SocietyMember>>() {})
-                    .to(new TypeLiteral<OnlineMemberCache<SocietyMember>>() {});
+            bind(MemberCache.class).to(OnlineMemberCache.class);
         } else {
-            bind(new TypeLiteral<MemberCache<SocietyMember>>() {})
-                    .to(new TypeLiteral<NaughtyMemberCache<SocietyMember>>() {});
+            bind(MemberCache.class).to(NaughtyMemberCache.class);
         }
 
-        bind(new TypeLiteral<MemberProvider<SocietyMember>>() {})
+        bind(new TypeLiteral<MemberProvider>() {})
                 .to(controller);
 
         // Group provider

@@ -22,7 +22,6 @@ import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.societies.api.PlayerResolver;
-import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.database.sql.layout.tables.records.MembersRecord;
 import net.catharos.societies.database.sql.layout.tables.records.SocietiesRecord;
 import net.catharos.societies.group.SocietyException;
@@ -50,7 +49,7 @@ import static net.catharos.societies.database.sql.SQLQueries.*;
 /**
  * Represents a LoadingMemberProvider
  */
-class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
+class SQLProvider implements MemberProvider, GroupProvider {
 
     public static final int PREPARE = DefaultGroup.PREPARE;
 
@@ -59,7 +58,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
     private final MemberPublisher memberPublisher;
 
-    private final MemberFactory<SocietyMember> memberFactory;
+    private final MemberFactory memberFactory;
     private final GroupFactory groupFactory;
     private final RankFactory rankFactory;
 
@@ -68,7 +67,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
 
 
     private final GroupCache groupCache;
-    private final MemberCache<SocietyMember> memberCache;
+    private final MemberCache memberCache;
 
     @InjectLogger
     private Logger logger;
@@ -77,13 +76,13 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     public SQLProvider(SQLQueries queries,
                        ListeningExecutorService service,
                        PlayerResolver playerResolver,
-                       MemberFactory<SocietyMember> memberFactory,
+                       MemberFactory memberFactory,
                        MemberPublisher memberPublisher,
                        GroupCache groupCache,
                        GroupFactory groupFactory,
                        SettingProvider settingProvider,
                        RankFactory rankFactory,
-                       MemberCache<SocietyMember> memberCache) {
+                       MemberCache memberCache) {
         this.queries = queries;
         this.service = service;
 
@@ -102,9 +101,9 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     //================================================================================
 
     @Override
-    public ListenableFuture<SocietyMember> getMember(String name) {
+    public ListenableFuture<Member> getMember(String name) {
         // Cache lookup
-        SocietyMember member = memberCache.getMember(name);
+        Member member = memberCache.getMember(name);
         if (member != null) {
             return immediateFuture(member);
         }
@@ -120,23 +119,23 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     }
 
     @Override
-    public ListenableFuture<Set<SocietyMember>> getMembers() {
-        Set<SocietyMember> members = memberCache.getMembers();
+    public ListenableFuture<Set<Member>> getMembers() {
+        Set<Member> members = memberCache.getMembers();
         if (members != null) {
             return immediateFuture(members);
         }
 
         ListenableFuture<Result<MembersRecord>> future = queries.query(service, SQLQueries.SELECT_MEMBERS);
 
-        return transform(future, new Function<Result<MembersRecord>, Set<SocietyMember>>() {
+        return transform(future, new Function<Result<MembersRecord>, Set<Member>>() {
             @Nullable
             @Override
-            public Set<SocietyMember> apply(@Nullable Result<MembersRecord> input) {
+            public Set<Member> apply(@Nullable Result<MembersRecord> input) {
                 if (input == null) {
                     return Collections.emptySet();
                 }
 
-                THashSet<SocietyMember> result = new THashSet<SocietyMember>(input.size());
+                THashSet<Member> result = new THashSet<Member>(input.size());
 
                 for (MembersRecord record : input) {
                     result.add(evaluateSingleMember(UUIDGen.toUUID(record.getUuid()), null, record));
@@ -148,27 +147,27 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     }
 
     @Override
-    public ListenableFuture<SocietyMember> getMember(UUID uuid) {
+    public ListenableFuture<Member> getMember(UUID uuid) {
         return getMember(uuid, null, service);
     }
 
-    public ListenableFuture<SocietyMember> getMember(final UUID uuid, final Group group, ListeningExecutorService service) {
+    public ListenableFuture<Member> getMember(final UUID uuid, final Group group, ListeningExecutorService service) {
         // Cache lookup
-        SocietyMember member = memberCache.getMember(uuid);
+        Member member = memberCache.getMember(uuid);
         if (member != null) {
             return immediateFuture(member);
         }
 
-        return queryMember(service, uuid, new Function<Result<MembersRecord>, SocietyMember>() {
+        return queryMember(service, uuid, new Function<Result<MembersRecord>, Member>() {
             @Nullable
             @Override
-            public SocietyMember apply(@Nullable Result<MembersRecord> input) {
+            public Member apply(@Nullable Result<MembersRecord> input) {
                 return evaluateMember(uuid, group, input);
             }
         });
     }
 
-    private ListenableFuture<SocietyMember> queryMember(ListeningExecutorService service, UUID uuid, Function<Result<MembersRecord>, SocietyMember> applier) {
+    private ListenableFuture<Member> queryMember(ListeningExecutorService service, UUID uuid, Function<Result<MembersRecord>, Member> applier) {
         Select<MembersRecord> query = queries.getQuery(SQLQueries.SELECT_MEMBER_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
@@ -177,13 +176,13 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         return transform(future, applier, service);
     }
 
-    private SocietyMember evaluateMember(UUID uuid, Group predefined, Result<MembersRecord> input) {
+    private Member evaluateMember(UUID uuid, Group predefined, Result<MembersRecord> input) {
         if (input == null) {
             return null;
         }
 
         if (input.isEmpty()) {
-            SocietyMember created = memberFactory.create(uuid);
+            Member created = memberFactory.create(uuid);
             memberPublisher.publish(created);
             return created;
         } else if (input.size() > 1) {
@@ -195,9 +194,9 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
         return evaluateSingleMember(uuid, predefined, record);
     }
 
-    private SocietyMember evaluateSingleMember(UUID uuid, Group predefined, MembersRecord record) {
+    private Member evaluateSingleMember(UUID uuid, Group predefined, MembersRecord record) {
         byte[] byteUUID = record.getUuid();
-        SocietyMember member = memberFactory.create(UUIDGen.toUUID(byteUUID));
+        Member member = memberFactory.create(UUIDGen.toUUID(byteUUID));
 
         member.complete(false);
 
@@ -260,7 +259,7 @@ class SQLProvider implements MemberProvider<SocietyMember>, GroupProvider {
     //================================================================================
 
 //    @Override
-//    public ListenableFuture<?> drop(final SocietyMember member) {
+//    public ListenableFuture<?> drop(final Member member) {
 //        return service.submit(new Runnable() {
 //            @Override
 //            public void run() {

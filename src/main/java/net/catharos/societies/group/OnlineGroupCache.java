@@ -2,9 +2,10 @@ package net.catharos.societies.group;
 
 import com.google.inject.Singleton;
 import gnu.trove.map.hash.THashMap;
+import net.catharos.bridge.Player;
 import net.catharos.groups.Group;
-import net.catharos.groups.cache.GroupCache;
 import net.catharos.groups.Member;
+import net.catharos.groups.cache.GroupCache;
 
 import java.util.Set;
 import java.util.UUID;
@@ -63,7 +64,7 @@ public class OnlineGroupCache implements GroupCache {
                 continue;
             }
 
-            if (member.isAvailable()) {
+            if (member.getExtension(Player.class).isAvailable()) {
                 return;
             }
         }

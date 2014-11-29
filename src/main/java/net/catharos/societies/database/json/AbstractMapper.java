@@ -89,7 +89,7 @@ public class AbstractMapper {
             Setting<Object> setting = CastSafe.toGeneric(cell.getRowKey());
             Object value = cell.getValue();
 
-           String result;
+            String result;
 
             try {
                 result = setting.convertToString(subject, target, value);

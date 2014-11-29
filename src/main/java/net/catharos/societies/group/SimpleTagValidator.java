@@ -2,9 +2,9 @@ package net.catharos.societies.group;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import net.catharos.bridge.ChatColor;
 import net.catharos.groups.validate.TagValidator;
 import net.catharos.groups.validate.ValidateResult;
-import net.catharos.bridge.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;

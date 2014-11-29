@@ -1,12 +1,9 @@
 package net.catharos.societies.member;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import net.catharos.bridge.*;
-import net.catharos.groups.DefaultMember;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.lib.core.command.sender.SenderHelper;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.societies.api.member.SocietyMember;
 import net.catharos.societies.member.locale.LocaleProvider;
@@ -15,22 +12,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.UUID;
 
 /**
  * Represents a ConsoleSocietyMember
  */
-class SystemSocietyMember extends DefaultMember implements SocietyMember {
+class SystemSocietyMember implements SocietyMember, Sender {
 
     private final LocaleProvider localeProvider;
     private final Dictionary<String> directory;
 
     @Inject
-    public SystemSocietyMember(Provider<UUID> uuid,
-                               LocaleProvider localeProvider,
-                               Dictionary<String> dictionary,
-                               DefaultMember.Statics statics) {
-        super(uuid.get(), statics);
+    public SystemSocietyMember(LocaleProvider localeProvider,
+                               Dictionary<String> dictionary) {
         this.localeProvider = localeProvider;
         this.directory = dictionary;
     }
@@ -69,11 +62,6 @@ class SystemSocietyMember extends DefaultMember implements SocietyMember {
     @Override
     public void send(StringBuilder message) {
         System.out.println(directory.getTranslation(message.toString()));
-    }
-
-    @Override
-    public <S extends Sender, R> R as(Executor<S, R> executor, Class<S> clazz) {
-        return SenderHelper.as(executor, clazz, this);
     }
 
     @Override
