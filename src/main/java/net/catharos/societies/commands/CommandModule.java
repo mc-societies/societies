@@ -1,7 +1,6 @@
 package net.catharos.societies.commands;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
@@ -15,7 +14,6 @@ import net.catharos.groups.Group;
 import net.catharos.groups.Member;
 import net.catharos.groups.command.GroupParser;
 import net.catharos.groups.command.MemberParser;
-import net.catharos.groups.setting.Setting;
 import net.catharos.lib.core.command.*;
 import net.catharos.lib.core.command.format.pagination.DefaultPaginator;
 import net.catharos.lib.core.command.format.pagination.Paginator;
@@ -35,7 +33,6 @@ import net.catharos.lib.shank.AbstractModule;
 import net.catharos.societies.LocationParser;
 import net.catharos.societies.SocietiesModule;
 import net.catharos.societies.commands.society.SocietyCommand;
-import net.catharos.societies.setting.RulesSetting;
 
 import java.util.Set;
 
@@ -63,8 +60,6 @@ public class CommandModule extends AbstractModule {
         bindNamedInstance("table-header", String.class, "Societies {3} - page {0}/{1} - {2} entries");
         bindNamedInstance("padding", int.class, 2);
         bind(Paginator.class).to(DefaultPaginator.class);
-        bindNamed("entires-per-page", int.class)
-                .to(Key.get(Integer.class, Names.named("chat.tables.max-rows-pre-page")));
 
         // Group parser
         bind(new TypeLiteral<ArgumentParser<Group>>() {}).to(GroupParser.class);
@@ -109,49 +104,6 @@ public class CommandModule extends AbstractModule {
         afterPipeline().addBinding().to(FooterExecutor.class);
 
         bindNamed("system-sender", Sender.class).to(SystemSender.class);
-
-        addRule("*", 0x0);
-        addRule("invite", 0x1);
-        addRule("join", 0x2);
-        addRule("leave", 0x3);
-        addRule("vitals", 0x4);
-        addRule("roster", 0x5);
-        addRule("kick", 0x6);
-        addRule("coords", 0x7);
-        addRule("trust", 0x8);
-        addRule("untrust", 0x9);
-        addRule("tag", 0xA);
-
-        addRule("home.teleport", 0x20);
-        addRule("home.regroup", 0x21);
-        addRule("home.set", 0x22);
-
-        addRule("rank.assign", 0x30);
-        addRule("rank.create", 0x31);
-        addRule("rank.list", 0x32);
-        addRule("rank.remove", 0x33);
-
-        addRule("rank.rules.assign", 0x40);
-        addRule("rank.rules.list", 0x41);
-        addRule("rank.rules.remove", 0x42);
-
-        addRule("allies.list", 0x50);
-        addRule("allies.add", 0x51);
-        addRule("allies.remove", 0x52);
-
-        addRule("rivals.list", 0x60);
-        addRule("rivals.add", 0x61);
-        addRule("rivals.remove", 0x62);
-
-        addRule("vote.join", 0x70);
-        addRule("vote.allies", 0x71);
-        addRule("vote.rivals", 0x72);
-
-        addRule("leader", 0x80);
-    }
-
-    private void addRule(String rule, int id) {
-        rules().addBinding(rule).toInstance(new RulesSetting(rule, id));
     }
 
     @Provides
@@ -185,10 +137,4 @@ public class CommandModule extends AbstractModule {
                 .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-before"))
                 .permitDuplicates();
     }
-
-    public MapBinder<String, Setting<Boolean>> rules() {
-        return MapBinder.newMapBinder(binder(), new TypeLiteral<String>() {}, new TypeLiteral<Setting<Boolean>>() {});
-    }
-
-
 }

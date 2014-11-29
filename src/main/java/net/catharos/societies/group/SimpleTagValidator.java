@@ -1,12 +1,11 @@
 package net.catharos.societies.group;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import net.catharos.bridge.ChatColor;
 import net.catharos.groups.validate.TagValidator;
 import net.catharos.groups.validate.ValidateResult;
+import net.catharos.lib.shank.config.ConfigSetting;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,9 +18,9 @@ public class SimpleTagValidator implements TagValidator {
     private final List disallowed;
 
     @Inject
-    public SimpleTagValidator(@Named("tag.max-length") Integer maxLength,
-                              @Named("tag.min-length") Integer minLength,
-                              @Named("tag.disallowed") ArrayList disallowed) {
+    public SimpleTagValidator(@ConfigSetting("tag.max-length") int maxLength,
+                              @ConfigSetting("tag.min-length") int minLength,
+                              @ConfigSetting("tag.disallowed") List<String> disallowed) {
         this.maxLength = maxLength;
         this.minLength = minLength;
         this.disallowed = disallowed;

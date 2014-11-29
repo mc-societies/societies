@@ -1,11 +1,10 @@
 package net.catharos.societies.group;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import net.catharos.groups.validate.NameValidator;
 import net.catharos.groups.validate.ValidateResult;
+import net.catharos.lib.shank.config.ConfigSetting;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,9 +17,9 @@ public class SimpleNameValidator implements NameValidator {
     private final List disallowed;
 
     @Inject
-    public SimpleNameValidator(@Named("name.max-length") Integer maxLength,
-                               @Named("name.min-length") Integer minLength,
-                               @Named("name.disallowed") ArrayList disallowed) {
+    public SimpleNameValidator(@ConfigSetting("name.max-length") int maxLength,
+                               @ConfigSetting("name.min-length") int minLength,
+                               @ConfigSetting("name.disallowed") List<String> disallowed) {
         this.maxLength = maxLength;
         this.minLength = minLength;
         this.disallowed = disallowed;

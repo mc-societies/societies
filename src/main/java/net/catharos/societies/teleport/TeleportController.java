@@ -6,10 +6,10 @@ import gnu.trove.set.hash.THashSet;
 import net.catharos.bridge.*;
 import net.catharos.groups.Group;
 import net.catharos.groups.Member;
+import net.catharos.lib.shank.config.ConfigSetting;
 
-import javax.inject.Named;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import static java.lang.Math.abs;
@@ -29,10 +29,10 @@ public class TeleportController implements Runnable, Teleporter {
 
     @Inject
     public TeleportController(
-            @Named("teleport.delay") int delay,
-            @Named("teleport.drop-items") boolean dropItems,
-            @Named("teleport.item-whitelist") ArrayList whitelisted,
-            @Named("teleport.item-blacklist") ArrayList blacklisted,
+            @ConfigSetting("teleport.delay") int delay,
+            @ConfigSetting("teleport.drop-items") boolean dropItems,
+            @ConfigSetting("teleport.item-whitelist") List<String> whitelisted,
+            @ConfigSetting("teleport.item-blacklist") List<String> blacklisted,
             Materials materials) {
         this.delay = delay;
         this.dropItems = dropItems;

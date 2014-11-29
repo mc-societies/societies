@@ -1,15 +1,14 @@
 package net.catharos.societies.commands;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import net.catharos.bridge.Player;
 import net.catharos.groups.Member;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.sender.Sender;
+import net.catharos.lib.shank.config.ConfigSetting;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,10 +16,10 @@ import java.util.List;
  */
 public class WorldStep implements Executor<Sender> {
 
-    private final List disabledWorlds;
+    private final List<String> disabledWorlds;
 
     @Inject
-    public WorldStep(@Named("blacklisted-worlds") ArrayList disabledWorlds) {
+    public WorldStep(@ConfigSetting("blacklisted-worlds") List<String> disabledWorlds) {
         this.disabledWorlds = disabledWorlds;
     }
 

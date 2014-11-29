@@ -11,8 +11,6 @@ import com.typesafe.config.*;
 import net.catharos.groups.event.EventController;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
-import net.catharos.lib.shank.config.ConfigModule;
-import net.catharos.lib.shank.config.TypeSafeConfigSource;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import net.catharos.societies.api.NameProvider;
 import net.catharos.societies.commands.CommandModule;
@@ -95,7 +93,7 @@ public class SocietiesModule extends AbstractServiceModule {
 
         bind(Config.class).toInstance(config);
 
-        install(new ConfigModule(new TypeSafeConfigSource(config)));
+        install(new ConfigModule(config));
 
         install(new SettingModule());
 

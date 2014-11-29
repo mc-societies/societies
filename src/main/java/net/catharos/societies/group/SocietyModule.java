@@ -48,6 +48,8 @@ public class SocietyModule extends AbstractModule {
         install(new DefaultRankModule("default-rank", config.getString("ranks.default")));
         install(new DefaultRankModule("normal-default-rank", config.getString("ranks.normal-default")));
         install(new DefaultRankModule("super-default-rank", config.getString("ranks.super-default")));
+
+        install(new RuleModule());
     }
 
     @Provides
