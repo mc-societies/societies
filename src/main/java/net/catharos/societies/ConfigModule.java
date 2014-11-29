@@ -50,7 +50,7 @@ public class ConfigModule extends AbstractModule {
         bind("pvp.global-ff-forced", "pvp.global-ff-forced", boolean.class);
         bind("pvp.save-civilians", "pvp.save-civilians", boolean.class);
 
-        bind("society.home.replace-spawn", "society.home.replace-spawn", boolean.class);
+        bind("home.replace-spawn", "society.home.replace-spawn", boolean.class);
     }
 
     public void bindNamed(String key, String setting, Class clazz) {
