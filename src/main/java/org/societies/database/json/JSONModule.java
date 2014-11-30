@@ -2,10 +2,15 @@ package org.societies.database.json;
 
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import net.catharos.lib.shank.service.AbstractServiceModule;
 import org.societies.api.lock.DummyLocker;
 import org.societies.api.lock.Locker;
+import org.societies.groups.ExtensionFactory;
 import org.societies.groups.group.GroupProvider;
+import org.societies.groups.member.DefaultMemberHeart;
+import org.societies.groups.member.Member;
+import org.societies.groups.member.MemberHeart;
 import org.societies.groups.member.MemberProvider;
 import org.societies.groups.publisher.*;
 
@@ -25,7 +30,9 @@ public class JSONModule extends AbstractServiceModule {
         // Member provider
         bind(MemberProvider.class).to(provider);
 
-//        bind(new TypeLiteral<MemberProvider<Member>>() {}).to(CastSafe.<Key<? extends MemberProvider<Member>>>toGeneric(provider);
+        install(new FactoryModuleBuilder()
+                .implement(MemberHeart.class, DefaultMemberHeart.class)
+                .build(new TypeLiteral<ExtensionFactory<MemberHeart, Member>>() {}));
 
         // Group provider
         bind(GroupProvider.class).to(provider);

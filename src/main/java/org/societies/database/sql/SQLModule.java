@@ -67,10 +67,17 @@ public class SQLModule extends AbstractServiceModule {
         bind(new TypeLiteral<MemberProvider>() {})
                 .to(controller);
 
-        // Group provider
         if (cache) {
             bind(GroupCache.class).to(OnlineGroupCache.class);
+
+            install(new FactoryModuleBuilder()
+                    .implement(MemberHeart.class, LazySQLMemberHearth.class)
+                    .build(new TypeLiteral<ExtensionFactory<MemberHeart, Member>>() {}));
         } else {
+            install(new FactoryModuleBuilder()
+                    .implement(MemberHeart.class, SQLMemberHearth.class)
+                    .build(new TypeLiteral<ExtensionFactory<MemberHeart, Member>>() {}));
+
             bind(GroupCache.class).to(NaughtyGroupCache.class);
         }
 
@@ -100,9 +107,6 @@ public class SQLModule extends AbstractServiceModule {
 
         bind(Locker.class).to(SQLLocker.class);
 
-        install(new FactoryModuleBuilder()
-                .implement(MemberHeart.class, SQLMemberHearth.class)
-                .build(new TypeLiteral<ExtensionFactory<MemberHeart, Member>>() {}));
 
     }
 }
