@@ -1,11 +1,3 @@
-ListCommand: reset colors at end of line      X
-AlliesCommand list get tag, message if there are none      X
-
-allies/rivals remove, add broadcast in opponent society    X
-
-requests do no work with no caching
-
-
 Beta release ------------------------------------------------------------------------------------
 Events:
     * GroupDropEvent
@@ -49,10 +41,9 @@ bulletin board:
 ----------------------------------------------------------------------------------------------------
 
 Other stuff:
+Beautify command output
 Request timeout
 Past groups
-Minimize libraries
-Inject config settings correctly
 Purge inactive-members from json source
 Command options:
         * coords sort

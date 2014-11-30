@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.catharos.societies</groupId>
+    <groupId>org.societies</groupId>
     <artifactId>societies</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -22,7 +22,7 @@
         </dependency>
 
         <dependency>
-            <groupId>net.catharos.lib</groupId>
+            <groupId>org.shank</groupId>
             <artifactId>shank</artifactId>
             <version>1.0-SNAPSHOT</version>
             <exclusions>
@@ -34,7 +34,7 @@
         </dependency>
 
         <dependency>
-            <groupId>net.catharos.lib</groupId>
+            <groupId>org.societies</groupId>
             <artifactId>lib-groups</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -52,7 +52,7 @@
         </dependency>
 
         <dependency>
-            <groupId>net.catharos.lib</groupId>
+            <groupId>org.societies</groupId>
             <artifactId>lib-database</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -94,13 +94,13 @@
         </dependency>
 
         <dependency>
-            <groupId>net.catharos.societies</groupId>
+            <groupId>org.societies</groupId>
             <artifactId>societies-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>net.catharos.bridge</groupId>
+            <groupId>org.societies.bridge</groupId>
             <artifactId>bridge</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
