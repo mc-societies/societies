@@ -2,7 +2,9 @@ package org.societies.database.sql;
 
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.lib.core.uuid.UUIDGen;
 import org.jetbrains.annotations.Nullable;
@@ -10,6 +12,7 @@ import org.joda.time.DateTime;
 import org.jooq.Record1;
 import org.jooq.Result;
 import org.jooq.Select;
+import org.societies.groups.event.EventController;
 import org.societies.groups.event.MemberJoinEvent;
 import org.societies.groups.event.MemberLeaveEvent;
 import org.societies.groups.group.Group;
@@ -19,6 +22,10 @@ import org.societies.groups.member.AbstractMemberHeart;
 import org.societies.groups.member.DefaultMemberHeart;
 import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberHeart;
+import org.societies.groups.publisher.MemberCreatedPublisher;
+import org.societies.groups.publisher.MemberGroupPublisher;
+import org.societies.groups.publisher.MemberLastActivePublisher;
+import org.societies.groups.publisher.MemberRankPublisher;
 import org.societies.groups.rank.Rank;
 import org.societies.member.MemberException;
 
@@ -32,18 +39,13 @@ import java.util.concurrent.ExecutionException;
  * Represents a SQLMember
  */
 class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
-    private final DefaultMemberHeart.Statics statics;
-    private final GroupProvider groupProvider;
+    protected final Statics statics;
     private final Member member;
-    private final SQLQueries queries;
-
 
     @Inject
-    public SQLMemberHearth(DefaultMemberHeart.Statics statics, GroupProvider groupProvider, @Assisted Member member, SQLQueries queries) {
+    public SQLMemberHearth(Statics statics, @Assisted Member member) {
         this.statics = statics;
-        this.groupProvider = groupProvider;
         this.member = member;
-        this.queries = queries;
     }
 
     @Override
@@ -53,7 +55,7 @@ class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
 
     @Override
     public Set<Rank> getRanks() {
-        Group group = getGroup();
+        GroupHeart group = getGroup();
 
         if (group == null) {
             return Collections.emptySet();
@@ -61,7 +63,7 @@ class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
 
         THashSet<Rank> ranks = new THashSet<Rank>();
 
-        Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_RANKS);
+        Select<Record1<byte[]>> query = statics.queries.getQuery(SQLQueries.SELECT_MEMBER_RANKS);
         query.bind(1, UUIDGen.toByteArray(member.getUUID()));
 
         for (Record1<byte[]> rankRecord : query.fetch()) {
@@ -104,7 +106,7 @@ class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
 
     @Override
     public DateTime getLastActive() {
-        Select<Record1<Timestamp>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_LAST_ACTIVE);
+        Select<Record1<Timestamp>> query = statics.queries.getQuery(SQLQueries.SELECT_MEMBER_LAST_ACTIVE);
         query.bind(1, UUIDGen.toByteArray(member.getUUID()));
 
         Record1<Timestamp> record = query.fetch().get(0);
@@ -120,7 +122,7 @@ class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
 
     @Override
     public DateTime getCreated() {
-        Select<Record1<Timestamp>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_CREATED);
+        Select<Record1<Timestamp>> query = statics.queries.getQuery(SQLQueries.SELECT_MEMBER_CREATED);
         query.bind(1, UUIDGen.toByteArray(member.getUUID()));
 
         Record1<Timestamp> record = query.fetch().get(0);
@@ -136,8 +138,8 @@ class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
 
     @Override
     @Nullable
-    public Group getGroup() {
-        Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_SOCIETY);
+    public GroupHeart getGroup() {
+        Select<Record1<byte[]>> query =  statics.queries.getQuery(SQLQueries.SELECT_MEMBER_SOCIETY);
         query.bind(1, UUIDGen.toByteArray(member.getUUID()));
 
         Result<Record1<byte[]>> result = query.fetch();
@@ -154,7 +156,7 @@ class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
         if (rawSociety != null && rawSociety.length == UUIDGen.UUID_LENGTH) {
 
             try {
-                group = groupProvider.getGroup(UUIDGen.toUUID(rawSociety)).get();
+                group = statics.groupProvider.getGroup(UUIDGen.toUUID(rawSociety)).get();
             } catch (InterruptedException e) {
                 throw new MemberException(member.getUUID(), e, "Failed to set group of member!");
             } catch (ExecutionException e) {
@@ -173,18 +175,46 @@ class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
         }
 
         if (member.isCompleted()) {
-            statics.publishGroup(member, group.getHolder());
+            statics.publishGroup(member, group == null ? null : group.getHolder());
         }
 
         if (group == null) {
             //fixme clear ranks in database
-            statics.publish(new MemberLeaveEvent(member, previous.getHolder()));
+            statics.publish(new MemberLeaveEvent(member, previous == null ? null : previous.getHolder()));
         } else {
             statics.publish(new MemberJoinEvent(member));
         }
 
         if (group != null && !group.isMember(member)) {
             group.addMember(member);
+        }
+    }
+
+    @Singleton
+    public static class Statics extends DefaultMemberHeart.Statics {
+
+        private final GroupProvider groupProvider;
+        private final SQLQueries queries;
+
+        @Inject
+        public Statics(MemberGroupPublisher groupPublisher,
+                       MemberRankPublisher memberRankPublisher,
+                       MemberLastActivePublisher lastActivePublisher,
+                       MemberCreatedPublisher createdPublisher,
+                       EventController eventController,
+                       @Named("default-rank") Rank defaultRank,
+                       GroupProvider groupProvider, SQLQueries queries) {
+            super(groupPublisher, memberRankPublisher, lastActivePublisher, createdPublisher, eventController, defaultRank);
+            this.groupProvider = groupProvider;
+            this.queries = queries;
+        }
+
+        public GroupProvider getGroupProvider() {
+            return groupProvider;
+        }
+
+        public SQLQueries getQueries() {
+            return queries;
         }
     }
 }

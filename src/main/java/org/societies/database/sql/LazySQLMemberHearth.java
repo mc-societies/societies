@@ -1,17 +1,16 @@
 package org.societies.database.sql;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import gnu.trove.set.hash.THashSet;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
-import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupHeart;
-import org.societies.groups.group.GroupProvider;
-import org.societies.groups.member.DefaultMemberHeart;
 import org.societies.groups.member.Member;
 import org.societies.groups.rank.Rank;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -26,57 +25,94 @@ class LazySQLMemberHearth extends SQLMemberHearth {
     private DateTime created;
 
     @Inject
-    public LazySQLMemberHearth(DefaultMemberHeart.Statics statics, GroupProvider groupProvider, @Assisted Member member, SQLQueries queries) {
-        super(statics, groupProvider, member, queries);
+    public LazySQLMemberHearth(Statics statics, @Assisted Member member) {
+        super(statics, member);
     }
 
     @Override
     public void setGroup(@Nullable GroupHeart group) {
+        this.group = group;
 
         super.setGroup(group);
-
-        this.group = group;
     }
 
     @Override
     public void setLastActive(DateTime lastActive) {
-        super.setLastActive(lastActive);
         this.lastActive = lastActive;
+
+        super.setLastActive(lastActive);
     }
 
     @Override
     public DateTime getCreated() {
-        return super.getCreated();
+        if (created != null) {
+            return created;
+        }
+
+        return created = super.getCreated();
     }
 
     @Override
     public void setCreated(DateTime created) {
+        this.created = created;
+
         super.setCreated(created);
     }
 
     @Nullable
     @Override
-    public Group getGroup() {
-        return super.getGroup();
+    public GroupHeart getGroup() {
+        if (group != null) {
+            return group;
+        }
+        return group = super.getGroup();
     }
 
     @Override
     public DateTime getLastActive() {
-        return super.getLastActive();
+        if (lastActive != null) {
+            return lastActive;
+        }
+
+        return lastActive = super.getLastActive();
     }
 
     @Override
     public void addRank(Rank rank) {
+        if (getGroup() == null) {
+            return;
+        }
+
+        if (ranks == null) {
+            ranks = new THashSet<Rank>();
+        }
+
+        ranks.add(rank);
+
         super.addRank(rank);
     }
 
     @Override
     public boolean removeRank(Rank rank) {
+        if (getGroup() == null) {
+            return false;
+        }
+
+        if (ranks == null) {
+            ranks = new THashSet<Rank>();
+        }
+
+        ranks.remove(rank);
+
         return super.removeRank(rank);
     }
 
     @Override
     public Set<Rank> getRanks() {
-        return super.getRanks();
+        if (getGroup() == null) {
+            return Collections.emptySet();
+        }
+
+        return Sets.union(ranks, Collections.singleton(statics.getDefaultRank()));
     }
 }
