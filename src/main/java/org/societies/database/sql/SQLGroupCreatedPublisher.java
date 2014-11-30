@@ -7,7 +7,7 @@ import net.catharos.lib.core.uuid.UUIDGen;
 import org.joda.time.DateTime;
 import org.jooq.Update;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
-import org.societies.groups.group.Group;
+import org.societies.groups.group.GroupHeart;
 import org.societies.groups.publisher.GroupCreatedPublisher;
 
 import java.sql.Timestamp;
@@ -24,10 +24,10 @@ class SQLGroupCreatedPublisher extends AbstractPublisher implements GroupCreated
     }
 
     @Override
-    public ListenableFuture<Group> publishCreated(final Group group, final DateTime created) {
-        return service.submit(new Callable<Group>() {
+    public ListenableFuture<GroupHeart> publishCreated(final GroupHeart group, final DateTime created) {
+        return service.submit(new Callable<GroupHeart>() {
             @Override
-            public Group call() throws Exception {
+            public GroupHeart call() throws Exception {
                 Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_LAST_ACTIVE);
 
                 query.bind(1, UUIDGen.toByteArray(group.getUUID()));

@@ -8,7 +8,7 @@ import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Insert;
 import org.jooq.Query;
 import org.societies.database.sql.layout.tables.records.RanksRecord;
-import org.societies.groups.group.Group;
+import org.societies.groups.group.GroupHeart;
 import org.societies.groups.member.Member;
 import org.societies.groups.publisher.GroupRankPublisher;
 import org.societies.groups.publisher.MemberRankPublisher;
@@ -52,14 +52,14 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher, Membe
     }
 
     @Override
-    public ListenableFuture<Group> publishRank(final Group group, final Rank rank) {
+    public ListenableFuture<GroupHeart> publishRank(final GroupHeart group, final Rank rank) {
         if (rank.isStatic()) {
             return Futures.immediateFuture(group);
         }
 
-        return service.submit(new Callable<Group>() {
+        return service.submit(new Callable<GroupHeart>() {
             @Override
-            public Group call() throws Exception {
+            public GroupHeart call() throws Exception {
                 Insert query = queries.getQuery(SQLQueries.INSERT_SOCIETY_RANK);
                 query.bind(1, UUIDGen.toByteArray(group.getUUID()));
                 query.bind(2, UUIDGen.toByteArray(rank.getUUID()));

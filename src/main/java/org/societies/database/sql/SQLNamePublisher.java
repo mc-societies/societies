@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Update;
 import org.societies.database.sql.layout.tables.records.SocietiesRecord;
-import org.societies.groups.group.Group;
+import org.societies.groups.group.GroupHeart;
 import org.societies.groups.publisher.GroupNamePublisher;
 
 import java.util.concurrent.Callable;
@@ -22,10 +22,10 @@ class SQLNamePublisher extends AbstractPublisher implements GroupNamePublisher {
     }
 
     @Override
-    public ListenableFuture<Group> publishName(final Group group, final String name) {
-        return service.submit(new Callable<Group>() {
+    public ListenableFuture<GroupHeart> publishName(final GroupHeart group, final String name) {
+        return service.submit(new Callable<GroupHeart>() {
             @Override
-            public Group call() throws Exception {
+            public GroupHeart call() throws Exception {
                 Update<SocietiesRecord> query = queries.getQuery(SQLQueries.UPDATE_SOCIETY_NAME);
 
                 query.bind(1, name);
@@ -38,10 +38,10 @@ class SQLNamePublisher extends AbstractPublisher implements GroupNamePublisher {
     }
 
     @Override
-    public ListenableFuture<Group> publishTag(final Group group, final String tag) {
-        return service.submit(new Callable<Group>() {
+    public ListenableFuture<GroupHeart> publishTag(final GroupHeart group, final String tag) {
+        return service.submit(new Callable<GroupHeart>() {
             @Override
-            public Group call() throws Exception {
+            public GroupHeart call() throws Exception {
                 Update<SocietiesRecord> query = queries.getQuery(SQLQueries.UPDATE_SOCIETY_TAG);
 
                 query.bind(1, tag);

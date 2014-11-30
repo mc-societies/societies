@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.Insert;
 import org.jooq.types.UShort;
 import org.societies.database.sql.layout.tables.records.SocietiesSettingsRecord;
-import org.societies.groups.group.Group;
+import org.societies.groups.group.GroupHeart;
 import org.societies.groups.publisher.SettingPublisher;
 import org.societies.groups.setting.Setting;
 import org.societies.groups.setting.SettingException;
@@ -30,7 +30,7 @@ class SQLSettingPublisher extends AbstractPublisher implements SettingPublisher 
 
     @Override
     public <V> void publish(final Subject subject, final Target target, final Setting<V> setting, final V value) {
-        if (subject instanceof Group) {
+        if (subject instanceof GroupHeart) {
             service.submit(new Runnable() {
                 @Override
                 public void run() {

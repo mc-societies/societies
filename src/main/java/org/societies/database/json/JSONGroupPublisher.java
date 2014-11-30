@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.societies.groups.group.Group;
+import org.societies.groups.group.GroupHeart;
 import org.societies.groups.publisher.*;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.setting.Setting;
@@ -78,6 +79,16 @@ final class JSONGroupPublisher implements
         });
     }
 
+    public ListenableFuture<GroupHeart> publish(final GroupHeart group) {
+        return Futures.transform(publish((Group) group), new Function<Group, GroupHeart>() {
+            @javax.annotation.Nullable
+            @Override
+            public GroupHeart apply(@Nullable Group input) {
+                return input;
+            }
+        });
+    }
+
 
     private Group publish0(final Group group) throws IOException {
         try {
@@ -89,37 +100,38 @@ final class JSONGroupPublisher implements
         return group;
     }
 
-    public ListenableFuture<Group> defaultPublish(final Group group) {
-        return service.submit(new Callable<Group>() {
+    public ListenableFuture<GroupHeart> defaultPublish(final GroupHeart group) {
+        return service.submit(new Callable<GroupHeart>() {
 
             @Override
-            public Group call() throws Exception {
-                return publish0(group);
+            public GroupHeart call() throws Exception {
+                publish0(group.getHolder());
+                return group;
             }
         });
     }
 
     @Override
-    public ListenableFuture<Group> publishCreated(Group group, DateTime created) {
-        return defaultPublish(group);
+    public ListenableFuture<GroupHeart> publishCreated(GroupHeart group, DateTime created) {
+        return defaultPublish(group.getHolder());
     }
 
     @Override
-    public ListenableFuture<Group> publishName(Group group, String name) {
+    public ListenableFuture<GroupHeart> publishName(GroupHeart group, String name) {
         return publish(group);
     }
 
     @Override
-    public ListenableFuture<Group> publishTag(Group group, String tag) {
+    public ListenableFuture<GroupHeart> publishTag(GroupHeart group, String tag) {
         return publish(group);
     }
 
     @Override
     public ListenableFuture<Rank> publish(final Rank rank) {
-        return Futures.transform(defaultPublish(rank.getGroup()), new Function<Group, Rank>() {
+        return Futures.transform(defaultPublish(rank.getGroup()), new Function<GroupHeart, Rank>() {
             @javax.annotation.Nullable
             @Override
-            public Rank apply(@Nullable Group input) {
+            public Rank apply(@Nullable GroupHeart input) {
                 return rank;
             }
         });
@@ -127,17 +139,17 @@ final class JSONGroupPublisher implements
 
     @Override
     public ListenableFuture<Rank> drop(final Rank rank) {
-        return Futures.transform(defaultPublish(rank.getGroup()), new Function<Group, Rank>() {
+        return Futures.transform(defaultPublish(rank.getGroup()), new Function<GroupHeart, Rank>() {
             @javax.annotation.Nullable
             @Override
-            public Rank apply(@Nullable Group input) {
+            public Rank apply(@Nullable GroupHeart input) {
                 return rank;
             }
         });
     }
 
     @Override
-    public ListenableFuture<Group> publishRank(Group group, Rank rank) {
+    public ListenableFuture<GroupHeart> publishRank(GroupHeart group, Rank rank) {
         return defaultPublish(group);
     }
 
