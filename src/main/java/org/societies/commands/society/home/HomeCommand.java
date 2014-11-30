@@ -2,13 +2,13 @@ package org.societies.commands.society.home;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import org.societies.bridge.Location;
-import org.societies.bridge.Player;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import org.societies.bridge.Location;
+import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;
 import org.societies.groups.group.Group;

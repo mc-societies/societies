@@ -1,7 +1,6 @@
 package org.societies.commands.society;
 
 import com.google.inject.Inject;
-import org.societies.bridge.Player;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Command;
@@ -14,6 +13,7 @@ import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.PeriodFormatter;
 import org.societies.api.Groups;
+import org.societies.bridge.Player;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 

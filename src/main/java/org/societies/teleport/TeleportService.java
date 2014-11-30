@@ -1,9 +1,9 @@
 package org.societies.teleport;
 
 import com.google.inject.Inject;
-import org.societies.bridge.Scheduler;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
+import org.societies.bridge.Scheduler;
 
 /**
  * Represents a TeleportService

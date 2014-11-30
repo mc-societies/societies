@@ -1,13 +1,13 @@
 package org.societies.commands.society;
 
 import com.google.inject.Inject;
-import org.societies.bridge.Player;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import org.societies.PlayerState;
+import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;
 import org.societies.groups.group.Group;

@@ -2,8 +2,8 @@ package org.societies;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import org.societies.bridge.ChatColor;
 import net.catharos.lib.core.i18n.DefaultDictionary;
+import org.societies.bridge.ChatColor;
 
 import java.util.Locale;
 

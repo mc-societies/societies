@@ -1,6 +1,5 @@
 package org.societies.commands.society;
 
-import org.societies.bridge.Player;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
@@ -9,6 +8,7 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
+import org.societies.bridge.Player;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 

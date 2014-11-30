@@ -1,8 +1,8 @@
 package org.societies.group;
 
 import com.google.inject.Inject;
-import org.societies.bridge.ChatColor;
 import net.catharos.lib.shank.config.ConfigSetting;
+import org.societies.bridge.ChatColor;
 import org.societies.groups.validate.TagValidator;
 import org.societies.groups.validate.ValidateResult;
 

@@ -1,14 +1,14 @@
 package org.societies;
 
 import com.google.inject.Inject;
-import org.societies.bridge.Location;
-import org.societies.bridge.Player;
-import org.societies.bridge.World;
-import org.societies.bridge.WorldResolver;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ParsingException;
 import net.catharos.lib.core.command.parser.ArgumentParser;
 import net.catharos.lib.core.command.sender.Sender;
+import org.societies.bridge.Location;
+import org.societies.bridge.Player;
+import org.societies.bridge.World;
+import org.societies.bridge.WorldResolver;
 import org.societies.groups.member.Member;
 
 /**

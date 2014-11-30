@@ -2,10 +2,10 @@ package org.societies.setting;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import org.jetbrains.annotations.Nullable;
 import org.societies.bridge.Location;
 import org.societies.bridge.World;
 import org.societies.bridge.WorldResolver;
-import org.jetbrains.annotations.Nullable;
 import org.societies.groups.setting.Setting;
 import org.societies.groups.setting.SettingException;
 import org.societies.groups.setting.subject.Subject;

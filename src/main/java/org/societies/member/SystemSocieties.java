@@ -1,7 +1,6 @@
 package org.societies.member;
 
 import com.google.inject.Inject;
-import net.catharos.bridge.*;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.i18n.Dictionary;

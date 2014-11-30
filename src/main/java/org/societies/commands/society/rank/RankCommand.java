@@ -2,13 +2,13 @@ package org.societies.commands.society.rank;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import org.societies.bridge.ChatColor;
 import net.catharos.lib.core.collections.IterableUtils;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import org.societies.bridge.ChatColor;
 import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;
 import org.societies.groups.group.Group;

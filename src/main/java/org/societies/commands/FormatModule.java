@@ -2,13 +2,13 @@ package org.societies.commands;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
-import org.societies.bridge.ChatColor;
 import net.catharos.lib.core.command.format.DefaultFormatter;
 import net.catharos.lib.core.command.format.Formatter;
 import net.catharos.lib.core.command.format.WidthProvider;
 import net.catharos.lib.core.command.format.table.*;
 import net.catharos.lib.shank.AbstractModule;
 import org.societies.MinecraftWidthProvider;
+import org.societies.bridge.ChatColor;
 
 /**
  * Represents a FormatModule

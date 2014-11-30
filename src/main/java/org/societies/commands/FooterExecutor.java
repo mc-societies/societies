@@ -1,12 +1,12 @@
 package org.societies.commands;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import org.societies.bridge.ChatColor;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.sender.Sender;
 import org.apache.commons.lang3.StringUtils;
+import org.societies.bridge.ChatColor;
 
 import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
 import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
