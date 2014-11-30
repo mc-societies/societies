@@ -36,6 +36,16 @@ public class KickCommand implements Executor<Member> {
             return;
         }
 
+        if (isCritical(sender, target, group)) {
+            return;
+        }
+
+        sender.send("you.kicked-member", target.getName(), group.getTag());
+        target.send("member.kicked", group.getName());
+        group.removeMember(target);
+    }
+
+    public static boolean isCritical(Member sender, Member target, Group group) {
         Set<Member> leaders = group.getMembers("leader");
 
         if (leaders.contains(target)) {
@@ -49,12 +59,10 @@ public class KickCommand implements Executor<Member> {
                     }
                 });
                 sender.send("you.assign-leader-first", leaderRanksString);
-                return;
+                return true;
             }
         }
 
-        sender.send("you.kicked-member", target.getName(), group.getTag());
-        target.send("member.kicked", group.getName());
-        group.removeMember(target);
+        return false;
     }
 }

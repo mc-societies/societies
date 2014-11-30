@@ -31,7 +31,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Represents a SQLMember
  */
-public class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
+class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
     private final DefaultMemberHeart.Statics statics;
     private final GroupProvider groupProvider;
     private final Member member;
