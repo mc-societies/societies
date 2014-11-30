@@ -1,3 +1,11 @@
+MemberHeart -> SQLMemberHeart -> LazySQLMemberHeart
+            -> DefaultMemberHeart
+
+GroupHeart  -> SQLGroupHeart -> LazySQLGroupHeart
+            -> DefaultMemberHeart
+
+Remove some delegations from Member & Group
+
 Beta release ------------------------------------------------------------------------------------
 Events:
     * GroupDropEvent
@@ -56,7 +64,6 @@ Optimization:
         * fast access player metadata -> player, getMember(Player player)
         * cache relation targets
         * cache levels (quick-living cache)
-        * Lazy loading of settings/ranks
         * Caching:
                 * Pre-rendered listing output -> list only accessible commands in command help
 

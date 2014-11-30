@@ -24,6 +24,7 @@ import org.societies.groups.setting.target.Target;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import static com.googlecode.cqengine.query.QueryFactory.contains;
 import static com.googlecode.cqengine.query.QueryFactory.or;
@@ -155,7 +156,14 @@ final class JSONGroupPublisher implements
 
     @Override
     public <V> void publish(Subject subject, Target target, Setting<V> setting, @Nullable V value) {
-        defaultPublish(((Group) subject));
+        //beautify
+        try {
+            defaultPublish(provider.getGroup(subject.getUUID()).get());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

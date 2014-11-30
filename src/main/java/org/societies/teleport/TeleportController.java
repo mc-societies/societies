@@ -65,6 +65,10 @@ public class TeleportController implements Runnable, Teleporter {
 
     @Override
     public void run() {
+        if (states.isEmpty()) {
+            return;
+        }
+
         for (Iterator<TeleportState> it = states.iterator(); it.hasNext(); ) {
             TeleportState state = it.next();
 

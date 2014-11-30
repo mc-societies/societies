@@ -1,6 +1,5 @@
 package org.societies.database.sql;
 
-import com.google.common.base.Objects;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
@@ -169,10 +168,10 @@ class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
 
     @Override
     public void setGroup(@Nullable GroupHeart group) {
-        GroupHeart previous = getGroup();
-        if (Objects.equal(previous, group)) {
-            return;
-        }
+//        GroupHeart previous = getGroup();  fixme
+//        if (Objects.equal(previous, group)) {
+//            return;                         fixme
+//        }           fixme
 
         if (member.isCompleted()) {
             statics.publishGroup(member, group == null ? null : group.getHolder());
@@ -180,7 +179,7 @@ class SQLMemberHearth extends AbstractMemberHeart implements MemberHeart {
 
         if (group == null) {
             //fixme clear ranks in database
-            statics.publish(new MemberLeaveEvent(member, previous == null ? null : previous.getHolder()));
+            statics.publish(new MemberLeaveEvent(member, group == null ? null : group.getHolder()));
         } else {
             statics.publish(new MemberJoinEvent(member));
         }
