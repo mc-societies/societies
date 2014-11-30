@@ -197,7 +197,7 @@ public class JSONProvider extends AbstractService implements MemberProvider, Gro
 
     @Override
     public ListenableFuture<Member> getMember(UUID uuid) {
-        Query<Member> query = (Query<Member>) equal(MEMBER_UUID, uuid);
+        Query<Member> query = equal(MEMBER_UUID, uuid);
         ResultSet<Member> retrieve = members.retrieve(query);
 
         if (retrieve.isEmpty()) {
@@ -234,7 +234,7 @@ public class JSONProvider extends AbstractService implements MemberProvider, Gro
             @Override
             public Member call() throws Exception {
                 try {
-                    members.add((Member) member);//beautify cast?
+                    members.add(member);//beautify cast?
                     mapper.writeMember(member, memberStorage.getFile(member.getUUID()));
                 } catch (Exception e) {
                     logger.catching(e);
