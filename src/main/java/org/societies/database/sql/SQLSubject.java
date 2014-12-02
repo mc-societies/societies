@@ -98,13 +98,13 @@ public class SQLSubject extends AbstractSubject {
     @Override
     public <V> V get(Setting<V> setting, Target target) {
         Table<Setting, Target, Object> table = getSettings();
-        return (V) table.get(setting, target); //todo
+        return (V) table.get(setting, target);//optimize
     }
 
     @Override
     public Table<Setting, Target, Object> getSettings() {
         Table<Setting, Target, Object> table = HashBasedTable.create();
-        //fixme
+
         Select<Record3<byte[], UShort, byte[]>> query = queries.getQuery(select);
         query.bind(1, UUIDGen.toByteArray(getUUID()));
 
