@@ -7,12 +7,14 @@ import net.catharos.lib.shank.service.AbstractServiceModule;
 import org.societies.api.lock.DummyLocker;
 import org.societies.api.lock.Locker;
 import org.societies.groups.ExtensionFactory;
-import org.societies.groups.group.GroupProvider;
-import org.societies.groups.member.DefaultMemberHeart;
-import org.societies.groups.member.Member;
-import org.societies.groups.member.MemberHeart;
-import org.societies.groups.member.MemberProvider;
-import org.societies.groups.publisher.*;
+import org.societies.groups.group.*;
+import org.societies.groups.group.memory.MemoryGroupFactory;
+import org.societies.groups.group.memory.MemoryGroupHeart;
+import org.societies.groups.member.*;
+import org.societies.groups.member.memory.MemoryMemberFactory;
+import org.societies.groups.member.memory.MemoryMemberHeart;
+
+import static com.google.inject.Key.get;
 
 /**
  * Represents a MemberProviderModule
@@ -21,7 +23,7 @@ public class JSONModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
-        Key<JSONProvider> provider = Key.get(new TypeLiteral<JSONProvider>() {});
+        Key<JSONProvider> provider = get(new TypeLiteral<JSONProvider>() {});
 
         bindService().to(provider);
 
@@ -30,39 +32,40 @@ public class JSONModule extends AbstractServiceModule {
         // Member provider
         bind(MemberProvider.class).to(provider);
 
+        bind(GroupFactory.class).to(MemoryGroupFactory.class);
+        bind(MemberFactory.class).to(MemoryMemberFactory.class);
+
+
         install(new FactoryModuleBuilder()
-                .implement(MemberHeart.class, DefaultMemberHeart.class)
+                .implement(MemoryMemberHeart.class, MemoryMemberHeart.class)
+                .build(new TypeLiteral<ExtensionFactory<MemoryMemberHeart, Member>>() {}));
+
+        install(new FactoryModuleBuilder()
+                .implement(MemoryGroupHeart.class, MemoryGroupHeart.class)
+                .build(new TypeLiteral<ExtensionFactory<MemoryGroupHeart, Group>>() {}));
+
+
+        install(new FactoryModuleBuilder()
+                .implement(GroupHeart.class, MemoryGroupHeart.class)
+                .build(new TypeLiteral<ExtensionFactory<GroupHeart, Group>>() {}));
+
+        install(new FactoryModuleBuilder()
+                .implement(MemberHeart.class, MemoryMemberHeart.class)
                 .build(new TypeLiteral<ExtensionFactory<MemberHeart, Member>>() {}));
 
         // Group provider
         bind(GroupProvider.class).to(provider);
 
-        Key<JSONGroupPublisher> groupPublisher = Key
-                .get(new TypeLiteral<JSONGroupPublisher>() {});
+        Key<JSONGroupPublisher> groupPublisher =
+                get(new TypeLiteral<JSONGroupPublisher>() {});
 
         // Group Publishers
         bind(GroupPublisher.class).to(groupPublisher);
-        bind(GroupNamePublisher.class).to(groupPublisher);
-        bind(GroupCreatedPublisher.class).to(groupPublisher);
-        bind(SettingPublisher.class).to(groupPublisher);
-        bind(GroupRankPublisher.class).to(groupPublisher);
-        bind(GroupDropPublisher.class).to(groupPublisher);
-
-        Key<JSONMemberPublisher> memberPublisher = Key
-                .get(new TypeLiteral<JSONMemberPublisher>() {});
+        bind(GroupDestructor.class).to(groupPublisher);
 
         // Member Publishers
         bind(MemberPublisher.class).to(provider);
-        bind(MemberGroupPublisher.class).to(memberPublisher);
-        bind(MemberCreatedPublisher.class).to(memberPublisher);
-        bind(MemberLastActivePublisher.class).to(memberPublisher);
-        bind(MemberRankPublisher.class).to(memberPublisher);
-        bind(MemberDropPublisher.class).to(provider);
-
-        // Rank publishers
-        bind(RankPublisher.class).to(groupPublisher);
-        bind(RankDropPublisher.class).to(groupPublisher);
-
+        bind(MemberDestructor.class).to(provider);
 
         bind(Locker.class).to(DummyLocker.class);
     }

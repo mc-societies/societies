@@ -92,13 +92,13 @@ public class GroupMapper extends AbstractMapper {
         //beatify
         Group group = builder.build();
 
-        group.complete(false);
+        group.unlink();
 
         for (Quartet<UUID, String, Table<Setting, Target, String>, Integer> rank : rawRanks) {
             group.addRank(toRank(group, rank));
         }
 
-        group.complete();
+        group.link();
 
         return group;
     }
@@ -134,7 +134,7 @@ public class GroupMapper extends AbstractMapper {
             rank.set(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
         }
 
-        rank.complete();
+        rank.link();
 
         return rank;
     }

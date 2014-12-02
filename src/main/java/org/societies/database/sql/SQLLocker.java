@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
  * Represents a SQLLocker
  */
 @Singleton
-public class SQLLocker extends AbstractPublisher implements Locker {
+class SQLLocker extends AbstractPublisher implements Locker {
 
 //todo    private final TIntObjectHashMap<ReentrantLock> locks = new TIntObjectHashMap<ReentrantLock>();
 

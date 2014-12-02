@@ -7,7 +7,7 @@ import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Insert;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
 import org.societies.groups.member.Member;
-import org.societies.groups.publisher.MemberPublisher;
+import org.societies.groups.member.MemberPublisher;
 
 import java.util.concurrent.Callable;
 
@@ -30,19 +30,9 @@ class SQLMemberPublisher extends AbstractPublisher implements MemberPublisher {
 
                 query.bind(1, UUIDGen.toByteArray(member.getUUID()));
 
-                Object group = null;
-
-                if (member.getGroup() != null) {
-                    group = UUIDGen.toByteArray(member.getGroup().getUUID());
-                }
-
-                query.bind(2, group);
-
                 query.execute();
-
                 return member;
             }
         });
     }
-
 }

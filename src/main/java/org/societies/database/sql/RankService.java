@@ -6,7 +6,7 @@ import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
 import org.apache.logging.log4j.Logger;
-import org.societies.groups.publisher.RankPublisher;
+import org.societies.groups.rank.RankPublisher;
 import org.societies.groups.rank.Rank;
 
 import java.util.Set;

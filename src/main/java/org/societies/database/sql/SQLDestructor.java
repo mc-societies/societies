@@ -6,23 +6,22 @@ import com.google.inject.Inject;
 import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Query;
 import org.societies.groups.member.Member;
-import org.societies.groups.publisher.MemberDropPublisher;
+import org.societies.groups.member.MemberDestructor;
 
 import java.util.concurrent.Callable;
 
 /**
  * Represents a SQLMemberDropPublisher
  */
-//todo needed?
-class SQLMemberDropPublisher extends AbstractPublisher implements MemberDropPublisher {
+class SQLDestructor extends AbstractPublisher implements MemberDestructor {
 
     @Inject
-    public SQLMemberDropPublisher(ListeningExecutorService service, SQLQueries queries) {
+    public SQLDestructor(ListeningExecutorService service, SQLQueries queries) {
         super(service, queries);
     }
 
     @Override
-    public ListenableFuture<Member> drop(final Member member) {
+    public ListenableFuture<Member> destruct(final Member member) {
         return service.submit(new Callable<Member>() {
             @Override
             public Member call() throws Exception {

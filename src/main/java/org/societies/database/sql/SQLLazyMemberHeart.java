@@ -1,12 +1,15 @@
 package org.societies.database.sql;
 
-import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 import gnu.trove.set.hash.THashSet;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
+import org.societies.groups.event.EventController;
 import org.societies.groups.group.GroupHeart;
+import org.societies.groups.group.GroupProvider;
 import org.societies.groups.member.Member;
 import org.societies.groups.rank.Rank;
 
@@ -16,17 +19,21 @@ import java.util.Set;
 /**
  * Represents a LazySQLMemberHearth
  */
-class LazySQLMemberHearth extends SQLMemberHearth {
+class SQLLazyMemberHeart extends SQLMemberHeart {
 
     @Nullable
     private GroupHeart group;
-    private THashSet<Rank> ranks = new THashSet<Rank>();
+    private Set<Rank> ranks = new THashSet<Rank>();
     private DateTime lastActive;
     private DateTime created;
 
     @Inject
-    public LazySQLMemberHearth(Statics statics, @Assisted Member member) {
-        super(statics, member);
+    public SQLLazyMemberHeart(@Assisted Member member,
+                              EventController events,
+                              @Named("default-rank") Rank defaultRank,
+                              GroupProvider groupProvider,
+                              SQLQueries queries, ListeningExecutorService service) {
+        super(member, events, defaultRank, groupProvider, queries, service);
     }
 
     @Override
@@ -34,6 +41,10 @@ class LazySQLMemberHearth extends SQLMemberHearth {
         this.group = group;
 
         super.setGroup(group);
+
+        if (group != null && !group.isMember(member)) {
+            group.addMember(member);
+        }
     }
 
     @Override
@@ -84,7 +95,7 @@ class LazySQLMemberHearth extends SQLMemberHearth {
         }
 
         if (ranks == null) {
-            ranks = new THashSet<Rank>();
+            ranks = getRanks();
         }
 
         ranks.add(rank);
@@ -99,7 +110,7 @@ class LazySQLMemberHearth extends SQLMemberHearth {
         }
 
         if (ranks == null) {
-            ranks = new THashSet<Rank>();
+            ranks = getRanks();
         }
 
         ranks.remove(rank);
@@ -113,6 +124,10 @@ class LazySQLMemberHearth extends SQLMemberHearth {
             return Collections.emptySet();
         }
 
-        return Sets.union(ranks, Collections.singleton(statics.getDefaultRank()));
+        if (ranks == null) {
+            ranks = super.getRanks();
+        }
+
+        return ranks;
     }
 }

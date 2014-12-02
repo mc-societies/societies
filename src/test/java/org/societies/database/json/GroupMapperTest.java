@@ -11,10 +11,10 @@ import org.jukito.JukitoRunner;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.societies.groups.group.DefaultGroupFactory;
+import org.societies.groups.group.memory.MemoryGroupFactory;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupFactory;
-import org.societies.groups.group.GroupGenerator;
+import org.societies.groups.group.RandomGroupGenerator;
 import org.societies.groups.rank.DefaultRank;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.rank.RankFactory;
@@ -31,7 +31,7 @@ public class GroupMapperTest {
         protected void configureTest() {
             bind(UUID.class).toProvider(TimeUUIDProvider.class);
 
-            bind(GroupFactory.class).to(DefaultGroupFactory.class);
+            bind(GroupFactory.class).to(MemoryGroupFactory.class);
 
             install(new FactoryModuleBuilder()
                     .implement(Rank.class, DefaultRank.class)
@@ -46,7 +46,7 @@ public class GroupMapperTest {
     GroupMapper groupMapper;
 
     @Inject
-    GroupGenerator generator;
+    RandomGroupGenerator generator;
 
     @Test
     public void testGroup() throws Exception {

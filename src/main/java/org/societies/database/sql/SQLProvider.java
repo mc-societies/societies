@@ -12,14 +12,11 @@ import net.catharos.lib.shank.logging.InjectLogger;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.jooq.Record1;
-import org.jooq.Record3;
 import org.jooq.Result;
 import org.jooq.Select;
-import org.jooq.types.UShort;
 import org.societies.api.PlayerResolver;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
 import org.societies.database.sql.layout.tables.records.SocietiesRecord;
-import org.societies.group.SocietyException;
 import org.societies.groups.cache.GroupCache;
 import org.societies.groups.cache.MemberCache;
 import org.societies.groups.group.Group;
@@ -28,22 +25,15 @@ import org.societies.groups.group.GroupProvider;
 import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberFactory;
 import org.societies.groups.member.MemberProvider;
-import org.societies.groups.publisher.MemberPublisher;
-import org.societies.groups.rank.Rank;
+import org.societies.groups.member.MemberPublisher;
 import org.societies.groups.rank.RankFactory;
-import org.societies.groups.setting.Setting;
-import org.societies.groups.setting.SettingException;
 import org.societies.groups.setting.SettingProvider;
-import org.societies.groups.setting.subject.Subject;
-import org.societies.groups.setting.target.SimpleTarget;
-import org.societies.groups.setting.target.Target;
 import org.societies.member.MemberException;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.Futures.transform;
@@ -190,7 +180,13 @@ class SQLProvider implements MemberProvider, GroupProvider {
             throw new MemberException(uuid, "There are more users with the same uuid?!");
         }
 
-        return memberFactory.create(uuid);
+        return evaluateSingleMember(uuid);
+    }
+
+    private Member evaluateSingleMember(UUID uuid) {
+        Member member = memberFactory.create(uuid);
+        memberCache.cache(member);
+        return member;
     }
 
     //================================================================================
@@ -199,10 +195,10 @@ class SQLProvider implements MemberProvider, GroupProvider {
 
     @Override
     public ListenableFuture<Group> getGroup(UUID uuid) {
-        return getGroup(uuid, null, service);
+        return getGroup(uuid, service);
     }
 
-    public ListenableFuture<Group> getGroup(UUID uuid, Member predefined, ListeningExecutorService service) {
+    public ListenableFuture<Group> getGroup(UUID uuid, ListeningExecutorService service) {
         // Cache lookup
         Group group = groupCache.getGroup(uuid);
         if (group != null) {
@@ -212,10 +208,10 @@ class SQLProvider implements MemberProvider, GroupProvider {
         Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
-        return querySingleGroup(uuid, queries.query(service, query), predefined);
+        return querySingleGroup(uuid, queries.query(service, query));
     }
 
-    private ListenableFuture<Group> querySingleGroup(final UUID uuid, final ListenableFuture<Result<SocietiesRecord>> result, final Member predefined) {
+    private ListenableFuture<Group> querySingleGroup(final UUID uuid, final ListenableFuture<Result<SocietiesRecord>> result) {
         return transform(result, new Function<Result<SocietiesRecord>, Group>() {
 
             @Nullable
@@ -226,116 +222,20 @@ class SQLProvider implements MemberProvider, GroupProvider {
                 }
 
                 if (input.isEmpty()) {
-                    return groupFactory.create(uuid, Group.NEW_GROUP_NAME, Group.NEW_GROUP_TAG);
+                    throw new RuntimeException("Group not found!");
                 }
 
                 SocietiesRecord record = Iterables.getOnlyElement(input);
 
-                return evaluateSingleGroup(record, predefined);
+                return evaluateSingleGroup(uuid, record);
             }
         }, service);
     }
 
-    private Group evaluateSingleGroup(SocietiesRecord record, Member predefined) {
-        byte[] uuid = record.getUuid();
-        Group group = groupFactory
-                .create(UUIDGen.toUUID(uuid), record.getName(), record.getTag(), new DateTime(record.getCreated()));
-
-        group.complete(false);
-
-        try {
-            groupCache.cache(group);
-
-            // Load members
-            Select<Record1<byte[]>> query = queries.getQuery(SELECT_SOCIETY_MEMBERS);
-
-            query.bind(1, uuid);
-
-            for (Record1<byte[]> member : query.fetch()) {
-                try {
-                    UUID memberUUID = UUIDGen.toUUID(member.value1());
-                    Member memberToAdd;
-
-                    if (predefined != null && predefined.getUUID().equals(memberUUID)) {
-                        memberToAdd = predefined;
-                    } else {
-                        memberToAdd = getMember(memberUUID).get();
-                    }
-
-                    group.addMember(memberToAdd);
-                } catch (InterruptedException e) {
-                    throw new SocietyException(e, "Failed to add member to group!");
-                } catch (ExecutionException e) {
-                    throw new SocietyException(e, "Failed to add member to group!");
-                }
-            }
-
-            //Load settings
-            loadSettings(group, uuid, queries.getQuery(SELECT_SOCIETY_SETTINGS));
-
-            //Load ranks
-            Select<Record3<byte[], String, Short>> rankQuery = queries.getQuery(SELECT_SOCIETY_RANKS);
-            rankQuery.bind(1, uuid);
-
-
-            for (Record3<byte[], String, Short> rankRecord : rankQuery.fetch()) {
-                Rank rank = loadRank(group, rankRecord);
-                group.addRank(rank);
-            }
-
-        } catch (RuntimeException e) {
-            groupCache.clear(group);
-            throw e;
-        } finally {
-            // Finished
-            group.complete();
-        }
-
+    private Group evaluateSingleGroup(UUID uuid, SocietiesRecord record) {
+        Group group = groupFactory.create(uuid, record.getName(), record.getTag(), new DateTime(record.getCreated()));
+        groupCache.cache(group);
         return group;
-    }
-
-    private Rank loadRank(Group group, Record3<byte[], String, Short> rankRecord) {
-        Rank rank = rankFactory
-                .create(UUIDGen.toUUID(rankRecord.value1()), rankRecord.value2(), rankRecord.value3(), group);
-        rank.complete(false);
-
-        loadSettings(rank, rankRecord.value1(), queries.getQuery(SELECT_RANK_SETTINGS));
-
-        rank.complete();
-        return rank;
-    }
-
-    public void loadSettings(Subject subject, byte[] uuid, Select<Record3<byte[], UShort, byte[]>> query) {
-        query.bind(1, uuid);
-
-        for (Record3<byte[], UShort, byte[]> settingRecord : query.fetch()) {
-            int settingID = settingRecord.value2().intValue();
-
-            Setting setting = settingProvider.getSetting(settingID);
-
-            if (setting == null) {
-                logger.warn("Failed to convert setting %s!", settingID);
-                continue;
-            }
-
-            byte[] targetUUID = settingRecord.value1();
-            Target target;
-
-            if (targetUUID == null) {
-                target = subject;
-            } else {
-                target = new SimpleTarget(UUIDGen.toUUID(targetUUID));
-            }
-
-            Object value;
-            try {
-                value = setting.convert(subject, target, settingRecord.value3());
-            } catch (SettingException e) {
-                continue;
-            }
-
-            subject.set(setting, target, value);
-        }
     }
 
     @Override
@@ -365,7 +265,8 @@ class SQLProvider implements MemberProvider, GroupProvider {
                 THashSet<Group> groups = new THashSet<Group>(input.size());
 
                 for (SocietiesRecord record : input) {
-                    groups.add(evaluateSingleGroup(record, null));
+                    UUID uuid = UUIDGen.toUUID(record.getUuid());
+                    groups.add(evaluateSingleGroup(uuid, record));
                 }
 
                 return groups;

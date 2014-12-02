@@ -3,7 +3,6 @@ package org.societies.database.sql;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.jooq.*;
-import org.jooq.impl.DSL;
 import org.jooq.types.UShort;
 import org.societies.database.DSLProvider;
 import org.societies.database.QueryKey;
@@ -30,6 +29,10 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Update<SocietiesRecord>> UPDATE_SOCIETY_NAME = QueryKey.create();
     public static final QueryKey<Update<SocietiesRecord>> UPDATE_SOCIETY_TAG = QueryKey.create();
     public static final QueryKey<Update<SocietiesRecord>> UPDATE_SOCIETY_CREATED = QueryKey.create();
+
+    public static final QueryKey<Select<Record1<String>>> SELECT_SOCIETY_NAME = QueryKey.create();
+    public static final QueryKey<Select<Record1<String>>> SELECT_SOCIETY_TAG = QueryKey.create();
+    public static final QueryKey<Select<Record1<Timestamp>>> SELECT_SOCIETY_CREATED = QueryKey.create();
 
 
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETIES = QueryKey.create();
@@ -85,6 +88,9 @@ class SQLQueries extends QueryProvider {
     public static final QueryKey<Select<MembersRecord>> SELECT_MEMBERS = QueryKey.create();
 
     public static final QueryKey<Select<Record3<byte[], UShort, byte[]>>> SELECT_MEMBER_SETTINGS = QueryKey.create();
+
+    public static final QueryKey<Insert<MemberSettingsRecord>> INSERT_MEMBER_SETTING = QueryKey.create();
+
 
     public static final QueryKey<Insert<MembersRecord>> INSERT_MEMBER = QueryKey.create();
 
@@ -194,7 +200,6 @@ class SQLQueries extends QueryProvider {
                         .set(SOCIETIES.CREATED, DEFAULT_TIMESTAMP).onDuplicateKeyIgnore();
             }
         });
-
         builder(DROP_SOCIETY_BY_UUID, new QueryBuilder<Query>() {
             @Override
             public Query create(DSLContext context) {
@@ -217,6 +222,7 @@ class SQLQueries extends QueryProvider {
             public Update<SocietiesRecord> create(DSLContext context) {
                 return context.update(SOCIETIES)
                         .set(SOCIETIES.TAG, DEFAULT_STRING)
+                        .set(SOCIETIES.CLEAN_TAG, DEFAULT_STRING)
                         .where(SOCIETIES.UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });
@@ -226,6 +232,28 @@ class SQLQueries extends QueryProvider {
             public Update<SocietiesRecord> create(DSLContext context) {
                 return context.update(SOCIETIES)
                         .set(SOCIETIES.CREATED, DEFAULT_TIMESTAMP)
+                        .where(SOCIETIES.UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(SELECT_SOCIETY_TAG, new QueryBuilder<Select<Record1<String>>>() {
+            @Override
+            public Select<Record1<String>> create(DSLContext context) {
+                return context.select(SOCIETIES.TAG).from(SOCIETIES).where(SOCIETIES.UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(SELECT_SOCIETY_NAME, new QueryBuilder<Select<Record1<String>>>() {
+            @Override
+            public Select<Record1<String>> create(DSLContext context) {
+                return context.select(SOCIETIES.NAME).from(SOCIETIES).where(SOCIETIES.UUID.equal(DEFAULT_BYTE_ARRAY));
+            }
+        });
+
+        builder(SELECT_SOCIETY_CREATED, new QueryBuilder<Select<Record1<Timestamp>>>() {
+            @Override
+            public Select<Record1<Timestamp>> create(DSLContext context) {
+                return context.select(SOCIETIES.CREATED).from(SOCIETIES)
                         .where(SOCIETIES.UUID.equal(DEFAULT_BYTE_ARRAY));
             }
         });
@@ -273,6 +301,21 @@ class SQLQueries extends QueryProvider {
                         .set(SOCIETIES_SETTINGS.VALUE, DEFAULT_BYTE_ARRAY);
             }
         });
+
+        builder(INSERT_MEMBER_SETTING, new QueryBuilder<Insert<MemberSettingsRecord>>() {
+            @Override
+            public Insert<MemberSettingsRecord> create(DSLContext context) {
+                return context
+                        .insertInto(MEMBER_SETTINGS)
+                        .values(DEFAULT_BYTE_ARRAY, DEFAULT_BYTE_ARRAY, UShort.valueOf(0), DEFAULT_BYTE_ARRAY)
+                        .onDuplicateKeyUpdate()
+                        .set(MEMBER_SETTINGS.SUBJECT_UUID, DEFAULT_BYTE_ARRAY)
+                        .set(MEMBER_SETTINGS.TARGET_UUID, DEFAULT_BYTE_ARRAY)
+                        .set(MEMBER_SETTINGS.SETTING, UShort.valueOf(0))
+                        .set(MEMBER_SETTINGS.VALUE, DEFAULT_BYTE_ARRAY);
+            }
+        });
+
 
         builder(INSERT_SOCIETY_RANK, new QueryBuilder<Insert>() {
             @Override
@@ -390,9 +433,7 @@ class SQLQueries extends QueryProvider {
             public Insert<MembersRecord> create(DSLContext context) {
                 return context
                         .insertInto(MEMBERS)
-                        .set(MEMBERS.UUID, DEFAULT_BYTE_ARRAY)
-                        .set(MEMBERS.SOCIETY, DEFAULT_BYTE_ARRAY)
-                        .set(MEMBERS.LASTACTIVE, DSL.currentTimestamp());
+                        .set(MEMBERS.UUID, DEFAULT_BYTE_ARRAY);
             }
         });
 

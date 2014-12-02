@@ -8,7 +8,7 @@ import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
-import org.societies.groups.publisher.GroupDropPublisher;
+import org.societies.groups.group.GroupDestructor;
 
 /**
  * Represents a AbandonCommand
@@ -18,10 +18,10 @@ import org.societies.groups.publisher.GroupDropPublisher;
 @Sender(Member.class)
 public class LeaveCommand implements Executor<Member> {
 
-    private final GroupDropPublisher dropGroup;
+    private final GroupDestructor dropGroup;
 
     @Inject
-    public LeaveCommand(GroupDropPublisher dropGroup) {this.dropGroup = dropGroup;}
+    public LeaveCommand(GroupDestructor dropGroup) {this.dropGroup = dropGroup;}
 
     @Override
     public void execute(CommandContext<Member> ctx, Member sender) {
@@ -35,11 +35,13 @@ public class LeaveCommand implements Executor<Member> {
 
             group.removeMember(sender);
 
+            String name = group.getName();
+
             if (group.size() == 0) {
-                dropGroup.drop(group);
+                dropGroup.destruct(group);
             }
 
-            sender.send("you.society-left", group.getName());
+            sender.send("you.society-left", name);
             return;
         }
 

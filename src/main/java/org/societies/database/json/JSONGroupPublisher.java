@@ -1,7 +1,5 @@
 package org.societies.database.json;
 
-import com.google.common.base.Function;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -11,20 +9,16 @@ import net.catharos.lib.core.uuid.UUIDStorage;
 import net.catharos.lib.shank.logging.InjectLogger;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.societies.groups.group.Group;
-import org.societies.groups.group.GroupHeart;
-import org.societies.groups.publisher.*;
-import org.societies.groups.rank.Rank;
-import org.societies.groups.setting.Setting;
-import org.societies.groups.setting.subject.Subject;
-import org.societies.groups.setting.target.Target;
+import org.societies.groups.group.GroupDestructor;
+import org.societies.groups.group.GroupFactory;
+import org.societies.groups.group.GroupPublisher;
 
+import javax.inject.Provider;
 import java.io.File;
-import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import static com.googlecode.cqengine.query.QueryFactory.contains;
 import static com.googlecode.cqengine.query.QueryFactory.or;
@@ -32,39 +26,34 @@ import static com.googlecode.cqengine.query.QueryFactory.or;
 /**
  * Represents a JSONMemberPublisher
  */
-final class JSONGroupPublisher implements
-        GroupPublisher,
-        GroupNamePublisher, GroupCreatedPublisher,
-        GroupRankPublisher,
-        RankPublisher, RankDropPublisher,
-        SettingPublisher,
-        GroupDropPublisher {
+final class JSONGroupPublisher implements GroupPublisher, GroupDestructor {
 
+    private final Provider<UUID> uuid;
     private final UUIDStorage uuidStorage;
     private final GroupMapper mapper;
     private final ListeningExecutorService service;
     private final JSONProvider provider;
+    private final GroupFactory groupFactory;
 
     @InjectLogger
     private Logger logger;
 
-
     @Inject
-    public JSONGroupPublisher(@Named("group-root") File groupRoot, GroupMapper mapper, ListeningExecutorService service, JSONProvider provider) {
+    public JSONGroupPublisher(@Named("group-root") File groupRoot, Provider<UUID> uuid, GroupMapper mapper, ListeningExecutorService service, JSONProvider provider, GroupFactory groupFactory) {
+        this.uuid = uuid;
         this.provider = provider;
+        this.groupFactory = groupFactory;
         this.uuidStorage = new UUIDStorage(groupRoot, "json");
         this.mapper = mapper;
         this.service = service;
     }
 
     @Override
-    public ListenableFuture<Group> publish(final Group group) {
+    public ListenableFuture<Group> publish(final UUID uuid, final String name, final String tag, final DateTime created) {
         return service.submit(new Callable<Group>() {
 
             @Override
             public Group call() throws Exception {
-                String tag = group.getTag();
-                String name = group.getName();
 
                 Query<Group> query = or(
                         contains(JSONProvider.GROUP_CLEAN_TAG, tag),
@@ -75,99 +64,42 @@ final class JSONGroupPublisher implements
                     return null;
                 }
 
-                return publish0(group);
+                Group group = groupFactory.create(uuid, name, tag, created);
+
+                publish0(group);
+                return group;
             }
         });
     }
 
-    public ListenableFuture<GroupHeart> publish(final GroupHeart group) {
-        return Futures.transform(publish((Group) group), new Function<Group, GroupHeart>() {
-            @javax.annotation.Nullable
-            @Override
-            public GroupHeart apply(@Nullable Group input) {
-                return input;
-            }
-        });
-    }
-
-
-    private Group publish0(final Group group) throws IOException {
+    private void publish0(Group group) {
         try {
             provider.groups.add(group);
             mapper.writeGroup(group, uuidStorage.getFile(group.getUUID()));
         } catch (Exception e) {
             logger.catching(e);
         }
-        return group;
     }
 
-    public ListenableFuture<GroupHeart> defaultPublish(final GroupHeart group) {
-        return service.submit(new Callable<GroupHeart>() {
+    @Override
+    public ListenableFuture<Group> publish(String name, String tag) {
+        return publish(uuid.get(), name, tag, DateTime.now());
+    }
+
+    @Override
+    public ListenableFuture<Group> publish(final Group group) {
+        return service.submit(new Callable<Group>() {
 
             @Override
-            public GroupHeart call() throws Exception {
-                publish0(group.getHolder());
+            public Group call() throws Exception {
+                publish0(group);
                 return group;
             }
         });
     }
 
     @Override
-    public ListenableFuture<GroupHeart> publishCreated(GroupHeart group, DateTime created) {
-        return defaultPublish(group.getHolder());
-    }
-
-    @Override
-    public ListenableFuture<GroupHeart> publishName(GroupHeart group, String name) {
-        return publish(group);
-    }
-
-    @Override
-    public ListenableFuture<GroupHeart> publishTag(GroupHeart group, String tag) {
-        return publish(group);
-    }
-
-    @Override
-    public ListenableFuture<Rank> publish(final Rank rank) {
-        return Futures.transform(defaultPublish(rank.getGroup()), new Function<GroupHeart, Rank>() {
-            @javax.annotation.Nullable
-            @Override
-            public Rank apply(@Nullable GroupHeart input) {
-                return rank;
-            }
-        });
-    }
-
-    @Override
-    public ListenableFuture<Rank> drop(final Rank rank) {
-        return Futures.transform(defaultPublish(rank.getGroup()), new Function<GroupHeart, Rank>() {
-            @javax.annotation.Nullable
-            @Override
-            public Rank apply(@Nullable GroupHeart input) {
-                return rank;
-            }
-        });
-    }
-
-    @Override
-    public ListenableFuture<GroupHeart> publishRank(GroupHeart group, Rank rank) {
-        return defaultPublish(group);
-    }
-
-    @Override
-    public <V> void publish(Subject subject, Target target, Setting<V> setting, @Nullable V value) {
-        //beautify
-        try {
-            defaultPublish(provider.getGroup(subject.getUUID()).get());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public ListenableFuture<Group> drop(final Group group) {
+    public ListenableFuture<Group> destruct(final Group group) {
         return service.submit(new Callable<Group>() {
 
             @Override

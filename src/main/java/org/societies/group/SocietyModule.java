@@ -10,12 +10,8 @@ import net.catharos.lib.shank.AbstractModule;
 import org.societies.groups.DefaultRelation;
 import org.societies.groups.Relation;
 import org.societies.groups.RelationFactory;
-import org.societies.groups.group.DefaultGroupFactory;
-import org.societies.groups.group.GroupFactory;
-import org.societies.groups.rank.DefaultRank;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.rank.RankFactory;
-import org.societies.groups.rank.StaticRank;
 import org.societies.groups.validate.NameValidator;
 import org.societies.groups.validate.TagValidator;
 
@@ -34,13 +30,6 @@ public class SocietyModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(Rank.class, DefaultRank.class)
-                .implement(Rank.class, Names.named("static"), StaticRank.class)
-                .build(RankFactory.class));
-
-        bind(GroupFactory.class).to(DefaultGroupFactory.class);
-
         install(new FactoryModuleBuilder()
                 .implement(Relation.class, DefaultRelation.class)
                 .build(RelationFactory.class));

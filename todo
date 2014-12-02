@@ -1,10 +1,12 @@
+Create DefaultGroupFactory & SQLGroupFactory, probably you can remove some factories
+
+Home location server dependant
+
 MemberHeart -> SQLMemberHeart -> LazySQLMemberHeart
             -> DefaultMemberHeart
 
 GroupHeart  -> SQLGroupHeart -> LazySQLGroupHeart
             -> DefaultMemberHeart
-
-Remove some delegations from Member & Group
 
 Beta release ------------------------------------------------------------------------------------
 Events:

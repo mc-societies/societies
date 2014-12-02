@@ -36,27 +36,6 @@ public class OnlineMemberCache implements MemberCache {
             return null;
         }
 
-//        Group group = member.getGroup();
-//
-//        if (group != null) {
-//            member.complete(false);
-//            try {
-//                member.setGroup(groupProvider.getGroup(group.getUUID()).get());
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            } catch (ExecutionException e) {
-//                e.printStackTrace();
-//            }
-//
-//            for (Rank rank : member.getRanks()) {
-//                if (group.getRank(rank.getUUID()) == null) {
-//                    member.removeRank(rank);
-//                }
-//            }
-//
-//            member.complete();
-//        }
-
         return member;
     }
 

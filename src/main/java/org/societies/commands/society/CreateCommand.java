@@ -19,7 +19,7 @@ import org.societies.api.economy.EconomyParticipant;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupFactory;
 import org.societies.groups.member.Member;
-import org.societies.groups.publisher.GroupPublisher;
+import org.societies.groups.group.GroupPublisher;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.validate.NameValidator;
 import org.societies.groups.validate.TagValidator;
@@ -105,29 +105,24 @@ public class CreateCommand implements Executor<Member> {
         name = stripColor(name).trim();
         tag = translateString('&', tag);
 
-        Group group = groupFactory.create(name, tag);
-
-        if (!verificationRequired) {
-            group.verify(true);
-        }
-
-        ListenableFuture<Group> future = publisher.publish(group);
+        ListenableFuture<Group> future = publisher.publish(name, tag);
 
         Futures.addCallback(future, new FutureCallback<Group>() {
             @Override
-            public void onSuccess(Group result) {
-                if (result == null) {
+            public void onSuccess(Group group) {
+                if (group == null) {
                     sender.send("society.already-exists", name, tag);
                     return;
                 }
 
-//                if (sender instanceof Member) {
-//                    Member societyMember = sender;
+                if (!verificationRequired) {
+                    group.verify(true);
+                }
 
-                result.addMember(sender);
+
+                group.addMember(sender);
                 sender.addRank(defaultRank);
                 sender.addRank(superRank);
-//                }
 
                 sender.send("society.created", name, tag);
             }
@@ -137,7 +132,5 @@ public class CreateCommand implements Executor<Member> {
                 logger.catching(t);
             }
         });
-
-
     }
 }

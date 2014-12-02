@@ -6,22 +6,22 @@ import com.google.inject.Inject;
 import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Query;
 import org.societies.groups.group.Group;
-import org.societies.groups.publisher.GroupDropPublisher;
+import org.societies.groups.group.GroupDestructor;
 
 import java.util.concurrent.Callable;
 
 /**
  * Represents a SQLGroupDropPublisher
  */
-class SQLGroupDropPublisher extends AbstractPublisher implements GroupDropPublisher {
+class SQLGroupDestructor extends AbstractPublisher implements GroupDestructor {
 
     @Inject
-    public SQLGroupDropPublisher(ListeningExecutorService service, SQLQueries queries) {
+    public SQLGroupDestructor(ListeningExecutorService service, SQLQueries queries) {
         super(service, queries);
     }
 
     @Override
-    public ListenableFuture<Group> drop(final Group group) {
+    public ListenableFuture<Group> destruct(final Group group) {
         return service.submit(new Callable<Group>() {
             @Override
             public Group call() throws Exception {

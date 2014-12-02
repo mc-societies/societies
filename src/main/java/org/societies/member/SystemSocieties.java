@@ -4,9 +4,9 @@ import com.google.inject.Inject;
 import net.catharos.lib.core.command.Command;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.i18n.Dictionary;
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.jetbrains.annotations.Nullable;
 import org.societies.api.economy.EconomyParticipant;
+import org.societies.api.economy.EconomyResponse;
 import org.societies.bridge.*;
 import org.societies.member.locale.LocaleProvider;
 
@@ -71,7 +71,7 @@ class SystemSocieties implements Player, EconomyParticipant, Sender {
 
     @Override
     public EconomyResponse withdraw(double amount) {
-        return new EconomyResponse(amount, 0, EconomyResponse.ResponseType.SUCCESS, null);
+        return new EconomyResponse(amount, 0, true);
     }
 
     @Override

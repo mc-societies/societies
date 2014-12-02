@@ -8,8 +8,8 @@ import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.societies.api.economy.EconomyParticipant;
+import org.societies.api.economy.EconomyResponse;
 import org.societies.api.lock.Locker;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
@@ -64,9 +64,9 @@ public class DepositCommand implements Executor<Member> {
             }
 
             double balance = group.getDouble(balanceSetting);
-            group.set(balanceSetting, balance + response.amount);
+            group.set(balanceSetting, balance + response.getAmount());
 
-            sender.send("deposit-successfully", response.amount);
+            sender.send("deposit-successfully", response.getAmount());
 
         } catch (InterruptedException e) {
             return;

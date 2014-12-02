@@ -13,7 +13,6 @@ import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
-import org.societies.groups.publisher.RankPublisher;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.rank.RankFactory;
 
@@ -54,12 +53,10 @@ public class RankCommand {
         int priority = Rank.DEFAULT_PRIORITY;
 
         private final RankFactory rankFactory;
-        private final RankPublisher rankPublisher;
 
         @Inject
-        public CreateCommand(RankFactory rankFactory, RankPublisher rankPublisher) {
+        public CreateCommand(RankFactory rankFactory) {
             this.rankFactory = rankFactory;
-            this.rankPublisher = rankPublisher;
         }
 
         @Override
@@ -87,7 +84,6 @@ public class RankCommand {
                 return;
             }
 
-            this.rankPublisher.publish(rank);
             group.addRank(rank);
 
             sender.send("rank.created", name);

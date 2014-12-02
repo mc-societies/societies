@@ -32,8 +32,8 @@ import org.societies.groups.group.GroupProvider;
 import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberFactory;
 import org.societies.groups.member.MemberProvider;
-import org.societies.groups.publisher.MemberDropPublisher;
-import org.societies.groups.publisher.MemberPublisher;
+import org.societies.groups.member.MemberDestructor;
+import org.societies.groups.member.MemberPublisher;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -43,14 +43,13 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
-import static com.googlecode.cqengine.query.QueryFactory.contains;
 import static com.googlecode.cqengine.query.QueryFactory.equal;
 
 /**
  * Represents a JSONProvider
  */
 @Singleton
-public class JSONProvider extends AbstractService implements MemberProvider, GroupProvider, MemberPublisher, MemberDropPublisher {
+public class JSONProvider extends AbstractService implements MemberProvider, GroupProvider, MemberPublisher, MemberDestructor {
 
     IndexedCollection<Group> groups = CQEngine.newInstance();
 
@@ -61,7 +60,9 @@ public class JSONProvider extends AbstractService implements MemberProvider, Gro
 
     public static final Attribute<Group, String> GROUP_TAG = new SimpleAttribute<Group, String>("group_tag") {
         @Override
-        public String getValue(Group group) { return group.getTag(); }
+        public String getValue(Group group) {
+            return group.getTag();
+        }
     };
 
     public static final Attribute<Group, String> GROUP_CLEAN_TAG = new SimpleAttribute<Group, String>("group_tag") {
@@ -71,7 +72,6 @@ public class JSONProvider extends AbstractService implements MemberProvider, Gro
 
 
     {
-
         groups.addIndex(HashIndex.onAttribute(GROUP_UUID));
 
         groups.addIndex(HashIndex.onAttribute(GROUP_TAG));
@@ -176,7 +176,7 @@ public class JSONProvider extends AbstractService implements MemberProvider, Gro
 
     @Override
     public ListenableFuture<Set<Group>> getGroup(String tag) {
-        Query<Group> query = contains(GROUP_TAG, tag);
+        Query<Group> query = equal(GROUP_TAG, tag);
 
         ResultSet<Group> retrieve = groups.retrieve(query);
 
@@ -246,7 +246,7 @@ public class JSONProvider extends AbstractService implements MemberProvider, Gro
     }
 
     @Override
-    public ListenableFuture drop(final Member member) {
+    public ListenableFuture destruct(final Member member) {
         return service.submit(new Callable<Member>() {
 
             @Override

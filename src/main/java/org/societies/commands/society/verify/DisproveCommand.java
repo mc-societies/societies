@@ -21,6 +21,6 @@ public class DisproveCommand implements Executor<Sender> {
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {
         target.verify(false);
-        sender.send("target-society.disproved");
+        sender.send("target-society.disproved", target.getTag());
     }
 }

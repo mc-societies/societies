@@ -82,10 +82,9 @@ public class MemberMapper extends AbstractMapper {
         }
 
         //Create member
-
         Member member = memberFactory.create(uuid);
 
-        member.complete(false);
+        member.unlink();
 
         member.setCreated(created);
         member.setLastActive(lastActive);
@@ -110,7 +109,7 @@ public class MemberMapper extends AbstractMapper {
             }
         }
 
-        member.complete();
+        member.link();
         return member;
     }
 
