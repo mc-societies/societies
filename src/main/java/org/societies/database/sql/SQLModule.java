@@ -3,9 +3,8 @@ package org.societies.database.sql;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.name.Names;
-import org.shank.service.AbstractServiceModule;
 import org.jooq.SQLDialect;
+import org.shank.service.AbstractServiceModule;
 import org.societies.api.lock.Locker;
 import org.societies.database.DSLProvider;
 import org.societies.database.Database;
@@ -20,11 +19,7 @@ import org.societies.groups.cache.MemberCache;
 import org.societies.groups.cache.NaughtyGroupCache;
 import org.societies.groups.group.*;
 import org.societies.groups.member.*;
-import org.societies.groups.rank.Rank;
-import org.societies.groups.rank.RankFactory;
 import org.societies.groups.rank.RankPublisher;
-import org.societies.groups.rank.StaticRank;
-import org.societies.groups.rank.memory.MemoryRank;
 import org.societies.member.OnlineMemberCache;
 
 import java.util.concurrent.TimeUnit;
@@ -90,11 +85,6 @@ public class SQLModule extends AbstractServiceModule {
                 .implement(GroupHeart.class, SQLGroupHeart.class)
                 .build(new TypeLiteral<ExtensionFactory<SQLGroupHeart, Group>>() {}));
 
-
-        install(new FactoryModuleBuilder()
-                .implement(Rank.class, MemoryRank.class)
-                .implement(Rank.class, Names.named("static"), StaticRank.class)
-                .build(RankFactory.class));
 
         bind(GroupFactory.class).to(SQLGroupFactory.class);
 
