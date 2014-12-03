@@ -5,7 +5,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.lib.shank.config.ConfigSetting;
+import org.shank.config.ConfigSetting;
 import org.societies.bridge.Player;
 import org.societies.groups.member.Member;
 

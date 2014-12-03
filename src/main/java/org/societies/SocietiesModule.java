@@ -10,7 +10,7 @@ import com.google.inject.name.Names;
 import com.typesafe.config.*;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
-import net.catharos.lib.shank.service.AbstractServiceModule;
+import org.shank.service.AbstractServiceModule;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.logging.log4j.Logger;

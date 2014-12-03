@@ -4,7 +4,7 @@ import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
-import net.catharos.lib.shank.service.AbstractServiceModule;
+import org.shank.service.AbstractServiceModule;
 import org.jooq.SQLDialect;
 import org.societies.api.lock.Locker;
 import org.societies.database.DSLProvider;

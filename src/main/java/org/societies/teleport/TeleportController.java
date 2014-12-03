@@ -3,7 +3,7 @@ package org.societies.teleport;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import gnu.trove.set.hash.THashSet;
-import net.catharos.lib.shank.config.ConfigSetting;
+import org.shank.config.ConfigSetting;
 import org.societies.bridge.*;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;

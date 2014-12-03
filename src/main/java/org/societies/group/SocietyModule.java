@@ -6,7 +6,7 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.typesafe.config.Config;
 import gnu.trove.set.hash.THashSet;
-import net.catharos.lib.shank.AbstractModule;
+import org.shank.AbstractModule;
 import org.societies.groups.DefaultRelation;
 import org.societies.groups.Relation;
 import org.societies.groups.RelationFactory;

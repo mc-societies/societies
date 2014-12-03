@@ -1,7 +1,7 @@
 package org.societies.member;
 
 import net.catharos.lib.core.command.sender.SenderProvider;
-import net.catharos.lib.shank.AbstractModule;
+import org.shank.AbstractModule;
 
 /**
  * Represents a MemberModule

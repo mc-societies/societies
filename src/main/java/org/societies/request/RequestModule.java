@@ -2,7 +2,7 @@ package org.societies.request;
 
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import net.catharos.lib.shank.AbstractModule;
+import org.shank.AbstractModule;
 import org.societies.groups.request.Request;
 import org.societies.groups.request.RequestFactory;
 import org.societies.groups.request.simple.Choices;

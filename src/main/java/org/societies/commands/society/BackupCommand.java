@@ -12,7 +12,7 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
 import net.catharos.lib.core.uuid.UUIDStorage;
-import net.catharos.lib.shank.logging.InjectLogger;
+import org.shank.logging.InjectLogger;
 import org.apache.logging.log4j.Logger;
 import org.societies.database.json.GroupMapper;
 import org.societies.database.json.MemberMapper;

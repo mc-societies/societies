@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.lib.core.util.ByteUtil;
 import net.catharos.lib.core.uuid.UUIDGen;
-import net.catharos.lib.shank.logging.InjectLogger;
+import org.shank.logging.InjectLogger;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.jooq.Record1;

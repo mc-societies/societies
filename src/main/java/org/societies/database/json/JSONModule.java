@@ -3,7 +3,7 @@ package org.societies.database.json;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import net.catharos.lib.shank.service.AbstractServiceModule;
+import org.shank.service.AbstractServiceModule;
 import org.societies.api.lock.DummyLocker;
 import org.societies.api.lock.Locker;
 import org.societies.groups.ExtensionFactory;

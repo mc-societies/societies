@@ -4,7 +4,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Option;
-import net.catharos.lib.shank.logging.InjectLogger;
+import org.shank.logging.InjectLogger;
 import org.apache.logging.log4j.Logger;
 import org.societies.groups.Relation;
 import org.societies.groups.group.Group;

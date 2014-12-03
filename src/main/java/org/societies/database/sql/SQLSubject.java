@@ -4,7 +4,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import net.catharos.lib.core.uuid.UUIDGen;
-import net.catharos.lib.shank.logging.InjectLogger;
+import org.shank.logging.InjectLogger;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Insert;
 import org.jooq.Record3;

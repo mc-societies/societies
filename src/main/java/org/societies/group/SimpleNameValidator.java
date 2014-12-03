@@ -1,7 +1,7 @@
 package org.societies.group;
 
 import com.google.inject.Inject;
-import net.catharos.lib.shank.config.ConfigSetting;
+import org.shank.config.ConfigSetting;
 import org.societies.groups.validate.NameValidator;
 import org.societies.groups.validate.ValidateResult;
 

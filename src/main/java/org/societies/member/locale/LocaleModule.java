@@ -1,6 +1,6 @@
 package org.societies.member.locale;
 
-import net.catharos.lib.shank.AbstractModule;
+import org.shank.AbstractModule;
 
 import java.util.Locale;
 

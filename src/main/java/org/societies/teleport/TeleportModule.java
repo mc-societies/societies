@@ -1,6 +1,6 @@
 package org.societies.teleport;
 
-import net.catharos.lib.shank.service.AbstractServiceModule;
+import org.shank.service.AbstractServiceModule;
 
 /**
  * Represents a TeleportModule

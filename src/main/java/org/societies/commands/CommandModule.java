@@ -23,7 +23,7 @@ import net.catharos.lib.core.command.token.Delimiter;
 import net.catharos.lib.core.command.token.DelimiterTokenizer;
 import net.catharos.lib.core.command.token.SpaceDelimiter;
 import net.catharos.lib.core.command.token.Tokenizer;
-import net.catharos.lib.shank.AbstractModule;
+import org.shank.AbstractModule;
 import org.societies.LocationParser;
 import org.societies.SocietiesModule;
 import org.societies.bridge.Location;

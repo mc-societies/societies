@@ -5,7 +5,7 @@ import net.catharos.lib.core.command.CommandException;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.ParsingException;
 import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.lib.shank.logging.InjectLogger;
+import org.shank.logging.InjectLogger;
 import org.apache.logging.log4j.Logger;
 
 /**

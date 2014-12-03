@@ -6,7 +6,7 @@ import net.catharos.lib.core.command.format.DefaultFormatter;
 import net.catharos.lib.core.command.format.Formatter;
 import net.catharos.lib.core.command.format.WidthProvider;
 import net.catharos.lib.core.command.format.table.*;
-import net.catharos.lib.shank.AbstractModule;
+import org.shank.AbstractModule;
 import org.societies.MinecraftWidthProvider;
 import org.societies.bridge.ChatColor;
 

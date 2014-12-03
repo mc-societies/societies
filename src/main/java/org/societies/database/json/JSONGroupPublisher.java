@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.googlecode.cqengine.query.Query;
 import net.catharos.lib.core.uuid.UUIDStorage;
-import net.catharos.lib.shank.logging.InjectLogger;
+import org.shank.logging.InjectLogger;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;

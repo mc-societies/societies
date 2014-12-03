@@ -2,9 +2,9 @@ package org.societies.database.sql;
 
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
-import net.catharos.lib.shank.logging.InjectLogger;
-import net.catharos.lib.shank.service.AbstractService;
-import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
+import org.shank.logging.InjectLogger;
+import org.shank.service.AbstractService;
+import org.shank.service.lifecycle.LifecycleContext;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Query;
 import org.societies.database.Database;

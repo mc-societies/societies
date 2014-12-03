@@ -1,8 +1,8 @@
 package org.societies.teleport;
 
 import com.google.inject.Inject;
-import net.catharos.lib.shank.service.AbstractService;
-import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
+import org.shank.service.AbstractService;
+import org.shank.service.lifecycle.LifecycleContext;
 import org.societies.bridge.Scheduler;
 
 /**

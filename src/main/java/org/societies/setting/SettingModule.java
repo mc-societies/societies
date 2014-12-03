@@ -3,7 +3,7 @@ package org.societies.setting;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.name.Names;
-import net.catharos.lib.shank.AbstractModule;
+import org.shank.AbstractModule;
 import org.societies.bridge.Location;
 import org.societies.groups.Relation;
 import org.societies.groups.setting.CollectiveSettingProvider;

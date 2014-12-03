@@ -5,8 +5,8 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.typesafe.config.Config;
 import net.catharos.lib.core.util.CastSafe;
-import net.catharos.lib.shank.AbstractModule;
-import net.catharos.lib.shank.config.Settings;
+import org.shank.AbstractModule;
+import org.shank.config.Settings;
 
 import java.util.List;
 

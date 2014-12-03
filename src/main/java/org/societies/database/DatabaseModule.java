@@ -2,7 +2,7 @@ package org.societies.database;
 
 
 import com.typesafe.config.Config;
-import net.catharos.lib.shank.AbstractModule;
+import org.shank.AbstractModule;
 import org.societies.database.json.JSONModule;
 import org.societies.database.sql.SQLModule;
 
