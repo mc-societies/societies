@@ -42,6 +42,10 @@ class SQLLazyMemberHeart extends SQLMemberHeart {
 
         super.setGroup(group);
 
+        if (group == null) {
+            this.ranks.clear();
+        }
+
         if (group != null && !group.isMember(member)) {
             group.addMember(member);
         }
