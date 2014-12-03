@@ -1,11 +1,5 @@
 Home location server dependant
 
-MemberHeart -> SQLMemberHeart -> LazySQLMemberHeart
-            -> DefaultMemberHeart
-
-GroupHeart  -> SQLGroupHeart -> LazySQLGroupHeart
-            -> DefaultMemberHeart
-
 Beta release ------------------------------------------------------------------------------------
 Events:
     * GroupDropEvent

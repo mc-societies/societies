@@ -63,9 +63,6 @@ public class SQLModule extends AbstractServiceModule {
         bindNamedInstance("critical-batch-size", int.class, 100);
 
 
-
-
-
         bind(Queries.class);
 
         Key<SQLProvider> controller = get(SQLProvider.class);
@@ -82,17 +79,21 @@ public class SQLModule extends AbstractServiceModule {
             install(new FactoryModuleBuilder()
                     .implement(MemberHeart.class, SQLLazyMemberHeart.class)
                     .build(new TypeLiteral<ExtensionFactory<SQLMemberHeart, Member>>() {}));
+
+            install(new FactoryModuleBuilder()
+                    .implement(GroupHeart.class, SQLLazyGroupHeart.class)
+                    .build(new TypeLiteral<ExtensionFactory<SQLGroupHeart, Group>>() {}));
         } else {
             install(new FactoryModuleBuilder()
                     .implement(MemberHeart.class, SQLMemberHeart.class)
                     .build(new TypeLiteral<ExtensionFactory<SQLMemberHeart, Member>>() {}));
 
+            install(new FactoryModuleBuilder()
+                    .implement(GroupHeart.class, SQLGroupHeart.class)
+                    .build(new TypeLiteral<ExtensionFactory<SQLGroupHeart, Group>>() {}));
+
             bind(GroupCache.class).to(NaughtyGroupCache.class);
         }
-
-        install(new FactoryModuleBuilder()
-                .implement(GroupHeart.class, SQLGroupHeart.class)
-                .build(new TypeLiteral<ExtensionFactory<SQLGroupHeart, Group>>() {}));
 
 
         bind(GroupFactory.class).to(SQLGroupFactory.class);

@@ -85,7 +85,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
             }
         }
 
-        return Sets.union(ranks, Collections.singleton(defaultRank));
+        return Sets.union(Collections.singleton(defaultRank), ranks);
     }
 
     @Override

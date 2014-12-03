@@ -94,30 +94,14 @@ class SQLLazyMemberHeart extends SQLMemberHeart {
 
     @Override
     public void addRank(Rank rank) {
-        if (getGroup() == null) {
-            return;
-        }
-
-        if (ranks == null) {
-            ranks = getRanks();
-        }
-
-        ranks.add(rank);
+        getRanks().add(rank);
 
         super.addRank(rank);
     }
 
     @Override
     public boolean removeRank(Rank rank) {
-        if (getGroup() == null) {
-            return false;
-        }
-
-        if (ranks == null) {
-            ranks = getRanks();
-        }
-
-        ranks.remove(rank);
+        getRanks().remove(rank);
 
         return super.removeRank(rank);
     }
@@ -129,7 +113,7 @@ class SQLLazyMemberHeart extends SQLMemberHeart {
         }
 
         if (ranks == null) {
-            ranks = super.getRanks();
+            ranks = new THashSet<Rank>(super.getRanks());
         }
 
         return ranks;
