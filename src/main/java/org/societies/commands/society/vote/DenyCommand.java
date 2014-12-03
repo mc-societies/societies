@@ -17,6 +17,7 @@ import org.societies.groups.request.simple.Choices;
 @Sender(Member.class)
 public class DenyCommand implements Executor<Member> {
 
+    @SuppressWarnings("unchecked")
     @Override
     public void execute(CommandContext<Member> ctx, Member sender) {
         Request activeRequest = sender.getReceivedRequest();
@@ -26,7 +27,10 @@ public class DenyCommand implements Executor<Member> {
             return;
         }
 
-        sender.send("request.voted.deny");
-        activeRequest.vote(sender, Choices.DENY);
+        try {
+            activeRequest.vote(sender, Choices.DENY);
+            sender.send("request.voted.deny");
+        } catch (ClassCastException ignored) {
+        }
     }
 }

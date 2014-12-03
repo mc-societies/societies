@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 class SQLGroupDestructor extends AbstractPublisher implements GroupDestructor {
 
     @Inject
-    public SQLGroupDestructor(ListeningExecutorService service, SQLQueries queries) {
+    public SQLGroupDestructor(ListeningExecutorService service, Queries queries) {
         super(service, queries);
     }
 
@@ -25,7 +25,7 @@ class SQLGroupDestructor extends AbstractPublisher implements GroupDestructor {
         return service.submit(new Callable<Group>() {
             @Override
             public Group call() throws Exception {
-                Query query = queries.getQuery(SQLQueries.DROP_SOCIETY_BY_UUID);
+                Query query = queries.getQuery(Queries.DROP_SOCIETY_BY_UUID);
 
                 query.bind(1, UUIDGen.toByteArray(group.getUUID()));
 

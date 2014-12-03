@@ -17,6 +17,7 @@ import org.societies.groups.request.simple.Choices;
 @Sender(Member.class)
 public class AbstainCommand implements Executor<Member> {
 
+    @SuppressWarnings("unchecked")
     @Override
     public void execute(CommandContext<Member> ctx, Member sender) {
         Request activeRequest = sender.getReceivedRequest();
@@ -26,7 +27,10 @@ public class AbstainCommand implements Executor<Member> {
             return;
         }
 
-        sender.send("request.voted.abstain");
-        activeRequest.vote(sender, Choices.ABSTAIN);
+        try {
+            activeRequest.vote(sender, Choices.ABSTAIN);
+            sender.send("request.voted.abstain");
+        } catch (ClassCastException ignored) {
+        }
     }
 }

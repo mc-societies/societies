@@ -9,11 +9,11 @@ import net.catharos.lib.core.uuid.UUIDGen;
 import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 import org.jooq.*;
+import org.societies.api.group.SocietyException;
 import org.societies.bridge.ChatColor;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
 import org.societies.database.sql.layout.tables.records.RanksRecord;
 import org.societies.database.sql.layout.tables.records.SocietiesRecord;
-import org.societies.group.SocietyException;
 import org.societies.groups.Relation;
 import org.societies.groups.group.AbstractGroupHeart;
 import org.societies.groups.group.Group;
@@ -33,8 +33,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import static net.catharos.lib.core.uuid.UUIDGen.toByteArray;
-import static org.societies.database.sql.SQLQueries.SELECT_SOCIETY_MEMBERS;
-import static org.societies.database.sql.SQLQueries.SELECT_SOCIETY_RANKS;
+import static org.societies.database.sql.Queries.SELECT_SOCIETY_MEMBERS;
+import static org.societies.database.sql.Queries.SELECT_SOCIETY_RANKS;
 
 /**
  * Represents a SQLGroupHeart
@@ -42,7 +42,7 @@ import static org.societies.database.sql.SQLQueries.SELECT_SOCIETY_RANKS;
 public class SQLGroupHeart extends AbstractGroupHeart {
 
     private final Group group;
-    private final SQLQueries queries;
+    private final Queries queries;
     private final ListeningExecutorService service;
     private final MemberProvider memberProvider;
     private final RankFactory rankFactory;
@@ -52,7 +52,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
     protected SQLGroupHeart(@Assisted Group group,
                             @Named("verify") Setting<Boolean> verifySetting, Setting<Relation> relationSetting,
                             Map<String, Setting<Boolean>> rules, MemberProvider memberProvider, RankFactory rankFactory,
-                            SQLQueries queries, ListeningExecutorService service,
+                            Queries queries, ListeningExecutorService service,
                             @Named("predefined-ranks") Set<Rank> defaultRanks) {
         super(rules, verifySetting, relationSetting, group);
         this.group = group;
@@ -69,7 +69,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
 
     @Override
     public String getName() {
-        Select<Record1<String>> query = queries.getQuery(SQLQueries.SELECT_SOCIETY_NAME);
+        Select<Record1<String>> query = queries.getQuery(Queries.SELECT_SOCIETY_NAME);
         query.bind(1, getByteUUID());
 
         Record1<String> record = query.fetch().get(0);
@@ -78,7 +78,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
 
     @Override
     public String getTag() {
-        Select<Record1<String>> query = queries.getQuery(SQLQueries.SELECT_SOCIETY_TAG);
+        Select<Record1<String>> query = queries.getQuery(Queries.SELECT_SOCIETY_TAG);
         query.bind(1, getByteUUID());
 
         Record1<String> record = query.fetch().get(0);
@@ -87,7 +87,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
 
     @Override
     public DateTime getCreated() {
-        Select<Record1<Timestamp>> query = queries.getQuery(SQLQueries.SELECT_SOCIETY_CREATED);
+        Select<Record1<Timestamp>> query = queries.getQuery(Queries.SELECT_SOCIETY_CREATED);
         query.bind(1, getByteUUID());
 
         Record1<Timestamp> record = query.fetch().get(0);
@@ -148,7 +148,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
         service.submit(new Callable<GroupHeart>() {
             @Override
             public GroupHeart call() throws Exception {
-                Update<SocietiesRecord> query = queries.getQuery(SQLQueries.UPDATE_SOCIETY_TAG);
+                Update<SocietiesRecord> query = queries.getQuery(Queries.UPDATE_SOCIETY_TAG);
 
                 query.bind(1, tag);
                 query.bind(2, ChatColor.stripColor(tag));
@@ -166,7 +166,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
         service.submit(new Callable<GroupHeart>() {
             @Override
             public GroupHeart call() throws Exception {
-                Update<SocietiesRecord> query = queries.getQuery(SQLQueries.UPDATE_SOCIETY_NAME);
+                Update<SocietiesRecord> query = queries.getQuery(Queries.UPDATE_SOCIETY_NAME);
 
                 query.bind(1, name);
                 query.bind(2, UUIDGen.toByteArray(group.getUUID()));
@@ -182,7 +182,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
         service.submit(new Callable<GroupHeart>() {
             @Override
             public GroupHeart call() throws Exception {
-                Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_LAST_ACTIVE);
+                Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_LAST_ACTIVE);
 
                 query.bind(1, UUIDGen.toByteArray(group.getUUID()));
                 query.bind(2, new Timestamp(created.getMillis()));
@@ -208,7 +208,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
                 String name = rank.getName();
                 int priority = rank.getPriority();
 
-                Insert<RanksRecord> query = queries.getQuery(SQLQueries.INSERT_RANK);
+                Insert<RanksRecord> query = queries.getQuery(Queries.INSERT_RANK);
 
                 query.bind(1, uuid);
                 query.bind(2, name);
@@ -225,7 +225,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
         service.submit(new Callable<GroupHeart>() {
             @Override
             public GroupHeart call() throws Exception {
-                Insert query = queries.getQuery(SQLQueries.INSERT_SOCIETY_RANK);
+                Insert query = queries.getQuery(Queries.INSERT_SOCIETY_RANK);
                 query.bind(1, UUIDGen.toByteArray(group.getUUID()));
                 query.bind(2, UUIDGen.toByteArray(rank.getUUID()));
                 query.execute();
@@ -239,15 +239,15 @@ public class SQLGroupHeart extends AbstractGroupHeart {
         service.submit(new Callable<Rank>() {
             @Override
             public Rank call() throws Exception {
-                Query query = queries.getQuery(SQLQueries.DROP_RANK_IN_SOCIETIES);
+                Query query = queries.getQuery(Queries.DROP_RANK_IN_SOCIETIES);
                 query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
                 query.execute();
 
-                query = queries.getQuery(SQLQueries.DROP_RANK_IN_MEMBERS);
+                query = queries.getQuery(Queries.DROP_RANK_IN_MEMBERS);
                 query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
                 query.execute();
 
-                query = queries.getQuery(SQLQueries.DROP_RANK);
+                query = queries.getQuery(Queries.DROP_RANK);
                 query.bind(1, UUIDGen.toByteArray(rank.getUUID()));
                 query.execute();
                 return rank;

@@ -32,7 +32,7 @@ class SQLLazyMemberHeart extends SQLMemberHeart {
                               EventController events,
                               @Named("default-rank") Rank defaultRank,
                               GroupProvider groupProvider,
-                              SQLQueries queries, ListeningExecutorService service) {
+                              Queries queries, ListeningExecutorService service) {
         super(member, events, defaultRank, groupProvider, queries, service);
     }
 

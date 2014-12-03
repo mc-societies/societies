@@ -7,6 +7,7 @@ import org.societies.bridge.ChatColor;
 /**
  * Represents a MinecraftWidthProvider
  */
+//optimize
 public class MinecraftWidthProvider implements WidthProvider {
 
     private final TCharIntHashMap widths = new TCharIntHashMap();
@@ -24,14 +25,13 @@ public class MinecraftWidthProvider implements WidthProvider {
 
             int next = i + 1;
 
-            if (c == ChatColor.COLOR_CHAR && next < string.length) {
+            if (c == ChatColor.COLOR_CHAR && next < length) {
                 ChatColor color = ChatColor.getByChar(string[next]);
                 if (color != null) {
                     i++;
                     continue;
                 }
             }
-
 
             width += widthOf(c);
         }
@@ -52,12 +52,6 @@ public class MinecraftWidthProvider implements WidthProvider {
         return widths.get(c);
     }
 
-    public void addWidths(String characters, int width) {
-        for (char c : characters.toCharArray()) {
-            widths.put(c, width);
-        }
-    }
-
     {
         addWidths("i.:,;|!", 2);
         addWidths("l'", 3);
@@ -67,4 +61,11 @@ public class MinecraftWidthProvider implements WidthProvider {
         addWidths("@~", 7);
         addWidths(" ", 7);
     }
+
+    public void addWidths(String characters, int width) {
+        for (char c : characters.toCharArray()) {
+            widths.put(c, width);
+        }
+    }
+
 }

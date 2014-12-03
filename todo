@@ -1,5 +1,3 @@
-Create DefaultGroupFactory & SQLGroupFactory, probably you can remove some factories
-
 Home location server dependant
 
 MemberHeart -> SQLMemberHeart -> LazySQLMemberHeart

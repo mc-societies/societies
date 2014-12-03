@@ -17,14 +17,13 @@ import static org.societies.database.sql.layout.Tables.*;
  * Represents a SocietiesQueries
  */
 @Singleton
-class SQLQueries extends QueryProvider {
+class Queries extends QueryProvider {
 
     //================================================================================
     // Groups
     //================================================================================
 
     public static final QueryKey<Insert<SocietiesRecord>> INSERT_SOCIETY = QueryKey.create();
-
 
     public static final QueryKey<Update<SocietiesRecord>> UPDATE_SOCIETY_NAME = QueryKey.create();
     public static final QueryKey<Update<SocietiesRecord>> UPDATE_SOCIETY_TAG = QueryKey.create();
@@ -66,7 +65,6 @@ class SQLQueries extends QueryProvider {
 
 
     public static final QueryKey<Insert<RanksRecord>> INSERT_RANK = QueryKey.create();
-
     public static final QueryKey<Query> DROP_RANK = QueryKey.create();
 
 
@@ -124,7 +122,7 @@ class SQLQueries extends QueryProvider {
 
 
     @Inject
-    protected SQLQueries(DSLProvider provider) {
+    protected Queries(DSLProvider provider) {
         super(provider);
     }
 

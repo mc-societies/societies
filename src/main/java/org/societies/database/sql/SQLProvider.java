@@ -15,6 +15,7 @@ import org.jooq.Record1;
 import org.jooq.Result;
 import org.jooq.Select;
 import org.societies.api.PlayerResolver;
+import org.societies.api.member.MemberException;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
 import org.societies.database.sql.layout.tables.records.SocietiesRecord;
 import org.societies.groups.cache.GroupCache;
@@ -26,9 +27,6 @@ import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberFactory;
 import org.societies.groups.member.MemberProvider;
 import org.societies.groups.member.MemberPublisher;
-import org.societies.groups.rank.RankFactory;
-import org.societies.groups.setting.SettingProvider;
-import org.societies.member.MemberException;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -37,25 +35,22 @@ import java.util.UUID;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.Futures.transform;
-import static org.societies.database.sql.SQLQueries.*;
+import static org.societies.database.sql.Queries.*;
 
 /**
  * Represents a LoadingMemberProvider
  */
 class SQLProvider implements MemberProvider, GroupProvider {
 
-    private final SQLQueries queries;
+    private final Queries queries;
     private final ListeningExecutorService service;
 
     private final MemberPublisher memberPublisher;
 
     private final MemberFactory memberFactory;
     private final GroupFactory groupFactory;
-    private final RankFactory rankFactory;
 
     private final PlayerResolver playerResolver;
-    private final SettingProvider settingProvider;
-
 
     private final GroupCache groupCache;
     private final MemberCache memberCache;
@@ -64,15 +59,13 @@ class SQLProvider implements MemberProvider, GroupProvider {
     private Logger logger;
 
     @Inject
-    public SQLProvider(SQLQueries queries,
+    public SQLProvider(Queries queries,
                        ListeningExecutorService service,
                        PlayerResolver playerResolver,
                        MemberFactory memberFactory,
                        MemberPublisher memberPublisher,
                        GroupCache groupCache,
                        GroupFactory groupFactory,
-                       SettingProvider settingProvider,
-                       RankFactory rankFactory,
                        MemberCache memberCache) {
         this.queries = queries;
         this.service = service;
@@ -82,8 +75,6 @@ class SQLProvider implements MemberProvider, GroupProvider {
         this.memberPublisher = memberPublisher;
         this.groupCache = groupCache;
         this.groupFactory = groupFactory;
-        this.settingProvider = settingProvider;
-        this.rankFactory = rankFactory;
         this.memberCache = memberCache;
     }
 

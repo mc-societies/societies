@@ -18,8 +18,8 @@ import org.apache.logging.log4j.Logger;
 import org.societies.api.economy.EconomyParticipant;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupFactory;
-import org.societies.groups.member.Member;
 import org.societies.groups.group.GroupPublisher;
+import org.societies.groups.member.Member;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.validate.NameValidator;
 import org.societies.groups.validate.TagValidator;
@@ -132,5 +132,7 @@ public class CreateCommand implements Executor<Member> {
                 logger.catching(t);
             }
         });
+
+        ctx.put("future", future);
     }
 }

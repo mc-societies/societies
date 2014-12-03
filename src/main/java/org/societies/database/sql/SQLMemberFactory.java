@@ -25,14 +25,14 @@ public class SQLMemberFactory implements MemberFactory {
 
     private final SettingProvider settingProvider;
     private final ListeningExecutorService service;
-    private final SQLQueries queries;
+    private final Queries queries;
 
 
     @Inject
     public SQLMemberFactory(ExtensionFactory<Sender, UUID> senderFactory,
                             ExtensionFactory<SQLMemberHeart, Member> heartFactory,
                             Set<ExtensionRoller> extensions,
-                            SettingProvider settingProvider, ListeningExecutorService service, SQLQueries queries) {
+                            SettingProvider settingProvider, ListeningExecutorService service, Queries queries) {
         this.senderFactory = senderFactory;
         this.heartFactory = heartFactory;
         this.extensions = extensions;
@@ -49,7 +49,7 @@ public class SQLMemberFactory implements MemberFactory {
         DefaultParticipant participant = new DefaultParticipant(sender);
         SQLMemberHeart heart = heartFactory.create(member);
 
-        SQLSubject subject = new SQLSubject(uuid, settingProvider, queries, service, SQLQueries.INSERT_MEMBER_SETTING, SQLQueries.SELECT_MEMBER_SETTINGS);
+        SQLSubject subject = new SQLSubject(uuid, settingProvider, queries, service, Queries.INSERT_MEMBER_SETTING, Queries.SELECT_MEMBER_SETTINGS);
 
         member.setMemberHeart(heart);
         member.setSubject(subject);

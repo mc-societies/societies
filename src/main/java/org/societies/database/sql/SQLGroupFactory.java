@@ -24,13 +24,13 @@ public class SQLGroupFactory implements GroupFactory {
 
     private final SettingProvider settingProvider;
     private final ListeningExecutorService service;
-    private final SQLQueries queries;
+    private final Queries queries;
 
     @Inject
     public SQLGroupFactory(
             Provider<UUID> uuidProvider,
             GroupPublisher groupPublisher,
-            ExtensionFactory<SQLGroupHeart, Group> heartFactory, SettingProvider settingProvider, ListeningExecutorService service, SQLQueries queries) {
+            ExtensionFactory<SQLGroupHeart, Group> heartFactory, SettingProvider settingProvider, ListeningExecutorService service, Queries queries) {
         this.uuidProvider = uuidProvider;
         this.groupPublisher = groupPublisher;
         this.heartFactory = heartFactory;
@@ -59,7 +59,7 @@ public class SQLGroupFactory implements GroupFactory {
         GroupComposite group = new GroupComposite(uuid);
 
         SQLGroupHeart heart = heartFactory.create(group);
-        SQLSubject subject = new SQLSubject(uuid, settingProvider, queries, service, SQLQueries.INSERT_SOCIETY_SETTING, SQLQueries.SELECT_SOCIETY_SETTINGS);
+        SQLSubject subject = new SQLSubject(uuid, settingProvider, queries, service, Queries.INSERT_SOCIETY_SETTING, Queries.SELECT_SOCIETY_SETTINGS);
 
         group.setGroupHeart(heart);
         group.setSubject(subject);

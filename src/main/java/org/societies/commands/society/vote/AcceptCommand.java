@@ -17,6 +17,7 @@ import org.societies.groups.request.simple.Choices;
 @Sender(Member.class)
 public class AcceptCommand implements Executor<Member> {
 
+    @SuppressWarnings("unchecked")
     @Override
     public void execute(CommandContext<Member> ctx, Member sender) {
         Request activeRequest = sender.getReceivedRequest();
@@ -26,7 +27,11 @@ public class AcceptCommand implements Executor<Member> {
             return;
         }
 
-        sender.send("request.voted.accept");
-        activeRequest.vote(sender, Choices.ACCEPT);
+
+        try {
+            activeRequest.vote(sender, Choices.ACCEPT);
+            sender.send("request.voted.accept");
+        } catch (ClassCastException ignored) {
+        }
     }
 }

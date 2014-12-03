@@ -7,8 +7,8 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
 import org.societies.groups.group.Group;
-import org.societies.groups.member.Member;
 import org.societies.groups.group.GroupDestructor;
+import org.societies.groups.member.Member;
 
 /**
  * Represents a AbandonCommand

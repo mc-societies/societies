@@ -12,7 +12,7 @@ import org.societies.database.Database;
 /**
  * Represents a TablesService
  */
-public class MigrationService extends AbstractService {
+class MigrationService extends AbstractService {
 
     private final Database database;
     private final ClassLoader classLoader;

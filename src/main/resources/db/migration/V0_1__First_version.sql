@@ -3,9 +3,9 @@
 -- Model: New Model    Version: 1.0
 -- MySQL Workbench Forward Engineering
 
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+SET @OLD_UNIQUE_CHECKS = @@UNIQUE_CHECKS, UNIQUE_CHECKS = 0;
+SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0;
+SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
 -- Schema societies
@@ -14,23 +14,26 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema societies
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `societies` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
-USE `societies` ;
+CREATE SCHEMA IF NOT EXISTS `societies`
+  DEFAULT CHARACTER SET utf8
+  COLLATE utf8_general_ci;
+USE `societies`;
 
 -- -----------------------------------------------------
 -- Table `societies`.`societies`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`societies` (
-  `uuid` VARBINARY(16) NOT NULL,
-  `name` VARCHAR(45) NULL,
-  `tag` VARCHAR(45) NULL,
-  `clean_tag` VARCHAR(45) NULL,
-  `created` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `uuid`      VARBINARY(16) NOT NULL,
+  `name`      VARCHAR(45)   NULL,
+  `tag`       VARCHAR(45)   NULL,
+  `clean_tag` VARCHAR(45)   NULL,
+  `created`   TIMESTAMP     NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`uuid`),
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   UNIQUE INDEX `tag_UNIQUE` (`tag` ASC),
-  UNIQUE INDEX `clean_tag_UNIQUE` (`clean_tag` ASC))
+  UNIQUE INDEX `clean_tag_UNIQUE` (`clean_tag` ASC)
+)
   ENGINE = InnoDB;
 
 
@@ -38,10 +41,10 @@ CREATE TABLE IF NOT EXISTS `societies`.`societies` (
 -- Table `societies`.`members`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`members` (
-  `uuid` VARBINARY(16) NOT NULL,
-  `created` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  `society` VARBINARY(16) NULL DEFAULT NULL,
-  `lastActive` TIMESTAMP NULL,
+  `uuid`       VARBINARY(16) NOT NULL,
+  `created`    TIMESTAMP     NULL DEFAULT CURRENT_TIMESTAMP,
+  `society`    VARBINARY(16) NULL DEFAULT NULL,
+  `lastActive` TIMESTAMP     NULL,
   PRIMARY KEY (`uuid`),
   INDEX `fk_members_societies1_idx` (`society` ASC),
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC),
@@ -49,7 +52,8 @@ CREATE TABLE IF NOT EXISTS `societies`.`members` (
   FOREIGN KEY (`society`)
   REFERENCES `societies`.`societies` (`uuid`)
     ON DELETE SET NULL
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
   ENGINE = InnoDB;
 
 
@@ -57,9 +61,9 @@ CREATE TABLE IF NOT EXISTS `societies`.`members` (
 -- Table `societies`.`relations`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`relations` (
-  `society` VARBINARY(16) NOT NULL,
+  `society`  VARBINARY(16) NOT NULL,
   `society2` VARBINARY(16) NOT NULL,
-  `type` SMALLINT NULL,
+  `type`     SMALLINT      NULL,
   PRIMARY KEY (`society`, `society2`),
   INDEX `fk_societies_has_societies_societies2_idx` (`society2` ASC),
   INDEX `fk_societies_has_societies_societies1_idx` (`society` ASC),
@@ -72,7 +76,8 @@ CREATE TABLE IF NOT EXISTS `societies`.`relations` (
   FOREIGN KEY (`society2`)
   REFERENCES `societies`.`societies` (`uuid`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
   ENGINE = InnoDB;
 
 
@@ -80,11 +85,12 @@ CREATE TABLE IF NOT EXISTS `societies`.`relations` (
 -- Table `societies`.`ranks`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`ranks` (
-  `uuid` VARBINARY(16) NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
-  `priority` SMALLINT NOT NULL,
+  `uuid`     VARBINARY(16) NOT NULL,
+  `name`     VARCHAR(45)   NOT NULL,
+  `priority` SMALLINT      NOT NULL,
   PRIMARY KEY (`uuid`, `name`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+)
   ENGINE = InnoDB;
 
 
@@ -93,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `societies`.`ranks` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`members_ranks` (
   `member` VARBINARY(16) NOT NULL,
-  `rank` VARBINARY(16) NOT NULL,
+  `rank`   VARBINARY(16) NOT NULL,
   PRIMARY KEY (`member`, `rank`),
   INDEX `fk_members_has_ranks_ranks1_idx` (`rank` ASC),
   INDEX `fk_members_has_ranks_members1_idx` (`member` ASC),
@@ -106,7 +112,8 @@ CREATE TABLE IF NOT EXISTS `societies`.`members_ranks` (
   FOREIGN KEY (`rank`)
   REFERENCES `societies`.`ranks` (`uuid`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
   ENGINE = InnoDB;
 
 
@@ -115,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `societies`.`members_ranks` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`societies_ranks` (
   `society` VARBINARY(16) NOT NULL,
-  `rank` VARBINARY(16) NOT NULL,
+  `rank`    VARBINARY(16) NOT NULL,
   PRIMARY KEY (`society`, `rank`),
   INDEX `fk_societies_has_ranks_ranks2_idx` (`rank` ASC),
   INDEX `fk_societies_has_ranks_societies2_idx` (`society` ASC),
@@ -128,7 +135,8 @@ CREATE TABLE IF NOT EXISTS `societies`.`societies_ranks` (
   FOREIGN KEY (`rank`)
   REFERENCES `societies`.`ranks` (`uuid`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
   ENGINE = InnoDB;
 
 
@@ -136,10 +144,10 @@ CREATE TABLE IF NOT EXISTS `societies`.`societies_ranks` (
 -- Table `societies`.`societies_settings`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`societies_settings` (
-  `subject_uuid` VARBINARY(16) NOT NULL,
-  `target_uuid` VARBINARY(16) NOT NULL,
-  `setting` SMALLINT UNSIGNED NOT NULL,
-  `value` VARBINARY(64) NULL,
+  `subject_uuid` VARBINARY(16)     NOT NULL,
+  `target_uuid`  VARBINARY(16)     NOT NULL,
+  `setting`      SMALLINT UNSIGNED NOT NULL,
+  `value`        VARBINARY(64)     NULL,
   PRIMARY KEY (`subject_uuid`, `setting`, `target_uuid`),
   INDEX `fk_socieites_settings_societies1_idx` (`subject_uuid` ASC),
   INDEX `fk_societies_settings_societies1_idx` (`target_uuid` ASC),
@@ -152,7 +160,8 @@ CREATE TABLE IF NOT EXISTS `societies`.`societies_settings` (
   FOREIGN KEY (`target_uuid`)
   REFERENCES `societies`.`societies` (`uuid`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
   ENGINE = InnoDB;
 
 
@@ -160,10 +169,10 @@ CREATE TABLE IF NOT EXISTS `societies`.`societies_settings` (
 -- Table `societies`.`ranks_settings`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`ranks_settings` (
-  `subject_uuid` VARBINARY(16) NOT NULL,
-  `target_uuid` VARBINARY(16) NOT NULL,
-  `setting` SMALLINT UNSIGNED NOT NULL,
-  `value` VARBINARY(64) NULL,
+  `subject_uuid` VARBINARY(16)     NOT NULL,
+  `target_uuid`  VARBINARY(16)     NOT NULL,
+  `setting`      SMALLINT UNSIGNED NOT NULL,
+  `value`        VARBINARY(64)     NULL,
   PRIMARY KEY (`subject_uuid`, `target_uuid`, `setting`),
   INDEX `fk_ranks_settings_ranks1_idx` (`subject_uuid` ASC),
   INDEX `fk_ranks_settings_ranks2_idx` (`target_uuid` ASC),
@@ -176,7 +185,8 @@ CREATE TABLE IF NOT EXISTS `societies`.`ranks_settings` (
   FOREIGN KEY (`target_uuid`)
   REFERENCES `societies`.`ranks` (`uuid`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
   ENGINE = InnoDB;
 
 
@@ -184,10 +194,10 @@ CREATE TABLE IF NOT EXISTS `societies`.`ranks_settings` (
 -- Table `societies`.`member_settings`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`member_settings` (
-  `subject_uuid` VARBINARY(16) NOT NULL,
-  `target_uuid` VARBINARY(16) NOT NULL,
-  `setting` SMALLINT UNSIGNED NOT NULL,
-  `value` VARBINARY(64) NULL,
+  `subject_uuid` VARBINARY(16)     NOT NULL,
+  `target_uuid`  VARBINARY(16)     NOT NULL,
+  `setting`      SMALLINT UNSIGNED NOT NULL,
+  `value`        VARBINARY(64)     NULL,
   PRIMARY KEY (`subject_uuid`, `target_uuid`, `setting`),
   INDEX `fk_societies_members_members1_idx` (`subject_uuid` ASC),
   INDEX `fk_societies_members_members2_idx` (`target_uuid` ASC),
@@ -200,7 +210,8 @@ CREATE TABLE IF NOT EXISTS `societies`.`member_settings` (
   FOREIGN KEY (`target_uuid`)
   REFERENCES `societies`.`members` (`uuid`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
   ENGINE = InnoDB;
 
 
@@ -210,10 +221,11 @@ CREATE TABLE IF NOT EXISTS `societies`.`member_settings` (
 CREATE TABLE IF NOT EXISTS `societies`.`societies_locks` (
   `id` SMALLINT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC)
+)
   ENGINE = InnoDB;
 
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+SET SQL_MODE = @OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;

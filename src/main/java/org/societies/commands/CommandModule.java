@@ -7,8 +7,8 @@ import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
-import gnu.trove.set.hash.THashSet;
 import net.catharos.lib.core.command.*;
+import net.catharos.lib.core.command.builder.GroupBuilder;
 import net.catharos.lib.core.command.format.pagination.DefaultPaginator;
 import net.catharos.lib.core.command.format.pagination.Paginator;
 import net.catharos.lib.core.command.parser.ArgumentParser;
@@ -28,12 +28,30 @@ import org.societies.LocationParser;
 import org.societies.SocietiesModule;
 import org.societies.bridge.Location;
 import org.societies.bridge.Player;
-import org.societies.commands.society.SocietyCommand;
+import org.societies.commands.society.*;
+import org.societies.commands.society.balance.BalanceCommand;
+import org.societies.commands.society.balance.DepositCommand;
+import org.societies.commands.society.balance.WithdrawCommand;
+import org.societies.commands.society.home.HomeCommand;
+import org.societies.commands.society.promote.DemoteCommand;
+import org.societies.commands.society.promote.PromoteCommand;
+import org.societies.commands.society.rank.RankCommand;
+import org.societies.commands.society.relation.AlliesCommand;
+import org.societies.commands.society.relation.RivalsCommand;
+import org.societies.commands.society.trust.DistrustCommand;
+import org.societies.commands.society.trust.TrustCommand;
+import org.societies.commands.society.verify.DisproveCommand;
+import org.societies.commands.society.verify.VerifyCommand;
+import org.societies.commands.society.vote.AbstainCommand;
+import org.societies.commands.society.vote.AcceptCommand;
+import org.societies.commands.society.vote.CancelCommand;
+import org.societies.commands.society.vote.DenyCommand;
 import org.societies.groups.command.GroupParser;
 import org.societies.groups.command.MemberParser;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 
+import java.util.Collections;
 import java.util.Set;
 
 import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
@@ -45,6 +63,56 @@ import static com.google.inject.name.Names.named;
  * Represents a CommandModule
  */
 public class CommandModule extends AbstractModule {
+
+    private final Class[] commands = new Class[]{
+            CreateCommand.class,
+            ListCommand.class,
+
+            ProfileCommand.class,
+            LookupCommand.class,
+
+            JoinCommand.class,
+            InviteCommand.class,
+
+            CoordsCommand.class,
+            VitalsCommand.class,
+            RosterCommand.class,
+
+            TrustCommand.class,
+            DistrustCommand.class,
+            PromoteCommand.class,
+            DemoteCommand.class,
+
+            AlliancesCommand.class,
+            RivalriesCommand.class,
+
+            FFCommand.class,
+            GroupFFCommand.class,
+            TagCommand.class,
+            KickCommand.class,
+            LeaveCommand.class,
+
+            AlliesCommand.class,
+            RivalsCommand.class,
+
+            HomeCommand.class,
+            RankCommand.class,
+
+            BalanceCommand.class,
+            DepositCommand.class,
+            WithdrawCommand.class,
+
+            AcceptCommand.class,
+            DenyCommand.class,
+            AbstainCommand.class,
+            CancelCommand.class,
+
+            VerifyCommand.class,
+            DisproveCommand.class,
+
+            ReloadCommand.class,
+            BackupCommand.class
+    };
 
     private static final TypeLiteral<Executor<Sender>> EXECUTOR_TYPE = new TypeLiteral<Executor<Sender>>() {};
 
@@ -67,7 +135,6 @@ public class CommandModule extends AbstractModule {
         parsers().addBinding(Location.class).to(LocationParser.class);
 
         // Member parser
-//                bind(new TypeLiteral<ArgumentParser<SocietyMember>>() {}).to(TargetParser.class);
         parsers().addBinding(Sender.class).to(TargetParser.class);
         parsers().addBinding(Member.class).to(new TypeLiteral<MemberParser>() {});
         parsers().addBinding(Player.class).to(new TypeLiteral<MemberParser>() {});
@@ -108,15 +175,16 @@ public class CommandModule extends AbstractModule {
 
     @Provides
     @Named("commands")
-    public Set<Command<Sender>> provideCommand(CommandAnalyser<Sender> analyser) {
-        Set<Command<Sender>> commands = new THashSet<Command<Sender>>();
+    public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, CommandAnalyser<Sender> analyser) {
 
-        commands.add(analyser.analyse(SocietyCommand.class));
+        GroupCommand<Sender> group = builder.identifier("societies").name("societies").build();
 
+        for (Class<?> clazz : this.commands) {
+            group.addChild(analyser.analyse(clazz));
+        }
 
-        return commands;
+        return Collections.<Command<Sender>>singleton(group);
     }
-
 
     public MapBinder<Class<?>, ArgumentParser<?>> parsers() {
         return newMapBinder(binder(),

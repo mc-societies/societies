@@ -6,8 +6,8 @@ import com.google.inject.Inject;
 import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Insert;
 import org.societies.database.sql.layout.tables.records.RanksRecord;
-import org.societies.groups.rank.RankPublisher;
 import org.societies.groups.rank.Rank;
+import org.societies.groups.rank.RankPublisher;
 
 import java.util.concurrent.Callable;
 
@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 class SQLRankPublisher extends AbstractPublisher implements RankPublisher {
 
     @Inject
-    public SQLRankPublisher(ListeningExecutorService service, SQLQueries queries) {
+    public SQLRankPublisher(ListeningExecutorService service, Queries queries) {
         super(service, queries);
     }
 
@@ -31,7 +31,7 @@ class SQLRankPublisher extends AbstractPublisher implements RankPublisher {
                 String name = rank.getName();
                 int priority = rank.getPriority();
 
-                Insert<RanksRecord> query = queries.getQuery(SQLQueries.INSERT_RANK);
+                Insert<RanksRecord> query = queries.getQuery(Queries.INSERT_RANK);
 
                 query.bind(1, uuid);
                 query.bind(2, name);

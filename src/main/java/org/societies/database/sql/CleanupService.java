@@ -18,14 +18,14 @@ import java.util.concurrent.TimeUnit;
 class CleanupService extends AbstractService {
 
     private final long memberMillis;
-    private final SQLQueries queries;
+    private final Queries queries;
     private final Database database;
 
     @InjectLogger
     private Logger logger;
 
     @Inject
-    public CleanupService(SQLQueries queries, Database database, Config config) {
+    public CleanupService(Queries queries, Database database, Config config) {
         this.queries = queries;
         this.database = database;
         this.memberMillis = config.getDuration("purge.inactive-members", TimeUnit.MILLISECONDS);
@@ -36,18 +36,18 @@ class CleanupService extends AbstractService {
         long current = System.currentTimeMillis();
         Query query;
 
-        query = queries.getQuery(SQLQueries.DROP_INACTIVE_MEMBERS);
+        query = queries.getQuery(Queries.DROP_INACTIVE_MEMBERS);
         query.bind(1, new Timestamp(current - memberMillis));
         int members = query.execute();
         logger.info("Dropped {0} members because of inactivity.", members);
 
 
-        query = queries.getQuery(SQLQueries.DROP_ORPHAN_SOCIETIES);
+        query = queries.getQuery(Queries.DROP_ORPHAN_SOCIETIES);
         int societies = query.execute();
         logger.info("Dropped {0} societies because of inactivity.", societies);
 
         // Delete rank orphans
-        query = queries.getQuery(SQLQueries.DROP_RANK_ORPHANS);
+        query = queries.getQuery(Queries.DROP_RANK_ORPHANS);
         int ranks = query.execute();
         logger.info("Dropped {0} ranks because of inactivity.", ranks);
     }

@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 class SQLDestructor extends AbstractPublisher implements MemberDestructor {
 
     @Inject
-    public SQLDestructor(ListeningExecutorService service, SQLQueries queries) {
+    public SQLDestructor(ListeningExecutorService service, Queries queries) {
         super(service, queries);
     }
 
@@ -25,7 +25,7 @@ class SQLDestructor extends AbstractPublisher implements MemberDestructor {
         return service.submit(new Callable<Member>() {
             @Override
             public Member call() throws Exception {
-                Query query = queries.getQuery(SQLQueries.DROP_MEMBER_BY_UUID);
+                Query query = queries.getQuery(Queries.DROP_MEMBER_BY_UUID);
 
                 query.bind(1, UUIDGen.toByteArray(member.getUUID()));
 

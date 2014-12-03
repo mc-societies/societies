@@ -6,15 +6,15 @@ import net.catharos.lib.shank.logging.InjectLogger;
 import net.catharos.lib.shank.service.AbstractService;
 import net.catharos.lib.shank.service.lifecycle.LifecycleContext;
 import org.apache.logging.log4j.Logger;
-import org.societies.groups.rank.RankPublisher;
 import org.societies.groups.rank.Rank;
+import org.societies.groups.rank.RankPublisher;
 
 import java.util.Set;
 
 /**
  * Represents a RankService
  */
-public class RankService extends AbstractService {
+class RankService extends AbstractService {
 
     private final Set<Rank> ranks;
     private final RankPublisher rankPublisher;

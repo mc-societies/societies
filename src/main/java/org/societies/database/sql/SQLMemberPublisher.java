@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
 class SQLMemberPublisher extends AbstractPublisher implements MemberPublisher {
 
     @Inject
-    public SQLMemberPublisher(ListeningExecutorService service, SQLQueries queries) {
+    public SQLMemberPublisher(ListeningExecutorService service, Queries queries) {
         super(service, queries);
     }
 
@@ -26,7 +26,7 @@ class SQLMemberPublisher extends AbstractPublisher implements MemberPublisher {
         return service.submit(new Callable<Member>() {
             @Override
             public Member call() throws Exception {
-                Insert<MembersRecord> query = queries.getQuery(SQLQueries.INSERT_MEMBER);
+                Insert<MembersRecord> query = queries.getQuery(Queries.INSERT_MEMBER);
 
                 query.bind(1, UUIDGen.toByteArray(member.getUUID()));
 

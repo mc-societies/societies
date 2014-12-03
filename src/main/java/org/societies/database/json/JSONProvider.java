@@ -29,11 +29,7 @@ import org.societies.api.PlayerResolver;
 import org.societies.bridge.ChatColor;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;
-import org.societies.groups.member.Member;
-import org.societies.groups.member.MemberFactory;
-import org.societies.groups.member.MemberProvider;
-import org.societies.groups.member.MemberDestructor;
-import org.societies.groups.member.MemberPublisher;
+import org.societies.groups.member.*;
 
 import javax.annotation.Nullable;
 import java.io.File;

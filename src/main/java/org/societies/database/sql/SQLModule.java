@@ -62,7 +62,7 @@ public class SQLModule extends AbstractServiceModule {
         bind(DSLProvider.class).to(RemoteDatabase.class);
 
 
-        bind(SQLQueries.class);
+        bind(Queries.class);
 
         Key<SQLProvider> controller = get(SQLProvider.class);
 

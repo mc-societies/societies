@@ -26,7 +26,7 @@ import java.util.UUID;
  */
 public class SQLSubject extends AbstractSubject {
 
-    private final SQLQueries queries;
+    private final Queries queries;
     private final UUID uuid;
     private final SettingProvider settingProvider;
     private final ListeningExecutorService service;
@@ -38,7 +38,7 @@ public class SQLSubject extends AbstractSubject {
 
     protected SQLSubject(UUID uuid,
                          SettingProvider settingProvider,
-                         SQLQueries queries, ListeningExecutorService service,
+                         Queries queries, ListeningExecutorService service,
                          QueryKey<? extends Insert> insert,
                          QueryKey<Select<Record3<byte[], UShort, byte[]>>> select) {
         this.queries = queries;

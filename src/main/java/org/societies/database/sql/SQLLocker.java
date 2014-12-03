@@ -22,7 +22,7 @@ class SQLLocker extends AbstractPublisher implements Locker {
 //todo    private final TIntObjectHashMap<ReentrantLock> locks = new TIntObjectHashMap<ReentrantLock>();
 
     @Inject
-    public SQLLocker(ListeningExecutorService service, SQLQueries queries) {
+    public SQLLocker(ListeningExecutorService service, Queries queries) {
         super(service, queries);
     }
 
@@ -31,7 +31,7 @@ class SQLLocker extends AbstractPublisher implements Locker {
         return service.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                Query query = queries.getQuery(SQLQueries.INSERT_LOCK);
+                Query query = queries.getQuery(Queries.INSERT_LOCK);
 
                 query.bind(1, id);
 
@@ -46,7 +46,7 @@ class SQLLocker extends AbstractPublisher implements Locker {
         return service.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                Query query = queries.getQuery(SQLQueries.DROP_LOCK);
+                Query query = queries.getQuery(Queries.DROP_LOCK);
 
                 query.bind(1, id);
 
@@ -60,7 +60,7 @@ class SQLLocker extends AbstractPublisher implements Locker {
         return service.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                Select query = queries.getQuery(SQLQueries.SELECT_LOCK);
+                Select query = queries.getQuery(Queries.SELECT_LOCK);
 
                 query.bind(1, id);
 

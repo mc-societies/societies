@@ -11,6 +11,7 @@ import net.catharos.lib.core.uuid.UUIDGen;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.jooq.*;
+import org.societies.api.member.MemberException;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
 import org.societies.database.sql.layout.tables.records.RanksRecord;
 import org.societies.groups.event.EventController;
@@ -21,7 +22,6 @@ import org.societies.groups.member.AbstractMemberHeart;
 import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberHeart;
 import org.societies.groups.rank.Rank;
-import org.societies.member.MemberException;
 
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -42,7 +42,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
     private final Rank defaultRank;
     private final GroupProvider groupProvider;
 
-    private final SQLQueries queries;
+    private final Queries queries;
     private final ListeningExecutorService service;
 
     @Inject
@@ -50,7 +50,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
                           EventController events,
                           @Named("default-rank") Rank defaultRank,
                           GroupProvider groupProvider,
-                          SQLQueries queries, ListeningExecutorService service) {
+                          Queries queries, ListeningExecutorService service) {
         super(events);
         this.defaultRank = defaultRank;
         this.groupProvider = groupProvider;
@@ -73,7 +73,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
 
         THashSet<Rank> ranks = new THashSet<Rank>();
 
-        Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_RANKS);
+        Select<Record1<byte[]>> query = queries.getQuery(Queries.SELECT_MEMBER_RANKS);
         query.bind(1, getByteUUID());
 
         for (Record1<byte[]> rankRecord : query.fetch()) {
@@ -102,7 +102,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
                 String name = rank.getName();
                 int priority = rank.getPriority();
 
-                Insert<RanksRecord> query = queries.getQuery(SQLQueries.INSERT_RANK);
+                Insert<RanksRecord> query = queries.getQuery(Queries.INSERT_RANK);
 
                 query.bind(1, uuid);
                 query.bind(2, name);
@@ -118,7 +118,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
         service.submit(new Callable<Member>() {
             @Override
             public Member call() throws Exception {
-                Insert query = queries.getQuery(SQLQueries.INSERT_MEMBER_RANK);
+                Insert query = queries.getQuery(Queries.INSERT_MEMBER_RANK);
                 query.bind(1, getByteUUID());
                 query.bind(2, toByteArray(rank.getUUID()));
                 query.execute();
@@ -139,7 +139,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
             @Override
             public Member call() throws Exception {
                 Query query;
-                query = queries.getQuery(SQLQueries.DROP_MEMBER_RANK);
+                query = queries.getQuery(Queries.DROP_MEMBER_RANK);
                 query.bind(1, getByteUUID());
                 query.bind(2, toByteArray(rank.getUUID()));
                 query.execute();
@@ -152,7 +152,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
 
     @Override
     public DateTime getLastActive() {
-        Select<Record1<Timestamp>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_LAST_ACTIVE);
+        Select<Record1<Timestamp>> query = queries.getQuery(Queries.SELECT_MEMBER_LAST_ACTIVE);
         query.bind(1, getByteUUID());
 
         Record1<Timestamp> record = query.fetch().get(0);
@@ -164,7 +164,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
         service.submit(new Callable<Member>() {
             @Override
             public Member call() throws Exception {
-                Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_LAST_ACTIVE);
+                Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_LAST_ACTIVE);
 
                 query.bind(1, getByteUUID());
                 query.bind(2, new Timestamp(lastActive.getMillis()));
@@ -177,7 +177,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
 
     @Override
     public DateTime getCreated() {
-        Select<Record1<Timestamp>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_CREATED);
+        Select<Record1<Timestamp>> query = queries.getQuery(Queries.SELECT_MEMBER_CREATED);
         query.bind(1, getByteUUID());
 
         Record1<Timestamp> record = query.fetch().get(0);
@@ -189,7 +189,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
         service.submit(new Callable<Member>() {
             @Override
             public Member call() throws Exception {
-                Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_CREATED);
+                Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_CREATED);
 
                 query.bind(1, getByteUUID());
                 query.bind(2, new Timestamp(created.getMillis()));
@@ -203,7 +203,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
     @Override
     @Nullable
     public GroupHeart getGroup() {
-        Select<Record1<byte[]>> query = queries.getQuery(SQLQueries.SELECT_MEMBER_SOCIETY);
+        Select<Record1<byte[]>> query = queries.getQuery(Queries.SELECT_MEMBER_SOCIETY);
         query.bind(1, getByteUUID());
 
         Result<Record1<byte[]>> result = query.fetch();
@@ -240,7 +240,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
         service.submit(new Callable<Member>() {
             @Override
             public Member call() throws Exception {
-                Update<MembersRecord> query = queries.getQuery(SQLQueries.UPDATE_MEMBER_SOCIETY);
+                Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_SOCIETY);
 
                 UUID uuid = null;
 

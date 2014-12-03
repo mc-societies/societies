@@ -4,6 +4,7 @@ import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.typesafe.config.Config;
+import net.catharos.lib.core.util.CastSafe;
 import net.catharos.lib.shank.AbstractModule;
 import net.catharos.lib.shank.config.Settings;
 
@@ -66,14 +67,18 @@ public class ConfigModule extends AbstractModule {
     }
 
     public void bindNamed(String key, String setting, Class clazz) {
-        bind(Key.get(clazz, Names.named(key))).toInstance(config.getAnyRef(setting));
+        bind(Key.get(clazz, Names.named(key)), setting);
+    }
+
+    public void bind(Key key, String setting) {
+        bind(CastSafe.<Key<Object>>toGeneric(key)).toInstance(config.getAnyRef(setting));
     }
 
     public void bind(String key, String setting, Class clazz) {
-        bind(Key.get(clazz, Settings.create(key))).toInstance(config.getAnyRef(setting));
+        bind(Key.get(clazz, Settings.create(key)), setting);
     }
 
     public void bind(String key, String setting, TypeLiteral clazz) {
-        bind(Key.get(clazz, Settings.create(key))).toInstance(config.getAnyRef(setting));
+        bind(Key.get(clazz, Settings.create(key)), setting);
     }
 }

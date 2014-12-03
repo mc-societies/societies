@@ -27,7 +27,7 @@ class SQLGroupPublisher extends AbstractPublisher implements GroupPublisher {
     private final GroupFactory groupFactory;
 
     @Inject
-    public SQLGroupPublisher(Provider<UUID> uuid, ListeningExecutorService service, SQLQueries queries, GroupFactory groupFactory) {
+    public SQLGroupPublisher(Provider<UUID> uuid, ListeningExecutorService service, Queries queries, GroupFactory groupFactory) {
         super(service, queries);
         this.uuid = uuid;
         this.groupFactory = groupFactory;
@@ -40,7 +40,7 @@ class SQLGroupPublisher extends AbstractPublisher implements GroupPublisher {
             public Group call() throws Exception {
                 Group group = groupFactory.create(uuid, name, tag, created);
 
-                Insert<SocietiesRecord> query = queries.getQuery(SQLQueries.INSERT_SOCIETY);
+                Insert<SocietiesRecord> query = queries.getQuery(Queries.INSERT_SOCIETY);
 
                 query.bind(1, UUIDGen.toByteArray(uuid));
                 query.bind(2, name);

@@ -14,7 +14,10 @@ import static org.societies.bridge.Materials.*;
  */
 public class PlayerState {
     private Player player;
+
+
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.#");
+
     private static final ChatColor[] ARMOR_ORDER = new ChatColor[]{ChatColor.BLACK, ChatColor.GOLD, ChatColor.YELLOW, ChatColor.WHITE, ChatColor.GRAY, ChatColor.AQUA, ChatColor.RED};
 
     public PlayerState(Player player) {
