@@ -9,6 +9,7 @@ import net.catharos.lib.core.uuid.UUIDGen;
 import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 import org.jooq.*;
+import org.jooq.types.UShort;
 import org.societies.api.group.SocietyException;
 import org.societies.bridge.ChatColor;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
@@ -23,6 +24,11 @@ import org.societies.groups.member.MemberProvider;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.rank.RankFactory;
 import org.societies.groups.setting.Setting;
+import org.societies.groups.setting.SettingException;
+import org.societies.groups.setting.SettingProvider;
+import org.societies.groups.setting.subject.Subject;
+import org.societies.groups.setting.target.SimpleTarget;
+import org.societies.groups.setting.target.Target;
 
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -47,13 +53,14 @@ public class SQLGroupHeart extends AbstractGroupHeart {
     private final MemberProvider memberProvider;
     private final RankFactory rankFactory;
     private final Set<Rank> defaultRanks;
+    private final SettingProvider settingProvider;
 
     @Inject
     protected SQLGroupHeart(@Assisted Group group,
                             @Named("verify") Setting<Boolean> verifySetting, Setting<Relation> relationSetting,
                             Map<String, Setting<Boolean>> rules, MemberProvider memberProvider, RankFactory rankFactory,
                             Queries queries, ListeningExecutorService service,
-                            @Named("predefined-ranks") Set<Rank> defaultRanks) {
+                            @Named("predefined-ranks") Set<Rank> defaultRanks, SettingProvider settingProvider) {
         super(rules, verifySetting, relationSetting, group);
         this.group = group;
         this.queries = queries;
@@ -61,6 +68,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
         this.memberProvider = memberProvider;
         this.rankFactory = rankFactory;
         this.defaultRanks = defaultRanks;
+        this.settingProvider = settingProvider;
     }
 
     private byte[] getByteUUID() {
@@ -114,13 +122,46 @@ public class SQLGroupHeart extends AbstractGroupHeart {
         Short priority = rankRecord.value3();
 
         Rank rank = rankFactory.create(uuid, name, priority, group);
-//        rank.unlink(false);
+        rank.unlink();
 
-        //fixme
-//        loadSettings(rank, rankRecord.value1(), queries.getQuery(SELECT_RANK_SETTINGS));
+        loadSettings(rank, rankRecord.value1(), queries.getQuery(Queries.SELECT_RANK_SETTINGS));
 
         rank.link();
         return rank;
+    }
+
+    //beautify
+    private void loadSettings(Subject subject, byte[] uuid, Select<Record3<byte[], UShort, byte[]>> query) {
+        query.bind(1, uuid);
+
+        for (Record3<byte[], UShort, byte[]> settingRecord : query.fetch()) {
+            int settingID = settingRecord.value2().intValue();
+
+            Setting setting = settingProvider.getSetting(settingID);
+
+            if (setting == null) {
+                System.out.println("Failed to convert setting " + settingID);
+                continue;
+            }
+
+            byte[] targetUUID = settingRecord.value1();
+            Target target;
+
+            if (targetUUID == null) {
+                target = subject;
+            } else {
+                target = new SimpleTarget(UUIDGen.toUUID(targetUUID));
+            }
+
+            Object value;
+            try {
+                value = setting.convert(subject, target, settingRecord.value3());
+            } catch (SettingException e) {
+                continue;
+            }
+
+            subject.set(setting, target, value);
+        }
     }
 
     @Override
