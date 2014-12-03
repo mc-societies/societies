@@ -94,10 +94,10 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
             return;
         }
 
-        //beautify duplicate
-        service.submit(new Callable<Rank>() {
+        service.submit(new Callable<Member>() {
             @Override
-            public Rank call() throws Exception {
+            public Member call() throws Exception {
+                //beautify duplicate
                 byte[] uuid = UUIDGen.toByteArray(rank.getUUID());
                 String name = rank.getName();
                 int priority = rank.getPriority();
@@ -111,14 +111,8 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
                 query.bind(5, name);
                 query.bind(6, priority);
                 query.execute();
-                return rank;
-            }
-        });
 
-        service.submit(new Callable<Member>() {
-            @Override
-            public Member call() throws Exception {
-                Insert query = queries.getQuery(Queries.INSERT_MEMBER_RANK);
+                query = queries.getQuery(Queries.INSERT_MEMBER_RANK);
                 query.bind(1, getByteUUID());
                 query.bind(2, toByteArray(rank.getUUID()));
                 query.execute();

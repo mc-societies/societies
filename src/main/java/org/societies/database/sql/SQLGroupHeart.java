@@ -242,9 +242,9 @@ public class SQLGroupHeart extends AbstractGroupHeart {
         }
 
         //beautify duplicate
-        service.submit(new Callable<Rank>() {
+        service.submit(new Callable<GroupHeart>() {
             @Override
-            public Rank call() throws Exception {
+            public GroupHeart call() throws Exception {
                 byte[] uuid = UUIDGen.toByteArray(rank.getUUID());
                 String name = rank.getName();
                 int priority = rank.getPriority();
@@ -258,15 +258,8 @@ public class SQLGroupHeart extends AbstractGroupHeart {
                 query.bind(5, name);
                 query.bind(6, priority);
                 query.execute();
-                return rank;
-            }
-        });
 
-
-        service.submit(new Callable<GroupHeart>() {
-            @Override
-            public GroupHeart call() throws Exception {
-                Insert query = queries.getQuery(Queries.INSERT_SOCIETY_RANK);
+                query = queries.getQuery(Queries.INSERT_SOCIETY_RANK);
                 query.bind(1, UUIDGen.toByteArray(group.getUUID()));
                 query.bind(2, UUIDGen.toByteArray(rank.getUUID()));
                 query.execute();

@@ -163,9 +163,10 @@ public class RankCommand {
             }
 
             Table table = tableProvider.get();
+            table.addRow("Rank", "Priority");  //todo translate
 
             for (Rank rank : ranks) {
-                table.addForwardingRow(rank);
+                table.addRow(rank.getName(), rank.getPriority());
             }
 
             sender.send(table.render(ctx.getName(), page));
