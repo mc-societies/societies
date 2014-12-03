@@ -161,6 +161,11 @@ public class HomeCommand implements Executor<Member> {
                 return;
             }
 
+            if (location instanceof Location.InvalidLocation) {
+                sender.send("home.not-valid");
+                return;
+            }
+
             Set<Member> members = group.getMembers();
 
             for (Member member : members) {

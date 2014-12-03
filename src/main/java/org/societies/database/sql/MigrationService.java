@@ -40,6 +40,15 @@ class MigrationService extends AbstractService {
         flyway.setBaselineOnMigrate(true);
         flyway.setClassLoader(classLoader);
         flyway.setDataSource(database.getDataSource());
+
+        if (System.getProperty("clean-database") != null) {
+            flyway.clean();
+        }
+
+        if (System.getProperty("baseline-database") != null) {
+            flyway.setBaselineOnMigrate(true);
+        }
+
         logger.info("Applied {0} migrations!", flyway.migrate());
     }
 }

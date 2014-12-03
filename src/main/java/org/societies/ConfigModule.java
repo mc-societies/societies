@@ -64,6 +64,7 @@ public class ConfigModule extends AbstractModule {
         bind("society.max-size", "society.max-size", int.class);
         bind("verification.show-unverified", "verification.show-unverified", boolean.class);
 
+        bindNamed("server-identity", "server-identity", short.class);
     }
 
     public void bindNamed(String key, String setting, Class clazz) {

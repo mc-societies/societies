@@ -21,12 +21,14 @@ class LocationSetting extends Setting<Location> {
 
     private final WorldResolver worldResolver;
     private final World defaultWorld;
+    private final int identity;
 
     @Inject
-    public LocationSetting(WorldResolver worldResolver, @Named("default-world") World defaultWorld) {
+    public LocationSetting(WorldResolver worldResolver, @Named("default-world") World defaultWorld, @Named("server-identity") short identity) {
         super(ID);
         this.worldResolver = worldResolver;
         this.defaultWorld = defaultWorld;
+        this.identity = identity;
     }
 
     @Override
@@ -34,6 +36,12 @@ class LocationSetting extends Setting<Location> {
         DataInputStream is = new DataInputStream(new ByteArrayInputStream(value));
 
         try {
+            int identity = is.readShort();
+
+            if (this.identity != identity) {
+                return new Location.InvalidLocation();
+            }
+
             World world = worldResolver.getWorld(is.readUTF());
             return new Location(world == null ? defaultWorld : world,
                     is.readDouble(), is.readDouble(), is.readDouble(), is.readFloat(), is.readFloat(), is.readFloat());
@@ -52,6 +60,7 @@ class LocationSetting extends Setting<Location> {
         DataOutputStream os = new DataOutputStream(out);
 
         try {
+            os.writeShort(identity);
             os.writeUTF(value.getWorld().getName());
             os.writeDouble(value.getX());
             os.writeDouble(value.getY());
