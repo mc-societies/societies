@@ -270,6 +270,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
 
     @Override
     public void removeRank(final Rank rank) {
+        super.removeRank(rank);
         service.submit(new Callable<Rank>() {
             @Override
             public Rank call() throws Exception {

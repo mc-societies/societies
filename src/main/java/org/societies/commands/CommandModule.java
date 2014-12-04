@@ -9,10 +9,9 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import net.catharos.lib.core.command.*;
 import net.catharos.lib.core.command.builder.GroupBuilder;
-import net.catharos.lib.core.command.format.pagination.DefaultPaginator;
-import net.catharos.lib.core.command.format.pagination.Paginator;
 import net.catharos.lib.core.command.parser.ArgumentParser;
 import net.catharos.lib.core.command.parser.DefaultParserModule;
+import net.catharos.lib.core.command.parser.IntegerParser;
 import net.catharos.lib.core.command.parser.TargetParser;
 import net.catharos.lib.core.command.reflect.instance.CommandAnalyser;
 import net.catharos.lib.core.command.reflect.instance.factory.InjectorInstanceFactory;
@@ -124,11 +123,6 @@ public class CommandModule extends AbstractModule {
         // Parsers
         install(new DefaultParserModule());
 
-        // Paginator
-        bindNamedInstance("table-header", String.class, "Societies {3} - page {0}/{1} - {2} entries");
-        bindNamedInstance("padding", int.class, 2);
-        bind(Paginator.class).to(DefaultPaginator.class);
-
         // Group parser
         bind(new TypeLiteral<ArgumentParser<Group>>() {}).to(GroupParser.class);
         parsers().addBinding(Group.class).to(GroupParser.class);
@@ -177,7 +171,9 @@ public class CommandModule extends AbstractModule {
     @Named("commands")
     public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, CommandAnalyser<Sender> analyser) {
 
-        GroupCommand<Sender> group = builder.identifier("societies").name("societies").build();
+        GroupCommand<Sender> group = builder.identifier("societies").name("Societies").build();
+
+        group.addOption(new Argument("page", "page", "page", true, new IntegerParser()));
 
         for (Class<?> clazz : this.commands) {
             group.addChild(analyser.analyse(clazz));

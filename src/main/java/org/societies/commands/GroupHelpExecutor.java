@@ -16,6 +16,7 @@ class GroupHelpExecutor<S extends Sender> implements Executor<S> {
 
     private final Provider<Table> tableProvider;
 
+    //todo define default options for group command e.g. page -> no need to declare it
     @Option(name = "argument.page")
     int page;
 
@@ -32,12 +33,13 @@ class GroupHelpExecutor<S extends Sender> implements Executor<S> {
 
         execute(command, sender, table);
 
-        String help = table.render("Help", page);
+        String help = table.render("Help", ctx.getPage());
         sender.send(help);
     }
 
     public void execute(GroupCommand<S> command, final S sender, final Table table) {
-        command.iterate(new FormatCommandIterator<S>(ChatColor.AQUA + "/", ChatColor.WHITE + " - ") {
+        command.iterate(new FormatCommandIterator<S>(ChatColor.AQUA + "/", ChatColor.GRAY + " - ") {
+
             @Override
             public void iterate(Command<S> command, String format) {
                 if (!command.getSenderClass().isInstance(sender)) {

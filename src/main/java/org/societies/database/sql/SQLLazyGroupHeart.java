@@ -16,6 +16,7 @@ import org.societies.groups.setting.Setting;
 import org.societies.groups.setting.SettingProvider;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -96,7 +97,7 @@ public class SQLLazyGroupHeart extends SQLGroupHeart {
     @Override
     public Collection<Rank> getRanks() {
         if (ranks == null) {
-            ranks = new THashSet<Rank>(getRanks());
+            ranks = new THashSet<Rank>(super.getRanks());
         }
 
         return ranks;
@@ -105,10 +106,10 @@ public class SQLLazyGroupHeart extends SQLGroupHeart {
     @Override
     public Set<Member> getMembers() {
         if (members == null) {
-            members = new THashSet<Member>(getMembers());
+            members = new THashSet<Member>(super.getMembers());
         }
 
-        return members;
+        return Collections.unmodifiableSet(members);
     }
 
     @Override

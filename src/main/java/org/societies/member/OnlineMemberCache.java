@@ -5,7 +5,6 @@ import com.google.inject.Singleton;
 import gnu.trove.map.hash.THashMap;
 import org.societies.api.PlayerResolver;
 import org.societies.groups.cache.MemberCache;
-import org.societies.groups.group.GroupProvider;
 import org.societies.groups.member.Member;
 
 import java.util.Set;
@@ -19,12 +18,10 @@ public class OnlineMemberCache implements MemberCache {
 
     private final THashMap<UUID, Member> members = new THashMap<UUID, Member>();
 
-    private final GroupProvider groupProvider;
     private final PlayerResolver provider;
 
     @Inject
-    public OnlineMemberCache(GroupProvider groupProvider, PlayerResolver provider) {
-        this.groupProvider = groupProvider;
+    public OnlineMemberCache(PlayerResolver provider) {
         this.provider = provider;
     }
 

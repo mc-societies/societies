@@ -4,10 +4,10 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import net.catharos.lib.core.command.format.DefaultFormatter;
 import net.catharos.lib.core.command.format.Formatter;
-import net.catharos.lib.core.command.format.WidthProvider;
+import net.catharos.lib.core.command.format.pagination.DefaultPaginator;
+import net.catharos.lib.core.command.format.pagination.Paginator;
 import net.catharos.lib.core.command.format.table.*;
 import org.shank.AbstractModule;
-import org.societies.MinecraftWidthProvider;
 import org.societies.bridge.ChatColor;
 
 /**
@@ -20,7 +20,6 @@ public class FormatModule extends AbstractModule {
         bind(Table.class).to(FormattedTable.class);
         bindNamed("clean", Table.class).to(DefaultTable.class);
         bindNamedString("append", ChatColor.RESET.toString());
-        bind(WidthProvider.class).toInstance(new MinecraftWidthProvider());
 
         install(new FactoryModuleBuilder()
                 .implement(Row.class, Names.named("default"), DefaultRow.class)
@@ -28,8 +27,14 @@ public class FormatModule extends AbstractModule {
                 .implement(Row.class, Names.named("dictionary"), DictionaryRow.class)
                 .build(RowFactory.class));
 
-        bindNamedInstance("column-spacing", double.class, 12.0D);
-        bindNamedInstance("max-line-length", double.class, 315.0D);
+        bindNamedInstance("column-spacing", double.class, 24.0D);
+        bindNamedInstance("max-line-length", double.class, 318.0D);
+
+        // Paginator
+        bindNamedInstance("table-header", String.class, "");
+        bindNamedInstance("padding", int.class, 2);
+        bind(Paginator.class).to(DefaultPaginator.class);
+
         bind(Formatter.class).to(DefaultFormatter.class);
     }
 }

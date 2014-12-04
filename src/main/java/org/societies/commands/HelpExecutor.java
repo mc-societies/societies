@@ -44,28 +44,37 @@ class HelpExecutor<S extends Sender> implements Executor<S> {
 
         if (!command.getOptions().isEmpty()) {
             help.append("Options:\n");
-            help.append(arguments(command, true).render("options", ctx.getPage()));
+            help.append(options(command).render("options", ctx.getPage()));
         }
 
         if (!command.getArguments().isEmpty()) {
             help.append("\nArguments:\n");
-            help.append(arguments(command, false).render("arguments", ctx.getPage()));
+            help.append(arguments(command).render("arguments", ctx.getPage()));
         }
 
         sender.send(help);
     }
 
-    private Table arguments(ExecutableCommand<S> command, boolean options) {
+    private Table arguments(ExecutableCommand<S> command) {
         Table table = tableProvider.get();
 
         for (Argument argument : command.getArguments()) {
-            if ((options && argument.isOption()) || (!options && !argument.isOption())) {
-                table.addRow(argument.getName(), argument.getDescription());
-            }
+            table.addRow(argument.getName(), argument.getDescription());
         }
 
         return table;
     }
+
+    private Table options(ExecutableCommand<S> command) {
+        Table table = tableProvider.get();
+
+        for (Argument argument : command.getOptions().values()) {
+            table.addRow(argument.getName(), argument.getDescription());
+        }
+
+        return table;
+    }
+
 
     @Override
     public void execute(CommandContext<S> ctx, S sender) {

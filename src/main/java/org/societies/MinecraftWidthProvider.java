@@ -1,5 +1,6 @@
 package org.societies;
 
+import com.google.inject.Singleton;
 import gnu.trove.map.hash.TCharIntHashMap;
 import net.catharos.lib.core.command.format.WidthProvider;
 import org.societies.bridge.ChatColor;
@@ -8,6 +9,7 @@ import org.societies.bridge.ChatColor;
  * Represents a MinecraftWidthProvider
  */
 //optimize
+@Singleton
 public class MinecraftWidthProvider implements WidthProvider {
 
     private final TCharIntHashMap widths = new TCharIntHashMap();

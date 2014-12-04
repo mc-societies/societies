@@ -1,11 +1,13 @@
 package org.societies.commands;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.inject.Inject;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
+import net.catharos.lib.core.command.format.Formatter;
+import net.catharos.lib.core.command.format.WidthProvider;
 import net.catharos.lib.core.command.sender.Sender;
-import org.apache.commons.lang3.StringUtils;
 import org.societies.bridge.ChatColor;
 
 import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
@@ -17,30 +19,36 @@ import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorS
  */
 class FooterExecutor implements Executor<Sender> {
 
+
+    private final Formatter formatter;
+    private final WidthProvider widthProvider;
+
+    @Inject
+    FooterExecutor(Formatter formatter, WidthProvider widthProvider) {
+        this.formatter = formatter;
+        this.widthProvider = widthProvider;
+    }
+
     @Override
     public void execute(CommandContext<Sender> ctx, final Sender sender) throws ExecuteException {
-        final Integer length = ctx.get("pre-length");
-
-        if (length == null) {
-            return;
-        }
-
         ListenableFuture future = ctx.get("future");
 
         if (future != null) {
             future.addListener(new Runnable() {
                 @Override
                 public void run() {
-                    send(sender, length);
+                    send(sender);
                 }
             }, listeningDecorator(newDirectExecutorService()));
         } else {
-            send(sender, length);
+            send(sender);
         }
     }
 
 
-    private void send(Sender sender, int length) {
-        sender.send(ChatColor.DARK_GRAY + StringUtils.repeat('-', length));
+    private void send(Sender sender) {
+        StringBuilder builder = new StringBuilder();
+        formatter.fill(builder, widthProvider.widthOf(builder), '-');
+        sender.send(ChatColor.DARK_GRAY + builder.toString());
     }
 }

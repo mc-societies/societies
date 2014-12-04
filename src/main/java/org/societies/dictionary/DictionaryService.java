@@ -5,12 +5,12 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import net.catharos.lib.core.i18n.MutableDictionary;
 import net.catharos.lib.core.util.ZipUtils;
-import org.shank.logging.InjectLogger;
-import org.shank.service.AbstractService;
-import org.shank.service.lifecycle.LifecycleContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Logger;
+import org.shank.logging.InjectLogger;
+import org.shank.service.AbstractService;
+import org.shank.service.lifecycle.LifecycleContext;
 
 import java.io.*;
 import java.net.URL;
@@ -23,7 +23,6 @@ import java.util.zip.ZipInputStream;
  * Represents a DictionaryService
  */
 class DictionaryService extends AbstractService {
-
 
     private final URL translationsURL;
     private final MutableDictionary<String> dictionary;
@@ -76,14 +75,6 @@ class DictionaryService extends AbstractService {
 
                     File output = new File(directory, name);
 
-//                    if (!output.exists()) {
-//                        FileUtils.forceMkdir(output.getParentFile());
-//                        output.createNewFile();
-//                    }
-//
-//                    stream.reset();
-//                    IOUtils.copy(stream, new FileOutputStream(output));
-
                     if (output.exists()) {
                         Properties current = new Properties();
                         current.load(new BufferedReader(new FileReader(output)));
@@ -113,52 +104,4 @@ class DictionaryService extends AbstractService {
         zip.close();
     }
 
-////    @Override
-//    public void init0(LifecycleContext context) throws Exception {
-//        logger.info("Loading language files!");
-//
-//        JarFile jar = JarUtils.getJarFile();
-//
-//        Map<String, InputStream> languages = JarUtils.listStreams(jar, "defaults/languages");
-//
-//        for (Map.Entry<String, InputStream> entry : languages.entrySet()) {
-//            String file = entry.getKey();
-//            String name = Files.getNameWithoutExtension(file);
-//            Locale locale = LocaleUtils.toLocale(name);
-//
-//            logger.info("Loading language: %s", name);
-//
-//            Reader reader = new BufferedReader(new InputStreamReader(entry.getValue()));
-//
-//            Properties defaultConfig = new Properties();
-//            defaultConfig.load(reader);
-//
-//            reader.close();
-//
-//            File output = new File(directory, file);
-//            Properties config = new Properties();
-//            if (output.exists()) {
-//                config.load(reader);
-//            }
-//
-//            defaultConfig.putAll(config);
-//            config = defaultConfig;
-//
-//
-//            for (Map.Entry<Object, Object> langEntry : config.entrySet()) {
-//                dictionary.addTranslation(locale, langEntry.getKey().toString(), langEntry.getValue().toString());
-//            }
-//
-//            if (!output.exists()) {
-//                output.getParentFile().mkdirs();
-//                output.createNewFile();
-//            }
-//
-//            FileOutputStream outputStream = new FileOutputStream(output);
-//            config.store(outputStream, "");
-//            outputStream.close();
-//        }
-//
-//        jar.close();
-//    }
 }

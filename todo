@@ -53,6 +53,7 @@ Command library:
          * aliases, extract information from context and inject them to fields
 
 Optimization:
+        * Member/Group saving algorithm
         * fast access player metadata -> player, getMember(Player player)
         * cache relation targets
         * cache levels (quick-living cache)

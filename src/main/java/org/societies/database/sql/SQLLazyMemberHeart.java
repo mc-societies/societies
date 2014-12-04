@@ -116,6 +116,6 @@ class SQLLazyMemberHeart extends SQLMemberHeart {
             ranks = new THashSet<Rank>(super.getRanks());
         }
 
-        return ranks;
+        return Collections.unmodifiableSet(ranks);
     }
 }
