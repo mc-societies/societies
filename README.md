@@ -8,7 +8,7 @@ At the moment Societies only supports Bukkit, but as new server implementations 
 “The ability to simplify means to eliminate the unnecessary so that the necessary may speak.”
 *—Hans Hofmann*
 
-Simplesocieties was borne out of the need for a self-sustaining drop-and-go system that could be easy to picked up by new players and required minimal attention from server staff. The system has been running over at the SacredLabyrinth where it has been enjoyed and refined by its community. I present it now for public consumption, enjoy.
+SimpleClans was borne out of the need for a self-sustaining drop-and-go system that could be easy to picked up by new players and required minimal attention from server staff. The system has been running over at the SacredLabyrinth where it has been enjoyed and refined by its community. I present it now for public consumption, enjoy.
 *—Phaed*
 
 
@@ -144,7 +144,7 @@ Add it to the bug [tracker](https://github.com/Catharos/Societies/issues).
 ## Developer area
 ### Getting started
 
-To get started, just contact me over at [esper.net](http://esper.net/publicirc.php) @ #Simplesocieties.
+To get started, just contact me over at [esper.net](http://esper.net/publicirc.php) @ #SimpleClans.
 
 ### Special libraries
 
@@ -153,7 +153,7 @@ The glue for all components is [google guice](https://code.google.com/p/google-g
 
 ### Contributing
 
-Currently, me - p000ison (Max A.) - is the only person who's working on this project, but this will hopefully change after release. You can contact me over at irc.esper.net @ #Simplesocieties
+Currently, me - p000ison (Max A.) - is the only person who's working on this project, but this will hopefully change after release. You can contact me over at irc.esper.net @ #SimpleClans
 
 #### License
 
