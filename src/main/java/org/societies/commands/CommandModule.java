@@ -1,12 +1,13 @@
 package org.societies.commands;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Binder;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Named;
-import com.google.inject.name.Names;
 import net.catharos.lib.core.command.*;
 import net.catharos.lib.core.command.builder.GroupBuilder;
 import net.catharos.lib.core.command.parser.ArgumentParser;
@@ -56,6 +57,7 @@ import java.util.Set;
 import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
 import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import static com.google.inject.multibindings.Multibinder.newSetBinder;
 import static com.google.inject.name.Names.named;
 
 /**
@@ -63,6 +65,7 @@ import static com.google.inject.name.Names.named;
  */
 public class CommandModule extends AbstractModule {
 
+    public static final TypeLiteral<DefaultCommandPipeline<Sender>> PIPELINE_IMPL = new TypeLiteral<DefaultCommandPipeline<Sender>>() {};
     private final Class[] commands = new Class[]{
             CreateCommand.class,
             ListCommand.class,
@@ -155,16 +158,39 @@ public class CommandModule extends AbstractModule {
         bindNamed("async-executor", ListeningExecutorService.class).to(SocietiesModule.WORKER_EXECUTOR);
 //        bindNamedInstance("async-executor", ListeningExecutorService.class, sameThreadExecutor());
 
-
-        bind(new TypeLiteral<CommandPipeline<Sender>>() {}).to(new TypeLiteral<DefaultCommandPipeline<Sender>>() {});
-        beforePipeline().addBinding().to(PermissionStep.class);
-        beforePipeline().addBinding().to(VerifyStep.class);
-        beforePipeline().addBinding().to(RuleStep.class);
-        beforePipeline().addBinding().to(HeaderExecutor.class);
-        beforePipeline().addBinding().to(WorldStep.class);
-        afterPipeline().addBinding().to(FooterExecutor.class);
+        bindNamed("provided", new TypeLiteral<CommandPipeline<Sender>>() {}).to(PIPELINE_IMPL);
 
         bindNamed("system-sender", Sender.class).to(SystemSender.class);
+    }
+
+
+    @Provides
+    @Named("help-pipeline")
+    @Singleton
+    public CommandPipeline<Sender> provideHelpPipeline(@Named("provided") CommandPipeline<Sender> pipeline,
+                                                       HeaderExecutor header,
+                                                       FooterExecutor footer) {
+        pipeline.addBefore(header);
+        pipeline.addAfter(footer);
+        return pipeline;
+    }
+
+    @Provides
+    @Singleton
+    public CommandPipeline<Sender> providePipeline(@Named("provided") CommandPipeline<Sender> pipeline,
+                                                   PermissionStep perm,
+                                                   VerifyStep verify,
+                                                   RuleStep rule,
+                                                   HeaderExecutor header,
+                                                   WorldStep world,
+                                                   FooterExecutor footer) {
+        pipeline.addBefore(perm);
+        pipeline.addBefore(verify);
+        pipeline.addBefore(rule);
+        pipeline.addBefore(header);
+        pipeline.addBefore(world);
+        pipeline.addAfter(footer);
+        return pipeline;
     }
 
     @Provides
@@ -190,15 +216,13 @@ public class CommandModule extends AbstractModule {
         );
     }
 
-    public Multibinder<Executor<Sender>> afterPipeline() {
-        return Multibinder
-                .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-after"))
+    public Multibinder<Executor<Sender>> afterPipeline(Binder binder) {
+        return newSetBinder(binder, new TypeLiteral<Executor<Sender>>() {}, named("pipeline-after"))
                 .permitDuplicates();
     }
 
-    public Multibinder<Executor<Sender>> beforePipeline() {
-        return Multibinder
-                .newSetBinder(binder(), new TypeLiteral<Executor<Sender>>() {}, Names.named("pipeline-before"))
+    public Multibinder<Executor<Sender>> beforePipeline(Binder binder) {
+        return newSetBinder(binder, new TypeLiteral<Executor<Sender>>() {}, named("pipeline-before"))
                 .permitDuplicates();
     }
 }

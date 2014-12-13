@@ -38,7 +38,7 @@ class GroupHelpExecutor<S extends Sender> implements Executor<S> {
     }
 
     public void execute(GroupCommand<S> command, final S sender, final Table table) {
-        command.iterate(new FormatCommandIterator<S>(ChatColor.AQUA + "/", ChatColor.GRAY + " - ") {
+        command.iterate(new FormatCommandIterator<S>(ChatColor.AQUA + "/", ChatColor.GRAY + " - ", " [?]") {
 
             @Override
             public void iterate(Command<S> command, String format) {
@@ -48,6 +48,6 @@ class GroupHelpExecutor<S extends Sender> implements Executor<S> {
 
                 table.addRow(format);
             }
-        });
+        }, false);
     }
 }
