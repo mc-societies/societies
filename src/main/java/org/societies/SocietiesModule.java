@@ -66,13 +66,14 @@ public class SocietiesModule extends AbstractServiceModule {
                 .parseResources(SocietiesModule.class.getClassLoader(), "config.conf", parseOptions);
 
         File file = new File(dataDirectory, "config.conf");
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        Config config;
+        if (file.exists()) {
+             config = ConfigFactory.parseFile(file, parseOptions).withFallback(defaultConfig);
+        } else {
+            config = ConfigFactory.empty();
         }
 
-        Config config = ConfigFactory.parseFile(file, parseOptions).withFallback(defaultConfig);
 
         ConfigRenderOptions renderOptions = ConfigRenderOptions
                 .defaults()
