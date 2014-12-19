@@ -3,7 +3,6 @@ package org.societies;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -29,7 +28,7 @@ import java.util.concurrent.Callable;
 public class MojangNameProvider implements NameProvider {
 
     private final ListeningExecutorService service;
-    private static final JsonFactory factory = new ObjectMapper().getFactory();
+    private static final JsonFactory factory = new JsonFactory();
 
     private final Map<UUID, String> names = Collections.synchronizedMap(new THashMap<UUID, String>());
 

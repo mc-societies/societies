@@ -10,12 +10,12 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import gnu.trove.set.hash.THashSet;
 import org.apache.logging.log4j.Logger;
-import org.javatuples.Quartet;
 import org.joda.time.DateTime;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupBuilder;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.rank.RankFactory;
+import org.societies.groups.rank.memory.MemoryRank;
 import org.societies.groups.setting.Setting;
 import org.societies.groups.setting.SettingProvider;
 import org.societies.groups.setting.target.Target;
@@ -62,8 +62,8 @@ public class GroupMapper extends AbstractMapper {
 
         GroupBuilder builder = builders.get();
 
-        //beautify
-        List<Quartet<UUID, String, Table<Setting, Target, String>, Integer>> rawRanks = Lists.newArrayList();
+
+        List<Rank> rawRanks = Lists.newArrayList();
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String groupField = parser.getCurrentName();
@@ -94,8 +94,8 @@ public class GroupMapper extends AbstractMapper {
 
         group.unlink();
 
-        for (Quartet<UUID, String, Table<Setting, Target, String>, Integer> rank : rawRanks) {
-            group.addRank(toRank(group, rank));
+        for (Rank rank : rawRanks) {
+            group.addRank(finalizeRank(group, rank));
         }
 
         group.link();
@@ -127,11 +127,9 @@ public class GroupMapper extends AbstractMapper {
         generator.writeEndObject();
     }
 
-    private Rank toRank(Group group, Quartet<UUID, String, Table<Setting, Target, String>, Integer> quartet) {
-        Rank rank = rankFactory.create(quartet.getValue0(), quartet.getValue1(), quartet.getValue3(), group);
-
-        for (Table.Cell<Setting, Target, String> cell : quartet.getValue2().cellSet()) {
-            rank.set(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
+    private Rank finalizeRank(Group group, Rank rank) {
+        if (rank instanceof MemoryRank) {
+            ((MemoryRank) rank).setGroup(group);
         }
 
         rank.link();
@@ -139,7 +137,7 @@ public class GroupMapper extends AbstractMapper {
         return rank;
     }
 
-    private Quartet<UUID, String, Table<Setting, Target, String>, Integer> readRank(JsonParser parser) throws IOException {
+    private Rank readRank(JsonParser parser) throws IOException {
         validateObject(parser);
 
         UUID uuid = null;
@@ -162,7 +160,13 @@ public class GroupMapper extends AbstractMapper {
             }
         }
 
-        return Quartet.with(uuid, name, settings, priority);
+        Rank rank = rankFactory.create(uuid, name, priority, null);
+
+        for (Table.Cell<Setting, Target, String> cell : settings.cellSet()) {
+            rank.set(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
+        }
+
+        return rank;
     }
 
     public void writeRank(JsonGenerator generator, Rank rank) throws IOException {

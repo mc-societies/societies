@@ -1,7 +1,6 @@
 package org.societies.database.json;
 
 import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Table;
 import net.catharos.lib.core.util.CastSafe;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +21,7 @@ import java.util.UUID;
  */
 public class AbstractMapper {
 
-    private final JsonFactory factory = new ObjectMapper().getFactory();
+    private final JsonFactory factory = new JsonFactory();
     protected final Logger logger;
     private final SettingProvider settingProvider;
 
