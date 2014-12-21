@@ -22,13 +22,13 @@
 |/societies leave|Leave a society|
 |/societies allies add [society]|Initiate an alliance|
 |/societies allies remove [society]|Cancel an alliance|
-|/societies allies ?|Manage your alliances|
+|/societies allies [?]|Manage your alliances|
 |/societies rivals create [society]|Initiate a rivalry|
 |/societies rivals remove [society]|Cancel a rivalry|
-|/societies rivals ?|Manage your rivalries|
+|/societies rivals [?]|Manage your rivalries|
 |/societies home set [--location]|Set your society's home|
 |/societies home regroup|Regroup your society|
-|/societies home ?|Teleport to your society's home|
+|/societies home [?]|Teleport to your society's home|
 |/societies rank create [name] [--priority]|Create a rank|
 |/societies rank remove [name]|Remove a rank|
 |/societies rank list [--page]|List all ranks|

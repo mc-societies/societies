@@ -1,8 +1,5 @@
 |Permission|Action|
 |---|---|---|
-|societies.member|Member permissions|
-|societies.moderator|Moderator permissions|
-|societies.admin|Admin permissions|
 |societies.create|/societies create [name] [tag] - Creates a new society|
 |societies.list|/societies list [--verified] [--page] - Lists all societies|
 |societies.profile|/societies profile [--society] - View your society' profile|
@@ -25,13 +22,13 @@
 |societies.leave|/societies leave - Leave a society|
 |societies.allies.add|/societies allies add [society] - Initiate an alliance|
 |societies.allies.remove|/societies allies remove [society] - Cancel an alliance|
-|societies.allies.list|/societies allies ? - Manage your alliances|
+|societies.allies.list|/societies allies [?] - Manage your alliances|
 |societies.rivals.add|/societies rivals create [society] - Initiate a rivalry|
 |societies.rivals.remove|/societies rivals remove [society] - Cancel a rivalry|
-|societies.rivals.list|/societies rivals ? - Manage your rivalries|
+|societies.rivals.list|/societies rivals [?] - Manage your rivalries|
 |societies.home.set|/societies home set [--location] - Set your society's home|
 |societies.home.regroup|/societies home regroup - Regroup your society|
-|societies.home.teleport|/societies home ? - Teleport to your society's home|
+|societies.home.teleport|/societies home [?] - Teleport to your society's home|
 |societies.rank.create|/societies rank create [name] [--priority] - Create a rank|
 |societies.rank.remove|/societies rank remove [name] - Remove a rank|
 |societies.rank.list|/societies rank list [--page] - List all ranks|
