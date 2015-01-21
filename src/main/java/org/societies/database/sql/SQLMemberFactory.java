@@ -2,6 +2,7 @@ package org.societies.database.sql;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import net.catharos.lib.core.command.sender.Sender;
 import org.societies.groups.ExtensionFactory;
 import org.societies.groups.ExtensionRoller;
@@ -30,8 +31,9 @@ public class SQLMemberFactory implements MemberFactory {
     @Inject
     public SQLMemberFactory(ExtensionFactory<Sender, UUID> senderFactory,
                             ExtensionFactory<SQLMemberHeart, Member> heartFactory,
-                            Set<ExtensionRoller> extensions,
-                            SettingProvider settingProvider, ListeningExecutorService service, Queries queries) {
+                            @Named("member") Set<ExtensionRoller> extensions,
+                            SettingProvider settingProvider,
+                            ListeningExecutorService service, Queries queries) {
         this.senderFactory = senderFactory;
         this.heartFactory = heartFactory;
         this.extensions = extensions;

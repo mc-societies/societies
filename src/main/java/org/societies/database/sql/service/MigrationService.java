@@ -1,4 +1,4 @@
-package org.societies.database.sql;
+package org.societies.database.sql.service;
 
 
 import com.google.inject.Inject;
@@ -12,7 +12,7 @@ import org.societies.database.Database;
 /**
  * Represents a TablesService
  */
-class MigrationService extends AbstractService {
+public class MigrationService extends AbstractService {
 
     private final Database database;
     private final ClassLoader classLoader;

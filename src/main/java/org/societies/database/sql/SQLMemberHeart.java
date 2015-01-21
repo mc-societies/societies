@@ -13,7 +13,6 @@ import org.joda.time.DateTime;
 import org.jooq.*;
 import org.societies.api.member.MemberException;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
-import org.societies.database.sql.layout.tables.records.RanksRecord;
 import org.societies.groups.event.EventController;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupHeart;
@@ -102,7 +101,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
                 String name = rank.getName();
                 int priority = rank.getPriority();
 
-                Insert<RanksRecord> query = queries.getQuery(Queries.INSERT_RANK);
+                Insert<?> query = queries.getQuery(Queries.INSERT_RANK);
 
                 query.bind(1, uuid);
                 query.bind(2, name);

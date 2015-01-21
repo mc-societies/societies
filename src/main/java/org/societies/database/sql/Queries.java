@@ -17,7 +17,7 @@ import static org.societies.database.sql.layout.Tables.*;
  * Represents a SocietiesQueries
  */
 @Singleton
-class Queries extends QueryProvider {
+public class Queries extends QueryProvider {
 
     //================================================================================
     // Groups

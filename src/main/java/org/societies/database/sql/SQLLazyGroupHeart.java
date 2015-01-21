@@ -31,7 +31,13 @@ public class SQLLazyGroupHeart extends SQLGroupHeart {
     private Set<Member> members;
 
     @Inject
-    protected SQLLazyGroupHeart(@Assisted Group group, @Named("verify") Setting<Boolean> verifySetting, Setting<Relation> relationSetting, Map<String, Setting<Boolean>> rules, MemberProvider memberProvider, RankFactory rankFactory, Queries queries, ListeningExecutorService service, @Named("predefined-ranks") Set<Rank> defaultRanks, SettingProvider settingProvider) {
+    protected SQLLazyGroupHeart(@Assisted Group group,
+                                @Named("verify") Setting<Boolean> verifySetting,
+                                Setting<Relation> relationSetting, Map<String, Setting<Boolean>> rules,
+                                MemberProvider memberProvider, RankFactory rankFactory, Queries queries,
+                                ListeningExecutorService service,
+                                @Named("predefined-ranks") Set<Rank> defaultRanks,
+                                SettingProvider settingProvider) {
         super(group, verifySetting, relationSetting, rules, memberProvider, rankFactory, queries, service, defaultRanks, settingProvider);
     }
 

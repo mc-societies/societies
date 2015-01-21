@@ -11,6 +11,9 @@ import org.societies.database.Database;
 import org.societies.database.RemoteDatabase;
 import org.societies.database.data.queue.DefaultQueue;
 import org.societies.database.data.queue.Queue;
+import org.societies.database.sql.service.CleanupService;
+import org.societies.database.sql.service.MigrationService;
+import org.societies.database.sql.service.RankService;
 import org.societies.group.OnlineGroupCache;
 import org.societies.groups.ExtensionFactory;
 import org.societies.groups.cache.GroupCache;
@@ -18,7 +21,6 @@ import org.societies.groups.cache.MemberCache;
 import org.societies.groups.cache.NaughtyGroupCache;
 import org.societies.groups.group.*;
 import org.societies.groups.member.*;
-import org.societies.groups.rank.RankPublisher;
 import org.societies.member.OnlineMemberCache;
 
 import java.util.concurrent.TimeUnit;
@@ -101,8 +103,6 @@ public class SQLModule extends AbstractServiceModule {
 
         bind(GroupProvider.class).to(controller);
 
-        Key<SQLRankPublisher> rankKey = get(SQLRankPublisher.class);
-
         // Group Publishers
         bind(GroupPublisher.class).to(SQLGroupPublisher.class);
         bind(GroupDestructor.class).to(SQLGroupDestructor.class);
@@ -110,11 +110,6 @@ public class SQLModule extends AbstractServiceModule {
         // Member Publishers
         bind(MemberPublisher.class).to(SQLMemberPublisher.class);
 
-        // Rank publishers
-        bind(RankPublisher.class).to(rankKey);
-
         bind(Locker.class).to(SQLLocker.class);
-
-
     }
 }

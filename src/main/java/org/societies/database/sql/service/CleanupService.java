@@ -1,4 +1,4 @@
-package org.societies.database.sql;
+package org.societies.database.sql.service;
 
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
@@ -8,6 +8,7 @@ import org.shank.logging.InjectLogger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
 import org.societies.database.Database;
+import org.societies.database.sql.Queries;
 
 import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Represents a CleanupPublisher
  */
-class CleanupService extends AbstractService {
+public class CleanupService extends AbstractService {
 
     private final long memberMillis;
     private final Queries queries;
