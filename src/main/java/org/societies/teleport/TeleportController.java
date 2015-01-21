@@ -99,9 +99,6 @@ public class TeleportController implements Runnable, Teleporter {
 
                 it.remove();
 
-                int x = target.getRoundedX();
-                int z = target.getRoundedZ();
-
                 if (!member.hasPermission("simpleclans.mod.keep-items")) {
                     dropItems(member.get(Player.class));
                 }

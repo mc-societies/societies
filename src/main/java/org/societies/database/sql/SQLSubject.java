@@ -60,7 +60,7 @@ public class SQLSubject extends AbstractSubject {
 
                 try {
                     converted = setting.convert(subject, target, value);
-                } catch (SettingException e) {
+                } catch (SettingException ignored) {
                     logger.warn("Failed to convert setting %s! Subject: %s Target: %s Value: %s", setting, subject, target, value);
                     return;
                 }
@@ -130,7 +130,7 @@ public class SQLSubject extends AbstractSubject {
             Object value;
             try {
                 value = setting.convert(this, target, settingRecord.value3());
-            } catch (SettingException e) {
+            } catch (SettingException ignored) {
                 continue;
             }
 

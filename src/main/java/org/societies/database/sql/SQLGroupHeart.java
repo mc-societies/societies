@@ -156,7 +156,7 @@ public class SQLGroupHeart extends AbstractGroupHeart {
             Object value;
             try {
                 value = setting.convert(subject, target, settingRecord.value3());
-            } catch (SettingException e) {
+            } catch (SettingException ignored) {
                 continue;
             }
 

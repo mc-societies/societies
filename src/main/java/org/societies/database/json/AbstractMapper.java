@@ -92,7 +92,7 @@ public class AbstractMapper {
 
             try {
                 result = setting.convertToString(subject, target, value);
-            } catch (SettingException e) {
+            } catch (SettingException ignored) {
                 logger.warn("Failed to result setting %s! Subject: %s Target: %s Value: %s", setting, subject, target, value);
                 continue;
             }

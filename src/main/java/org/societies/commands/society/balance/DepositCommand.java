@@ -68,9 +68,9 @@ public class DepositCommand implements Executor<Member> {
 
             sender.send("deposit-successfully", response.getAmount());
 
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
             return;
-        } catch (ExecutionException e) {
+        } catch (ExecutionException ignored) {
             return;
         } finally {
             unlock();
@@ -81,9 +81,9 @@ public class DepositCommand implements Executor<Member> {
     private void unlock() {
         try {
             locker.unlock(0).get();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
             return;
-        } catch (ExecutionException e) {
+        } catch (ExecutionException ignored) {
             return;
         }
     }

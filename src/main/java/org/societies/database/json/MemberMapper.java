@@ -98,7 +98,7 @@ public class MemberMapper extends AbstractMapper {
 
             try {
                 member.set(setting, target, setting.convertFromString(group, target, value));
-            } catch (SettingException e) {
+            } catch (SettingException ignored) {
                 logger.warn("Failed to convert setting %s! Subject: %s Target: %s Value: %s", setting, group, target, value);
             }
         }

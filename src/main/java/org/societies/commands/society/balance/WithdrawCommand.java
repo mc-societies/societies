@@ -73,9 +73,9 @@ public class WithdrawCommand implements Executor<Member> {
             sender.send("withdraw-successfully", withdraw);
 
 
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
             return;
-        } catch (ExecutionException e) {
+        } catch (ExecutionException ignored) {
             return;
         } finally {
             unlock();
@@ -86,9 +86,9 @@ public class WithdrawCommand implements Executor<Member> {
     private void unlock() {
         try {
             locker.unlock(0).get();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
             return;
-        } catch (ExecutionException e) {
+        } catch (ExecutionException ignored) {
             return;
         }
     }

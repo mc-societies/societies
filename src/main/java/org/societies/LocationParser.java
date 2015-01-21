@@ -48,7 +48,7 @@ public class LocationParser implements ArgumentParser<Location> {
 
             try {
                 coordinate = Double.parseDouble(part);
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException ignored) {
                 throw new ParsingException("Invalid location!", ctx);
             }
 
