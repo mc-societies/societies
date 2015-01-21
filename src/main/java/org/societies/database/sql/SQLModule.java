@@ -70,8 +70,7 @@ public class SQLModule extends AbstractServiceModule {
         // Member provider
         bind(MemberCache.class).to(OnlineMemberCache.class);
 
-        bind(new TypeLiteral<MemberProvider>() {})
-                .to(controller);
+        bind(MemberProvider.class).to(controller);
 
         if (cache) {
             bind(GroupCache.class).to(OnlineGroupCache.class);

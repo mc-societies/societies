@@ -2,11 +2,11 @@ package org.societies.database.sql;
 
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
+import org.apache.logging.log4j.Logger;
+import org.jooq.Query;
 import org.shank.logging.InjectLogger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
-import org.apache.logging.log4j.Logger;
-import org.jooq.Query;
 import org.societies.database.Database;
 
 import java.sql.Timestamp;

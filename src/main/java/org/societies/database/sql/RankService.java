@@ -2,10 +2,10 @@ package org.societies.database.sql;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import org.apache.logging.log4j.Logger;
 import org.shank.logging.InjectLogger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
-import org.apache.logging.log4j.Logger;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.rank.RankPublisher;
 

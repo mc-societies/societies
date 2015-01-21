@@ -9,8 +9,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.name.Named;
 import gnu.trove.map.hash.THashMap;
-import org.shank.logging.InjectLogger;
 import org.apache.logging.log4j.Logger;
+import org.shank.logging.InjectLogger;
 import org.societies.api.NameProvider;
 
 import javax.inject.Inject;

@@ -69,7 +69,7 @@ public class SocietiesModule extends AbstractServiceModule {
 
         Config config;
         if (file.exists()) {
-             config = ConfigFactory.parseFile(file, parseOptions).withFallback(defaultConfig);
+            config = ConfigFactory.parseFile(file, parseOptions).withFallback(defaultConfig);
         } else {
             config = ConfigFactory.empty().withFallback(defaultConfig);
         }

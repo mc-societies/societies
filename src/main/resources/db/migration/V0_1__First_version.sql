@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `societies`.`societies` (
   UNIQUE INDEX `tag_UNIQUE` (`tag` ASC),
   UNIQUE INDEX `clean_tag_UNIQUE` (`clean_tag` ASC)
 )
-  ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -51,10 +51,10 @@ CREATE TABLE IF NOT EXISTS `societies`.`members` (
   CONSTRAINT `fk_members_societies1`
   FOREIGN KEY (`society`)
   REFERENCES `societies`.`societies` (`uuid`)
-    ON DELETE SET NULL
-    ON UPDATE NO ACTION
+  ON DELETE SET NULL
+  ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -70,15 +70,15 @@ CREATE TABLE IF NOT EXISTS `societies`.`relations` (
   CONSTRAINT `fk_societies_has_societies_societies1`
   FOREIGN KEY (`society`)
   REFERENCES `societies`.`societies` (`uuid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
   CONSTRAINT `fk_societies_has_societies_societies2`
   FOREIGN KEY (`society2`)
   REFERENCES `societies`.`societies` (`uuid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `societies`.`ranks` (
   PRIMARY KEY (`uuid`, `name`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)
 )
-  ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -106,15 +106,15 @@ CREATE TABLE IF NOT EXISTS `societies`.`members_ranks` (
   CONSTRAINT `fk_members_has_ranks_members1`
   FOREIGN KEY (`member`)
   REFERENCES `societies`.`members` (`uuid`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION,
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION,
   CONSTRAINT `fk_members_has_ranks_ranks1`
   FOREIGN KEY (`rank`)
   REFERENCES `societies`.`ranks` (`uuid`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -129,90 +129,90 @@ CREATE TABLE IF NOT EXISTS `societies`.`societies_ranks` (
   CONSTRAINT `fk_societies_has_ranks_societies2`
   FOREIGN KEY (`society`)
   REFERENCES `societies`.`societies` (`uuid`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION,
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION,
   CONSTRAINT `fk_societies_has_ranks_ranks2`
   FOREIGN KEY (`rank`)
   REFERENCES `societies`.`ranks` (`uuid`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `societies`.`societies_settings`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`societies_settings` (
-  `subject_uuid` VARBINARY(16)     NOT NULL,
-  `target_uuid`  VARBINARY(16)     NOT NULL,
+  `subject_uuid` VARBINARY(16) NOT NULL,
+  `target_uuid`  VARBINARY(16) NOT NULL,
   `setting`      SMALLINT UNSIGNED NOT NULL,
-  `value`        VARBINARY(64)     NULL,
+  `value`        VARBINARY(64) NULL,
   PRIMARY KEY (`subject_uuid`, `setting`, `target_uuid`),
   INDEX `fk_socieites_settings_societies1_idx` (`subject_uuid` ASC),
   INDEX `fk_societies_settings_societies1_idx` (`target_uuid` ASC),
   CONSTRAINT `fk_socieites_settings_societies1`
   FOREIGN KEY (`subject_uuid`)
   REFERENCES `societies`.`societies` (`uuid`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION,
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION,
   CONSTRAINT `fk_societies_settings_societies1`
   FOREIGN KEY (`target_uuid`)
   REFERENCES `societies`.`societies` (`uuid`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `societies`.`ranks_settings`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`ranks_settings` (
-  `subject_uuid` VARBINARY(16)     NOT NULL,
-  `target_uuid`  VARBINARY(16)     NOT NULL,
+  `subject_uuid` VARBINARY(16) NOT NULL,
+  `target_uuid`  VARBINARY(16) NOT NULL,
   `setting`      SMALLINT UNSIGNED NOT NULL,
-  `value`        VARBINARY(64)     NULL,
+  `value`        VARBINARY(64) NULL,
   PRIMARY KEY (`subject_uuid`, `target_uuid`, `setting`),
   INDEX `fk_ranks_settings_ranks1_idx` (`subject_uuid` ASC),
   INDEX `fk_ranks_settings_ranks2_idx` (`target_uuid` ASC),
   CONSTRAINT `fk_ranks_settings_ranks1`
   FOREIGN KEY (`subject_uuid`)
   REFERENCES `societies`.`ranks` (`uuid`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION,
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION,
   CONSTRAINT `fk_ranks_settings_ranks2`
   FOREIGN KEY (`target_uuid`)
   REFERENCES `societies`.`ranks` (`uuid`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `societies`.`member_settings`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`member_settings` (
-  `subject_uuid` VARBINARY(16)     NOT NULL,
-  `target_uuid`  VARBINARY(16)     NOT NULL,
+  `subject_uuid` VARBINARY(16) NOT NULL,
+  `target_uuid`  VARBINARY(16) NOT NULL,
   `setting`      SMALLINT UNSIGNED NOT NULL,
-  `value`        VARBINARY(64)     NULL,
+  `value`        VARBINARY(64) NULL,
   PRIMARY KEY (`subject_uuid`, `target_uuid`, `setting`),
   INDEX `fk_societies_members_members1_idx` (`subject_uuid` ASC),
   INDEX `fk_societies_members_members2_idx` (`target_uuid` ASC),
   CONSTRAINT `fk_societies_members_members1`
   FOREIGN KEY (`subject_uuid`)
   REFERENCES `societies`.`members` (`uuid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
   CONSTRAINT `fk_societies_members_members2`
   FOREIGN KEY (`target_uuid`)
   REFERENCES `societies`.`members` (`uuid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `societies`.`societies_locks` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)
 )
-  ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 SET SQL_MODE = @OLD_SQL_MODE;

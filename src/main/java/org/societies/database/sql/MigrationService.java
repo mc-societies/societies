@@ -2,11 +2,11 @@ package org.societies.database.sql;
 
 
 import com.google.inject.Inject;
+import org.apache.logging.log4j.Logger;
+import org.flywaydb.core.Flyway;
 import org.shank.logging.InjectLogger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
-import org.apache.logging.log4j.Logger;
-import org.flywaydb.core.Flyway;
 import org.societies.database.Database;
 
 /**

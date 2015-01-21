@@ -6,9 +6,7 @@ import com.google.inject.Provider;
 import org.joda.time.DateTime;
 import org.societies.groups.ExtensionFactory;
 import org.societies.groups.group.Group;
-import org.societies.groups.group.GroupComposite;
 import org.societies.groups.group.GroupFactory;
-import org.societies.groups.group.GroupPublisher;
 import org.societies.groups.setting.SettingProvider;
 
 import java.util.UUID;
@@ -19,7 +17,6 @@ import java.util.UUID;
 public class SQLGroupFactory implements GroupFactory {
 
     private final Provider<UUID> uuidProvider;
-    private final GroupPublisher groupPublisher;
     private final ExtensionFactory<SQLGroupHeart, Group> heartFactory;
 
     private final SettingProvider settingProvider;
@@ -29,10 +26,10 @@ public class SQLGroupFactory implements GroupFactory {
     @Inject
     public SQLGroupFactory(
             Provider<UUID> uuidProvider,
-            GroupPublisher groupPublisher,
-            ExtensionFactory<SQLGroupHeart, Group> heartFactory, SettingProvider settingProvider, ListeningExecutorService service, Queries queries) {
+            ExtensionFactory<SQLGroupHeart, Group> heartFactory,
+            SettingProvider settingProvider,
+            ListeningExecutorService service, Queries queries) {
         this.uuidProvider = uuidProvider;
-        this.groupPublisher = groupPublisher;
         this.heartFactory = heartFactory;
         this.settingProvider = settingProvider;
         this.service = service;
@@ -56,7 +53,7 @@ public class SQLGroupFactory implements GroupFactory {
 
     @Override
     public Group create(final UUID uuid, String name, String tag, DateTime created) {
-        GroupComposite group = new GroupComposite(uuid);
+        Group group = new Group(uuid);
 
         SQLGroupHeart heart = heartFactory.create(group);
         SQLSubject subject = new SQLSubject(uuid, settingProvider, queries, service, Queries.INSERT_SOCIETY_SETTING, Queries.SELECT_SOCIETY_SETTINGS);

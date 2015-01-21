@@ -11,10 +11,10 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
-import org.shank.config.ConfigSetting;
-import org.shank.logging.InjectLogger;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.shank.config.ConfigSetting;
+import org.shank.logging.InjectLogger;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;
 

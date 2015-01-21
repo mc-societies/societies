@@ -21,7 +21,8 @@ class HeaderExecutor implements Executor<Sender> {
     private final WidthProvider widthProvider;
 
     @Inject
-    HeaderExecutor(Formatter formatter, WidthProvider widthProvider) {this.formatter = formatter;
+    HeaderExecutor(Formatter formatter, WidthProvider widthProvider) {
+        this.formatter = formatter;
         this.widthProvider = widthProvider;
     }
 
@@ -30,7 +31,7 @@ class HeaderExecutor implements Executor<Sender> {
         String name = GRAY + ctx.getCommand().getName() + DARK_GRAY + "   ";
 
         StringBuilder message = new StringBuilder(name);
-        formatter.fill(message, widthProvider.widthOf(message),'-');
+        formatter.fill(message, widthProvider.widthOf(message), '-');
         sender.send(message);
     }
 }
