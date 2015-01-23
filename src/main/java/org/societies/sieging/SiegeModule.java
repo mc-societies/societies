@@ -1,10 +1,11 @@
 package org.societies.sieging;
 
+import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 import org.shank.AbstractModule;
-import org.societies.groups.Extensible;
 import org.societies.groups.ExtensionRoller;
+import org.societies.groups.group.Group;
 
 /**
  * Represents a SiegeModule
@@ -13,14 +14,14 @@ public class SiegeModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        Multibinder<ExtensionRoller> extensions = Multibinder.newSetBinder(binder(), ExtensionRoller.class, Names
+        Multibinder<ExtensionRoller<Group>> extensions = Multibinder.newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {}, Names
                 .named("group"));
 
 
-        extensions.addBinding().toInstance(new ExtensionRoller() {
+        extensions.addBinding().toInstance(new ExtensionRoller<Group>() {
             @Override
-            public void roll(Extensible extensible) {
-                extensible.add(new MemoryBesieger());
+            public void roll(Group extensible) {
+                extensible.add(new MemoryBesieger(extensible));
             }
         });
     }

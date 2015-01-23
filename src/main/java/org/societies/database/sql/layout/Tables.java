@@ -19,11 +19,6 @@ public class Tables {
 	public static final org.societies.database.sql.layout.tables.Cities CITIES = org.societies.database.sql.layout.tables.Cities.CITIES;
 
 	/**
-	 * The table societies.cities_lands
-	 */
-	public static final org.societies.database.sql.layout.tables.CitiesLands CITIES_LANDS = org.societies.database.sql.layout.tables.CitiesLands.CITIES_LANDS;
-
-	/**
 	 * The table societies.lands
 	 */
 	public static final org.societies.database.sql.layout.tables.Lands LANDS = org.societies.database.sql.layout.tables.Lands.LANDS;
