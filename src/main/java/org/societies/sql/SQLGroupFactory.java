@@ -1,9 +1,8 @@
-package org.societies.database.sql;
+package org.societies.sql;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.name.Named;
 import org.joda.time.DateTime;
 import org.societies.groups.ExtensionFactory;
 import org.societies.groups.ExtensionRoller;
@@ -17,7 +16,7 @@ import java.util.UUID;
 /**
  * Represents a DefaultGroupFactory
  */
-public class SQLGroupFactory implements GroupFactory {
+class SQLGroupFactory implements GroupFactory {
 
     private final Provider<UUID> uuidProvider;
     private final ExtensionFactory<SQLGroupHeart, Group> heartFactory;
@@ -25,7 +24,7 @@ public class SQLGroupFactory implements GroupFactory {
     private final SettingProvider settingProvider;
     private final ListeningExecutorService service;
     private final Queries queries;
-    private final Set<ExtensionRoller> extensions;
+    private final Set<ExtensionRoller<Group>> extensions;
 
     @Inject
     public SQLGroupFactory(
@@ -33,7 +32,7 @@ public class SQLGroupFactory implements GroupFactory {
             ExtensionFactory<SQLGroupHeart, Group> heartFactory,
             SettingProvider settingProvider,
             ListeningExecutorService service, Queries queries,
-            @Named("member") Set<ExtensionRoller> extensions) {
+            Set<ExtensionRoller<Group>> extensions) {
         this.uuidProvider = uuidProvider;
         this.heartFactory = heartFactory;
         this.settingProvider = settingProvider;
@@ -67,7 +66,7 @@ public class SQLGroupFactory implements GroupFactory {
         group.setGroupHeart(heart);
         group.setSubject(subject);
 
-        for (ExtensionRoller extension : extensions) {
+        for (ExtensionRoller<Group> extension : extensions) {
             extension.roll(group);
         }
 

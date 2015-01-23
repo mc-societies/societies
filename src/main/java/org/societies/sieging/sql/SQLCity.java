@@ -1,4 +1,4 @@
-package org.societies.sieging;
+package org.societies.sieging.sql;
 
 import gnu.trove.set.hash.THashSet;
 import net.catharos.lib.core.uuid.UUIDGen;
@@ -9,8 +9,8 @@ import org.jooq.Select;
 import org.societies.api.sieging.City;
 import org.societies.api.sieging.Land;
 import org.societies.bridge.Location;
-import org.societies.database.sql.Queries;
 import org.societies.database.sql.layout.tables.records.LandsRecord;
+import org.societies.sieging.DefaultLand;
 
 import java.util.Set;
 import java.util.UUID;
@@ -18,13 +18,13 @@ import java.util.UUID;
 /**
  * Represents a SQLCity
  */
-public class SQLCity implements City {
+class SQLCity implements City {
 
-    private final Queries queries;
+    private final SiegingQueries queries;
     private final Location location;
     private final UUID uuid;
 
-    public SQLCity(Queries queries, Location location, UUID uuid) {
+    public SQLCity(SiegingQueries queries, Location location, UUID uuid) {
         this.queries = queries;
         this.location = location;
         this.uuid = uuid;
@@ -37,7 +37,7 @@ public class SQLCity implements City {
 
     @Override
     public void addLand(Land land) {
-        Insert query = queries.getQuery(Queries.INSERT_LAND);
+        Insert query = queries.getQuery(SiegingQueries.INSERT_LAND);
 
         query.bind(1, UUIDGen.toByteArray(land.getUUID()));
         query.bind(2, UUIDGen.toByteArray(getUUID()));
@@ -48,7 +48,7 @@ public class SQLCity implements City {
     @Override
     public Set<Land> getLands() {
         THashSet<Land> lands = new THashSet<Land>();
-        Select<Record1<byte[]>> query = queries.getQuery(Queries.SELECT_LANDS_BY_CITY);
+        Select<Record1<byte[]>> query = queries.getQuery(SiegingQueries.SELECT_LANDS_BY_CITY);
 
         for (Record1<byte[]> record : query.fetch()) {
             UUID uuid = UUIDGen.toUUID(record.value1());
@@ -61,7 +61,7 @@ public class SQLCity implements City {
 
     @Override
     public boolean removeLand(UUID uuid) {
-        Delete<LandsRecord> query = queries.getQuery(Queries.DROP_LAND);
+        Delete<LandsRecord> query = queries.getQuery(SiegingQueries.DROP_LAND);
         query.bind(1, UUIDGen.toByteArray(uuid));
         return query.execute() != 0;
     }

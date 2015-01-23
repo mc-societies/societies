@@ -1,8 +1,7 @@
-package org.societies.database.sql;
+package org.societies.sql;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import net.catharos.lib.core.command.sender.Sender;
 import org.societies.groups.ExtensionFactory;
 import org.societies.groups.ExtensionRoller;
@@ -17,11 +16,11 @@ import java.util.UUID;
 /**
  * Represents a BukkitMemberFactory
  */
-public class SQLMemberFactory implements MemberFactory {
+class SQLMemberFactory implements MemberFactory {
 
     private final ExtensionFactory<? extends Sender, UUID> senderFactory;
     private final ExtensionFactory<SQLMemberHeart, Member> heartFactory;
-    private final Set<ExtensionRoller> extensions;
+    private final Set<ExtensionRoller<Member>> extensions;
 
     private final SettingProvider settingProvider;
     private final ListeningExecutorService service;
@@ -31,7 +30,7 @@ public class SQLMemberFactory implements MemberFactory {
     @Inject
     public SQLMemberFactory(ExtensionFactory<Sender, UUID> senderFactory,
                             ExtensionFactory<SQLMemberHeart, Member> heartFactory,
-                            @Named("member") Set<ExtensionRoller> extensions,
+                            Set<ExtensionRoller<Member>> extensions,
                             SettingProvider settingProvider,
                             ListeningExecutorService service, Queries queries) {
         this.senderFactory = senderFactory;
@@ -57,7 +56,7 @@ public class SQLMemberFactory implements MemberFactory {
         member.setParticipant(participant);
         member.setSender(sender);
 
-        for (ExtensionRoller extension : extensions) {
+        for (ExtensionRoller<Member> extension : extensions) {
             extension.roll(member);
         }
 

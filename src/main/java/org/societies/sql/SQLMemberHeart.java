@@ -1,4 +1,4 @@
-package org.societies.database.sql;
+package org.societies.sql;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.jooq.*;
 import org.societies.api.member.MemberException;
+import org.societies.database.QueryProvider;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
 import org.societies.groups.event.EventController;
 import org.societies.groups.group.Group;
@@ -34,14 +35,14 @@ import static net.catharos.lib.core.uuid.UUIDGen.*;
 /**
  * Represents a SQLMember
  */
-public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
+class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
 
     protected final Member member;
 
     private final Rank defaultRank;
     private final GroupProvider groupProvider;
 
-    private final Queries queries;
+    private final QueryProvider queries;
     private final ListeningExecutorService service;
 
     @Inject
@@ -49,7 +50,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
                           EventController events,
                           @Named("default-rank") Rank defaultRank,
                           GroupProvider groupProvider,
-                          Queries queries, ListeningExecutorService service) {
+                          QueryProvider queries, ListeningExecutorService service) {
         super(events);
         this.defaultRank = defaultRank;
         this.groupProvider = groupProvider;

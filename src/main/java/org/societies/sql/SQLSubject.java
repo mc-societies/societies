@@ -1,4 +1,4 @@
-package org.societies.database.sql;
+package org.societies.sql;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -11,6 +11,7 @@ import org.jooq.Select;
 import org.jooq.types.UShort;
 import org.shank.logging.InjectLogger;
 import org.societies.database.QueryKey;
+import org.societies.database.QueryProvider;
 import org.societies.groups.setting.Setting;
 import org.societies.groups.setting.SettingException;
 import org.societies.groups.setting.SettingProvider;
@@ -24,9 +25,9 @@ import java.util.UUID;
 /**
  * Represents a SQLSubject
  */
-public class SQLSubject extends AbstractSubject {
+class SQLSubject extends AbstractSubject {
 
-    private final Queries queries;
+    private final QueryProvider queries;
     private final UUID uuid;
     private final SettingProvider settingProvider;
     private final ListeningExecutorService service;
@@ -38,7 +39,7 @@ public class SQLSubject extends AbstractSubject {
 
     protected SQLSubject(UUID uuid,
                          SettingProvider settingProvider,
-                         Queries queries, ListeningExecutorService service,
+                         QueryProvider queries, ListeningExecutorService service,
                          QueryKey<? extends Insert> insert,
                          QueryKey<Select<Record3<byte[], UShort, byte[]>>> select) {
         this.queries = queries;

@@ -19,7 +19,7 @@ import static com.google.inject.Key.get;
 /**
  * Represents a MemberProviderModule
  */
-public class JSONModule extends AbstractServiceModule {
+public class JSONDatabaseModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
@@ -56,8 +56,7 @@ public class JSONModule extends AbstractServiceModule {
         // Group provider
         bind(GroupProvider.class).to(provider);
 
-        Key<JSONGroupPublisher> groupPublisher =
-                get(new TypeLiteral<JSONGroupPublisher>() {});
+        Key<JSONGroupPublisher> groupPublisher = get(new TypeLiteral<JSONGroupPublisher>() {});
 
         // Group Publishers
         bind(GroupPublisher.class).to(groupPublisher);

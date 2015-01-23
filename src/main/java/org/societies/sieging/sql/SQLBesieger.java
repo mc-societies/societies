@@ -1,4 +1,4 @@
-package org.societies.sieging;
+package org.societies.sieging.sql;
 
 import gnu.trove.set.hash.THashSet;
 import net.catharos.lib.core.uuid.UUIDGen;
@@ -8,7 +8,6 @@ import org.jooq.Select;
 import org.societies.api.sieging.Besieger;
 import org.societies.api.sieging.City;
 import org.societies.bridge.Location;
-import org.societies.database.sql.Queries;
 import org.societies.database.sql.layout.tables.records.CitiesRecord;
 import org.societies.groups.group.Group;
 
@@ -17,12 +16,13 @@ import java.util.Set;
 /**
  * Represents a SQLBesieger
  */
-public class SQLBesieger implements Besieger {
-    
-    private final Group group;
-    private final Queries queries;
+class SQLBesieger implements Besieger {
 
-    public SQLBesieger(Group group, Queries queries) {this.group = group;
+    private final Group group;
+    private final SiegingQueries queries;
+
+    public SQLBesieger(Group group, SiegingQueries queries) {
+        this.group = group;
         this.queries = queries;
     }
 
@@ -33,7 +33,7 @@ public class SQLBesieger implements Besieger {
 
     @Override
     public void addCity(City city) {
-        Insert query = queries.getQuery(Queries.INSERT_CITY);
+        Insert query = queries.getQuery(SiegingQueries.INSERT_CITY);
 
         query.bind(1, UUIDGen.toByteArray(city.getUUID()));
         query.bind(2, UUIDGen.toByteArray(group.getUUID()));
@@ -48,7 +48,7 @@ public class SQLBesieger implements Besieger {
 
     @Override
     public void removeCity(City city) {
-        Delete<CitiesRecord> query = queries.getQuery(Queries.DROP_CITY);
+        Delete<CitiesRecord> query = queries.getQuery(SiegingQueries.DROP_CITY);
         query.bind(1, city.getUUID());
         query.execute();
     }
@@ -56,7 +56,7 @@ public class SQLBesieger implements Besieger {
     @Override
     public Set<City> getCities() {
         THashSet<City> cities = new THashSet<City>();
-        Select<CitiesRecord> query = queries.getQuery(Queries.SELECT_CITIES_BY_SOCIETY);
+        Select<CitiesRecord> query = queries.getQuery(SiegingQueries.SELECT_CITIES_BY_SOCIETY);
 
         for (CitiesRecord record : query.fetch()) {
             SQLCity city = new SQLCity(queries, new Location(null, record.getX(), record.getY(), record.getZ()), UUIDGen

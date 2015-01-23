@@ -1,4 +1,4 @@
-package org.societies.database.sql;
+package org.societies.lock.sql;
 
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
@@ -9,6 +9,7 @@ import com.google.inject.Singleton;
 import org.jooq.Query;
 import org.jooq.Select;
 import org.societies.api.lock.Locker;
+import org.societies.database.sql.AbstractPublisher;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
@@ -22,7 +23,7 @@ class SQLLocker extends AbstractPublisher implements Locker {
 //todo    private final TIntObjectHashMap<ReentrantLock> locks = new TIntObjectHashMap<ReentrantLock>();
 
     @Inject
-    public SQLLocker(ListeningExecutorService service, Queries queries) {
+    public SQLLocker(ListeningExecutorService service, LockQueries queries) {
         super(service, queries);
     }
 
@@ -31,7 +32,7 @@ class SQLLocker extends AbstractPublisher implements Locker {
         return service.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                Query query = queries.getQuery(Queries.INSERT_LOCK);
+                Query query = queries.getQuery(LockQueries.INSERT_LOCK);
 
                 query.bind(1, id);
 
@@ -46,7 +47,7 @@ class SQLLocker extends AbstractPublisher implements Locker {
         return service.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                Query query = queries.getQuery(Queries.DROP_LOCK);
+                Query query = queries.getQuery(LockQueries.DROP_LOCK);
 
                 query.bind(1, id);
 
@@ -60,7 +61,7 @@ class SQLLocker extends AbstractPublisher implements Locker {
         return service.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                Select query = queries.getQuery(Queries.SELECT_LOCK);
+                Select query = queries.getQuery(LockQueries.SELECT_LOCK);
 
                 query.bind(1, id);
 

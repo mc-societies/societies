@@ -1,19 +1,10 @@
-package org.societies.database.sql;
+package org.societies.sql;
 
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import org.jooq.SQLDialect;
 import org.shank.service.AbstractServiceModule;
-import org.societies.api.lock.Locker;
-import org.societies.database.DSLProvider;
-import org.societies.database.Database;
-import org.societies.database.RemoteDatabase;
-import org.societies.database.data.queue.DefaultQueue;
-import org.societies.database.data.queue.Queue;
-import org.societies.database.sql.service.CleanupService;
-import org.societies.database.sql.service.MigrationService;
-import org.societies.database.sql.service.RankService;
+import org.societies.database.QueryProvider;
 import org.societies.group.OnlineGroupCache;
 import org.societies.groups.ExtensionFactory;
 import org.societies.groups.cache.GroupCache;
@@ -21,51 +12,27 @@ import org.societies.groups.cache.MemberCache;
 import org.societies.groups.cache.NaughtyGroupCache;
 import org.societies.groups.group.*;
 import org.societies.groups.member.*;
+import org.societies.lock.sql.SQLLockModule;
 import org.societies.member.OnlineMemberCache;
-
-import java.util.concurrent.TimeUnit;
 
 import static com.google.inject.Key.get;
 
 /**
- * Represents a MemberProviderModule
+ * Represents a SQLModule
  */
 public class SQLModule extends AbstractServiceModule {
 
     private final boolean cache;
 
-    public SQLModule(boolean cache) {this.cache = cache;}
+    public SQLModule(boolean cache) {
+        this.cache = cache;
+    }
 
     @Override
     protected void configure() {
-        bindService().to(MigrationService.class);
-        bindService().to(CleanupService.class);
-        bindService().to(RankService.class);
-
-        bind(Database.class).to(RemoteDatabase.class);
-        bind(DSLProvider.class).to(RemoteDatabase.class);
-        bindNamedString(RemoteDatabase.DB_DATASOURCE_CLASS, "com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
-
-        bind(SQLDialect.class).toInstance(SQLDialect.MYSQL);
-
-
-//        bind(Database.class).to(URLDatabase.class);
-//        bind(DSLProvider.class).to(URLDatabase.class);
-//        bindNamedString(RemoteDatabase.DB_DATASOURCE_CLASS, "org.h2.jdbcx.JdbcDataSource");
-//        bindNamedString("db-url", "jdbc:h2:./test");
-//        bindNamedString("db-driver", "org.h2.Driver");
-//
-//        bind(SQLDialect.class).toInstance(SQLDialect.H2);
-
-
-        bind(Queue.class).to(DefaultQueue.class);
-        bindNamedInstance("auto-flush-interval", long.class, 5000L);
-        bindNamedInstance("max-batch-idle", long.class, 5000L);
-        bindNamedInstance("queue-time-unit", TimeUnit.class, TimeUnit.MILLISECONDS);
-        bindNamedInstance("critical-batch-size", int.class, 100);
-
-
         bind(Queries.class);
+
+        bindNamed("main", QueryProvider.class).to(Queries.class);
 
         Key<SQLProvider> controller = get(SQLProvider.class);
 
@@ -110,6 +77,8 @@ public class SQLModule extends AbstractServiceModule {
         // Member Publishers
         bind(MemberPublisher.class).to(SQLMemberPublisher.class);
 
-        bind(Locker.class).to(SQLLocker.class);
+        install(new SQLLockModule());
+
+        bindService().to(RankService.class);
     }
 }

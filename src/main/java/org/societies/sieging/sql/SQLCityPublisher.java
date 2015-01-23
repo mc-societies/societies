@@ -1,4 +1,4 @@
-package org.societies.sieging;
+package org.societies.sieging.sql;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -7,7 +7,6 @@ import org.jooq.Insert;
 import org.societies.api.sieging.City;
 import org.societies.api.sieging.CityPublisher;
 import org.societies.bridge.Location;
-import org.societies.database.sql.Queries;
 import org.societies.groups.group.Group;
 
 import java.util.concurrent.Callable;
@@ -15,12 +14,12 @@ import java.util.concurrent.Callable;
 /**
  * Represents a SQLCityPublisher
  */
-public class SQLCityPublisher implements CityPublisher {
+class SQLCityPublisher implements CityPublisher {
 
     private final ListeningExecutorService service;
-    private final Queries queries;
+    private final SiegingQueries queries;
 
-    public SQLCityPublisher(ListeningExecutorService service, Queries queries) {
+    public SQLCityPublisher(ListeningExecutorService service, SiegingQueries queries) {
         this.service = service;
         this.queries = queries;
     }
@@ -30,7 +29,7 @@ public class SQLCityPublisher implements CityPublisher {
         return service.submit(new Callable<City>() {
             @Override
             public City call() throws Exception {
-                Insert query = queries.getQuery(Queries.INSERT_CITY);
+                Insert query = queries.getQuery(SiegingQueries.INSERT_CITY);
 
                 query.bind(1, UUIDGen.toByteArray(city.getUUID()));
                 query.bind(2, UUIDGen.toByteArray(group.getUUID()));

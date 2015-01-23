@@ -1,7 +1,6 @@
-package org.societies.database.sql;
+package org.societies.sql;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import org.jooq.*;
 import org.jooq.types.UShort;
 import org.societies.database.DSLProvider;
@@ -14,10 +13,9 @@ import java.sql.Timestamp;
 import static org.societies.database.sql.layout.Tables.*;
 
 /**
- * Represents a SocietiesQueries
+ * Represents a Queries
  */
-@Singleton
-public class Queries extends QueryProvider {
+class Queries extends QueryProvider {
 
     //================================================================================
     // Groups
@@ -56,22 +54,7 @@ public class Queries extends QueryProvider {
 
     public static final QueryKey<Query> DROP_RANK_IN_SOCIETIES = QueryKey.create();
 
-    public static final QueryKey<Query> DROP_ORPHAN_SOCIETIES = QueryKey.create();
 
-
-    //================================================================================
-    // Ranks
-    //================================================================================
-
-
-    public static final QueryKey<Insert<RanksRecord>> INSERT_RANK = QueryKey.create();
-    public static final QueryKey<Query> DROP_RANK = QueryKey.create();
-
-
-    public static final QueryKey<Query> DROP_RANK_ORPHANS = QueryKey.create();
-
-
-    //================================================================================
     // Members
     //================================================================================
 
@@ -108,47 +91,16 @@ public class Queries extends QueryProvider {
 
     public static final QueryKey<Query> DROP_RANK_IN_MEMBERS = QueryKey.create();
 
-    public static final QueryKey<Query> DROP_INACTIVE_MEMBERS = QueryKey.create();
-
     //================================================================================
-    // Locks
+    // Ranks
     //================================================================================
 
-    public static final QueryKey<Insert<SocietiesLocksRecord>> INSERT_LOCK = QueryKey.create();
-
-    public static final QueryKey<Query> DROP_LOCK = QueryKey.create();
-
-    public static final QueryKey<Select<SocietiesLocksRecord>> SELECT_LOCK = QueryKey.create();
-
-    //================================================================================
-    // Sieging
-    //================================================================================
-
-    public static final QueryKey<Insert> INSERT_LAND = QueryKey.create();
-
-    public static final QueryKey<Delete<LandsRecord>> DROP_LAND = QueryKey.create();
-
-    public static final QueryKey<Select<Record1<byte[]>>> SELECT_LANDS_BY_CITY = QueryKey.create();
-
-
-    public static final QueryKey<Insert> INSERT_CITY = QueryKey.create();
-
-    public static final QueryKey<Delete<CitiesRecord>> DROP_CITY = QueryKey.create();
-
-    public static final QueryKey<Select<CitiesRecord>> SELECT_CITIES_BY_SOCIETY = QueryKey.create();
-
-
-    public static final QueryKey<Insert> INSERT_SIEGE = QueryKey.create();
-
-    public static final QueryKey<Delete<SiegesRecord>> DROP_SIEGE = QueryKey.create();
-
-    public static final QueryKey<Select<SiegesRecord>> SELECT_SIEGES_BY_CITY = QueryKey.create();
-
-    public static final QueryKey<Select<SiegesRecord>> SELECT_SIEGES_BY_SOCIETY = QueryKey.create();
+    public static final QueryKey<Insert<RanksRecord>> INSERT_RANK = QueryKey.create();
+    public static final QueryKey<Query> DROP_RANK = QueryKey.create();
 
 
     @Inject
-    protected Queries(DSLProvider provider) {
+    public Queries(DSLProvider provider) {
         super(provider);
     }
 
@@ -182,7 +134,6 @@ public class Queries extends QueryProvider {
                         where(MEMBERS.SOCIETY.equal(DEFAULT_BYTE_ARRAY));
             }
         });
-
 
         builder(SELECT_SOCIETY_BY_UUID, new QueryBuilder<Select<SocietiesRecord>>() {
             @Override
@@ -224,6 +175,7 @@ public class Queries extends QueryProvider {
                         .set(SOCIETIES.CREATED, DEFAULT_TIMESTAMP).onDuplicateKeyIgnore();
             }
         });
+
         builder(DROP_SOCIETY_BY_UUID, new QueryBuilder<Query>() {
             @Override
             public Query create(DSLContext context) {
@@ -340,7 +292,6 @@ public class Queries extends QueryProvider {
             }
         });
 
-
         builder(INSERT_SOCIETY_RANK, new QueryBuilder<Insert>() {
             @Override
             public Insert create(DSLContext context) {
@@ -354,15 +305,6 @@ public class Queries extends QueryProvider {
             public Query create(DSLContext context) {
                 return context.delete(SOCIETIES_RANKS)
                         .where(SOCIETIES_RANKS.RANK.equal(DEFAULT_BYTE_ARRAY));
-            }
-        });
-
-        builder(DROP_ORPHAN_SOCIETIES, new QueryBuilder<Query>() {
-            @Override
-            public Query create(DSLContext context) {
-                return context.delete(SOCIETIES)
-                        .where(SOCIETIES.UUID
-                                .notIn(context.select(MEMBERS.SOCIETY).from(MEMBERS)));
             }
         });
 
@@ -386,17 +328,6 @@ public class Queries extends QueryProvider {
             @Override
             public Query create(DSLContext context) {
                 return context.delete(RANKS).where(RANKS.UUID.equal(DEFAULT_BYTE_ARRAY));
-            }
-        });
-
-        builder(DROP_RANK_ORPHANS, new QueryBuilder<Query>() {
-            @Override
-            public Query create(DSLContext context) {
-                return context.delete(RANKS)
-                        .where(RANKS.UUID
-                                .notIn(context.select(SOCIETIES_RANKS.RANK).from(SOCIETIES_RANKS))
-                                .and(RANKS.UUID
-                                        .notIn(context.select(MEMBERS_RANKS.RANK).from(MEMBERS_RANKS))));
             }
         });
 
@@ -441,7 +372,6 @@ public class Queries extends QueryProvider {
                         .where(MEMBERS.UUID.equal(DEFAULT_UUID));
             }
         });
-
 
         builder(SELECT_MEMBER_RANKS, new QueryBuilder<Select<Record1<byte[]>>>() {
             @Override
@@ -502,14 +432,6 @@ public class Queries extends QueryProvider {
             }
         });
 
-        builder(DROP_INACTIVE_MEMBERS, new QueryBuilder<Query>() {
-            @Override
-            public Query create(DSLContext context) {
-                return context.delete(MEMBERS)
-                        .where(MEMBERS.CREATED.le(new Timestamp(System.currentTimeMillis())));
-            }
-        });
-
         builder(UPDATE_MEMBER_LAST_ACTIVE, new QueryBuilder<Update<MembersRecord>>() {
             @Override
             public Update<MembersRecord> create(DSLContext context) {
@@ -525,133 +447,6 @@ public class Queries extends QueryProvider {
                 return context.update(MEMBERS)
                         .set(MEMBERS.CREATED, DEFAULT_TIMESTAMP)
                         .where(MEMBERS.UUID.equal(DEFAULT_BYTE_ARRAY));
-            }
-        });
-
-        //================================================================================
-        // Locks
-        //================================================================================
-
-
-        builder(INSERT_LOCK, new QueryBuilder<Insert<SocietiesLocksRecord>>() {
-            @Override
-            public Insert<SocietiesLocksRecord> create(DSLContext context) {
-                return context.insertInto(SOCIETIES_LOCKS).set(SOCIETIES_LOCKS.ID, DEFAULT_SHORT)
-                        .onDuplicateKeyIgnore();
-            }
-        });
-
-        builder(DROP_LOCK, new QueryBuilder<Query>() {
-            @Override
-            public Query create(DSLContext context) {
-                return context.delete(SOCIETIES_LOCKS).where(SOCIETIES_LOCKS.ID.equal(DEFAULT_SHORT));
-            }
-        });
-
-        builder(SELECT_LOCK, new QueryBuilder<Select<SocietiesLocksRecord>>() {
-            @Override
-            public Select<SocietiesLocksRecord> create(DSLContext context) {
-                return context.selectFrom(SOCIETIES_LOCKS).where(SOCIETIES_LOCKS.ID.equal(DEFAULT_SHORT));
-            }
-        });
-
-        //================================================================================
-        // Sieging
-        //================================================================================
-
-        builder(INSERT_LAND, new QueryBuilder<Insert>() {
-            @Override
-            public Insert create(DSLContext context) {
-                return context.insertInto(LANDS)
-                        .set(LANDS.UUID, DEFAULT_BYTE_ARRAY)
-                        .set(LANDS.ORIGIN, DEFAULT_BYTE_ARRAY);
-
-            }
-        });
-
-        builder(DROP_LAND, new QueryBuilder<Delete<LandsRecord>>() {
-            @Override
-            public Delete<LandsRecord> create(DSLContext context) {
-                return context.delete(LANDS)
-                        .where(LANDS.UUID.equal(DEFAULT_BYTE_ARRAY));
-            }
-        });
-
-        builder(SELECT_LANDS_BY_CITY, new QueryBuilder<Select<Record1<byte[]>>>() {
-            @Override
-            public Select<Record1<byte[]>> create(DSLContext context) {
-                return context.select(LANDS.UUID).from(LANDS).where(LANDS.ORIGIN.equal(DEFAULT_BYTE_ARRAY));
-            }
-        });
-
-
-        builder(INSERT_CITY, new QueryBuilder<Insert>() {
-            @Override
-            public Insert create(DSLContext context) {
-                return context.insertInto(CITIES)
-                        .set(CITIES.UUID, DEFAULT_BYTE_ARRAY)
-                        .set(CITIES.SOCIETY, DEFAULT_BYTE_ARRAY)
-
-                        .set(CITIES.X, DEFAULT_SHORT)
-                        .set(CITIES.Y, DEFAULT_SHORT)
-                        .set(CITIES.Z, DEFAULT_SHORT);
-            }
-        });
-
-        builder(DROP_CITY, new QueryBuilder<Delete<CitiesRecord>>() {
-            @Override
-            public Delete<CitiesRecord> create(DSLContext context) {
-                return context.delete(CITIES)
-                        .where(CITIES.UUID.equal(DEFAULT_BYTE_ARRAY));
-            }
-        });
-
-        builder(SELECT_CITIES_BY_SOCIETY, new QueryBuilder<Select<CitiesRecord>>() {
-            @Override
-            public Select<CitiesRecord> create(DSLContext context) {
-                return context.selectFrom(CITIES).where(CITIES.SOCIETY.equal(DEFAULT_BYTE_ARRAY));
-            }
-        });
-
-
-        builder(INSERT_SIEGE, new QueryBuilder<Insert>() {
-            @Override
-            public Insert create(DSLContext context) {
-                return context.insertInto(SIEGES)
-                        .set(SIEGES.UUID, DEFAULT_BYTE_ARRAY)
-                        .set(SIEGES.SOCIETY, DEFAULT_BYTE_ARRAY)
-                        .set(SIEGES.CITY, DEFAULT_BYTE_ARRAY)
-
-                        .set(SIEGES.X, DEFAULT_SHORT)
-                        .set(SIEGES.Y, DEFAULT_SHORT)
-                        .set(SIEGES.Z, DEFAULT_SHORT)
-
-                        .set(SIEGES.CREATED, DEFAULT_TIMESTAMP)
-                        .set(SIEGES.WAGER, DEFAULT_BYTE_ARRAY);
-            }
-        });
-
-        builder(DROP_SIEGE, new QueryBuilder<Delete<SiegesRecord>>() {
-            @Override
-            public Delete<SiegesRecord> create(DSLContext context) {
-                return context.delete(SIEGES)
-                        .where(SIEGES.UUID.equal(DEFAULT_BYTE_ARRAY));
-            }
-        });
-
-        builder(SELECT_SIEGES_BY_CITY, new QueryBuilder<Select<SiegesRecord>>() {
-            @Override
-            public Select<SiegesRecord> create(DSLContext context) {
-                return context.selectFrom(SIEGES).where(SIEGES.CITY
-                        .equal(DEFAULT_BYTE_ARRAY));
-            }
-        });
-
-        builder(SELECT_SIEGES_BY_SOCIETY, new QueryBuilder<Select<SiegesRecord>>() {
-            @Override
-            public Select<SiegesRecord> create(DSLContext context) {
-                return context.selectFrom(SIEGES).where(SIEGES.SOCIETY
-                        .equal(DEFAULT_BYTE_ARRAY));
             }
         });
     }

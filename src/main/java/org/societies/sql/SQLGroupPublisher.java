@@ -1,4 +1,4 @@
-package org.societies.database.sql;
+package org.societies.sql;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -8,6 +8,7 @@ import net.catharos.lib.core.uuid.UUIDGen;
 import org.joda.time.DateTime;
 import org.jooq.Insert;
 import org.societies.bridge.ChatColor;
+import org.societies.database.sql.AbstractPublisher;
 import org.societies.database.sql.layout.tables.records.SocietiesRecord;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupFactory;

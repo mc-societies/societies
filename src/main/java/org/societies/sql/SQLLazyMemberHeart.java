@@ -1,4 +1,4 @@
-package org.societies.database.sql;
+package org.societies.sql;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -7,6 +7,7 @@ import com.google.inject.name.Named;
 import gnu.trove.set.hash.THashSet;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
+import org.societies.database.QueryProvider;
 import org.societies.groups.event.EventController;
 import org.societies.groups.group.GroupHeart;
 import org.societies.groups.group.GroupProvider;
@@ -32,7 +33,7 @@ class SQLLazyMemberHeart extends SQLMemberHeart {
                               EventController events,
                               @Named("default-rank") Rank defaultRank,
                               GroupProvider groupProvider,
-                              Queries queries, ListeningExecutorService service) {
+                              QueryProvider queries, ListeningExecutorService service) {
         super(member, events, defaultRank, groupProvider, queries, service);
     }
 

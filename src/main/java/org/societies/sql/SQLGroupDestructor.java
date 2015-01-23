@@ -1,10 +1,11 @@
-package org.societies.database.sql;
+package org.societies.sql;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Query;
+import org.societies.database.sql.AbstractPublisher;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupDestructor;
 

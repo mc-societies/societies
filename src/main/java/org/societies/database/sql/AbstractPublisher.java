@@ -1,16 +1,17 @@
 package org.societies.database.sql;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
+import org.societies.database.QueryProvider;
 
 /**
  * Represents a AbstractPublisher
  */
-abstract class AbstractPublisher {
+public abstract class AbstractPublisher {
 
     protected final ListeningExecutorService service;
-    protected final Queries queries;
+    protected final QueryProvider queries;
 
-    public AbstractPublisher(ListeningExecutorService service, Queries queries) {
+    public AbstractPublisher(ListeningExecutorService service, QueryProvider queries) {
         this.service = service;
         this.queries = queries;
     }

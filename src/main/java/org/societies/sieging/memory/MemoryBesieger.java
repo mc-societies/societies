@@ -1,4 +1,4 @@
-package org.societies.sieging;
+package org.societies.sieging.memory;
 
 import gnu.trove.set.hash.THashSet;
 import org.societies.api.sieging.Besieger;
@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Represents a MemoryBesieger
  */
-public class MemoryBesieger implements Besieger {
+class MemoryBesieger implements Besieger {
 
     private final Set<City> cities = new THashSet<City>();
     private final Group group;

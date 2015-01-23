@@ -1,4 +1,4 @@
-package org.societies.database.sql;
+package org.societies.sql;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -35,7 +35,7 @@ import java.util.UUID;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.Futures.transform;
-import static org.societies.database.sql.Queries.*;
+import static org.societies.sql.Queries.*;
 
 /**
  * Represents a LoadingMemberProvider

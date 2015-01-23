@@ -1,4 +1,4 @@
-package org.societies.sieging;
+package org.societies.sieging.memory;
 
 import gnu.trove.map.hash.THashMap;
 import org.societies.api.sieging.City;
@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * Represents a MemoryCity
  */
-public class MemoryCity implements City {
+class MemoryCity implements City {
 
     private final THashMap<UUID, Land> lands = new THashMap<UUID, Land>();
     private final UUID uuid;

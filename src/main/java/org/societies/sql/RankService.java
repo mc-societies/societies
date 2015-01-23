@@ -1,4 +1,4 @@
-package org.societies.database.sql.service;
+package org.societies.sql;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -8,7 +8,7 @@ import org.jooq.Insert;
 import org.shank.logging.InjectLogger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
-import org.societies.database.sql.Queries;
+import org.societies.database.QueryProvider;
 import org.societies.database.sql.layout.tables.records.RanksRecord;
 import org.societies.groups.rank.Rank;
 
@@ -17,16 +17,16 @@ import java.util.Set;
 /**
  * Represents a RankService
  */
-public class RankService extends AbstractService {
+class RankService extends AbstractService {
 
     private final Set<Rank> ranks;
-    private final Queries queries;
+    private final QueryProvider queries;
 
     @InjectLogger
     private Logger logger;
 
     @Inject
-    public RankService(@Named("predefined-ranks") Set<Rank> ranks, Queries queries) {
+    public RankService(@Named("predefined-ranks") Set<Rank> ranks, @Named("main") QueryProvider queries) {
         this.ranks = ranks;
         this.queries = queries;
     }

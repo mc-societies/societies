@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.typesafe.config.*;
@@ -24,7 +25,10 @@ import org.societies.commands.FormatModule;
 import org.societies.database.DatabaseModule;
 import org.societies.dictionary.DictionaryModule;
 import org.societies.group.SocietyModule;
+import org.societies.groups.ExtensionRoller;
 import org.societies.groups.event.EventController;
+import org.societies.groups.group.Group;
+import org.societies.groups.member.Member;
 import org.societies.member.MemberModule;
 import org.societies.member.locale.LocaleModule;
 import org.societies.request.RequestModule;
@@ -38,6 +42,8 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.Executors;
+
+import static com.google.inject.multibindings.Multibinder.newSetBinder;
 
 /**
  * Represents a SocietiesModule
@@ -153,6 +159,10 @@ public class SocietiesModule extends AbstractServiceModule {
         }
 
         bind(EventController.class).to(DefaultEventController.class);
+
+
+        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Member>>() {});
+        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
     }
 
     @Singleton

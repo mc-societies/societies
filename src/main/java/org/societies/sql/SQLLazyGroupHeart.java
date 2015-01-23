@@ -1,4 +1,4 @@
-package org.societies.database.sql;
+package org.societies.sql;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * Represents a LazyGroupHeart
  */
-public class SQLLazyGroupHeart extends SQLGroupHeart {
+class SQLLazyGroupHeart extends SQLGroupHeart {
 
     private String name, tag;
     private DateTime created;

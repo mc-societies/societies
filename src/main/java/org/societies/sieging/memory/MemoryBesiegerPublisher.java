@@ -1,4 +1,4 @@
-package org.societies.sieging;
+package org.societies.sieging.memory;
 
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
@@ -13,11 +13,11 @@ import javax.annotation.Nullable;
 /**
  * Represents a BesiegerPublisher
  */
-public class JSONBesiegerPublisher implements BesiegerPublisher {
+class MemoryBesiegerPublisher implements BesiegerPublisher {
 
     private final GroupPublisher groupPublisher;
 
-    public JSONBesiegerPublisher(GroupPublisher groupPublisher) {
+    public MemoryBesiegerPublisher(GroupPublisher groupPublisher) {
         this.groupPublisher = groupPublisher;
     }
 
