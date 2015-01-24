@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * Represents a LazySQLMemberHearth
  */
-class SQLLazyMemberHeart extends SQLMemberHeart {
+public class SQLLazyMemberHeart extends SQLMemberHeart {
 
     @Nullable
     private GroupHeart group;

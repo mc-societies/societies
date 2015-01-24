@@ -7,7 +7,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
 import net.catharos.lib.core.util.ByteUtil;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.jooq.Record1;
@@ -120,7 +119,7 @@ class SQLProvider implements MemberProvider, GroupProvider {
                 THashSet<Member> result = new THashSet<Member>(input.size());
 
                 for (MembersRecord record : input) {
-                    result.add(memberFactory.create(UUIDGen.toUUID(record.getUuid())));
+                    result.add(memberFactory.create(record.getUuid()));
                 }
 
                 return result;
@@ -256,7 +255,7 @@ class SQLProvider implements MemberProvider, GroupProvider {
                 THashSet<Group> groups = new THashSet<Group>(input.size());
 
                 for (SocietiesRecord record : input) {
-                    UUID uuid = UUIDGen.toUUID(record.getUuid());
+                    UUID uuid = record.getUuid();
                     groups.add(evaluateSingleGroup(uuid, record));
                 }
 

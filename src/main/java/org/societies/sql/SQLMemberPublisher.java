@@ -3,7 +3,6 @@ package org.societies.sql;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Insert;
 import org.societies.database.sql.AbstractPublisher;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
@@ -29,7 +28,7 @@ class SQLMemberPublisher extends AbstractPublisher implements MemberPublisher {
             public Member call() throws Exception {
                 Insert<MembersRecord> query = queries.getQuery(Queries.INSERT_MEMBER);
 
-                query.bind(1, UUIDGen.toByteArray(member.getUUID()));
+                query.bind(1, member.getUUID());
 
                 query.execute();
                 return member;

@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * Represents a LazyGroupHeart
  */
-class SQLLazyGroupHeart extends SQLGroupHeart {
+public class SQLLazyGroupHeart extends SQLGroupHeart {
 
     private String name, tag;
     private DateTime created;

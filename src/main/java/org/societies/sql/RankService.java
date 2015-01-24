@@ -2,7 +2,6 @@ package org.societies.sql;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Insert;
 import org.shank.logging.InjectLogger;
@@ -13,6 +12,7 @@ import org.societies.database.sql.layout.tables.records.RanksRecord;
 import org.societies.groups.rank.Rank;
 
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Represents a RankService
@@ -34,7 +34,7 @@ class RankService extends AbstractService {
     @Override
     public void init(LifecycleContext context) throws Exception {
         for (Rank rank : ranks) {
-            byte[] uuid = UUIDGen.toByteArray(rank.getUUID());
+            UUID uuid = rank.getUUID();
             String name = rank.getName();
             int priority = rank.getPriority();
 

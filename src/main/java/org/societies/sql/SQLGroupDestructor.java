@@ -3,7 +3,6 @@ package org.societies.sql;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Query;
 import org.societies.database.sql.AbstractPublisher;
 import org.societies.groups.group.Group;
@@ -28,7 +27,7 @@ class SQLGroupDestructor extends AbstractPublisher implements GroupDestructor {
             public Group call() throws Exception {
                 Query query = queries.getQuery(Queries.DROP_SOCIETY_BY_UUID);
 
-                query.bind(1, UUIDGen.toByteArray(group.getUUID()));
+                query.bind(1, group.getUUID());
 
                 query.execute();
                 return group;

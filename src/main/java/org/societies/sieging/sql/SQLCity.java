@@ -1,7 +1,6 @@
 package org.societies.sieging.sql;
 
 import gnu.trove.set.hash.THashSet;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Delete;
 import org.jooq.Insert;
 import org.jooq.Record1;
@@ -39,8 +38,8 @@ class SQLCity implements City {
     public void addLand(Land land) {
         Insert query = queries.getQuery(SiegingQueries.INSERT_LAND);
 
-        query.bind(1, UUIDGen.toByteArray(land.getUUID()));
-        query.bind(2, UUIDGen.toByteArray(getUUID()));
+        query.bind(1, land.getUUID());
+        query.bind(2, getUUID());
 
         query.execute();
     }
@@ -48,10 +47,10 @@ class SQLCity implements City {
     @Override
     public Set<Land> getLands() {
         THashSet<Land> lands = new THashSet<Land>();
-        Select<Record1<byte[]>> query = queries.getQuery(SiegingQueries.SELECT_LANDS_BY_CITY);
+        Select<Record1<UUID>> query = queries.getQuery(SiegingQueries.SELECT_LANDS_BY_CITY);
 
-        for (Record1<byte[]> record : query.fetch()) {
-            UUID uuid = UUIDGen.toUUID(record.value1());
+        for (Record1<UUID> record : query.fetch()) {
+            UUID uuid = record.value1();
 
             lands.add(new DefaultLand(uuid, this));
         }
@@ -62,7 +61,7 @@ class SQLCity implements City {
     @Override
     public boolean removeLand(UUID uuid) {
         Delete<LandsRecord> query = queries.getQuery(SiegingQueries.DROP_LAND);
-        query.bind(1, UUIDGen.toByteArray(uuid));
+        query.bind(1, uuid);
         return query.execute() != 0;
     }
 

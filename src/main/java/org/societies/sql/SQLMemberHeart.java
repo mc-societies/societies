@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 import gnu.trove.set.hash.THashSet;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.jooq.*;
@@ -30,12 +29,10 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import static net.catharos.lib.core.uuid.UUIDGen.*;
-
 /**
  * Represents a SQLMember
  */
-class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
+public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
 
     protected final Member member;
 
@@ -50,7 +47,7 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
                           EventController events,
                           @Named("default-rank") Rank defaultRank,
                           GroupProvider groupProvider,
-                          QueryProvider queries, ListeningExecutorService service) {
+                          @Named("main") QueryProvider queries, ListeningExecutorService service) {
         super(events);
         this.defaultRank = defaultRank;
         this.groupProvider = groupProvider;
@@ -59,8 +56,8 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
         this.member = member;
     }
 
-    private byte[] getByteUUID() {
-        return toByteArray(member.getUUID());
+    public UUID getUUID() {
+        return member.getUUID();
     }
 
     @Override
@@ -73,11 +70,11 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
 
         THashSet<Rank> ranks = new THashSet<Rank>();
 
-        Select<Record1<byte[]>> query = queries.getQuery(Queries.SELECT_MEMBER_RANKS);
-        query.bind(1, getByteUUID());
+        Select<Record1<UUID>> query = queries.getQuery(Queries.SELECT_MEMBER_RANKS);
+        query.bind(1, member.getUUID());
 
-        for (Record1<byte[]> rankRecord : query.fetch()) {
-            UUID rankUUID = toUUID(rankRecord.value1());
+        for (Record1<UUID> rankRecord : query.fetch()) {
+            UUID rankUUID = rankRecord.value1();
             Rank rank = group.getRank(rankUUID);
 
             if (rank != null) {
@@ -98,7 +95,7 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
             @Override
             public Member call() throws Exception {
                 //beautify duplicate
-                byte[] uuid = UUIDGen.toByteArray(rank.getUUID());
+                UUID uuid = rank.getUUID();
                 String name = rank.getName();
                 int priority = rank.getPriority();
 
@@ -113,8 +110,8 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
                 query.execute();
 
                 query = queries.getQuery(Queries.INSERT_MEMBER_RANK);
-                query.bind(1, getByteUUID());
-                query.bind(2, toByteArray(rank.getUUID()));
+                query.bind(1, getUUID());
+                query.bind(2, rank.getUUID());
                 query.execute();
                 return member;
             }
@@ -134,8 +131,8 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
             public Member call() throws Exception {
                 Query query;
                 query = queries.getQuery(Queries.DROP_MEMBER_RANK);
-                query.bind(1, getByteUUID());
-                query.bind(2, toByteArray(rank.getUUID()));
+                query.bind(1, getUUID());
+                query.bind(2, rank.getUUID());
                 query.execute();
                 return member;
             }
@@ -147,7 +144,7 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
     @Override
     public DateTime getLastActive() {
         Select<Record1<Timestamp>> query = queries.getQuery(Queries.SELECT_MEMBER_LAST_ACTIVE);
-        query.bind(1, getByteUUID());
+        query.bind(1, getUUID());
 
         Record1<Timestamp> record = query.fetch().get(0);
         return new DateTime(record.value1());
@@ -160,7 +157,7 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
             public Member call() throws Exception {
                 Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_LAST_ACTIVE);
 
-                query.bind(1, getByteUUID());
+                query.bind(1, getUUID());
                 query.bind(2, new Timestamp(lastActive.getMillis()));
 
                 query.execute();
@@ -172,7 +169,7 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
     @Override
     public DateTime getCreated() {
         Select<Record1<Timestamp>> query = queries.getQuery(Queries.SELECT_MEMBER_CREATED);
-        query.bind(1, getByteUUID());
+        query.bind(1, getUUID());
 
         Record1<Timestamp> record = query.fetch().get(0);
         return new DateTime(record.value1());
@@ -185,7 +182,7 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
             public Member call() throws Exception {
                 Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_CREATED);
 
-                query.bind(1, getByteUUID());
+                query.bind(1, getUUID());
                 query.bind(2, new Timestamp(created.getMillis()));
 
                 query.execute();
@@ -197,23 +194,23 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
     @Override
     @Nullable
     public GroupHeart getGroup() {
-        Select<Record1<byte[]>> query = queries.getQuery(Queries.SELECT_MEMBER_SOCIETY);
-        query.bind(1, getByteUUID());
+        Select<Record1<UUID>> query = queries.getQuery(Queries.SELECT_MEMBER_SOCIETY);
+        query.bind(1, getUUID());
 
-        Result<Record1<byte[]>> result = query.fetch();
+        Result<Record1<UUID>> result = query.fetch();
 
         if (result.isEmpty()) {
             return null;
         }
 
-        Record1<byte[]> record = result.get(0);
+        Record1<UUID> record = result.get(0);
 
         Group group = null;
-        byte[] rawSociety = record.value1();
+        UUID rawSociety = record.value1();
 
-        if (rawSociety != null && rawSociety.length == UUID_LENGTH) {
+        if (rawSociety != null) {
             try {
-                group = groupProvider.getGroup(toUUID(rawSociety)).get();
+                group = groupProvider.getGroup(rawSociety).get();
             } catch (InterruptedException e) {
                 throw new MemberException(member.getUUID(), e, "Failed to set group of member!");
             } catch (ExecutionException e) {
@@ -242,8 +239,8 @@ class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
                     uuid = group.getUUID();
                 }
 
-                query.bind(1, toByteArray(uuid));
-                query.bind(2, getByteUUID());
+                query.bind(1, uuid);
+                query.bind(2, getUUID());
 
                 query.execute();
                 return member;

@@ -1,7 +1,6 @@
 package org.societies.sieging.sql;
 
 import gnu.trove.set.hash.THashSet;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Delete;
 import org.jooq.Insert;
 import org.jooq.Select;
@@ -35,8 +34,8 @@ class SQLBesieger implements Besieger {
     public void addCity(City city) {
         Insert query = queries.getQuery(SiegingQueries.INSERT_CITY);
 
-        query.bind(1, UUIDGen.toByteArray(city.getUUID()));
-        query.bind(2, UUIDGen.toByteArray(group.getUUID()));
+        query.bind(1, city.getUUID());
+        query.bind(2, group.getUUID());
 
         query.bind(3, city.getLocation().getRoundedX());
         query.bind(4, city.getLocation().getRoundedY());
@@ -59,8 +58,7 @@ class SQLBesieger implements Besieger {
         Select<CitiesRecord> query = queries.getQuery(SiegingQueries.SELECT_CITIES_BY_SOCIETY);
 
         for (CitiesRecord record : query.fetch()) {
-            SQLCity city = new SQLCity(queries, new Location(null, record.getX(), record.getY(), record.getZ()), UUIDGen
-                    .toUUID(record.getUuid()));
+            SQLCity city = new SQLCity(queries, new Location(null, record.getX(), record.getY(), record.getZ()), record.getUuid());
             cities.add(city);
         }
 

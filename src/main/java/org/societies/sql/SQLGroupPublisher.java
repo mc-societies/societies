@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.joda.time.DateTime;
 import org.jooq.Insert;
 import org.societies.bridge.ChatColor;
@@ -43,7 +42,7 @@ class SQLGroupPublisher extends AbstractPublisher implements GroupPublisher {
 
                 Insert<SocietiesRecord> query = queries.getQuery(Queries.INSERT_SOCIETY);
 
-                query.bind(1, UUIDGen.toByteArray(uuid));
+                query.bind(1, uuid);
                 query.bind(2, name);
                 query.bind(3, tag);
                 query.bind(4, ChatColor.stripColor(tag));

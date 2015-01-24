@@ -2,7 +2,6 @@ package org.societies.sieging.sql;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.jooq.Insert;
 import org.societies.api.sieging.City;
 import org.societies.api.sieging.CityPublisher;
@@ -31,8 +30,8 @@ class SQLCityPublisher implements CityPublisher {
             public City call() throws Exception {
                 Insert query = queries.getQuery(SiegingQueries.INSERT_CITY);
 
-                query.bind(1, UUIDGen.toByteArray(city.getUUID()));
-                query.bind(2, UUIDGen.toByteArray(group.getUUID()));
+                query.bind(1, city.getUUID());
+                query.bind(2, group.getUUID());
 
                 Location location = city.getLocation();
                 query.bind(3, location.getRoundedX());

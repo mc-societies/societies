@@ -3,7 +3,6 @@ package org.societies.sql;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Insert;
 import org.jooq.Record3;
@@ -32,7 +31,7 @@ class SQLSubject extends AbstractSubject {
     private final SettingProvider settingProvider;
     private final ListeningExecutorService service;
     private final QueryKey<? extends Insert> insert;
-    private final QueryKey<Select<Record3<byte[], UShort, byte[]>>> select;
+    private final QueryKey<Select<Record3<UUID, UShort, byte[]>>> select;
 
     @InjectLogger
     private Logger logger;
@@ -41,7 +40,7 @@ class SQLSubject extends AbstractSubject {
                          SettingProvider settingProvider,
                          QueryProvider queries, ListeningExecutorService service,
                          QueryKey<? extends Insert> insert,
-                         QueryKey<Select<Record3<byte[], UShort, byte[]>>> select) {
+                         QueryKey<Select<Record3<UUID, UShort, byte[]>>> select) {
         this.queries = queries;
         this.uuid = uuid;
         this.settingProvider = settingProvider;
@@ -68,8 +67,8 @@ class SQLSubject extends AbstractSubject {
 
                 Insert query = queries.getQuery(insert);
 
-                byte[] subjectUUID = UUIDGen.toByteArray(subject.getUUID());
-                byte[] targetUUID = UUIDGen.toByteArray(target.getUUID());
+                UUID subjectUUID = subject.getUUID();
+                UUID targetUUID = target.getUUID();
                 UShort settingID = UShort.valueOf(setting.getID());
 
                 query.bind(1, subjectUUID);
@@ -106,10 +105,10 @@ class SQLSubject extends AbstractSubject {
     public Table<Setting, Target, Object> getSettings() {
         Table<Setting, Target, Object> table = HashBasedTable.create();
 
-        Select<Record3<byte[], UShort, byte[]>> query = queries.getQuery(select);
-        query.bind(1, UUIDGen.toByteArray(getUUID()));
+        Select<Record3<UUID, UShort, byte[]>> query = queries.getQuery(select);
+        query.bind(1, getUUID());
 
-        for (Record3<byte[], UShort, byte[]> settingRecord : query.fetch()) {
+        for (Record3<UUID, UShort, byte[]> settingRecord : query.fetch()) {
             int settingID = settingRecord.value2().intValue();
 
             Setting setting = settingProvider.getSetting(settingID);
@@ -119,13 +118,13 @@ class SQLSubject extends AbstractSubject {
                 continue;
             }
 
-            byte[] targetUUID = settingRecord.value1();
+            UUID targetUUID = settingRecord.value1();
             Target target;
 
             if (targetUUID == null) {
                 target = this;
             } else {
-                target = new SimpleTarget(UUIDGen.toUUID(targetUUID));
+                target = new SimpleTarget(targetUUID);
             }
 
             Object value;

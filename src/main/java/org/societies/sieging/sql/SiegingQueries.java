@@ -9,6 +9,8 @@ import org.societies.database.sql.layout.tables.records.CitiesRecord;
 import org.societies.database.sql.layout.tables.records.LandsRecord;
 import org.societies.database.sql.layout.tables.records.SiegesRecord;
 
+import java.util.UUID;
+
 import static org.societies.database.sql.layout.Tables.*;
 
 /**
@@ -24,7 +26,7 @@ class SiegingQueries extends QueryProvider {
 
     public static final QueryKey<Delete<LandsRecord>> DROP_LAND = QueryKey.create();
 
-    public static final QueryKey<Select<Record1<byte[]>>> SELECT_LANDS_BY_CITY = QueryKey.create();
+    public static final QueryKey<Select<Record1<UUID>>> SELECT_LANDS_BY_CITY = QueryKey.create();
 
 
     public static final QueryKey<Insert> INSERT_CITY = QueryKey.create();
@@ -57,8 +59,8 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Insert create(DSLContext context) {
                 return context.insertInto(LANDS)
-                        .set(LANDS.UUID, DEFAULT_BYTE_ARRAY)
-                        .set(LANDS.ORIGIN, DEFAULT_BYTE_ARRAY);
+                        .set(LANDS.UUID, uuid_param())
+                        .set(LANDS.ORIGIN, uuid_param("origin"));
 
             }
         });
@@ -67,14 +69,14 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Delete<LandsRecord> create(DSLContext context) {
                 return context.delete(LANDS)
-                        .where(LANDS.UUID.equal(DEFAULT_BYTE_ARRAY));
+                        .where(LANDS.UUID.equal(uuid_param()));
             }
         });
 
-        builder(SELECT_LANDS_BY_CITY, new QueryBuilder<Select<Record1<byte[]>>>() {
+        builder(SELECT_LANDS_BY_CITY, new QueryBuilder<Select<Record1<UUID>>>() {
             @Override
-            public Select<Record1<byte[]>> create(DSLContext context) {
-                return context.select(LANDS.UUID).from(LANDS).where(LANDS.ORIGIN.equal(DEFAULT_BYTE_ARRAY));
+            public Select<Record1<UUID>> create(DSLContext context) {
+                return context.select(LANDS.UUID).from(LANDS).where(LANDS.ORIGIN.equal(uuid_param("origin")));
             }
         });
 
@@ -83,8 +85,8 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Insert create(DSLContext context) {
                 return context.insertInto(CITIES)
-                        .set(CITIES.UUID, DEFAULT_BYTE_ARRAY)
-                        .set(CITIES.SOCIETY, DEFAULT_BYTE_ARRAY)
+                        .set(CITIES.UUID, uuid_param())
+                        .set(CITIES.SOCIETY, uuid_param("society"))
 
                         .set(CITIES.X, DEFAULT_SHORT)
                         .set(CITIES.Y, DEFAULT_SHORT)
@@ -96,14 +98,14 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Delete<CitiesRecord> create(DSLContext context) {
                 return context.delete(CITIES)
-                        .where(CITIES.UUID.equal(DEFAULT_BYTE_ARRAY));
+                        .where(CITIES.UUID.equal(uuid_param()));
             }
         });
 
         builder(SELECT_CITIES_BY_SOCIETY, new QueryBuilder<Select<CitiesRecord>>() {
             @Override
             public Select<CitiesRecord> create(DSLContext context) {
-                return context.selectFrom(CITIES).where(CITIES.SOCIETY.equal(DEFAULT_BYTE_ARRAY));
+                return context.selectFrom(CITIES).where(CITIES.SOCIETY.equal(uuid_param("society")));
             }
         });
 
@@ -112,16 +114,16 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Insert create(DSLContext context) {
                 return context.insertInto(SIEGES)
-                        .set(SIEGES.UUID, DEFAULT_BYTE_ARRAY)
-                        .set(SIEGES.SOCIETY, DEFAULT_BYTE_ARRAY)
-                        .set(SIEGES.CITY, DEFAULT_BYTE_ARRAY)
+                        .set(SIEGES.UUID, uuid_param())
+                        .set(SIEGES.SOCIETY, uuid_param("society"))
+                        .set(SIEGES.CITY, uuid_param("city"))
 
                         .set(SIEGES.X, DEFAULT_SHORT)
                         .set(SIEGES.Y, DEFAULT_SHORT)
                         .set(SIEGES.Z, DEFAULT_SHORT)
 
                         .set(SIEGES.CREATED, DEFAULT_TIMESTAMP)
-                        .set(SIEGES.WAGER, DEFAULT_BYTE_ARRAY);
+                        .set(SIEGES.WAGER, DEFAULT_UUID);
             }
         });
 
@@ -129,7 +131,7 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Delete<SiegesRecord> create(DSLContext context) {
                 return context.delete(SIEGES)
-                        .where(SIEGES.UUID.equal(DEFAULT_BYTE_ARRAY));
+                        .where(SIEGES.UUID.equal(uuid_param()));
             }
         });
 
@@ -137,7 +139,7 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Select<SiegesRecord> create(DSLContext context) {
                 return context.selectFrom(SIEGES).where(SIEGES.CITY
-                        .equal(DEFAULT_BYTE_ARRAY));
+                        .equal(uuid_param("city")));
             }
         });
 
@@ -145,7 +147,7 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Select<SiegesRecord> create(DSLContext context) {
                 return context.selectFrom(SIEGES).where(SIEGES.SOCIETY
-                        .equal(DEFAULT_BYTE_ARRAY));
+                        .equal(uuid_param("society")));
             }
         });
     }
