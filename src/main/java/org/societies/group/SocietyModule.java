@@ -17,6 +17,7 @@ import org.societies.groups.rank.memory.MemoryRank;
 import org.societies.groups.validate.NameValidator;
 import org.societies.groups.validate.TagValidator;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -75,7 +76,7 @@ public class SocietyModule extends AbstractModule {
             ranks.add(rank);
         }
 
-        return ranks;
+        return Collections.unmodifiableSet(ranks);
     }
 
     private static interface RankSelector {
