@@ -4,11 +4,12 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.name.Names;
 import org.shank.AbstractModule;
+import org.societies.api.setting.LocationSetting;
+import org.societies.api.setting.RelationSetting;
+import org.societies.api.setting.VerifySetting;
 import org.societies.bridge.Location;
 import org.societies.groups.Relation;
-import org.societies.groups.setting.CollectiveSettingProvider;
-import org.societies.groups.setting.Setting;
-import org.societies.groups.setting.SettingProvider;
+import org.societies.groups.setting.*;
 
 /**
  * Represents a SettingModule

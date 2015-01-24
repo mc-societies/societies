@@ -14,7 +14,7 @@ import org.societies.groups.member.Member;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.setting.Setting;
 import org.societies.groups.setting.target.Target;
-import org.societies.setting.RulesSetting;
+import org.societies.api.setting.RulesSetting;
 
 import java.util.Map;
 

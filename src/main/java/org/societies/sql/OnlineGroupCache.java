@@ -1,4 +1,4 @@
-package org.societies.group;
+package org.societies.sql;
 
 import com.google.inject.Singleton;
 import gnu.trove.map.hash.THashMap;
@@ -14,7 +14,7 @@ import java.util.UUID;
  * Represents a OnlineCacheMemberProvider
  */
 @Singleton
-public class OnlineGroupCache implements GroupCache {
+class OnlineGroupCache implements GroupCache {
 
     private final THashMap<UUID, Group> groups = new THashMap<UUID, Group>();
 
@@ -52,9 +52,10 @@ public class OnlineGroupCache implements GroupCache {
         return this.groups.remove(uuid);
     }
 
-    public void clear(Member leaving, Group group) {
+    @Override
+    public Group clear(Member leaving, Group group) {
         if (group == null) {
-            return;
+            return null;
         }
 
         Set<Member> members = group.getMembers();
@@ -65,11 +66,12 @@ public class OnlineGroupCache implements GroupCache {
             }
 
             if (member.get(Player.class).isAvailable()) {
-                return;
+                return null;
             }
         }
 
         clear(group);
+        return group;
     }
 
     @Override

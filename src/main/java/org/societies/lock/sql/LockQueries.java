@@ -15,7 +15,7 @@ import static org.societies.database.sql.layout.Tables.SOCIETIES_LOCKS;
 /**
  * Represents a Queries
  */
-public class LockQueries extends QueryProvider {
+class LockQueries extends QueryProvider {
 
     //================================================================================
     // Locks

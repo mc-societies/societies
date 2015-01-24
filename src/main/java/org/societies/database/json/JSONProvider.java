@@ -45,7 +45,7 @@ import static com.googlecode.cqengine.query.QueryFactory.equal;
  * Represents a JSONProvider
  */
 @Singleton
-public class JSONProvider extends AbstractService implements MemberProvider, GroupProvider, MemberPublisher, MemberDestructor {
+class JSONProvider extends AbstractService implements MemberProvider, GroupProvider, MemberPublisher, MemberDestructor {
 
     IndexedCollection<Group> groups = CQEngine.newInstance();
 

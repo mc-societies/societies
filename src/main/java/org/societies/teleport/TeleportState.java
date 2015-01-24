@@ -6,7 +6,7 @@ import org.societies.groups.member.Member;
 /**
  * Represents a TeleportState
  */
-public class TeleportState {
+class TeleportState {
 
     private final Member member;
     private final Location destination;

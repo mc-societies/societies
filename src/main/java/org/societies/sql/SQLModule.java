@@ -5,7 +5,6 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.shank.service.AbstractServiceModule;
 import org.societies.database.QueryProvider;
-import org.societies.group.OnlineGroupCache;
 import org.societies.groups.ExtensionFactory;
 import org.societies.groups.cache.GroupCache;
 import org.societies.groups.cache.MemberCache;
@@ -13,7 +12,6 @@ import org.societies.groups.cache.NaughtyGroupCache;
 import org.societies.groups.group.*;
 import org.societies.groups.member.*;
 import org.societies.lock.sql.SQLLockModule;
-import org.societies.member.OnlineMemberCache;
 
 import static com.google.inject.Key.get;
 

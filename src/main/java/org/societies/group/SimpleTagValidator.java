@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Represents a SimpleTagValidator
  */
-public class SimpleTagValidator implements TagValidator {
+class SimpleTagValidator implements TagValidator {
 
     private final int maxLength;
     private final int minLength;

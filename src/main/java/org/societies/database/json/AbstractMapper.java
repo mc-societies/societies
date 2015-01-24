@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * Represents a AbstractMapper
  */
-public class AbstractMapper {
+class AbstractMapper {
 
     private final JsonFactory factory = new JsonFactory();
     protected final Logger logger;

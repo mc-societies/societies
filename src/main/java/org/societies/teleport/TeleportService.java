@@ -10,7 +10,7 @@ import org.societies.bridge.Scheduler;
 /**
  * Represents a TeleportService
  */
-public class TeleportService extends AbstractService {
+class TeleportService extends AbstractService {
 
     private final Scheduler scheduler;
     private final TeleportController controller;

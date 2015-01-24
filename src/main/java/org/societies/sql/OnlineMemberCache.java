@@ -1,4 +1,4 @@
-package org.societies.member;
+package org.societies.sql;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -14,7 +14,7 @@ import java.util.UUID;
  * Represents a OnlineCacheMemberProvider
  */
 @Singleton
-public class OnlineMemberCache implements MemberCache {
+class OnlineMemberCache implements MemberCache {
 
     private final THashMap<UUID, Member> members = new THashMap<UUID, Member>();
 
@@ -47,6 +47,7 @@ public class OnlineMemberCache implements MemberCache {
         return null;
     }
 
+    @Override
     public Member clear(UUID uuid) {
         return this.members.remove(uuid);
     }

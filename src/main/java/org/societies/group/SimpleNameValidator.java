@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Represents a SimpleNameValidator
  */
-public class SimpleNameValidator implements NameValidator {
+class SimpleNameValidator implements NameValidator {
 
     private final int maxLength;
     private final int minLength;
