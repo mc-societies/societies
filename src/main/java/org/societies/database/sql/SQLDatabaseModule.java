@@ -2,7 +2,6 @@ package org.societies.database.sql;
 
 import org.jooq.SQLDialect;
 import org.shank.service.AbstractServiceModule;
-import org.shank.service.AbstractServicePrivateModule;
 import org.societies.database.DSLProvider;
 import org.societies.database.Database;
 import org.societies.database.RemoteDatabase;
@@ -19,17 +18,8 @@ public class SQLDatabaseModule extends AbstractServiceModule {
     @Override
     protected void configure() {
         bindService().to(MigrationService.class);
-
-        install(new AbstractServicePrivateModule() {
-            @Override
-            protected void configure() {
-                bind(CleanupService.class);
-                bindService().to(CleanupService.class);
-
-                expose(CleanupService.class);
-            }
-        });
-
+        bind(CleanupQueries.class);
+        bindService().to(CleanupService.class);
 
         bind(Database.class).to(RemoteDatabase.class);
         bind(DSLProvider.class).to(RemoteDatabase.class);
