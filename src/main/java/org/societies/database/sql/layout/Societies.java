@@ -16,7 +16,7 @@ package org.societies.database.sql.layout;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Societies extends org.jooq.impl.SchemaImpl {
 
-	private static final long serialVersionUID = 745596101;
+	private static final long serialVersionUID = -734327343;
 
 	/**
 	 * The reference instance of <code>societies</code>
@@ -47,6 +47,7 @@ public class Societies extends org.jooq.impl.SchemaImpl {
 			org.societies.database.sql.layout.tables.Ranks.RANKS,
 			org.societies.database.sql.layout.tables.RanksSettings.RANKS_SETTINGS,
 			org.societies.database.sql.layout.tables.Relations.RELATIONS,
+			org.societies.database.sql.layout.tables.SchemaVersion.SCHEMA_VERSION,
 			org.societies.database.sql.layout.tables.Sieges.SIEGES,
 			org.societies.database.sql.layout.tables.Societies.SOCIETIES,
 			org.societies.database.sql.layout.tables.SocietiesLocks.SOCIETIES_LOCKS,

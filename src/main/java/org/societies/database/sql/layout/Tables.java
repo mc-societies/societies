@@ -57,6 +57,11 @@ public class Tables {
 	public static final org.societies.database.sql.layout.tables.Relations RELATIONS = org.societies.database.sql.layout.tables.Relations.RELATIONS;
 
 	/**
+	 * The table societies.schema_version
+	 */
+	public static final org.societies.database.sql.layout.tables.SchemaVersion SCHEMA_VERSION = org.societies.database.sql.layout.tables.SchemaVersion.SCHEMA_VERSION;
+
+	/**
 	 * The table societies.sieges
 	 */
 	public static final org.societies.database.sql.layout.tables.Sieges SIEGES = org.societies.database.sql.layout.tables.Sieges.SIEGES;

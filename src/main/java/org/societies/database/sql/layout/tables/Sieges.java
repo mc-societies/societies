@@ -16,7 +16,7 @@ package org.societies.database.sql.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Sieges extends org.jooq.impl.TableImpl<org.societies.database.sql.layout.tables.records.SiegesRecord> {
 
-	private static final long serialVersionUID = -1525601703;
+	private static final long serialVersionUID = 1686077808;
 
 	/**
 	 * The reference instance of <code>societies.sieges</code>
@@ -64,7 +64,7 @@ public class Sieges extends org.jooq.impl.TableImpl<org.societies.database.sql.l
 	/**
 	 * The column <code>societies.sieges.created</code>.
 	 */
-	public final org.jooq.TableField<org.societies.database.sql.layout.tables.records.SiegesRecord, java.sql.Timestamp> CREATED = createField("created", org.jooq.impl.SQLDataType.TIMESTAMP.defaulted(true), this, "");
+	public final org.jooq.TableField<org.societies.database.sql.layout.tables.records.SiegesRecord, org.joda.time.DateTime> CREATED = createField("created", org.jooq.impl.SQLDataType.TIMESTAMP.defaulted(true), this, "", new org.societies.database.sql.DateTimeConverter());
 
 	/**
 	 * The column <code>societies.sieges.wager</code>.

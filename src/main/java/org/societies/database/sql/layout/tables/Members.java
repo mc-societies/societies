@@ -16,7 +16,7 @@ package org.societies.database.sql.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Members extends org.jooq.impl.TableImpl<org.societies.database.sql.layout.tables.records.MembersRecord> {
 
-	private static final long serialVersionUID = 1851287759;
+	private static final long serialVersionUID = -948774751;
 
 	/**
 	 * The reference instance of <code>societies.members</code>
@@ -39,7 +39,7 @@ public class Members extends org.jooq.impl.TableImpl<org.societies.database.sql.
 	/**
 	 * The column <code>societies.members.created</code>.
 	 */
-	public final org.jooq.TableField<org.societies.database.sql.layout.tables.records.MembersRecord, java.sql.Timestamp> CREATED = createField("created", org.jooq.impl.SQLDataType.TIMESTAMP.defaulted(true), this, "");
+	public final org.jooq.TableField<org.societies.database.sql.layout.tables.records.MembersRecord, org.joda.time.DateTime> CREATED = createField("created", org.jooq.impl.SQLDataType.TIMESTAMP.defaulted(true), this, "", new org.societies.database.sql.DateTimeConverter());
 
 	/**
 	 * The column <code>societies.members.society</code>.
@@ -49,7 +49,7 @@ public class Members extends org.jooq.impl.TableImpl<org.societies.database.sql.
 	/**
 	 * The column <code>societies.members.lastActive</code>.
 	 */
-	public final org.jooq.TableField<org.societies.database.sql.layout.tables.records.MembersRecord, java.sql.Timestamp> LASTACTIVE = createField("lastActive", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
+	public final org.jooq.TableField<org.societies.database.sql.layout.tables.records.MembersRecord, org.joda.time.DateTime> LASTACTIVE = createField("lastActive", org.jooq.impl.SQLDataType.TIMESTAMP, this, "", new org.societies.database.sql.DateTimeConverter());
 
 	/**
 	 * Create a <code>societies.members</code> table reference

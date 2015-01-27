@@ -16,7 +16,7 @@ package org.societies.database.sql.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Societies extends org.jooq.impl.TableImpl<org.societies.database.sql.layout.tables.records.SocietiesRecord> {
 
-	private static final long serialVersionUID = -1759179088;
+	private static final long serialVersionUID = 538691321;
 
 	/**
 	 * The reference instance of <code>societies.societies</code>
@@ -54,7 +54,7 @@ public class Societies extends org.jooq.impl.TableImpl<org.societies.database.sq
 	/**
 	 * The column <code>societies.societies.created</code>.
 	 */
-	public final org.jooq.TableField<org.societies.database.sql.layout.tables.records.SocietiesRecord, java.sql.Timestamp> CREATED = createField("created", org.jooq.impl.SQLDataType.TIMESTAMP.defaulted(true), this, "");
+	public final org.jooq.TableField<org.societies.database.sql.layout.tables.records.SocietiesRecord, org.joda.time.DateTime> CREATED = createField("created", org.jooq.impl.SQLDataType.TIMESTAMP.defaulted(true), this, "", new org.societies.database.sql.DateTimeConverter());
 
 	/**
 	 * Create a <code>societies.societies</code> table reference

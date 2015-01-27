@@ -219,6 +219,8 @@
                                  Defaults to false -->
                             <interfaces>false</interfaces>
 
+                            <deprecated>false</deprecated>
+
                             <!-- Generate DAOs in addition to POJO classes
                                  Defaults to false -->
                             <daos>false</daos>
@@ -294,17 +296,34 @@
                                          custom type can only have one converter in jOOQ -->
                                     <converter>org.societies.database.sql.UUIDConverter</converter>
                                 </customType>
+
+                                <customType>
+                                    <!-- Specify the fully-qualified class name of your custom type -->
+                                    <name>org.joda.time.DateTime</name>
+
+                                    <!-- Associate that custom type with your converter. Note, a
+                                         custom type can only have one converter in jOOQ -->
+                                    <converter>org.societies.database.sql.DateTimeConverter</converter>
+                                </customType>
                             </customTypes>
 
                             <!-- Then, associate custom types with database columns -->
                             <forcedTypes>
                                 <forcedType>
-                                    <name>VARBINARY</name>
+                                    <!--<name>VARBINARY</name>-->
                                     <!-- Specify again he fully-qualified class name of your custom type -->
                                     <name>java.util.UUID</name>
 
                                     <!-- Add a list of comma-separated regular expressions matching columns -->
                                     <expression>[A-Za-z0-9_.]+?uuid|member|society|society2|rank|origin|city|wager</expression>
+                                </forcedType>
+
+                                <forcedType>
+                                    <!--<name>TIMESTAMP</name>-->
+                                    <!-- Specify again he fully-qualified class name of your custom type -->
+                                    <name>org.joda.time.DateTime</name>
+
+                                    <expression>created|lastActive</expression>
                                 </forcedType>
                             </forcedTypes>
                         </database>
