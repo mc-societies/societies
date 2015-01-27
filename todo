@@ -1,7 +1,12 @@
-LOG EXCEPTIONS IN EXECUTORSERVICE!
-
-
 Beta release ------------------------------------------------------------------------------------
+
+Abstract ExecutorService
+
+Sieging:
+    Per city build permissions
+    Scoreboards:
+        * Display current territory
+
 Events:
     * GroupDropEvent
     * GroupCreateEvent
@@ -27,9 +32,6 @@ Kill statistics:
                 - kill-weights.neutral
                 - kill-weights.civilian
 
-Claiming & Wars:
-        Scoreboards:
-                * Display current territory
 
 Full release ------------------------------------------------------------------------------------
 

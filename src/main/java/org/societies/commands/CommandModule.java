@@ -162,6 +162,12 @@ public class CommandModule extends AbstractModule {
         bindNamed("provided", new TypeLiteral<CommandPipeline<Sender>>() {}).to(PIPELINE_IMPL);
 
         bindNamed("system-sender", Sender.class).to(SystemSender.class);
+
+        newSetBinder(
+                binder(),
+                new TypeLiteral<Class<Executor>>() {},
+                named("custom-commands")
+        );
     }
 
 
@@ -196,7 +202,7 @@ public class CommandModule extends AbstractModule {
 
     @Provides
     @Named("commands")
-    public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, Set<Class<? extends Command>> classes, CommandAnalyser<Sender> analyser) {
+    public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, @Named("custom-commands") Set<Class> classes, CommandAnalyser<Sender> analyser) {
 
         GroupCommand<Sender> group = builder.identifier("societies").name("Societies").build();
 
@@ -206,7 +212,7 @@ public class CommandModule extends AbstractModule {
             group.addChild(analyser.analyse(clazz));
         }
 
-        for (Class<? extends Command> clazz : classes) {
+        for (Class<?> clazz : classes) {
             group.addChild(analyser.analyse(clazz));
         }
 
