@@ -1,3 +1,6 @@
+LOG EXCEPTIONS IN EXECUTORSERVICE!
+
+
 Beta release ------------------------------------------------------------------------------------
 Events:
     * GroupDropEvent
@@ -35,7 +38,6 @@ bulletin board:
                       color = "GREY"
                       show-on-login = false
                     }
-
 
 
 ----------------------------------------------------------------------------------------------------

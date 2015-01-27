@@ -1,6 +1,7 @@
 package org.societies.sieging.sql;
 
 import com.google.inject.Inject;
+import org.joda.time.DateTime;
 import org.jooq.*;
 import org.societies.database.DSLProvider;
 import org.societies.database.QueryKey;
@@ -11,6 +12,7 @@ import org.societies.database.sql.layout.tables.records.SiegesRecord;
 
 import java.util.UUID;
 
+import static org.jooq.impl.DSL.param;
 import static org.societies.database.sql.layout.Tables.*;
 
 /**
@@ -38,11 +40,15 @@ class SiegingQueries extends QueryProvider {
 
     public static final QueryKey<Insert> INSERT_SIEGE = QueryKey.create();
 
-    public static final QueryKey<Delete<SiegesRecord>> DROP_SIEGE = QueryKey.create();
+    public static final QueryKey<Delete<SiegesRecord>> DROP_SIEGE_BY_SIEGE = QueryKey.create();
+
+    public static final QueryKey<Select<SiegesRecord>> SELECT_SIEGE_BY_SIEGE = QueryKey.create();
 
     public static final QueryKey<Select<SiegesRecord>> SELECT_SIEGES_BY_CITY = QueryKey.create();
 
-    public static final QueryKey<Select<SiegesRecord>> SELECT_SIEGES_BY_SOCIETY = QueryKey.create();
+    public static final QueryKey<Select<SiegesRecord>> SELECT_SIEGES_BY_BESIEGER = QueryKey.create();
+
+    public static final QueryKey<Select<Record8<UUID, UUID, UUID, Short, Short, Short, UUID, DateTime>>> SELECT_SIEGES_BY_SIEGED = QueryKey.create();
 
     @Inject
     public SiegingQueries(DSLProvider provider) {
@@ -69,7 +75,7 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Delete<LandsRecord> create(DSLContext context) {
                 return context.delete(LANDS)
-                        .where(LANDS.UUID.equal(uuid_param()));
+                        .where(LANDS.UUID.equal(id_param()));
             }
         });
 
@@ -85,7 +91,7 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Insert create(DSLContext context) {
                 return context.insertInto(CITIES)
-                        .set(CITIES.UUID, uuid_param())
+                        .set(CITIES.UUID, id_param())
                         .set(CITIES.SOCIETY, uuid_param("society"))
 
                         .set(CITIES.X, DEFAULT_SHORT)
@@ -98,7 +104,14 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Delete<CitiesRecord> create(DSLContext context) {
                 return context.delete(CITIES)
-                        .where(CITIES.UUID.equal(uuid_param()));
+                        .where(CITIES.UUID.equal(id_param()));
+            }
+        });
+
+        builder(SELECT_SIEGE_BY_SIEGE, new QueryBuilder<Select<SiegesRecord>>() {
+            @Override
+            public Select<SiegesRecord> create(DSLContext context) {
+                return context.selectFrom(SIEGES).where(SIEGES.UUID.equal(uuid_param()));
             }
         });
 
@@ -114,20 +127,19 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Insert create(DSLContext context) {
                 return context.insertInto(SIEGES)
-                        .set(SIEGES.UUID, uuid_param())
+                        .set(SIEGES.UUID, id_param())
                         .set(SIEGES.SOCIETY, uuid_param("society"))
                         .set(SIEGES.CITY, uuid_param("city"))
 
-                        .set(SIEGES.X, DEFAULT_SHORT)
-                        .set(SIEGES.Y, DEFAULT_SHORT)
-                        .set(SIEGES.Z, DEFAULT_SHORT)
+                        .set(SIEGES.X, param("x", short.class))
+                        .set(SIEGES.Y, param("y", short.class))
+                        .set(SIEGES.Z, param("z", short.class))
 
-                        .set(SIEGES.CREATED, DEFAULT_TIMESTAMP)
-                        .set(SIEGES.WAGER, DEFAULT_UUID);
+                        .set(SIEGES.WAGER, uuid_param("wager"));
             }
         });
 
-        builder(DROP_SIEGE, new QueryBuilder<Delete<SiegesRecord>>() {
+        builder(DROP_SIEGE_BY_SIEGE, new QueryBuilder<Delete<SiegesRecord>>() {
             @Override
             public Delete<SiegesRecord> create(DSLContext context) {
                 return context.delete(SIEGES)
@@ -143,11 +155,22 @@ class SiegingQueries extends QueryProvider {
             }
         });
 
-        builder(SELECT_SIEGES_BY_SOCIETY, new QueryBuilder<Select<SiegesRecord>>() {
+        builder(SELECT_SIEGES_BY_BESIEGER, new QueryBuilder<Select<SiegesRecord>>() {
             @Override
             public Select<SiegesRecord> create(DSLContext context) {
                 return context.selectFrom(SIEGES).where(SIEGES.SOCIETY
-                        .equal(uuid_param("society")));
+                        .equal(uuid_param("besieger")));
+            }
+        });
+
+        builder(SELECT_SIEGES_BY_SIEGED, new QueryBuilder<Select<Record8<UUID, UUID, UUID, Short, Short, Short, UUID, DateTime>>>() {
+            @Override
+            public Select<Record8<UUID, UUID, UUID, Short, Short, Short, UUID, DateTime>> create(DSLContext context) {
+                return context.select(SIEGES.UUID, SIEGES.SOCIETY, SIEGES.CITY, SIEGES.X, SIEGES.Y, SIEGES.Z, SIEGES.WAGER, SIEGES.CREATED)
+                        .from(SIEGES)
+                        .join(CITIES)
+                        .on(SIEGES.SOCIETY.equal(CITIES.SOCIETY))
+                        .and(SIEGES.SOCIETY.equal(uuid_param("sieged")));
             }
         });
     }

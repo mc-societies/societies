@@ -125,7 +125,6 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
             return false;
         }
 
-
         service.submit(new Callable<Member>() {
             @Override
             public Member call() throws Exception {
@@ -143,11 +142,11 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
 
     @Override
     public DateTime getLastActive() {
-        Select<Record1<Timestamp>> query = queries.getQuery(Queries.SELECT_MEMBER_LAST_ACTIVE);
+        Select<Record1<DateTime>> query = queries.getQuery(Queries.SELECT_MEMBER_LAST_ACTIVE);
         query.bind(1, getUUID());
 
-        Record1<Timestamp> record = query.fetch().get(0);
-        return new DateTime(record.value1());
+        Record1<DateTime> record = query.fetch().get(0);
+        return record.value1();
     }
 
     @Override
@@ -168,11 +167,11 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
 
     @Override
     public DateTime getCreated() {
-        Select<Record1<Timestamp>> query = queries.getQuery(Queries.SELECT_MEMBER_CREATED);
+        Select<Record1<DateTime>> query = queries.getQuery(Queries.SELECT_MEMBER_CREATED);
         query.bind(1, getUUID());
 
-        Record1<Timestamp> record = query.fetch().get(0);
-        return new DateTime(record.value1());
+        Record1<DateTime> record = query.fetch().get(0);
+        return record.value1();
     }
 
     @Override

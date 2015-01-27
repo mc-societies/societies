@@ -1,6 +1,7 @@
 package org.societies.sql;
 
 import com.google.inject.Inject;
+import org.joda.time.DateTime;
 import org.jooq.*;
 import org.jooq.types.UShort;
 import org.societies.database.DSLProvider;
@@ -8,7 +9,6 @@ import org.societies.database.QueryKey;
 import org.societies.database.QueryProvider;
 import org.societies.database.sql.layout.tables.records.*;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.param;
@@ -31,7 +31,7 @@ class Queries extends QueryProvider {
 
     public static final QueryKey<Select<Record1<String>>> SELECT_SOCIETY_NAME = QueryKey.create();
     public static final QueryKey<Select<Record1<String>>> SELECT_SOCIETY_TAG = QueryKey.create();
-    public static final QueryKey<Select<Record1<Timestamp>>> SELECT_SOCIETY_CREATED = QueryKey.create();
+    public static final QueryKey<Select<Record1<DateTime>>> SELECT_SOCIETY_CREATED = QueryKey.create();
 
 
     public static final QueryKey<Select<SocietiesRecord>> SELECT_SOCIETIES = QueryKey.create();
@@ -62,9 +62,9 @@ class Queries extends QueryProvider {
 
     public static final QueryKey<Select<MembersRecord>> SELECT_MEMBER_BY_UUID = QueryKey.create();
 
-    public static final QueryKey<Select<Record1<Timestamp>>> SELECT_MEMBER_CREATED = QueryKey.create();
+    public static final QueryKey<Select<Record1<DateTime>>> SELECT_MEMBER_CREATED = QueryKey.create();
 
-    public static final QueryKey<Select<Record1<Timestamp>>> SELECT_MEMBER_LAST_ACTIVE = QueryKey.create();
+    public static final QueryKey<Select<Record1<DateTime>>> SELECT_MEMBER_LAST_ACTIVE = QueryKey.create();
 
     public static final QueryKey<Select<Record1<UUID>>> SELECT_MEMBER_SOCIETY = QueryKey.create();
 
@@ -133,7 +133,7 @@ class Queries extends QueryProvider {
             public Select<Record1<UUID>> create(DSLContext context) {
                 return context.select(MEMBERS.UUID).
                         from(MEMBERS).
-                        where(MEMBERS.SOCIETY.equal(uuid_param()));
+                        where(MEMBERS.SOCIETY.equal(id_param()));
             }
         });
 
@@ -142,7 +142,7 @@ class Queries extends QueryProvider {
             public Select<SocietiesRecord> create(DSLContext context) {
                 return context.
                         selectFrom(SOCIETIES)
-                        .where(SOCIETIES.UUID.equal(uuid_param()));
+                        .where(SOCIETIES.UUID.equal(id_param()));
             }
         });
 
@@ -161,7 +161,7 @@ class Queries extends QueryProvider {
                 return context.select(RANKS.UUID, RANKS.NAME, RANKS.PRIORITY).from(RANKS)
                         .join(SOCIETIES_RANKS)
                         .on(SOCIETIES_RANKS.RANK.eq(RANKS.UUID))
-                        .and(SOCIETIES_RANKS.SOCIETY.eq(uuid_param("society")));
+                        .and(SOCIETIES_RANKS.SOCIETY.eq(id_param()));
             }
         });
 
@@ -174,7 +174,7 @@ class Queries extends QueryProvider {
                         .set(SOCIETIES.NAME, param("name", String.class))
                         .set(SOCIETIES.TAG, param("tag", String.class))
                         .set(SOCIETIES.CLEAN_TAG, param("clean_tag", String.class))
-                        .set(SOCIETIES.CREATED, param("created", Timestamp.class)).onDuplicateKeyIgnore();
+                        .set(SOCIETIES.CREATED, param("created", DateTime.class)).onDuplicateKeyIgnore();
             }
         });
 
@@ -182,7 +182,7 @@ class Queries extends QueryProvider {
             @Override
             public Query create(DSLContext context) {
                 return context
-                        .delete(SOCIETIES).where(SOCIETIES.UUID.equal(uuid_param()));
+                        .delete(SOCIETIES).where(SOCIETIES.UUID.equal(id_param()));
             }
         });
 
@@ -191,7 +191,7 @@ class Queries extends QueryProvider {
             public Update<SocietiesRecord> create(DSLContext context) {
                 return context.update(SOCIETIES)
                         .set(SOCIETIES.NAME, DEFAULT_STRING)
-                        .where(SOCIETIES.UUID.equal(uuid_param()));
+                        .where(SOCIETIES.UUID.equal(id_param()));
             }
         });
 
@@ -201,7 +201,7 @@ class Queries extends QueryProvider {
                 return context.update(SOCIETIES)
                         .set(SOCIETIES.TAG, DEFAULT_STRING)
                         .set(SOCIETIES.CLEAN_TAG, DEFAULT_STRING)
-                        .where(SOCIETIES.UUID.equal(uuid_param()));
+                        .where(SOCIETIES.UUID.equal(id_param()));
             }
         });
 
@@ -210,29 +210,29 @@ class Queries extends QueryProvider {
             public Update<SocietiesRecord> create(DSLContext context) {
                 return context.update(SOCIETIES)
                         .set(SOCIETIES.CREATED, DEFAULT_TIMESTAMP)
-                        .where(SOCIETIES.UUID.equal(uuid_param()));
+                        .where(SOCIETIES.UUID.equal(id_param()));
             }
         });
 
         builder(SELECT_SOCIETY_TAG, new QueryBuilder<Select<Record1<String>>>() {
             @Override
             public Select<Record1<String>> create(DSLContext context) {
-                return context.select(SOCIETIES.TAG).from(SOCIETIES).where(SOCIETIES.UUID.equal(uuid_param()));
+                return context.select(SOCIETIES.TAG).from(SOCIETIES).where(SOCIETIES.UUID.equal(id_param()));
             }
         });
 
         builder(SELECT_SOCIETY_NAME, new QueryBuilder<Select<Record1<String>>>() {
             @Override
             public Select<Record1<String>> create(DSLContext context) {
-                return context.select(SOCIETIES.NAME).from(SOCIETIES).where(SOCIETIES.UUID.equal(uuid_param()));
+                return context.select(SOCIETIES.NAME).from(SOCIETIES).where(SOCIETIES.UUID.equal(id_param()));
             }
         });
 
-        builder(SELECT_SOCIETY_CREATED, new QueryBuilder<Select<Record1<Timestamp>>>() {
+        builder(SELECT_SOCIETY_CREATED, new QueryBuilder<Select<Record1<DateTime>>>() {
             @Override
-            public Select<Record1<Timestamp>> create(DSLContext context) {
+            public Select<Record1<DateTime>> create(DSLContext context) {
                 return context.select(SOCIETIES.CREATED).from(SOCIETIES)
-                        .where(SOCIETIES.UUID.equal(uuid_param()));
+                        .where(SOCIETIES.UUID.equal(id_param()));
             }
         });
 
@@ -242,7 +242,7 @@ class Queries extends QueryProvider {
                 return context
                         .select(SOCIETIES_SETTINGS.TARGET_UUID, SOCIETIES_SETTINGS.SETTING, SOCIETIES_SETTINGS.VALUE)
                         .from(SOCIETIES_SETTINGS)
-                        .where(SOCIETIES_SETTINGS.SUBJECT_UUID.equal(uuid_param("subject")));
+                        .where(SOCIETIES_SETTINGS.SUBJECT_UUID.equal(id_param()));
             }
         });
 
@@ -252,7 +252,7 @@ class Queries extends QueryProvider {
                 return context
                         .select(MEMBER_SETTINGS.TARGET_UUID, MEMBER_SETTINGS.SETTING, MEMBER_SETTINGS.VALUE)
                         .from(MEMBER_SETTINGS)
-                        .where(MEMBER_SETTINGS.SUBJECT_UUID.equal(uuid_param("subject")));
+                        .where(MEMBER_SETTINGS.SUBJECT_UUID.equal(id_param()));
             }
         });
 
@@ -262,7 +262,7 @@ class Queries extends QueryProvider {
                 return context
                         .select(RANKS_SETTINGS.TARGET_UUID, RANKS_SETTINGS.SETTING, RANKS_SETTINGS.VALUE)
                         .from(RANKS_SETTINGS)
-                        .where(RANKS_SETTINGS.SUBJECT_UUID.equal(uuid_param("subject")));
+                        .where(RANKS_SETTINGS.SUBJECT_UUID.equal(id_param()));
             }
         });
 
@@ -273,8 +273,8 @@ class Queries extends QueryProvider {
                         .insertInto(SOCIETIES_SETTINGS)
                         .values(DEFAULT_UUID, DEFAULT_UUID, UShort.valueOf(0), DEFAULT_BYTE_ARRAY)
                         .onDuplicateKeyUpdate()
-                        .set(SOCIETIES_SETTINGS.SUBJECT_UUID, uuid_param("subject"))
-                        .set(SOCIETIES_SETTINGS.TARGET_UUID, uuid_param("target"))
+                        .set(SOCIETIES_SETTINGS.SUBJECT_UUID, id_param())
+                        .set(SOCIETIES_SETTINGS.TARGET_UUID, id_param())
                         .set(SOCIETIES_SETTINGS.SETTING, UShort.valueOf(0))
                         .set(SOCIETIES_SETTINGS.VALUE, DEFAULT_BYTE_ARRAY);
             }
@@ -287,8 +287,8 @@ class Queries extends QueryProvider {
                         .insertInto(MEMBER_SETTINGS)
                         .values(DEFAULT_UUID, DEFAULT_UUID, UShort.valueOf(0), DEFAULT_BYTE_ARRAY)
                         .onDuplicateKeyUpdate()
-                        .set(MEMBER_SETTINGS.SUBJECT_UUID, uuid_param("subject"))
-                        .set(MEMBER_SETTINGS.TARGET_UUID, uuid_param("target"))
+                        .set(MEMBER_SETTINGS.SUBJECT_UUID, id_param())
+                        .set(MEMBER_SETTINGS.TARGET_UUID, id_param())
                         .set(MEMBER_SETTINGS.SETTING, UShort.valueOf(0))
                         .set(MEMBER_SETTINGS.VALUE, DEFAULT_BYTE_ARRAY);
             }
@@ -306,7 +306,7 @@ class Queries extends QueryProvider {
             @Override
             public Query create(DSLContext context) {
                 return context.delete(SOCIETIES_RANKS)
-                        .where(SOCIETIES_RANKS.RANK.equal(uuid_param("rank")));
+                        .where(SOCIETIES_RANKS.RANK.equal(id_param()));
             }
         });
 
@@ -318,9 +318,9 @@ class Queries extends QueryProvider {
             @Override
             public Insert<RanksRecord> create(DSLContext context) {
                 return context.insertInto(RANKS)
-                        .values(uuid_param(), DEFAULT_STRING, DEFAULT_SHORT)
+                        .values(id_param(), DEFAULT_STRING, DEFAULT_SHORT)
                         .onDuplicateKeyUpdate()
-                        .set(RANKS.UUID, uuid_param())
+                        .set(RANKS.UUID, id_param())
                         .set(RANKS.NAME, DEFAULT_STRING)
                         .set(RANKS.PRIORITY, DEFAULT_SHORT);
             }
@@ -329,7 +329,7 @@ class Queries extends QueryProvider {
         builder(DROP_RANK, new QueryBuilder<Query>() {
             @Override
             public Query create(DSLContext context) {
-                return context.delete(RANKS).where(RANKS.UUID.equal(uuid_param()));
+                return context.delete(RANKS).where(RANKS.UUID.equal(id_param()));
             }
         });
 
@@ -345,24 +345,24 @@ class Queries extends QueryProvider {
             }
         });
 
-        builder(SELECT_MEMBER_CREATED, new QueryBuilder<Select<Record1<Timestamp>>>() {
+        builder(SELECT_MEMBER_CREATED, new QueryBuilder<Select<Record1<DateTime>>>() {
             @Override
-            public Select<Record1<Timestamp>> create(DSLContext context) {
-                return context.select(MEMBERS.CREATED).from(MEMBERS).where(MEMBERS.UUID.equal(uuid_param()));
+            public Select<Record1<DateTime>> create(DSLContext context) {
+                return context.select(MEMBERS.CREATED).from(MEMBERS).where(MEMBERS.UUID.equal(id_param()));
             }
         });
 
-        builder(SELECT_MEMBER_LAST_ACTIVE, new QueryBuilder<Select<Record1<Timestamp>>>() {
+        builder(SELECT_MEMBER_LAST_ACTIVE, new QueryBuilder<Select<Record1<DateTime>>>() {
             @Override
-            public Select<Record1<Timestamp>> create(DSLContext context) {
-                return context.select(MEMBERS.LASTACTIVE).from(MEMBERS).where(MEMBERS.UUID.equal(uuid_param()));
+            public Select<Record1<DateTime>> create(DSLContext context) {
+                return context.select(MEMBERS.LASTACTIVE).from(MEMBERS).where(MEMBERS.UUID.equal(id_param()));
             }
         });
 
         builder(SELECT_MEMBER_SOCIETY, new QueryBuilder<Select<Record1<UUID>>>() {
             @Override
             public Select<Record1<UUID>> create(DSLContext context) {
-                return context.select(MEMBERS.SOCIETY).from(MEMBERS).where(MEMBERS.UUID.equal(uuid_param()));
+                return context.select(MEMBERS.SOCIETY).from(MEMBERS).where(MEMBERS.UUID.equal(id_param()));
             }
         });
 
@@ -371,7 +371,7 @@ class Queries extends QueryProvider {
             public Select<MembersRecord> create(DSLContext context) {
                 return context.
                         selectFrom(MEMBERS)
-                        .where(MEMBERS.UUID.equal(uuid_param()));
+                        .where(MEMBERS.UUID.equal(id_param()));
             }
         });
 
@@ -380,7 +380,7 @@ class Queries extends QueryProvider {
             public Select<Record1<UUID>> create(DSLContext context) {
                 return context.
                         select(MEMBERS_RANKS.RANK).from(MEMBERS_RANKS)
-                        .where(MEMBERS_RANKS.MEMBER.equal(uuid_param("member")));
+                        .where(MEMBERS_RANKS.MEMBER.equal(id_param()));
             }
         });
 
@@ -389,7 +389,7 @@ class Queries extends QueryProvider {
             public Insert<MembersRecord> create(DSLContext context) {
                 return context
                         .insertInto(MEMBERS)
-                        .set(MEMBERS.UUID, uuid_param());
+                        .set(MEMBERS.UUID, id_param());
             }
         });
 
@@ -397,7 +397,7 @@ class Queries extends QueryProvider {
             @Override
             public Query create(DSLContext context) {
                 return context
-                        .delete(MEMBERS).where(MEMBERS.UUID.equal(uuid_param()));
+                        .delete(MEMBERS).where(MEMBERS.UUID.equal(id_param()));
             }
         });
 
@@ -405,8 +405,8 @@ class Queries extends QueryProvider {
             @Override
             public Update<MembersRecord> create(DSLContext context) {
                 return context.update(MEMBERS)
-                        .set(MEMBERS.SOCIETY, uuid_param("society"))
-                        .where(MEMBERS.UUID.equal(uuid_param()));
+                        .set(MEMBERS.SOCIETY, id_param())
+                        .where(MEMBERS.UUID.equal(id_param()));
             }
         });
 
@@ -422,15 +422,15 @@ class Queries extends QueryProvider {
             @Override
             public Query create(DSLContext context) {
                 return context.delete(MEMBERS_RANKS)
-                        .where(MEMBERS_RANKS.MEMBER.equal(uuid_param("member"))
-                                .and(MEMBERS_RANKS.RANK.equal(uuid_param("rank"))));
+                        .where(MEMBERS_RANKS.MEMBER.equal(id_param())
+                                .and(MEMBERS_RANKS.RANK.equal(id_param())));
             }
         });
 
         builder(DROP_RANK_IN_MEMBERS, new QueryBuilder<Query>() {
             @Override
             public Query create(DSLContext context) {
-                return context.delete(MEMBERS_RANKS).where(MEMBERS_RANKS.RANK.equal(uuid_param("rank")));
+                return context.delete(MEMBERS_RANKS).where(MEMBERS_RANKS.RANK.equal(id_param()));
             }
         });
 
@@ -439,7 +439,7 @@ class Queries extends QueryProvider {
             public Update<MembersRecord> create(DSLContext context) {
                 return context.update(MEMBERS)
                         .set(MEMBERS.LASTACTIVE, DEFAULT_TIMESTAMP)
-                        .where(MEMBERS.UUID.equal(uuid_param()));
+                        .where(MEMBERS.UUID.equal(id_param()));
             }
         });
 
@@ -448,7 +448,7 @@ class Queries extends QueryProvider {
             public Update<MembersRecord> create(DSLContext context) {
                 return context.update(MEMBERS)
                         .set(MEMBERS.CREATED, DEFAULT_TIMESTAMP)
-                        .where(MEMBERS.UUID.equal(uuid_param()));
+                        .where(MEMBERS.UUID.equal(id_param()));
             }
         });
     }

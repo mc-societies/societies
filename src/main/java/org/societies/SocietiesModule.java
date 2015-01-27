@@ -62,6 +62,15 @@ public class SocietiesModule extends AbstractServiceModule {
 
     @Override
     protected void configure() {
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                System.out.println("Error");
+                e.printStackTrace(System.out);
+            }
+        });
+
+
 //        binder().disableCircularProxies();
 
         ConfigParseOptions parseOptions = ConfigParseOptions.defaults()
@@ -124,7 +133,6 @@ public class SocietiesModule extends AbstractServiceModule {
 
         // Societies
         install(new SocietyModule(config));
-
 
         // Dictionary
         install(new DictionaryModule(dataDirectory));

@@ -11,7 +11,7 @@ import org.societies.groups.group.Group;
 /**
  * Represents a SocietyProfile
  */
-@Command(identifier = "command.verify", async = true)
+@Command(identifier = "command.verify", async = false)
 @Permission("societies.verify")
 public class VerifyCommand implements Executor<Sender> {
 

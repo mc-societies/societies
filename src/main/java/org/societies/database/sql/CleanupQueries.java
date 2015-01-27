@@ -7,8 +7,7 @@ import org.societies.database.DSLProvider;
 import org.societies.database.QueryKey;
 import org.societies.database.QueryProvider;
 
-import java.sql.Timestamp;
-
+import static org.joda.time.DateTime.now;
 import static org.societies.database.sql.layout.Tables.*;
 
 /**
@@ -51,7 +50,7 @@ class CleanupQueries extends QueryProvider {
             @Override
             public Query create(DSLContext context) {
                 return context.delete(MEMBERS)
-                        .where(MEMBERS.CREATED.le(new Timestamp(System.currentTimeMillis())));
+                        .where(MEMBERS.CREATED.le(now()));
             }
         });
     }

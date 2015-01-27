@@ -66,6 +66,7 @@ import static com.google.inject.name.Names.named;
 public class CommandModule extends AbstractModule {
 
     public static final TypeLiteral<DefaultCommandPipeline<Sender>> PIPELINE_IMPL = new TypeLiteral<DefaultCommandPipeline<Sender>>() {};
+
     private final Class[] commands = new Class[]{
             CreateCommand.class,
             ListCommand.class,
@@ -195,13 +196,17 @@ public class CommandModule extends AbstractModule {
 
     @Provides
     @Named("commands")
-    public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, CommandAnalyser<Sender> analyser) {
+    public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, Set<Class<? extends Command>> classes, CommandAnalyser<Sender> analyser) {
 
         GroupCommand<Sender> group = builder.identifier("societies").name("Societies").build();
 
-        group.addOption(new Argument("page", "page", "page", true, new IntegerParser()));
+        group.addOption(new Argument<Integer>("page", "page", "page", true, new IntegerParser()));
 
         for (Class<?> clazz : this.commands) {
+            group.addChild(analyser.analyse(clazz));
+        }
+
+        for (Class<? extends Command> clazz : classes) {
             group.addChild(analyser.analyse(clazz));
         }
 

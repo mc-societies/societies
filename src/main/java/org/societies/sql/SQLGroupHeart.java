@@ -87,11 +87,11 @@ public class SQLGroupHeart extends AbstractGroupHeart {
 
     @Override
     public DateTime getCreated() {
-        Select<Record1<Timestamp>> query = queries.getQuery(SELECT_SOCIETY_CREATED);
+        Select<Record1<DateTime>> query = queries.getQuery(SELECT_SOCIETY_CREATED);
         query.bind(1, getUUID());
 
-        Record1<Timestamp> record = query.fetch().get(0);
-        return new DateTime(record.value1());
+        Record1<DateTime> record = query.fetch().get(0);
+        return record.value1();
     }
 
     @Override
