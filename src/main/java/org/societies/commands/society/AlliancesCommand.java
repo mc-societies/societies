@@ -13,7 +13,7 @@ import javax.inject.Provider;
 /**
  * Represents a AlliancesCommand
  */
-@Command(identifier = "command.alliances")
+@Command(identifier = "command.alliances", async = true)
 @Permission("societies.alliances")
 public class AlliancesCommand extends AbstractRelationsCommand {
 

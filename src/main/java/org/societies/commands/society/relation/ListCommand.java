@@ -13,7 +13,6 @@ import org.societies.groups.member.Member;
 
 import javax.inject.Provider;
 import java.util.Collection;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Represents a ListCommand
@@ -53,16 +52,7 @@ abstract class ListCommand implements Executor<Member> {
         Table table = tableProvider.get();
 
         for (Relation relation : relations) {
-            Group target;
-            try {
-                target = groupProvider.getGroup(relation.getOpposite(group.getUUID())).get();
-            } catch (InterruptedException e) {
-                logger.catching(e);
-                continue;
-            } catch (ExecutionException e) {
-                logger.catching(e);
-                continue;
-            }
+            Group target = groupProvider.getGroup(relation.getOpposite(group.getUUID()));
 
             table.addForwardingRow(target);
         }

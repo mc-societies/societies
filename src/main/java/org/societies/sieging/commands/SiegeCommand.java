@@ -23,7 +23,7 @@ public class SiegeCommand {
 
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
-              //location
+            //location
         }
     }
 

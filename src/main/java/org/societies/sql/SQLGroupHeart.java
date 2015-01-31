@@ -9,7 +9,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 import org.jooq.*;
 import org.jooq.types.UShort;
-import org.societies.api.group.SocietyException;
 import org.societies.bridge.ChatColor;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
 import org.societies.database.sql.layout.tables.records.SocietiesRecord;
@@ -34,7 +33,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import static org.societies.sql.Queries.*;
 
@@ -164,14 +162,8 @@ public class SQLGroupHeart extends AbstractGroupHeart {
         query.bind(1, getUUID());
 
         for (Record1<UUID> member : query.fetch()) {
-            try {
-                UUID memberUUID = member.value1();
-                members.add(memberProvider.getMember(memberUUID).get());
-            } catch (InterruptedException e) {
-                throw new SocietyException(e, "Failed to add member to group!");
-            } catch (ExecutionException e) {
-                throw new SocietyException(e, "Failed to add member to group!");
-            }
+            UUID memberUUID = member.value1();
+            members.add(memberProvider.getMember(memberUUID));
         }
         return members;
     }

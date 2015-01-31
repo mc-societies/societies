@@ -68,7 +68,7 @@ class DictionaryService extends AbstractService {
 
                     String lang = name.substring(0, name.length() - "general.properties".length() - 1);
 
-                    InputStreamReader reader = new InputStreamReader(stream);
+                    InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
 
                     Properties properties = new Properties();
                     properties.load(new BufferedReader(reader));

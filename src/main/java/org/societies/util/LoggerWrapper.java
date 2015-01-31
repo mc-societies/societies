@@ -12,7 +12,10 @@ import java.util.logging.Logger;
  * Represents a LoggerWrapper
  */
 public class LoggerWrapper extends AbstractLogger {
-    private final Logger logger;
+
+    public static final long serialVersionUID = 1421715L;
+
+    private transient final Logger logger;
 
     public LoggerWrapper(Logger logger) {this.logger = logger;}
 

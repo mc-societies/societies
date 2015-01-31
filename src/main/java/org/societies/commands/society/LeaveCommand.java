@@ -7,7 +7,7 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
 import org.societies.groups.group.Group;
-import org.societies.groups.group.GroupDestructor;
+import org.societies.groups.group.GroupPublisher;
 import org.societies.groups.member.Member;
 
 /**
@@ -18,10 +18,12 @@ import org.societies.groups.member.Member;
 @Sender(Member.class)
 public class LeaveCommand implements Executor<Member> {
 
-    private final GroupDestructor dropGroup;
+    private final GroupPublisher dropGroup;
 
     @Inject
-    public LeaveCommand(GroupDestructor dropGroup) {this.dropGroup = dropGroup;}
+    public LeaveCommand(GroupPublisher dropGroup) {
+        this.dropGroup = dropGroup;
+    }
 
     @Override
     public void execute(CommandContext<Member> ctx, Member sender) {

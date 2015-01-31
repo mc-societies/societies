@@ -48,7 +48,8 @@ class SiegingQueries extends QueryProvider {
 
     public static final QueryKey<Select<SiegesRecord>> SELECT_SIEGES_BY_BESIEGER = QueryKey.create();
 
-    public static final QueryKey<Select<Record8<UUID, UUID, UUID, Short, Short, Short, UUID, DateTime>>> SELECT_SIEGES_BY_SIEGED = QueryKey.create();
+    public static final QueryKey<Select<Record8<UUID, UUID, UUID, Short, Short, Short, UUID, DateTime>>> SELECT_SIEGES_BY_SIEGED = QueryKey
+            .create();
 
     @Inject
     public SiegingQueries(DSLProvider provider) {

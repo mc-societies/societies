@@ -15,8 +15,6 @@ import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 import org.societies.groups.setting.Setting;
 
-import java.util.concurrent.ExecutionException;
-
 /**
  * Represents a RelationListCommand
  */
@@ -49,7 +47,7 @@ public class WithdrawCommand implements Executor<Member> {
         //beautify
         DepositCommand.lock.lock();
         try {
-            if (!locker.lock(0).get()) return;
+            if (!locker.lock(0)) return;
 
             EconomyParticipant economy = sender.get(EconomyParticipant.class);
 
@@ -72,11 +70,6 @@ public class WithdrawCommand implements Executor<Member> {
 
             sender.send("withdraw-successfully", withdraw);
 
-
-        } catch (InterruptedException ignored) {
-            return;
-        } catch (ExecutionException ignored) {
-            return;
         } finally {
             unlock();
             DepositCommand.lock.unlock();
@@ -84,12 +77,6 @@ public class WithdrawCommand implements Executor<Member> {
     }
 
     private void unlock() {
-        try {
-            locker.unlock(0).get();
-        } catch (InterruptedException ignored) {
-            return;
-        } catch (ExecutionException ignored) {
-            return;
-        }
+        locker.unlock(0);
     }
 }

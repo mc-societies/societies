@@ -109,7 +109,7 @@ public class SocietyModule extends AbstractModule {
         }
     }
 
-    private class DefaultRankModule extends PrivateModule {
+    private static class DefaultRankModule extends PrivateModule {
 
         private final String keyName;
         private final String defaultRank;

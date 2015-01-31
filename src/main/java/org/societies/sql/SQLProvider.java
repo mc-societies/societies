@@ -1,8 +1,6 @@
 package org.societies.sql;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
@@ -27,13 +25,10 @@ import org.societies.groups.member.MemberFactory;
 import org.societies.groups.member.MemberProvider;
 import org.societies.groups.member.MemberPublisher;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.google.common.util.concurrent.Futures.immediateFuture;
-import static com.google.common.util.concurrent.Futures.transform;
 import static org.societies.sql.Queries.*;
 
 /**
@@ -82,79 +77,63 @@ class SQLProvider implements MemberProvider, GroupProvider {
     //================================================================================
 
     @Override
-    public ListenableFuture<Member> getMember(String name) {
+    public Member getMember(String name) {
         // Cache lookup
         Member member = memberCache.getMember(name);
         if (member != null) {
-            return immediateFuture(member);
+            return member;
         }
-
 
         UUID player = playerResolver.getPlayer(name);
 
         if (player == null) {
-            return immediateFuture(null);
+            return null;
         }
 
         return getMember(player);
     }
 
     @Override
-    public ListenableFuture<Set<Member>> getMembers() {
+    public Set<Member> getMembers() {
         Set<Member> members = memberCache.getMembers();
         if (members != null) {
-            return immediateFuture(members);
+            return members;
         }
 
-        ListenableFuture<Result<MembersRecord>> future = queries.query(service, SELECT_MEMBERS);
+        Result<MembersRecord> result = queries.query(SELECT_MEMBERS);
 
-        return transform(future, new Function<Result<MembersRecord>, Set<Member>>() {
-            @Nullable
-            @Override
-            public Set<Member> apply(@Nullable Result<MembersRecord> input) {
-                if (input == null) {
-                    return Collections.emptySet();
-                }
+        if (result == null) {
+            return Collections.emptySet();
+        }
 
-                THashSet<Member> result = new THashSet<Member>(input.size());
+        THashSet<Member> ret = new THashSet<Member>(result.size());
 
-                for (MembersRecord record : input) {
-                    result.add(memberFactory.create(record.getUuid()));
-                }
+        for (MembersRecord record : result) {
+            ret.add(memberFactory.create(record.getUuid()));
+        }
 
-                return result;
-            }
-        });
+        return ret;
     }
+
 
     @Override
-    public ListenableFuture<Member> getMember(UUID uuid) {
-        return getMember(uuid, service);
-    }
-
-    public ListenableFuture<Member> getMember(final UUID uuid, ListeningExecutorService service) {
+    public Member getMember(final UUID uuid) {
         // Cache lookup
         Member member = memberCache.getMember(uuid);
         if (member != null) {
-            return immediateFuture(member);
+            return member;
         }
 
-        return queryMember(service, uuid, new Function<Result<MembersRecord>, Member>() {
-            @Nullable
-            @Override
-            public Member apply(@Nullable Result<MembersRecord> input) {
-                return evaluateMember(uuid, input);
-            }
-        });
+        Result<MembersRecord> result = queryMember(uuid);
+
+        return evaluateMember(uuid, result);
     }
 
-    private ListenableFuture<Member> queryMember(ListeningExecutorService service, UUID uuid, Function<Result<MembersRecord>, Member> applier) {
+    private Result<MembersRecord> queryMember(UUID uuid) {
         Select<MembersRecord> query = queries.getQuery(SELECT_MEMBER_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
-        ListenableFuture<Result<MembersRecord>> future = queries.query(service, query);
-
-        return transform(future, applier, service);
+        return queries.query(query);
     }
 
     private Member evaluateMember(UUID uuid, Result<MembersRecord> input) {
@@ -184,42 +163,31 @@ class SQLProvider implements MemberProvider, GroupProvider {
     //================================================================================
 
     @Override
-    public ListenableFuture<Group> getGroup(UUID uuid) {
+    public Group getGroup(UUID uuid) {
         return getGroup(uuid, service);
     }
 
-    public ListenableFuture<Group> getGroup(UUID uuid, ListeningExecutorService service) {
+    public Group getGroup(UUID uuid, ListeningExecutorService service) {
         // Cache lookup
         Group group = groupCache.getGroup(uuid);
         if (group != null) {
-            return immediateFuture(group);
+            return group;
         }
 
         Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_UUID);
         query.bind(1, ByteUtil.toByteArray(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits()));
 
-        return querySingleGroup(uuid, queries.query(service, query));
+        return querySingleGroup(uuid, queries.query(query));
     }
 
-    private ListenableFuture<Group> querySingleGroup(final UUID uuid, final ListenableFuture<Result<SocietiesRecord>> result) {
-        return transform(result, new Function<Result<SocietiesRecord>, Group>() {
+    private Group querySingleGroup(final UUID uuid, Result<SocietiesRecord> result) {
+        if (result.isEmpty()) {
+            throw new RuntimeException("Group not found!");
+        }
 
-            @Nullable
-            @Override
-            public Group apply(@Nullable Result<SocietiesRecord> input) {
-                if (input == null) {
-                    return null;
-                }
+        SocietiesRecord record = Iterables.getOnlyElement(result);
 
-                if (input.isEmpty()) {
-                    throw new RuntimeException("Group not found!");
-                }
-
-                SocietiesRecord record = Iterables.getOnlyElement(input);
-
-                return evaluateSingleGroup(uuid, record);
-            }
-        }, service);
+        return evaluateSingleGroup(uuid, record);
     }
 
     private Group evaluateSingleGroup(UUID uuid, SocietiesRecord record) {
@@ -229,60 +197,38 @@ class SQLProvider implements MemberProvider, GroupProvider {
     }
 
     @Override
-    public ListenableFuture<Set<Group>> getGroup(String tag) {
+    public Set<Group> getGroup(String tag) {
         // Cache lookup
         Set<Group> group = groupCache.getGroup(tag);
         if (group != null) {
-            return immediateFuture(group);
+            return group;
         }
 
         Select<SocietiesRecord> query = queries.getQuery(SELECT_SOCIETY_BY_TAG);
         query.bind(1, tag);
 
-        return evaluateMultipleGroups(queries.query(service, query));
+        return evaluateMultipleGroups(queries.query(query));
     }
 
-    private ListenableFuture<Set<Group>> evaluateMultipleGroups(ListenableFuture<Result<SocietiesRecord>> result) {
-        return transform(result, new Function<Result<SocietiesRecord>, Set<Group>>() {
+    private Set<Group> evaluateMultipleGroups(Result<SocietiesRecord> result) {
+        THashSet<Group> groups = new THashSet<Group>(result.size());
 
-            @Nullable
-            @Override
-            public Set<Group> apply(@Nullable Result<SocietiesRecord> input) {
-                if (input == null) {
-                    return null;
-                }
+        for (SocietiesRecord record : result) {
+            UUID uuid = record.getUuid();
+            groups.add(evaluateSingleGroup(uuid, record));
+        }
 
-                THashSet<Group> groups = new THashSet<Group>(input.size());
-
-                for (SocietiesRecord record : input) {
-                    UUID uuid = record.getUuid();
-                    groups.add(evaluateSingleGroup(uuid, record));
-                }
-
-                return groups;
-            }
-        });
+        return groups;
     }
 
     @Override
-    public ListenableFuture<Set<Group>> getGroups() {
-        return evaluateMultipleGroups(queries.query(service, SELECT_SOCIETIES));
+    public Set<Group> getGroups() {
+        return evaluateMultipleGroups(queries.query(SELECT_SOCIETIES));
     }
 
     @Override
-    public ListenableFuture<Integer> size() {
-        return transform(queries
-                .query(service, SELECT_SOCIETIES_AMOUNT), new Function<Result<Record1<Integer>>, Integer>() {
-
-            @Nullable
-            @Override
-            public Integer apply(@Nullable Result<Record1<Integer>> input) {
-                if (input == null) {
-                    return -1;
-                }
-
-                return Iterables.getOnlyElement(input).value1();
-            }
-        });
+    public Integer size() {
+        Result<Record1<Integer>> result = queries.query(SELECT_SOCIETIES_AMOUNT);
+        return Iterables.getOnlyElement(result).value1();
     }
 }

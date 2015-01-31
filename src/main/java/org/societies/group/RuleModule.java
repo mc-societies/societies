@@ -3,8 +3,8 @@ package org.societies.group;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import org.shank.AbstractModule;
-import org.societies.groups.setting.Setting;
 import org.societies.api.setting.RulesSetting;
+import org.societies.groups.setting.Setting;
 
 /**
  * Represents a RuleModule

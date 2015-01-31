@@ -1,8 +1,5 @@
 package org.societies.commands.society;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
@@ -57,51 +54,30 @@ public class BackupCommand implements Executor<Sender> {
         final UUIDStorage groupStorage = new UUIDStorage(new File(output, "groups"), "json");
         final UUIDStorage memberStorage = new UUIDStorage(new File(output, "members"), "json");
 
-        final ListenableFuture<Set<Group>> groups = groupProvider.getGroups();
+        final Set<Group> groups = groupProvider.getGroups();
 
-        Futures.addCallback(groups, new FutureCallback<Set<Group>>() {
-            @Override
-            public void onSuccess(Set<Group> result) {
-                for (Group group : result) {
-                    try {
-                        groupMapper.writeGroup(group, groupStorage.getFile(group.getUUID()));
-                    } catch (IOException e) {
-                        logger.catching(e);
-                    }
-                }
 
-                sender.send("backup.groups-finished");
+        for (Group group : groups) {
+            try {
+                groupMapper.writeGroup(group, groupStorage.getFile(group.getUUID()));
+            } catch (IOException e) {
+                logger.catching(e);
             }
+        }
 
-            @Override
-            public void onFailure(Throwable t) {
-                logger.catching(t);
+        sender.send("backup.groups-finished");
+
+
+        Set<Member> members = memberProvider.getMembers();
+
+        for (Member member : members) {
+            try {
+                memberMapper.writeMember(member, memberStorage.getFile(member.getUUID()));
+            } catch (IOException e) {
+                logger.catching(e);
             }
-        });
+        }
 
-
-        ListenableFuture<? extends Set<? extends Member>> members = memberProvider.getMembers();
-
-        Futures.addCallback(members, new FutureCallback<Set<? extends Member>>() {
-            @Override
-            public void onSuccess(Set<? extends Member> result) {
-                for (Member member : result) {
-                    try {
-                        memberMapper.writeMember(member, memberStorage.getFile(member.getUUID()));
-                    } catch (IOException e) {
-                        logger.catching(e);
-                    }
-                }
-
-                sender.send("backup.members-finished");
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                logger.catching(t);
-            }
-        });
+        sender.send("backup.members-finished");
     }
-
-
 }

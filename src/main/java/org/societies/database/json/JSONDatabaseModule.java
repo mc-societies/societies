@@ -68,11 +68,9 @@ public class JSONDatabaseModule extends AbstractServiceModule {
 
         // Group Publishers
         bind(GroupPublisher.class).to(groupPublisher);
-        bind(GroupDestructor.class).to(groupPublisher);
 
         // Member Publishers
         bind(MemberPublisher.class).to(provider);
-        bind(MemberDestructor.class).to(provider);
 
         bind(Locker.class).to(DummyLocker.class);
     }

@@ -1,83 +1,54 @@
 package org.societies.lock.sql;
 
-import com.google.common.base.Function;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.jooq.Query;
 import org.jooq.Select;
 import org.societies.api.lock.Locker;
-import org.societies.database.sql.AbstractPublisher;
-
-import javax.annotation.Nullable;
-import java.util.concurrent.Callable;
 
 /**
  * Represents a SQLLocker
  */
 @Singleton
-class SQLLocker extends AbstractPublisher implements Locker {
+class SQLLocker implements Locker {
+    private final LockQueries queries;
 
 //todo    private final TIntObjectHashMap<ReentrantLock> locks = new TIntObjectHashMap<ReentrantLock>();
 
     @Inject
-    public SQLLocker(ListeningExecutorService service, LockQueries queries) {
-        super(service, queries);
+    public SQLLocker(LockQueries queries) {
+        this.queries = queries;
     }
 
     @Override
-    public ListenableFuture<Boolean> lock(final int id) {
-        return service.submit(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                Query query = queries.getQuery(LockQueries.INSERT_LOCK);
+    public boolean lock(final int id) {
+        Query query = queries.getQuery(LockQueries.INSERT_LOCK);
 
-                query.bind(1, id);
+        query.bind(1, id);
 
-                return query.execute() > 0;
-            }
-        });
-    }
-
-
-    @Override
-    public ListenableFuture<Boolean> unlock(final int id) {
-        return service.submit(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                Query query = queries.getQuery(LockQueries.DROP_LOCK);
-
-                query.bind(1, id);
-
-                return query.execute() > 0;
-            }
-        });
+        return query.execute() > 0;
     }
 
     @Override
-    public ListenableFuture<Boolean> isLocked(final int id) {
-        return service.submit(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                Select query = queries.getQuery(LockQueries.SELECT_LOCK);
+    public boolean unlock(final int id) {
+        Query query = queries.getQuery(LockQueries.DROP_LOCK);
 
-                query.bind(1, id);
+        query.bind(1, id);
 
-                return query.fetchCount() > 0;
-            }
-        });
+        return query.execute() > 0;
     }
 
     @Override
-    public ListenableFuture<Boolean> isFree(int id) {
-        return Futures.transform(isLocked(id), new Function<Boolean, Boolean>() {
-            @Nullable
-            @Override
-            public Boolean apply(Boolean input) {
-                return !input;
-            }
-        });
+    public boolean isLocked(final int id) {
+        Select query = queries.getQuery(LockQueries.SELECT_LOCK);
+
+        query.bind(1, id);
+
+        return query.fetchCount() > 0;
+    }
+
+    @Override
+    public boolean isFree(int id) {
+        return !isLocked(id);
     }
 }

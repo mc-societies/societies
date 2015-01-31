@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 
@@ -238,17 +237,7 @@ public class RivalsCommand extends ListCommand {
                 return;
             }
 
-            Integer societies;
-
-            try {
-                societies = groupProvider.size().get();
-            } catch (InterruptedException e) {
-                logger.catching(e);
-                return;
-            } catch (ExecutionException e) {
-                logger.catching(e);
-                return;
-            }
+            Integer societies = groupProvider.size();
 
             if (Math.round(societies * (rivalsLimit / 100)) < group.getRelations().size()) {
                 sender.send("society.reached-max-rivals");

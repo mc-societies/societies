@@ -7,6 +7,7 @@ import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import org.societies.api.setting.RulesSetting;
 import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;
 import org.societies.groups.group.Group;
@@ -14,7 +15,6 @@ import org.societies.groups.member.Member;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.setting.Setting;
 import org.societies.groups.setting.target.Target;
-import org.societies.api.setting.RulesSetting;
 
 import java.util.Map;
 

@@ -15,7 +15,6 @@ import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 import org.societies.groups.setting.Setting;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -52,7 +51,7 @@ public class DepositCommand implements Executor<Member> {
 
         lock.lock();
         try {
-            if (!locker.lock(0).get()) return;
+            if (!locker.lock(0)) return;
 
             EconomyParticipant economy = sender.get(EconomyParticipant.class);
 
@@ -68,10 +67,6 @@ public class DepositCommand implements Executor<Member> {
 
             sender.send("deposit-successfully", response.getAmount());
 
-        } catch (InterruptedException ignored) {
-            return;
-        } catch (ExecutionException ignored) {
-            return;
         } finally {
             unlock();
             lock.unlock();
@@ -79,12 +74,6 @@ public class DepositCommand implements Executor<Member> {
     }
 
     private void unlock() {
-        try {
-            locker.unlock(0).get();
-        } catch (InterruptedException ignored) {
-            return;
-        } catch (ExecutionException ignored) {
-            return;
-        }
+        locker.unlock(0);
     }
 }

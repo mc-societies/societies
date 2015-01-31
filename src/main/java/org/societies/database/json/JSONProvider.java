@@ -3,7 +3,6 @@ package org.societies.database.json;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -29,23 +28,25 @@ import org.societies.api.PlayerResolver;
 import org.societies.bridge.ChatColor;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;
-import org.societies.groups.member.*;
+import org.societies.groups.member.Member;
+import org.societies.groups.member.MemberFactory;
+import org.societies.groups.member.MemberProvider;
+import org.societies.groups.member.MemberPublisher;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.googlecode.cqengine.query.QueryFactory.equal;
 
 /**
  * Represents a JSONProvider
  */
 @Singleton
-class JSONProvider extends AbstractService implements MemberProvider, GroupProvider, MemberPublisher, MemberDestructor {
+class JSONProvider extends AbstractService implements MemberProvider, GroupProvider, MemberPublisher {
 
     IndexedCollection<Group> groups = CQEngine.newInstance();
 
@@ -163,36 +164,34 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
     }
 
     @Override
-    public ListenableFuture<Group> getGroup(UUID uuid) {
+    public Group getGroup(UUID uuid) {
         Query<Group> query = equal(GROUP_UUID, uuid);
         ResultSet<Group> retrieve = groups.retrieve(query);
 
-        return immediateFuture(Iterables.getOnlyElement(retrieve, null));
+        return Iterables.getOnlyElement(retrieve, null);
     }
 
     @Override
-    public ListenableFuture<Set<Group>> getGroup(String tag) {
+    public Set<Group> getGroup(String tag) {
         Query<Group> query = equal(GROUP_TAG, tag);
 
         ResultSet<Group> retrieve = groups.retrieve(query);
 
-        Set<Group> result = Sets.newHashSet(retrieve);
-        return immediateFuture(result);
+        return Sets.newHashSet(retrieve);
     }
 
     @Override
-    public ListenableFuture<Set<Group>> getGroups() {
-        Set<Group> result = Sets.newHashSet(groups);
-        return immediateFuture(result);
+    public Set<Group> getGroups() {
+        return Sets.newHashSet(groups);
     }
 
     @Override
-    public ListenableFuture<Integer> size() {
-        return immediateFuture(groups.size());
+    public Integer size() {
+        return groups.size();
     }
 
     @Override
-    public ListenableFuture<Member> getMember(UUID uuid) {
+    public Member getMember(UUID uuid) {
         Query<Member> query = equal(MEMBER_UUID, uuid);
         ResultSet<Member> retrieve = members.retrieve(query);
 
@@ -200,59 +199,53 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
             Member member = memberFactory.create(uuid);
             memberPublisher.publish(member);
             members.add(member);
-            return immediateFuture(member);
+            return member;
         }
 
-        return immediateFuture(Iterables.getOnlyElement(retrieve, null));
+        return Iterables.getOnlyElement(retrieve, null);
     }
 
     @Override
-    public ListenableFuture<Member> getMember(String name) {
+    public Member getMember(String name) {
         UUID player = playerResolver.getPlayer(name);
 
         if (player == null) {
-            return immediateFuture(null);
+            return null;
         }
 
         return getMember(player);
     }
 
     @Override
-    public ListenableFuture<Set<Member>> getMembers() {
-        Set<Member> result = Collections.unmodifiableSet(members);
-        return immediateFuture(result);
+    public Set<Member> getMembers() {
+        return Collections.unmodifiableSet(members);
     }
 
     @Override
-    public ListenableFuture<Member> publish(final Member member) {
-        return service.submit(new Callable<Member>() {
+    public Member publish(final Member member) {
 
-            @Override
-            public Member call() throws Exception {
-                try {
-                    members.add(member);//beautify cast?
-                    mapper.writeMember(member, memberStorage.getFile(member.getUUID()));
-                } catch (Exception e) {
-                    logger.catching(e);
-                }
+        try {
+            members.add(member);//beautify cast?
+            mapper.writeMember(member, memberStorage.getFile(member.getUUID()));
+        } catch (Exception e) {
+            logger.catching(e);
+        }
 
-                return member;
-            }
-        });
+        return member;
     }
 
     @Override
-    public ListenableFuture destruct(final Member member) {
-        return service.submit(new Callable<Member>() {
+    public Member destruct(final Member member) {
+        members.remove(member);
 
-            @Override
-            public Member call() throws Exception {
-                members.remove(member);
+        try {
+            File file = memberStorage.getFile(member.getUUID());
+            FileUtils.forceDelete(file);
+        } catch (IOException e) {
+            e.printStackTrace();      //fixme
+            return null;
+        }
 
-                File file = memberStorage.getFile(member.getUUID());
-                FileUtils.forceDelete(file);
-                return member;
-            }
-        });
+        return member;
     }
 }

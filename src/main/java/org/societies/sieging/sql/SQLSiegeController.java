@@ -19,8 +19,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import static com.google.common.util.concurrent.Futures.getUnchecked;
-
 /**
  * Represents a SQLSiegeController
  */
@@ -98,8 +96,8 @@ class SQLSiegeController implements SiegeController {
 
         Location location = new Location(null, record.getX(), record.getY(), record.getZ());
 
-        Group group = getUnchecked(groupProvider.getGroup(record.getSociety()));
-        City city = getUnchecked(cityProvider.getCity(record.getCity()));
+        Group group = groupProvider.getGroup(record.getSociety());
+        City city = cityProvider.getCity(record.getCity());
 
         return new SQLSiege(
                 record.getUuid(),
@@ -161,8 +159,8 @@ class SQLSiegeController implements SiegeController {
                     Wager wager = wagers.get(record.value7());
                     Location location = new Location(null, record.value4(), record.value5(), record.value6());
 
-                    Group group = getUnchecked(groupProvider.getGroup(record.value2()));
-                    City city = getUnchecked(cityProvider.getCity(record.value3()));
+                    Group group = groupProvider.getGroup(record.value2());
+                    City city = cityProvider.getCity(record.value3());
 
                     sieges.add(new SQLSiege(
                             record.value1(),

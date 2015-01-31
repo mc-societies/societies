@@ -1,38 +1,42 @@
 package org.societies.sql;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import org.jooq.Insert;
-import org.societies.database.sql.AbstractPublisher;
+import org.jooq.Query;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
 import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberPublisher;
 
-import java.util.concurrent.Callable;
-
 /**
  * Represents a SQLMemberPublisher
  */
-class SQLMemberPublisher extends AbstractPublisher implements MemberPublisher {
+class SQLMemberPublisher implements MemberPublisher {
+
+    private final Queries queries;
 
     @Inject
-    public SQLMemberPublisher(ListeningExecutorService service, Queries queries) {
-        super(service, queries);
+    public SQLMemberPublisher(Queries queries) {
+        this.queries = queries;
     }
 
     @Override
-    public ListenableFuture<Member> publish(final Member member) {
-        return service.submit(new Callable<Member>() {
-            @Override
-            public Member call() throws Exception {
-                Insert<MembersRecord> query = queries.getQuery(Queries.INSERT_MEMBER);
+    public Member publish(final Member member) {
+        Insert<MembersRecord> query = queries.getQuery(Queries.INSERT_MEMBER);
 
-                query.bind(1, member.getUUID());
+        query.bind(1, member.getUUID());
 
-                query.execute();
-                return member;
-            }
-        });
+        query.execute();
+        return member;
+
+    }
+
+    @Override
+    public Member destruct(final Member member) {
+        Query query = queries.getQuery(Queries.DROP_MEMBER_BY_UUID);
+
+        query.bind(1, member.getUUID());
+
+        query.execute();
+        return member;
     }
 }

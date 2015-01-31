@@ -8,7 +8,6 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
-import org.societies.bridge.Player;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 
@@ -27,7 +26,7 @@ public class RenameCommand implements Executor<Sender> {
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) throws ExecuteException {
-        if ((sender instanceof Player)) {
+        if ((sender instanceof Member)) {
             if (target == null) {
                 target = ((Member) sender).getGroup();
             } else {

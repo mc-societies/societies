@@ -10,7 +10,6 @@ import gnu.trove.set.hash.THashSet;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.jooq.*;
-import org.societies.api.member.MemberException;
 import org.societies.database.QueryProvider;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
 import org.societies.groups.event.EventController;
@@ -27,7 +26,6 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Represents a SQLMember
@@ -208,13 +206,7 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
         UUID rawSociety = record.value1();
 
         if (rawSociety != null) {
-            try {
-                group = groupProvider.getGroup(rawSociety).get();
-            } catch (InterruptedException e) {
-                throw new MemberException(member.getUUID(), e, "Failed to set group of member!");
-            } catch (ExecutionException e) {
-                throw new MemberException(member.getUUID(), e, "Failed to set group of member!");
-            }
+            group = groupProvider.getGroup(rawSociety);
         }
 
         return group;
@@ -227,25 +219,18 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
             return;
         }
 
-        service.submit(new Callable<Member>() {
-            @Override
-            public Member call() throws Exception {
-                Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_SOCIETY);
+        Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_SOCIETY);
 
-                UUID uuid = null;
+        UUID uuid = null;
 
-                if (group != null) {
-                    uuid = group.getUUID();
-                }
+        if (group != null) {
+            uuid = group.getUUID();
+        }
 
-                query.bind(1, uuid);
-                query.bind(2, getUUID());
+        query.bind(1, uuid);
+        query.bind(2, getUUID());
 
-                query.execute();
-                return member;
-            }
-        });
-
+        query.execute();
 
         publishMemberEvents(member, group, previous);
     }

@@ -2,6 +2,7 @@ package org.societies.util;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -24,32 +25,40 @@ public class DependencyLoader {
     public DependencyLoader(Logger logger) {this.logger = logger;}
 
     public void loadDependencies(URL url, File destination) throws InvocationTargetException, IllegalAccessException, IOException {
-        destination.mkdirs();
+        FileUtils.forceMkdir(destination);
         File cacheFile = new File(destination, ".cache");
 
         boolean download = true;
 
         if (cacheFile.exists()) {
-            String source = CharStreams.toString(new FileReader(cacheFile));
-            if (source.equals(url.toExternalForm())) {
-                download = false;
+            InputStreamReader reader = new InputStreamReader(new FileInputStream(cacheFile), "UTF-8");
+            try {
+                String source = CharStreams.toString(reader);
+                if (source.equals(url.toExternalForm())) {
+                    download = false;
+                }
+            } finally {
+                reader.close();
             }
         }
 
         if (download) {
             logger.info("Downloading dependencies...");
             Set<String> loaded = download(destination, url);
-            PrintWriter printWriter = new PrintWriter(cacheFile);
-            printWriter.print(url.toExternalForm());
-            printWriter.flush();
-            printWriter.close();
+            PrintWriter printWriter = new PrintWriter(cacheFile, "UTF-8");
+            try {
+                printWriter.print(url.toExternalForm());
+                printWriter.flush();
+            } finally {
+                printWriter.close();
+            }
 
             File[] dependencies = destination.listFiles(new JarFilter());
 
             for (File dependency : dependencies) {
                 if (!loaded.contains(dependency.getName())) {
                     logger.info("Deleting " + dependency.getName() + "...");
-                    dependency.delete();
+                    FileUtils.deleteQuietly(dependency);
                 }
             }
         }
@@ -91,7 +100,7 @@ public class DependencyLoader {
             if (isLoadable(entry.getName())) {
                 File file = new File(destination, entry.getName());
 
-                file.getParentFile().mkdirs();
+                FileUtils.forceMkdir(file.getParentFile());
 
                 loaded.add(entry.getName());
 

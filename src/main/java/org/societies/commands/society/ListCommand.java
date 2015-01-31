@@ -1,8 +1,5 @@
 package org.societies.commands.society;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
@@ -12,20 +9,18 @@ import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.shank.config.ConfigSetting;
 import org.shank.logging.InjectLogger;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;
 
-import javax.annotation.Nullable;
 import javax.inject.Provider;
 import java.util.Set;
 
 /**
  * Represents a SocietiesListCommand
  */
-@Command(identifier = "command.list")
+@Command(identifier = "command.list", async = true)
 @Permission("societies.list")
 public class ListCommand implements Executor<Sender> {
 
@@ -51,41 +46,25 @@ public class ListCommand implements Executor<Sender> {
 
     @Override
     public void execute(final CommandContext<Sender> ctx, final Sender sender) {
-        ListenableFuture<Set<Group>> future = groupProvider.getGroups();
+        Set<Group> groups = groupProvider.getGroups();
 
-        Futures.addCallback(future, new FutureCallback<Set<Group>>() {
-            @Override
-            public void onSuccess(@Nullable Set<Group> result) {
-                if (result == null) {
-                    return;
-                }
+        if (groups.isEmpty()) {
+            sender.send("societies.not-found");
+            return;
+        }
 
-                if (result.isEmpty()) {
-                    sender.send("societies.not-found");
-                    return;
-                }
+        sender.send("Total societies: {0}", groups.size());
 
-                sender.send("Total societies: {0}", result.size());
+        Table table = tableProvider.get();
 
-                Table table = tableProvider.get();
+        table.addRow("Society", "Tag", "Members");
 
-                table.addRow("Society", "Tag", "Members");
-
-                for (Group group : result) {
-                    if ((!verified && showUnverified) || group.isVerified()) {
-                        table.addRow(group.getName(), group.getTag(), Integer.toString(group.getMembers().size()));
-                    }
-                }
-
-                sender.send(table.render(ctx.getName(), page));
+        for (Group group : groups) {
+            if ((!verified && showUnverified) || group.isVerified()) {
+                table.addRow(group.getName(), group.getTag(), Integer.toString(group.getMembers().size()));
             }
+        }
 
-            @Override
-            public void onFailure(@NotNull Throwable t) {
-                logger.catching(t);
-            }
-        });
-
-        ctx.put("future", future);
+        sender.send(table.render(ctx.getName(), page));
     }
 }

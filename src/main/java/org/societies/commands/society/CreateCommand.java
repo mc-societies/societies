@@ -1,8 +1,5 @@
 package org.societies.commands.society;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.typesafe.config.Config;
@@ -17,7 +14,6 @@ import org.shank.config.ConfigSetting;
 import org.shank.logging.InjectLogger;
 import org.societies.api.economy.EconomyParticipant;
 import org.societies.groups.group.Group;
-import org.societies.groups.group.GroupFactory;
 import org.societies.groups.group.GroupPublisher;
 import org.societies.groups.member.Member;
 import org.societies.groups.rank.Rank;
@@ -31,7 +27,7 @@ import static org.societies.bridge.ChatColor.translateString;
 /**
  * Represents a CreateCommand
  */
-@Command(identifier = "command.create")
+@Command(identifier = "command.create", async = true)
 @Permission("societies.create")
 @Sender(Member.class)
 public class CreateCommand implements Executor<Member> {
@@ -42,7 +38,6 @@ public class CreateCommand implements Executor<Member> {
     @Argument(name = "argument.society.tag")
     String tag;
 
-    private final GroupFactory groupFactory;
     private final GroupPublisher publisher;
     private final NameValidator nameValidator;
     private final TagValidator tagValidator;
@@ -56,14 +51,12 @@ public class CreateCommand implements Executor<Member> {
     private Logger logger;
 
     @Inject
-    public CreateCommand(GroupFactory groupFactory,
-                         GroupPublisher publisher,
+    public CreateCommand(GroupPublisher publisher,
                          NameValidator nameValidator, TagValidator tagValidator,
                          Config config,
                          @Named("super-default-rank") Rank superRank,
                          @Named("normal-default-rank") Rank defaultRank,
                          @ConfigSetting("verification-required") boolean verificationRequired) {
-        this.groupFactory = groupFactory;
         this.publisher = publisher;
         this.nameValidator = nameValidator;
         this.tagValidator = tagValidator;
@@ -105,34 +98,22 @@ public class CreateCommand implements Executor<Member> {
         name = stripColor(name).trim();
         tag = translateString('&', tag);
 
-        ListenableFuture<Group> future = publisher.publish(name, tag);
+        Group group = publisher.publish(name, tag);
 
-        Futures.addCallback(future, new FutureCallback<Group>() {
-            @Override
-            public void onSuccess(Group group) {
-                if (group == null) {
-                    sender.send("society.already-exists", name, tag);
-                    return;
-                }
+        if (group == null) {
+            sender.send("society.already-exists", name, tag);
+            return;
+        }
 
-                if (!verificationRequired) {
-                    group.verify(true);
-                }
+        if (!verificationRequired) {
+            group.verify(true);
+        }
 
 
-                group.addMember(sender);
-                sender.addRank(defaultRank);
-                sender.addRank(superRank);
+        group.addMember(sender);
+        sender.addRank(defaultRank);
+        sender.addRank(superRank);
 
-                sender.send("society.created", name, tag);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                logger.catching(t);
-            }
-        });
-
-        ctx.put("future", future);
+        sender.send("society.created", name, tag);
     }
 }

@@ -5,6 +5,10 @@ import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import org.societies.api.sieging.City;
+import org.societies.api.sieging.CityFactory;
+import org.societies.api.sieging.CityPublisher;
+import org.societies.bridge.Location;
+import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
 import org.societies.groups.member.Member;
 
@@ -22,9 +26,23 @@ public class BindstoneCommand {
         @Argument
         String name;
 
+        private final CityFactory cityFactory;
+        private final CityPublisher cityPublisher;
+
+        public CreateCommand(CityFactory cityFactory, CityPublisher cityPublisher) {
+            this.cityFactory = cityFactory;
+            this.cityPublisher = cityPublisher;
+        }
+
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
-             //location
+            Player player = sender.get(Player.class);
+
+            Location location = player.getLocation();
+
+            City city = cityFactory.create(location);
+
+            cityPublisher.publish(city, sender.getGroup());
         }
     }
 

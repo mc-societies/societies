@@ -13,7 +13,7 @@ import javax.inject.Provider;
 /**
  * Represents a AlliancesCommand
  */
-@Command(identifier = "command.rivalries")
+@Command(identifier = "command.rivalries", async = true)
 @Permission("societies.rivalries")
 public class RivalriesCommand extends AbstractRelationsCommand {
 
