@@ -49,7 +49,7 @@ public class KickCommand implements Executor<Member> {
         Set<Member> leaders = group.getMembers("leader");
 
         if (leaders.contains(target)) {
-            if (leaders.size() == 1 && group.size() > 1) {
+            if (leaders.size() <= 1 && group.size() > 1) {
                 Collection<Rank> leaderRanks = group.getRanks("leader");
                 String leaderRanksString = IterableUtils.toString(leaderRanks, new Function<Rank, String>() {
                     @Nullable

@@ -57,7 +57,7 @@ public class DistrustCommand implements Executor<Member> {
         Set<Member> cantrust = group.getMembers("trust");
 
         //beautify
-        if (cantrust.size() == 1) {
+        if (cantrust.size() <= 1) {
             Collection<Rank> trustRanks = group.getRanks("trust");
             String leaderRanksString = IterableUtils.toString(trustRanks, new Function<Rank, String>() {
                 @Nullable

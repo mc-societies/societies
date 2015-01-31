@@ -258,7 +258,7 @@ public class RankCommand {
 
             //beautify
             if (leaders.contains(target)) {
-                if (leaders.size() == 1) {
+                if (leaders.size() <= 1) {
                     Collection<Rank> leaderRanks = group.getRanks("leader");
                     String leaderRanksString = IterableUtils.toString(leaderRanks, new Function<Rank, String>() {
                         @Nullable
