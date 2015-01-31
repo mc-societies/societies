@@ -26,8 +26,9 @@ class SQLMemberPublisher implements MemberPublisher {
         query.bind(1, member.getUUID());
 
         query.execute();
-        return member;
 
+        member.activate();
+        return member;
     }
 
     @Override

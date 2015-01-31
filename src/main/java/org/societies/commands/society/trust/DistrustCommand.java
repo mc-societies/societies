@@ -1,7 +1,9 @@
 package org.societies.commands.society.trust;
 
+import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import net.catharos.lib.core.collections.IterableUtils;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
@@ -9,6 +11,10 @@ import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 import org.societies.groups.rank.Rank;
+
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * Represents a RelationListCommand
@@ -45,6 +51,22 @@ public class DistrustCommand implements Executor<Member> {
 
         if (!target.hasRank(normalDefaultRank)) {
             sender.send("target-member.not-trusted", target.getName());
+            return;
+        }
+
+        Set<Member> cantrust = group.getMembers("trust");
+
+        //beautify
+        if (cantrust.size() == 1) {
+            Collection<Rank> trustRanks = group.getRanks("trust");
+            String leaderRanksString = IterableUtils.toString(trustRanks, new Function<Rank, String>() {
+                @Nullable
+                @Override
+                public String apply(Rank input) {
+                    return input.getName();
+                }
+            });
+            sender.send("you.assign-first", leaderRanksString);
             return;
         }
 

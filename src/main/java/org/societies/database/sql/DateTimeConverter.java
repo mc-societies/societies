@@ -11,11 +11,19 @@ import java.sql.Timestamp;
 public class DateTimeConverter implements Converter<Timestamp, DateTime> {
     @Override
     public DateTime from(Timestamp databaseObject) {
+        if (databaseObject == null) {
+            return null;
+        }
+
         return new DateTime(databaseObject.getTime());
     }
 
     @Override
     public Timestamp to(DateTime userObject) {
+        if (userObject == null) {
+            return null;
+        }
+
         return new Timestamp(userObject.getMillis());
     }
 

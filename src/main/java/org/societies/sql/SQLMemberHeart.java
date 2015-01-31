@@ -21,11 +21,9 @@ import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberHeart;
 import org.societies.groups.rank.Rank;
 
-import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 /**
  * Represents a SQLMember
@@ -89,32 +87,26 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
             return;
         }
 
-        service.submit(new Callable<Member>() {
-            @Override
-            public Member call() throws Exception {
-                //beautify duplicate
-                UUID uuid = rank.getUUID();
-                String name = rank.getName();
-                int priority = rank.getPriority();
 
-                Insert<?> query = queries.getQuery(Queries.INSERT_RANK);
+        //beautify duplicate
+        UUID uuid = rank.getUUID();
+        String name = rank.getName();
+        int priority = rank.getPriority();
 
-                query.bind(1, uuid);
-                query.bind(2, name);
-                query.bind(3, priority);
-                query.bind(4, uuid);
-                query.bind(5, name);
-                query.bind(6, priority);
-                query.execute();
+        Insert<?> query = queries.getQuery(Queries.INSERT_RANK);
 
-                query = queries.getQuery(Queries.INSERT_MEMBER_RANK);
-                query.bind(1, getUUID());
-                query.bind(2, rank.getUUID());
-                query.execute();
-                return member;
-            }
-        });
+        query.bind(1, uuid);
+        query.bind(2, name);
+        query.bind(3, priority);
+        query.bind(4, uuid);
+        query.bind(5, name);
+        query.bind(6, priority);
+        query.execute();
 
+        query = queries.getQuery(Queries.INSERT_MEMBER_RANK);
+        query.bind(1, getUUID());
+        query.bind(2, rank.getUUID());
+        query.execute();
     }
 
     @Override
@@ -123,20 +115,13 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
             return false;
         }
 
-        service.submit(new Callable<Member>() {
-            @Override
-            public Member call() throws Exception {
-                Query query;
-                query = queries.getQuery(Queries.DROP_MEMBER_RANK);
-                query.bind(1, getUUID());
-                query.bind(2, rank.getUUID());
-                query.execute();
-                return member;
-            }
-        });
-        return true;
-    }
+        Query query;
+        query = queries.getQuery(Queries.DROP_MEMBER_RANK);
+        query.bind(1, getUUID());
+        query.bind(2, rank.getUUID());
 
+        return query.execute() == 1;
+    }
 
     @Override
     public DateTime getLastActive() {
@@ -144,23 +129,24 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
         query.bind(1, getUUID());
 
         Record1<DateTime> record = query.fetch().get(0);
-        return record.value1();
+
+        DateTime lastActive = record.value1();
+
+        if (lastActive == null) {
+            return DateTime.now();
+        }
+
+        return lastActive;
     }
 
     @Override
     public void setLastActive(final DateTime lastActive) {
-        service.submit(new Callable<Member>() {
-            @Override
-            public Member call() throws Exception {
-                Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_LAST_ACTIVE);
+        Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_LAST_ACTIVE);
 
-                query.bind(1, getUUID());
-                query.bind(2, new Timestamp(lastActive.getMillis()));
+        query.bind(1, DateTime.now());
+        query.bind(2, getUUID());
 
-                query.execute();
-                return member;
-            }
-        });
+        query.execute();
     }
 
     @Override
@@ -174,18 +160,12 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
 
     @Override
     public void setCreated(final DateTime created) {
-        service.submit(new Callable<Member>() {
-            @Override
-            public Member call() throws Exception {
-                Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_CREATED);
+        Update<MembersRecord> query = queries.getQuery(Queries.UPDATE_MEMBER_CREATED);
 
-                query.bind(1, getUUID());
-                query.bind(2, new Timestamp(created.getMillis()));
+        query.bind(1, getUUID());
+        query.bind(2, new DateTime(created.getMillis()));
 
-                query.execute();
-                return member;
-            }
-        });
+        query.execute();
     }
 
     @Override

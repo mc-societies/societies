@@ -3,13 +3,13 @@ package org.societies.database.sql;
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
 import org.apache.logging.log4j.Logger;
+import org.joda.time.DateTime;
 import org.jooq.Query;
 import org.shank.logging.InjectLogger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
 import org.societies.database.Database;
 
-import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -37,7 +37,7 @@ class CleanupService extends AbstractService {
         Query query;
 
         query = queries.getQuery(CleanupQueries.DROP_INACTIVE_MEMBERS);
-        query.bind(1, new Timestamp(current - memberMillis));
+        query.bind(1, new DateTime(current - memberMillis));
         int members = query.execute();
         logger.info("Dropped {0} members because of inactivity.", members);
 

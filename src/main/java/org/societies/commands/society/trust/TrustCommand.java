@@ -19,7 +19,7 @@ import org.societies.groups.rank.Rank;
 @Sender(Member.class)
 public class TrustCommand implements Executor<Member> {
 
-    @Option(name = "argument.target.member")
+    @Argument(name = "argument.target.member")
     Member target;
 
     private final Rank normalDefaultRank;
@@ -52,6 +52,7 @@ public class TrustCommand implements Executor<Member> {
         if (!target.equals(sender)) {
             sender.send("target-member.trusted", target.getName());
         }
+
         target.send("you.trusted-by", sender.getName());
     }
 }

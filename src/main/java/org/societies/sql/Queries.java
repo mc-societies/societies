@@ -11,7 +11,6 @@ import org.societies.database.sql.layout.tables.records.*;
 
 import java.util.UUID;
 
-import static org.jooq.impl.DSL.param;
 import static org.societies.database.sql.layout.Tables.*;
 
 /**
@@ -170,11 +169,11 @@ class Queries extends QueryProvider {
             public Insert<SocietiesRecord> create(DSLContext context) {
                 return context
                         .insertInto(SOCIETIES)
-                        .set(SOCIETIES.UUID, param("uuid", UUID.class))
-                        .set(SOCIETIES.NAME, param("name", String.class))
-                        .set(SOCIETIES.TAG, param("tag", String.class))
-                        .set(SOCIETIES.CLEAN_TAG, param("clean_tag", String.class))
-                        .set(SOCIETIES.CREATED, param("created", DateTime.class)).onDuplicateKeyIgnore();
+                        .set(SOCIETIES.UUID, id_param())
+                        .set(SOCIETIES.NAME, DEFAULT_STRING)
+                        .set(SOCIETIES.TAG, DEFAULT_STRING)
+                        .set(SOCIETIES.CLEAN_TAG, DEFAULT_STRING)
+                        .set(SOCIETIES.CREATED, DEFAULT_TIMESTAMP).onDuplicateKeyIgnore();
             }
         });
 

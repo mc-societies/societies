@@ -267,7 +267,7 @@ public class RankCommand {
                             return input.getName();
                         }
                     });
-                    sender.send("you.assign-leader-first", leaderRanksString);
+                    sender.send("you.assign-first", leaderRanksString);
                     return;
                 }
             }

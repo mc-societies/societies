@@ -58,7 +58,7 @@ public class DemoteCommand implements Executor<Member> {
 
         //beautify
         if (leaders.contains(target)) {
-            if (leaders.size() == 1) {
+            if (leaders.size() <= 1) {
                 Collection<Rank> leaderRanks = group.getRanks("leader");
                 String leaderRanksString = IterableUtils.toString(leaderRanks, new Function<Rank, String>() {
                     @Nullable
@@ -67,7 +67,7 @@ public class DemoteCommand implements Executor<Member> {
                         return input.getName();
                     }
                 });
-                sender.send("you.assign-leader-first", leaderRanksString);
+                sender.send("you.assign-first", leaderRanksString);
                 return;
             }
         }

@@ -11,7 +11,6 @@ import org.societies.groups.group.GroupFactory;
 import org.societies.groups.group.GroupPublisher;
 
 import javax.inject.Provider;
-import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -40,7 +39,7 @@ class SQLGroupPublisher implements GroupPublisher {
         query.bind(2, name);
         query.bind(3, tag);
         query.bind(4, ChatColor.stripColor(tag));
-        query.bind(5, new Timestamp(created.getMillis()));
+        query.bind(5, new DateTime(created.getMillis()));
 
 
         int inserted = query.execute();

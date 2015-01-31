@@ -15,7 +15,6 @@ import org.societies.groups.setting.Setting;
 import org.societies.groups.setting.SettingException;
 import org.societies.groups.setting.SettingProvider;
 import org.societies.groups.setting.subject.AbstractSubject;
-import org.societies.groups.setting.subject.Subject;
 import org.societies.groups.setting.target.SimpleTarget;
 import org.societies.groups.setting.target.Target;
 
@@ -51,38 +50,31 @@ class SQLSubject extends AbstractSubject {
 
     @Override
     public <V> void set(final Setting<V> setting, final Target target, final V value) {
-        service.submit(new Runnable() {
-            @Override
-            public void run() {
-                Subject subject = SQLSubject.this;
+        byte[] converted;
 
-                byte[] converted;
+        try {
+            converted = setting.convert(this, target, value);
+        } catch (SettingException ignored) {
+            logger.warn("Failed to convert setting %s! Subject: %s Target: %s Value: %s", setting, this, target, value);
+            return;
+        }
 
-                try {
-                    converted = setting.convert(subject, target, value);
-                } catch (SettingException ignored) {
-                    logger.warn("Failed to convert setting %s! Subject: %s Target: %s Value: %s", setting, subject, target, value);
-                    return;
-                }
+        Insert query = queries.getQuery(insert);
 
-                Insert query = queries.getQuery(insert);
+        UUID subjectUUID = this.getUUID();
+        UUID targetUUID = target.getUUID();
+        UShort settingID = UShort.valueOf(setting.getID());
 
-                UUID subjectUUID = subject.getUUID();
-                UUID targetUUID = target.getUUID();
-                UShort settingID = UShort.valueOf(setting.getID());
+        query.bind(1, subjectUUID);
+        query.bind(2, targetUUID);
+        query.bind(3, settingID);
+        query.bind(4, converted);
 
-                query.bind(1, subjectUUID);
-                query.bind(2, targetUUID);
-                query.bind(3, settingID);
-                query.bind(4, converted);
-
-                query.bind(5, subjectUUID);
-                query.bind(6, targetUUID);
-                query.bind(7, settingID);
-                query.bind(8, converted);
-                query.execute();
-            }
-        });
+        query.bind(5, subjectUUID);
+        query.bind(6, targetUUID);
+        query.bind(7, settingID);
+        query.bind(8, converted);
+        query.execute();
     }
 
     @Override

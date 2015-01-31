@@ -1,6 +1,5 @@
 package org.societies.sql;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
@@ -35,10 +34,9 @@ public class SQLLazyGroupHeart extends SQLGroupHeart {
                                 @Named("verify") Setting<Boolean> verifySetting,
                                 Setting<Relation> relationSetting, Map<String, Setting<Boolean>> rules,
                                 MemberProvider memberProvider, RankFactory rankFactory, Queries queries,
-                                ListeningExecutorService service,
                                 @Named("predefined-ranks") Set<Rank> defaultRanks,
                                 SettingProvider settingProvider) {
-        super(group, verifySetting, relationSetting, rules, memberProvider, rankFactory, queries, service, defaultRanks, settingProvider);
+        super(group, verifySetting, relationSetting, rules, memberProvider, rankFactory, queries, defaultRanks, settingProvider);
     }
 
     @Override
