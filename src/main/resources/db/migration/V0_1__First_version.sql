@@ -204,12 +204,12 @@ CREATE TABLE IF NOT EXISTS `societies`.`member_settings` (
   CONSTRAINT `fk_societies_members_members1`
   FOREIGN KEY (`subject_uuid`)
   REFERENCES `societies`.`members` (`uuid`)
-  ON DELETE CASCADE
+  ON DELETE NO ACTION
   ON UPDATE NO ACTION,
   CONSTRAINT `fk_societies_members_members2`
   FOREIGN KEY (`target_uuid`)
   REFERENCES `societies`.`members` (`uuid`)
-  ON DELETE CASCADE
+  ON DELETE NO ACTION
   ON UPDATE NO ACTION
 )
 ENGINE = InnoDB;
