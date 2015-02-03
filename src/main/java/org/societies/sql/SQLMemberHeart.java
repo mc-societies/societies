@@ -2,7 +2,6 @@ package org.societies.sql;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
@@ -19,6 +18,7 @@ import org.societies.groups.group.GroupProvider;
 import org.societies.groups.member.AbstractMemberHeart;
 import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberHeart;
+import org.societies.groups.member.MemberPublisher;
 import org.societies.groups.rank.Rank;
 
 import java.util.Collections;
@@ -31,25 +31,26 @@ import java.util.UUID;
 public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
 
     protected final Member member;
+    private final MemberPublisher memberPublisher;
 
     private final Rank defaultRank;
     private final GroupProvider groupProvider;
 
     private final QueryProvider queries;
-    private final ListeningExecutorService service;
 
     @Inject
     public SQLMemberHeart(@Assisted Member member,
                           EventController events,
                           @Named("default-rank") Rank defaultRank,
                           GroupProvider groupProvider,
-                          @Named("main") QueryProvider queries, ListeningExecutorService service) {
+                          @Named("main") QueryProvider queries,
+                          MemberPublisher memberPublisher) {
         super(events);
         this.defaultRank = defaultRank;
         this.groupProvider = groupProvider;
         this.queries = queries;
-        this.service = service;
         this.member = member;
+        this.memberPublisher = memberPublisher;
     }
 
     public UUID getUUID() {
@@ -211,6 +212,11 @@ public class SQLMemberHeart extends AbstractMemberHeart implements MemberHeart {
         query.bind(2, getUUID());
 
         query.execute();
+
+        if (uuid == null) {
+            // Drop member information if group is null
+            memberPublisher.destruct(member);
+        }
 
         publishMemberEvents(member, group, previous);
     }

@@ -1,6 +1,5 @@
 package org.societies.sql;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
@@ -12,6 +11,7 @@ import org.societies.groups.event.EventController;
 import org.societies.groups.group.GroupHeart;
 import org.societies.groups.group.GroupProvider;
 import org.societies.groups.member.Member;
+import org.societies.groups.member.MemberPublisher;
 import org.societies.groups.rank.Rank;
 
 import java.util.Collections;
@@ -33,8 +33,9 @@ public class SQLLazyMemberHeart extends SQLMemberHeart {
                               EventController events,
                               @Named("default-rank") Rank defaultRank,
                               GroupProvider groupProvider,
-                              QueryProvider queries, ListeningExecutorService service) {
-        super(member, events, defaultRank, groupProvider, queries, service);
+                              QueryProvider queries,
+                              MemberPublisher memberPublisher) {
+        super(member, events, defaultRank, groupProvider, queries, memberPublisher);
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.jooq.Insert;
 import org.jooq.Query;
 import org.societies.bridge.ChatColor;
 import org.societies.database.sql.layout.tables.records.SocietiesRecord;
+import org.societies.groups.cache.GroupCache;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupFactory;
 import org.societies.groups.group.GroupPublisher;
@@ -21,12 +22,14 @@ class SQLGroupPublisher implements GroupPublisher {
     private final Provider<UUID> uuid;
     private final Queries queries;
     private final GroupFactory groupFactory;
+    private final GroupCache groupCache;
 
     @Inject
-    public SQLGroupPublisher(Provider<UUID> uuid, Queries queries, GroupFactory groupFactory) {
+    public SQLGroupPublisher(Provider<UUID> uuid, Queries queries, GroupFactory groupFactory, GroupCache groupCache) {
         this.uuid = uuid;
         this.queries = queries;
         this.groupFactory = groupFactory;
+        this.groupCache = groupCache;
     }
 
     @Override
@@ -69,6 +72,9 @@ class SQLGroupPublisher implements GroupPublisher {
         query.bind(1, group.getUUID());
 
         query.execute();
+
+        groupCache.clear(group);
+
         return group;
     }
 }

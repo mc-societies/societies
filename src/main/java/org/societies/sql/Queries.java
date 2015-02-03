@@ -55,7 +55,7 @@ class Queries extends QueryProvider {
 
     public static final QueryKey<Query> DROP_RANK_IN_SOCIETIES = QueryKey.create();
 
-
+    //================================================================================
     // Members
     //================================================================================
 
@@ -91,6 +91,10 @@ class Queries extends QueryProvider {
     public static final QueryKey<Query> DROP_MEMBER_RANK = QueryKey.create();
 
     public static final QueryKey<Query> DROP_RANK_IN_MEMBERS = QueryKey.create();
+
+    public static final QueryKey<Delete> DROP_MEMBER_RANKS = QueryKey.create();
+
+    public static final QueryKey<Delete> DROP_MEMBER_SETTINGS = QueryKey.create();
 
     //================================================================================
     // Ranks
@@ -430,6 +434,21 @@ class Queries extends QueryProvider {
             @Override
             public Query create(DSLContext context) {
                 return context.delete(MEMBERS_RANKS).where(MEMBERS_RANKS.RANK.equal(id_param()));
+            }
+        });
+
+        builder(DROP_MEMBER_RANKS, new QueryBuilder<Delete>() {
+            @Override
+            public Delete create(DSLContext context) {
+                return context.delete(MEMBERS_RANKS).where(MEMBERS_RANKS.MEMBER.equal(id_param()));
+            }
+        });
+
+        builder(DROP_MEMBER_SETTINGS, new QueryBuilder<Delete>() {
+            @Override
+            public Delete create(DSLContext context) {
+                return context.delete(MEMBER_SETTINGS)
+                        .where(MEMBER_SETTINGS.SUBJECT_UUID.equal(id_param()).or(MEMBER_SETTINGS.TARGET_UUID.equal(id_param())));
             }
         });
 

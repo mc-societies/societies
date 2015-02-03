@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import org.jooq.Insert;
 import org.jooq.Query;
 import org.societies.database.sql.layout.tables.records.MembersRecord;
+import org.societies.groups.cache.MemberCache;
 import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberPublisher;
 
@@ -13,10 +14,12 @@ import org.societies.groups.member.MemberPublisher;
 class SQLMemberPublisher implements MemberPublisher {
 
     private final Queries queries;
+    private final MemberCache memberCache;
 
     @Inject
-    public SQLMemberPublisher(Queries queries) {
+    public SQLMemberPublisher(Queries queries, MemberCache memberCache) {
         this.queries = queries;
+        this.memberCache = memberCache;
     }
 
     @Override
@@ -38,6 +41,9 @@ class SQLMemberPublisher implements MemberPublisher {
         query.bind(1, member.getUUID());
 
         query.execute();
+
+        memberCache.clear(member);
+
         return member;
     }
 }
