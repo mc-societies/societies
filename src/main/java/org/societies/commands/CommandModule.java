@@ -165,7 +165,7 @@ public class CommandModule extends AbstractModule {
 
         newSetBinder(
                 binder(),
-                new TypeLiteral<Class<Executor>>() {},
+                new TypeLiteral<Class>() {},
                 named("custom-commands")
         );
     }
@@ -202,7 +202,7 @@ public class CommandModule extends AbstractModule {
 
     @Provides
     @Named("commands")
-    public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, @Named("custom-commands") Set<Class<Executor>> classes, CommandAnalyser<Sender> analyser) {
+    public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, @Named("custom-commands") Set<Class> classes, CommandAnalyser<Sender> analyser) {
 
         GroupCommand<Sender> group = builder.identifier("societies").name("Societies").build();
 

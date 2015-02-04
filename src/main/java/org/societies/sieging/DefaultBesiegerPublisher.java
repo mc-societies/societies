@@ -1,5 +1,6 @@
-package org.societies.sieging.memory;
+package org.societies.sieging;
 
+import com.google.inject.Inject;
 import org.societies.api.sieging.Besieger;
 import org.societies.api.sieging.BesiegerPublisher;
 import org.societies.groups.group.GroupPublisher;
@@ -7,11 +8,12 @@ import org.societies.groups.group.GroupPublisher;
 /**
  * Represents a BesiegerPublisher
  */
-class MemoryBesiegerPublisher implements BesiegerPublisher {
+public class DefaultBesiegerPublisher implements BesiegerPublisher {
 
     private final GroupPublisher groupPublisher;
 
-    public MemoryBesiegerPublisher(GroupPublisher groupPublisher) {
+    @Inject
+    public DefaultBesiegerPublisher(GroupPublisher groupPublisher) {
         this.groupPublisher = groupPublisher;
     }
 

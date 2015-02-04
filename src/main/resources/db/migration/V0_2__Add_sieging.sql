@@ -2,20 +2,21 @@
 -- Table `societies`.`cities`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`cities` (
-  `uuid`    VARBINARY(16) NOT NULL,
+  `uuid` VARBINARY(16) NOT NULL,
   `society` VARBINARY(16) NOT NULL,
-  `x`       SMALLINT      NULL,
-  `y`       SMALLINT      NULL,
-  `z`       SMALLINT      NULL,
-  PRIMARY KEY (`uuid`, `society`),
+  `name` VARCHAR(45) NOT NULL,
+  `x` SMALLINT NULL,
+  `y` SMALLINT NULL,
+  `z` SMALLINT NULL,
+  PRIMARY KEY (`uuid`, `society`, `name`),
   UNIQUE INDEX `idcities_UNIQUE` (`uuid` ASC),
   INDEX `fk_cities_1_idx` (`society` ASC),
+  INDEX `location` (`x` ASC, `y` ASC, `z` ASC),
   CONSTRAINT `fk_cities_1`
   FOREIGN KEY (`society`)
   REFERENCES `societies`.`societies` (`uuid`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
+    ON UPDATE NO ACTION)
   ENGINE = InnoDB;
 
 
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `societies`.`cities` (
 -- Table `societies`.`lands`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`lands` (
-  `uuid`   VARBINARY(16) NOT NULL,
+  `uuid` VARBINARY(16) NOT NULL,
   `origin` VARBINARY(16) NULL,
   PRIMARY KEY (`uuid`),
   UNIQUE INDEX `idlands_UNIQUE` (`uuid` ASC),
@@ -32,8 +33,7 @@ CREATE TABLE IF NOT EXISTS `societies`.`lands` (
   FOREIGN KEY (`origin`)
   REFERENCES `societies`.`cities` (`uuid`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
+    ON UPDATE NO ACTION)
   ENGINE = InnoDB;
 
 
@@ -41,18 +41,19 @@ CREATE TABLE IF NOT EXISTS `societies`.`lands` (
 -- Table `societies`.`sieges`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `societies`.`sieges` (
-  `uuid`    VARBINARY(16) NOT NULL,
+  `uuid` VARBINARY(16) NOT NULL,
   `society` VARBINARY(16) NOT NULL,
-  `city`    VARBINARY(16) NOT NULL,
-  `x`       SMALLINT      NULL,
-  `y`       SMALLINT      NULL,
-  `z`       SMALLINT      NULL,
-  `created` TIMESTAMP     NULL DEFAULT CURRENT_TIMESTAMP,
-  `wager`   VARBINARY(16) NULL,
+  `city` VARBINARY(16) NOT NULL,
+  `x` SMALLINT NULL,
+  `y` SMALLINT NULL,
+  `z` SMALLINT NULL,
+  `created` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `wager` VARBINARY(16) NULL,
   PRIMARY KEY (`uuid`, `society`, `city`),
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC),
   INDEX `fk_sieges_1_idx` (`society` ASC),
   INDEX `fk_sieges_2_idx` (`city` ASC),
+  INDEX `location` (`x` ASC, `y` ASC, `z` ASC),
   CONSTRAINT `fk_sieges_1`
   FOREIGN KEY (`society`)
   REFERENCES `societies`.`societies` (`uuid`)
@@ -62,6 +63,5 @@ CREATE TABLE IF NOT EXISTS `societies`.`sieges` (
   FOREIGN KEY (`city`)
   REFERENCES `societies`.`cities` (`uuid`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
+    ON UPDATE NO ACTION)
   ENGINE = InnoDB;

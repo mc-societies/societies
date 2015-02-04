@@ -6,6 +6,7 @@ import org.societies.api.sieging.City;
 import org.societies.groups.group.Group;
 
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Represents a MemoryBesieger
@@ -17,6 +18,11 @@ class MemoryBesieger implements Besieger {
 
     public MemoryBesieger(Group group) {
         this.group = group;
+    }
+
+    @Override
+    public UUID getUUID() {
+        return group.getUUID();
     }
 
     @Override

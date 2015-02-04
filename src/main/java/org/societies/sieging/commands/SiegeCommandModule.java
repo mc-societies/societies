@@ -1,9 +1,12 @@
 package org.societies.sieging.commands;
 
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
-import net.catharos.lib.core.command.Executor;
+import com.google.inject.name.Names;
+import net.catharos.lib.core.command.parser.ArgumentParser;
 import org.shank.AbstractModule;
+import org.societies.api.sieging.City;
 
 import static com.google.inject.multibindings.Multibinder.newSetBinder;
 import static com.google.inject.name.Names.named;
@@ -14,21 +17,25 @@ import static com.google.inject.name.Names.named;
 public class SiegeCommandModule extends AbstractModule {
 
     private final Class[] commands = {
-            BindstoneCommand.CreateCommand.class,
-            BindstoneCommand.ListCommand.class,
-            BindstoneCommand.RemoveCommand.class,
-            BindstoneCommand.MoveLand.class,
+            BindstoneCommand.class,
 
-            SiegeCommand.StartCommand.class,
-            SiegeCommand.EndCommand.class,
-            SiegeCommand.ListCommand.class,
+            SiegeCommand.class,
     };
 
     @Override
     protected void configure() {
-        Multibinder<Class<Executor>> cmds = newSetBinder(
+        MapBinder<Class<?>, ArgumentParser<?>> parsers = MapBinder
+                .newMapBinder(binder(), new TypeLiteral<Class<?>>() {}, new TypeLiteral<ArgumentParser<?>>() {}, Names
+                        .named("parsers"));
+
+
+        bind(new TypeLiteral<ArgumentParser<City>>() {}).to(CityParser.class);
+        parsers.addBinding(City.class).to(CityParser.class);
+
+
+        Multibinder<Class> cmds = newSetBinder(
                 binder(),
-                new TypeLiteral<Class<Executor>>() {},
+                new TypeLiteral<Class>() {},
                 named("custom-commands")
         );
 

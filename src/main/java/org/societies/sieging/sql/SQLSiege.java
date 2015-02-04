@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * Represents a SQLSiege
  */
-public class SQLSiege implements Siege {
+class SQLSiege implements Siege {
 
 
     private final UUID uuid;

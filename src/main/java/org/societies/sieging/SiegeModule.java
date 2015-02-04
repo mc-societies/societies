@@ -1,10 +1,14 @@
 package org.societies.sieging;
 
 import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.Multibinder;
 import org.shank.AbstractModule;
-import org.societies.groups.ExtensionRoller;
-import org.societies.groups.group.Group;
+import org.societies.api.sieging.Wager;
+import org.societies.sieging.commands.SiegeCommandModule;
+import org.societies.sieging.sql.SQLSiegingModule;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Represents a SiegeModule
@@ -13,15 +17,9 @@ public class SiegeModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        Multibinder<ExtensionRoller<Group>> extensions = Multibinder
-                .newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
+        bind(new TypeLiteral<Map<UUID, Wager>>() {}).toInstance(Collections.<UUID, Wager>emptyMap());
 
-
-//        extensions.addBinding().toInstance(new ExtensionRoller<Group>() {
-//            @Override
-//            public void roll(Group extensible) {
-//                extensible.add(new MemoryBesieger(extensible));
-//            }
-//        });
+        install(new SQLSiegingModule());
+        install(new SiegeCommandModule());
     }
 }

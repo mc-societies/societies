@@ -1,10 +1,12 @@
 package org.societies.sieging.sql;
 
+import com.google.inject.assistedinject.Assisted;
 import gnu.trove.set.hash.THashSet;
 import org.jooq.Delete;
 import org.jooq.Insert;
 import org.jooq.Record1;
 import org.jooq.Select;
+import org.societies.api.sieging.Besieger;
 import org.societies.api.sieging.City;
 import org.societies.api.sieging.Land;
 import org.societies.bridge.Location;
@@ -20,18 +22,32 @@ import java.util.UUID;
 class SQLCity implements City {
 
     private final SiegingQueries queries;
+    private final String name;
     private final Location location;
+    private final Besieger owner;
     private final UUID uuid;
 
-    public SQLCity(SiegingQueries queries, Location location, UUID uuid) {
+    public SQLCity(SiegingQueries queries, String name, @Assisted UUID uuid, @Assisted Location location, Besieger owner) {
         this.queries = queries;
+        this.name = name;
         this.location = location;
         this.uuid = uuid;
+        this.owner = owner;
     }
 
     @Override
     public UUID getUUID() {
         return uuid;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public Besieger getOwner() {
+        return owner;
     }
 
     @Override

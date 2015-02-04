@@ -1,5 +1,6 @@
 package org.societies.sieging.sql;
 
+import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
 import org.joda.time.DateTime;
 import org.jooq.Delete;
@@ -11,7 +12,9 @@ import org.societies.bridge.Location;
 import org.societies.database.sql.layout.tables.records.SiegesRecord;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;
+import org.societies.sieging.wager.EmptyWager;
 
+import javax.inject.Provider;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -22,7 +25,6 @@ import java.util.UUID;
 class SQLSiegeController implements SiegeController {
 
 
-    private final SiegeFactory siegeFactory;
     private final Map<UUID, Wager> wagers;
 
     private final GroupProvider groupProvider;
@@ -30,15 +32,18 @@ class SQLSiegeController implements SiegeController {
 
     private final SiegingQueries queries;
 
-    SQLSiegeController(SiegeFactory siegeFactory,
-                       Map<UUID, Wager> wagers,
+    private final Provider<UUID> provider;
+
+    @Inject
+    SQLSiegeController(Map<UUID, Wager> wagers,
                        GroupProvider groupProvider, CityProvider cityProvider,
-                       SiegingQueries queries) {
+                       SiegingQueries queries, Provider<UUID> provider) {
+
         this.queries = queries;
-        this.siegeFactory = siegeFactory;
         this.wagers = wagers;
         this.groupProvider = groupProvider;
         this.cityProvider = cityProvider;
+        this.provider = provider;
     }
 
     public Siege start(final Siege siege) {
@@ -47,35 +52,34 @@ class SQLSiegeController implements SiegeController {
 
         Location location = siege.getLocationInitiated();
 
-        query.bind("uuid", siege.getUUID());
-        query.bind("city", siege.getCity().getUUID());
-        query.bind("society", siege.getBesieger().getGroup().getUUID());
-        query.bind("x", (short) location.getRoundedX());
-        query.bind("y", (short) location.getRoundedY());
-        query.bind("z", (short) location.getRoundedZ());
-        query.bind("wager", siege.getWager().getUUID());
+        query.bind(1, siege.getUUID());
+        query.bind(2, siege.getBesieger().getGroup().getUUID());
+        query.bind(3, siege.getCity().getUUID());
+        query.bind(4, (short) location.getRoundedX());
+        query.bind(5, (short) location.getRoundedY());
+        query.bind(6, (short) location.getRoundedZ());
+        query.bind(7, siege.getWager().getUUID());
 
         query.execute();
 
         return siege;
-
     }
 
     @Override
-    public Siege start(Group group, City city, Location location) {
-        return start(siegeFactory.create(group, city, location));
+    public Siege start(Besieger besieger, City city, Location location) {
+        return start(besieger, city, location, new EmptyWager());
     }
 
     @Override
-    public Siege start(Group group, City city, Location location, Wager wager) {
-        return start(siegeFactory.create(group, city, location, wager));
+    public Siege start(Besieger besieger, City city, Location location, Wager wager) {
+        return start(new SQLSiege(provider.get(), besieger, city, location, DateTime.now(), wager));
     }
 
     @Override
     public Siege getSiege(final UUID uuid) {
 
         Select<SiegesRecord> query = queries.getQuery(SiegingQueries.SELECT_SIEGE_BY_SIEGE);
-        query.bind("uuid", uuid);
+        query.bind(1, uuid);
         return newSiege(query.fetchOne());
     }
 
@@ -107,16 +111,16 @@ class SQLSiegeController implements SiegeController {
     @Override
     public Set<Siege> getSieges(final City city) {
         Select<SiegesRecord> query = queries.getQuery(SiegingQueries.SELECT_SIEGES_BY_CITY);
-        query.bind("city", city.getUUID());
+        query.bind(1, city.getUUID());
 
         return getSieges(query);
     }
 
     @Override
-    public Set<Siege> getSieges(final Group besieger) {
+    public Set<Siege> getSieges(final Besieger besieger) {
 
         Select<SiegesRecord> query = queries.getQuery(SiegingQueries.SELECT_SIEGES_BY_BESIEGER);
-        query.bind("besieger", besieger.getUUID());
+        query.bind(1, besieger.getUUID());
 
         return getSieges(query);
     }
@@ -129,7 +133,7 @@ class SQLSiegeController implements SiegeController {
         Select<Record8<UUID, UUID, UUID, Short, Short, Short, UUID, DateTime>> query = queries
                 .getQuery(SiegingQueries.SELECT_SIEGES_BY_SIEGED);
 
-        query.bind("sieged", victim.getUUID());
+        query.bind(1, victim.getUUID());
 
         for (Record8<UUID, UUID, UUID, Short, Short, Short, UUID, DateTime> record : query.fetch()) {
             Wager wager = wagers.get(record.value7());
@@ -150,6 +154,6 @@ class SQLSiegeController implements SiegeController {
     @Override
     public void stop(Siege siege) {
         Delete<?> query = queries.getQuery(SiegingQueries.DROP_SIEGE_BY_SIEGE);
-        query.bind("uuid", siege.getUUID());
+        query.bind(1, siege.getUUID());
     }
 }

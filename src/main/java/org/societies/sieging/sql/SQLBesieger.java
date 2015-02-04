@@ -11,6 +11,7 @@ import org.societies.database.sql.layout.tables.records.CitiesRecord;
 import org.societies.groups.group.Group;
 
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Represents a SQLBesieger
@@ -23,6 +24,11 @@ class SQLBesieger implements Besieger {
     public SQLBesieger(Group group, SiegingQueries queries) {
         this.group = group;
         this.queries = queries;
+    }
+
+    @Override
+    public UUID getUUID() {
+        return group.getUUID();
     }
 
     @Override
@@ -58,7 +64,7 @@ class SQLBesieger implements Besieger {
         Select<CitiesRecord> query = queries.getQuery(SiegingQueries.SELECT_CITIES_BY_SOCIETY);
 
         for (CitiesRecord record : query.fetch()) {
-            SQLCity city = new SQLCity(queries, new Location(null, record.getX(), record.getY(), record.getZ()), record.getUuid());
+            SQLCity city = new SQLCity(queries, record.getName(), record.getUuid(), new Location(null, record.getX(), record.getY(), record.getZ()), this);
             cities.add(city);
         }
 

@@ -16,7 +16,7 @@ package org.societies.database.sql.layout.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Cities extends org.jooq.impl.TableImpl<org.societies.database.sql.layout.tables.records.CitiesRecord> {
 
-	private static final long serialVersionUID = 118703074;
+	private static final long serialVersionUID = -420244762;
 
 	/**
 	 * The reference instance of <code>societies.cities</code>
@@ -40,6 +40,11 @@ public class Cities extends org.jooq.impl.TableImpl<org.societies.database.sql.l
 	 * The column <code>societies.cities.society</code>.
 	 */
 	public final org.jooq.TableField<org.societies.database.sql.layout.tables.records.CitiesRecord, java.util.UUID> SOCIETY = createField("society", org.jooq.impl.SQLDataType.VARBINARY.length(16).nullable(false), this, "", new org.societies.database.sql.UUIDConverter());
+
+	/**
+	 * The column <code>societies.cities.name</code>.
+	 */
+	public final org.jooq.TableField<org.societies.database.sql.layout.tables.records.CitiesRecord, java.lang.String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR.length(45), this, "");
 
 	/**
 	 * The column <code>societies.cities.x</code>.

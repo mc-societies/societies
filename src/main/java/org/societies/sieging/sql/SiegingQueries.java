@@ -12,7 +12,8 @@ import org.societies.database.sql.layout.tables.records.SiegesRecord;
 
 import java.util.UUID;
 
-import static org.jooq.impl.DSL.param;
+import static org.jooq.impl.DSL.count;
+import static org.jooq.impl.DSL.power;
 import static org.societies.database.sql.layout.Tables.*;
 
 /**
@@ -37,6 +38,11 @@ class SiegingQueries extends QueryProvider {
 
     public static final QueryKey<Select<CitiesRecord>> SELECT_CITIES_BY_SOCIETY = QueryKey.create();
 
+    public static final QueryKey<Select<CitiesRecord>> SELECT_NEAREST = QueryKey.create();
+
+    public static final QueryKey<Select<CitiesRecord>> SELECT_CITY_BY_UUID = QueryKey.create();
+    public static final QueryKey<Select<CitiesRecord>> SELECT_CITY_BY_NAME = QueryKey.create();
+
 
     public static final QueryKey<Insert> INSERT_SIEGE = QueryKey.create();
 
@@ -47,6 +53,7 @@ class SiegingQueries extends QueryProvider {
     public static final QueryKey<Select<SiegesRecord>> SELECT_SIEGES_BY_CITY = QueryKey.create();
 
     public static final QueryKey<Select<SiegesRecord>> SELECT_SIEGES_BY_BESIEGER = QueryKey.create();
+
 
     public static final QueryKey<Select<Record8<UUID, UUID, UUID, Short, Short, Short, UUID, DateTime>>> SELECT_SIEGES_BY_SIEGED = QueryKey
             .create();
@@ -66,8 +73,8 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Insert create(DSLContext context) {
                 return context.insertInto(LANDS)
-                        .set(LANDS.UUID, uuid_param())
-                        .set(LANDS.ORIGIN, uuid_param("origin"));
+                        .set(LANDS.UUID, id_param())
+                        .set(LANDS.ORIGIN, id_param());
 
             }
         });
@@ -83,7 +90,7 @@ class SiegingQueries extends QueryProvider {
         builder(SELECT_LANDS_BY_CITY, new QueryBuilder<Select<Record1<UUID>>>() {
             @Override
             public Select<Record1<UUID>> create(DSLContext context) {
-                return context.select(LANDS.UUID).from(LANDS).where(LANDS.ORIGIN.equal(uuid_param("origin")));
+                return context.select(LANDS.UUID).from(LANDS).where(LANDS.ORIGIN.equal(id_param()));
             }
         });
 
@@ -93,8 +100,8 @@ class SiegingQueries extends QueryProvider {
             public Insert create(DSLContext context) {
                 return context.insertInto(CITIES)
                         .set(CITIES.UUID, id_param())
-                        .set(CITIES.SOCIETY, uuid_param("society"))
-
+                        .set(CITIES.SOCIETY, id_param())
+                        .set(CITIES.NAME, DEFAULT_STRING)
                         .set(CITIES.X, DEFAULT_SHORT)
                         .set(CITIES.Y, DEFAULT_SHORT)
                         .set(CITIES.Z, DEFAULT_SHORT);
@@ -119,7 +126,7 @@ class SiegingQueries extends QueryProvider {
         builder(SELECT_CITIES_BY_SOCIETY, new QueryBuilder<Select<CitiesRecord>>() {
             @Override
             public Select<CitiesRecord> create(DSLContext context) {
-                return context.selectFrom(CITIES).where(CITIES.SOCIETY.equal(uuid_param("society")));
+                return context.selectFrom(CITIES).where(CITIES.SOCIETY.equal(id_param()));
             }
         });
 
@@ -129,14 +136,14 @@ class SiegingQueries extends QueryProvider {
             public Insert create(DSLContext context) {
                 return context.insertInto(SIEGES)
                         .set(SIEGES.UUID, id_param())
-                        .set(SIEGES.SOCIETY, uuid_param("society"))
-                        .set(SIEGES.CITY, uuid_param("city"))
+                        .set(SIEGES.SOCIETY, id_param())
+                        .set(SIEGES.CITY, id_param())
 
-                        .set(SIEGES.X, param("x", short.class))
-                        .set(SIEGES.Y, param("y", short.class))
-                        .set(SIEGES.Z, param("z", short.class))
+                        .set(SIEGES.X, DEFAULT_SHORT)
+                        .set(SIEGES.Y, DEFAULT_SHORT)
+                        .set(SIEGES.Z, DEFAULT_SHORT)
 
-                        .set(SIEGES.WAGER, uuid_param("wager"));
+                        .set(SIEGES.WAGER, id_param());
             }
         });
 
@@ -152,7 +159,7 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Select<SiegesRecord> create(DSLContext context) {
                 return context.selectFrom(SIEGES).where(SIEGES.CITY
-                        .equal(uuid_param("city")));
+                        .equal(id_param()));
             }
         });
 
@@ -160,7 +167,7 @@ class SiegingQueries extends QueryProvider {
             @Override
             public Select<SiegesRecord> create(DSLContext context) {
                 return context.selectFrom(SIEGES).where(SIEGES.SOCIETY
-                        .equal(uuid_param("besieger")));
+                        .equal(id_param()));
             }
         });
 
@@ -171,8 +178,38 @@ class SiegingQueries extends QueryProvider {
                         .from(SIEGES)
                         .join(CITIES)
                         .on(SIEGES.SOCIETY.equal(CITIES.SOCIETY))
-                        .and(SIEGES.SOCIETY.equal(uuid_param("sieged")));
+                        .and(SIEGES.SOCIETY.equal(id_param()));
             }
         });
+
+
+        builder(SELECT_NEAREST, new QueryBuilder<Select<CitiesRecord>>() {
+            @Override
+            public Select<CitiesRecord> create(DSLContext context) {
+                return context.selectFrom(CITIES).where(
+                        power(CITIES.X.minus(DEFAULT_DOUBLE), 2)
+                                .add(power(CITIES.Y.minus(DEFAULT_DOUBLE), 2))
+                                .add(power(CITIES.Z.minus(DEFAULT_DOUBLE), 2))
+                                .cast(Integer.class)
+                                .lessOrEqual(context.select(count().mul(5)).from(LANDS)
+                                        .where(LANDS.ORIGIN.equal(CITIES.UUID)))
+                );
+            }
+        });
+
+        builder(SELECT_CITY_BY_UUID, new QueryBuilder<Select<CitiesRecord>>() {
+            @Override
+            public Select<CitiesRecord> create(DSLContext context) {
+                return context.selectFrom(CITIES).where(CITIES.UUID.equal(uuid_param()));
+            }
+        });
+
+        builder(SELECT_CITY_BY_NAME, new QueryBuilder<Select<CitiesRecord>>() {
+            @Override
+            public Select<CitiesRecord> create(DSLContext context) {
+                return context.selectFrom(CITIES).where(CITIES.NAME.equal(DEFAULT_STRING));
+            }
+        });
+
     }
 }
