@@ -14,8 +14,9 @@ import org.societies.api.sieging.CityPublisher;
 import org.societies.bridge.Location;
 import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
+import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
-import org.societies.sieging.DefaultLand;
+import org.societies.api.sieging.SimpleLand;
 
 /**
  * Represents a BindstoneCommand
@@ -48,11 +49,14 @@ public class BindstoneCommand {
             Player player = sender.get(Player.class);
 
             Location location = player.getLocation();
-            City city = cityPublisher.publish(name, location, sender.getGroup().get(Besieger.class));
+            Group group = sender.getGroup();
+            City city = cityPublisher.publish(name, location, group.get(Besieger.class));
 
 
-            city.addLand(new DefaultLand(UUIDGen.generateType1UUID(), city));
-            city.addLand(new DefaultLand(UUIDGen.generateType1UUID(), city));
+            city.addLand(new SimpleLand(UUIDGen.generateType1UUID(), city));
+            city.addLand(new SimpleLand(UUIDGen.generateType1UUID(), city));
+
+
         }
     }
 

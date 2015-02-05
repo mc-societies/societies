@@ -61,4 +61,13 @@ class MemoryCity implements City {
     public Location getLocation() {
         return location;
     }
+
+    @Override
+    public String toString() {
+        return "MemoryCity{" +
+                "location=" + location +
+                ", name='" + name + '\'' +
+                ", uuid=" + uuid +
+                '}';
+    }
 }
