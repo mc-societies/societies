@@ -131,9 +131,8 @@ Works with all common permissions managers.
 Societies can be completely localized by contributing to our [crowdin.com project](https://crowdin.com/project/societies).
 
 ### Persistence
-Societies supports two storage engines:
+Societies supports **one** storage engines:
 
-- MySQL offers you the possibility to support for example BungeeCord by disabling caching completely.
 - A integrated engine is quiet fast and is perfectly for you if you're owning a small server (less than a few hundred players) or you just want to test Societies.
 
 

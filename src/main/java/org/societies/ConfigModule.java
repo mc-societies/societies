@@ -36,12 +36,6 @@ public class ConfigModule extends AbstractModule {
         bind("teleport.item-blacklist", "teleport.item-blacklist", new TypeLiteral<List<String>>() {});
         bind("teleport.item-whitelist", "teleport.item-whitelist", new TypeLiteral<List<String>>() {});
 
-        bindNamed("database.mysql.database", "database.mysql.database", String.class);
-        bindNamed("database.mysql.host", "database.mysql.host", String.class);
-        bindNamed("database.mysql.port", "database.mysql.port", int.class);
-        bindNamed("database.mysql.password", "database.mysql.password", String.class);
-        bindNamed("database.mysql.username", "database.mysql.username", String.class);
-
         bind("blacklisted-worlds", "blacklisted-worlds", new TypeLiteral<List<String>>() {});
 
         bindNamed("entries-per-page", "chat.tables.max-rows-pre-page", int.class);
