@@ -18,8 +18,8 @@ import org.societies.groups.member.Member;
         SiegeCommand.ListCommand.class})
 public class SiegeCommand {
 
-    @Command(identifier = "command.sieging.start")
-    @Permission("societies.sieging.start")
+    @Command(identifier = "command.siege.start")
+    @Permission("societies.siege.start")
     @Meta(@Entry(key = RuleStep.RULE, value = "sieging"))
     public static class StartCommand implements Executor<Member> {
 
@@ -32,8 +32,8 @@ public class SiegeCommand {
         }
     }
 
-    @Command(identifier = "command.sieging.end")
-    @Permission("societies.sieging.end")
+    @Command(identifier = "command.siege.end")
+    @Permission("societies.siege.end")
     @Meta(@Entry(key = RuleStep.RULE, value = "sieging"))
     public static class EndCommand implements Executor<Member> {
 
@@ -43,8 +43,8 @@ public class SiegeCommand {
         }
     }
 
-    @Command(identifier = "command.sieging.list")
-    @Permission("societies.sieging.list")
+    @Command(identifier = "command.siege.list")
+    @Permission("societies.siege.list")
     @Meta(@Entry(key = RuleStep.RULE, value = "sieging"))
     public static class ListCommand implements Executor<Member> {
 
