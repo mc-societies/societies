@@ -2,6 +2,7 @@ package org.societies.sieging.memory.index;
 
 import algs.model.IMultiPoint;
 import algs.model.kdtree.KDTree;
+import com.google.common.collect.ImmutableSet;
 import com.googlecode.cqengine.attribute.Attribute;
 import com.googlecode.cqengine.attribute.SimpleAttribute;
 import com.googlecode.cqengine.index.common.AbstractAttributeIndex;
@@ -41,7 +42,12 @@ public class KDTreeIndex<A extends IMultiPoint, O> extends AbstractAttributeInde
                 @Override
                 public Iterator<O> iterator() {
                     PointNode<O> nearest = (PointNode<O>) tree.nearest(equal.getLocation());
-                    return Collections.singleton(nearest.obj).iterator();
+
+                    if (nearest == null) {
+                        return ImmutableSet.<O>of().iterator();
+                    }
+
+                    return ImmutableSet.of(nearest.obj).iterator();
                 }
 
                 @Override

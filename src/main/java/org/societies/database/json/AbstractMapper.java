@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * Represents a AbstractMapper
  */
-class AbstractMapper {
+public class AbstractMapper {
 
     private final JsonFactory factory = new JsonFactory();
     protected final Logger logger;
@@ -106,13 +106,13 @@ class AbstractMapper {
         generator.writeEndArray();
     }
 
-    void validateObject(JsonParser parser) throws IOException {
+    public void validateObject(JsonParser parser) throws IOException {
         if (parser.getCurrentToken() != JsonToken.START_OBJECT) {
             throw new IOException("Expected data to start with an Object, but was " + parser.getCurrentToken());
         }
     }
 
-    void validateArray(JsonParser parser) throws IOException {
+    public void validateArray(JsonParser parser) throws IOException {
         if (parser.getCurrentToken() != JsonToken.START_ARRAY) {
             throw new IOException("Expected data to start with an Array, but was " + parser.getCurrentToken());
         }

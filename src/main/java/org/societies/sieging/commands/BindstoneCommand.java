@@ -17,6 +17,7 @@ import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 import org.societies.api.sieging.SimpleLand;
+import org.societies.groups.setting.BooleanSetting;
 
 /**
  * Represents a BindstoneCommand
@@ -50,13 +51,15 @@ public class BindstoneCommand {
 
             Location location = player.getLocation();
             Group group = sender.getGroup();
-            City city = cityPublisher.publish(name, location, group.get(Besieger.class));
+            Besieger besieger = group.get(Besieger.class);
+            City city = cityPublisher.publish(name, location, besieger);
+            besieger.addCity(city);
 
 
             city.addLand(new SimpleLand(UUIDGen.generateType1UUID(), city));
             city.addLand(new SimpleLand(UUIDGen.generateType1UUID(), city));
 
-
+            city.set(new BooleanSetting(1337), true);
         }
     }
 

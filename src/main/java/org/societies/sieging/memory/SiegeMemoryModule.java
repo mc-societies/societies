@@ -30,11 +30,7 @@ public class SiegeMemoryModule extends AbstractModule {
                 .newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
 
 
-        extensions.addBinding().toInstance(new ExtensionRoller<Group>() {
-            @Override
-            public void roll(Group extensible) {
-                extensible.add(Besieger.class, new MemoryBesieger(extensible));
-            }
-        });
+        extensions.addBinding().to(MemorySiegeRoller.class);
     }
+
 }

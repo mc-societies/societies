@@ -173,7 +173,7 @@ public class SocietiesModule extends AbstractServiceModule {
         newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Member>>() {});
         newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
 
-        install(new SiegeModule());
+        install(new SiegeModule(dataDirectory));
     }
 
     @Singleton

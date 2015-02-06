@@ -1,4 +1,4 @@
-package org.societies.sieging.commands;
+package org.societies.sieging.commands.parser;
 
 import com.google.inject.Inject;
 import net.catharos.lib.core.command.CommandContext;

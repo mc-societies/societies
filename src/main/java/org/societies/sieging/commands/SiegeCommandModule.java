@@ -7,6 +7,7 @@ import com.google.inject.name.Names;
 import net.catharos.lib.core.command.parser.ArgumentParser;
 import org.shank.AbstractModule;
 import org.societies.api.sieging.City;
+import org.societies.sieging.commands.parser.CityParser;
 
 import static com.google.inject.multibindings.Multibinder.newSetBinder;
 import static com.google.inject.name.Names.named;
