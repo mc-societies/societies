@@ -106,7 +106,8 @@ class MemoryCityController implements CityProvider, CityPublisher {
         if (city != null) {
             int lands = city.getLands().size();
 
-            if (city.getLocation().distance(location) > lands * 2) {
+            Location locationCity = city.getLocation();
+            if (Math.floor(locationCity.distance2d(location)) > lands * 2) {
                 return null;
             }
         }

@@ -26,6 +26,8 @@ import org.societies.groups.setting.target.Target;
 import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -49,37 +51,42 @@ public class CityParser extends AbstractMapper {
         this.cityPublisher = cityPublisher;
     }
 
-    public void readCities(Besieger owner) throws IOException {
+    public Set<City> readCities(Besieger owner) throws IOException {
         File file = cityStorage.getFile(owner.getUUID());
 
         if (!file.exists()) {
-            return;
+            return Collections.emptySet();
         }
 
         JsonParser parser = createParser(file);
-
-        readCities(parser, owner);
+        parser.nextToken();
+        Set<City> cities = readCities(parser, owner);
 
         parser.close();
+
+        return cities;
     }
 
-    public void readCities(JsonParser parser, Besieger owner) throws IOException {
+    public Set<City> readCities(JsonParser parser, Besieger owner) throws IOException {
         if (parser.getCurrentToken() == null) {
-            return;
+            return Collections.emptySet();
         }
+
+        THashSet<City> cities = new THashSet<City>();
 
         validateArray(parser);
 
         while (parser.nextToken() != JsonToken.END_ARRAY) {
             City city = readCity(parser, owner);
-
-            owner.addCity(city);
             city.link();
+
+            cities.add(city);
         }
+
+        return cities;
     }
 
     public City readCity(JsonParser parser, Besieger owner) throws IOException {
-        parser.nextToken();
         validateObject(parser);
 
         UUID uuid = null;
@@ -102,12 +109,12 @@ public class CityParser extends AbstractMapper {
             } else if (fieldName.equals("location")) {
                 validateObject(parser);
 
+                World world = null;
+                double x = 0, y = 0, z = 0;
+
                 while (parser.nextToken() != JsonToken.END_OBJECT) {
                     fieldName = parser.getCurrentName();
                     parser.nextToken();
-
-                    World world = null;
-                    double x = 0, y = 0, z = 0;
 
                     if (fieldName.equals("world")) {
                         world = worldResolver.getWorld(parser.getText());
