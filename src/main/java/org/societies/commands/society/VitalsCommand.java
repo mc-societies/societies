@@ -68,6 +68,5 @@ public class VitalsCommand implements Executor<Member> {
         }
 
         sender.send(table.render(ctx.getName(), page));
-
     }
 }

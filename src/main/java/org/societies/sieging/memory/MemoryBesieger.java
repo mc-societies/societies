@@ -37,12 +37,37 @@ class MemoryBesieger implements Besieger {
     }
 
     @Override
+    public void removeCity(String name) {
+        cities.remove(name);
+    }
+
+    @Override
+    public City getCity(String name) {
+        return cities.get(name);
+    }
+
+    @Override
     public void removeCity(City city) {
-        cities.put(city.getName(), city);
+        cities.remove(city.getName());
     }
 
     @Override
     public Set<City> getCities() {
         return ImmutableSet.copyOf(cities.values());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MemoryBesieger)) return false;
+
+        MemoryBesieger that = (MemoryBesieger) o;
+
+        return getUUID().equals(that.getUUID());
+    }
+
+    @Override
+    public int hashCode() {
+        return getUUID().hashCode();
     }
 }

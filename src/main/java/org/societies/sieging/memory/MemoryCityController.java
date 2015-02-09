@@ -118,6 +118,7 @@ class MemoryCityController implements CityProvider, CityPublisher {
     @Override
     public City publish(String name, Location cityLocation, Besieger group) {
         City published = publish(new MemoryCity(uuidProvider.get(), name, cityLocation, group, DateTime.now(), this));
+        group.addCity(published);
         published.link();
         return published;
     }
