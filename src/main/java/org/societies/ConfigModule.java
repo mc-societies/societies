@@ -59,6 +59,8 @@ public class ConfigModule extends AbstractModule {
         bind("verification.show-unverified", "verification.show-unverified", boolean.class);
 
         bindNamed("server-identity", "server-identity", short.class);
+
+        bindNamed("translate-identifiers", "translate-identifiers", boolean.class);
     }
 
     public void bindNamed(String key, String setting, Class clazz) {
