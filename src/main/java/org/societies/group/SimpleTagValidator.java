@@ -1,6 +1,7 @@
 package org.societies.group;
 
 import com.google.inject.Inject;
+import net.catharos.lib.core.i18n.Dictionary;
 import org.shank.config.ConfigSetting;
 import org.societies.bridge.ChatColor;
 import org.societies.groups.validate.TagValidator;
@@ -16,14 +17,16 @@ class SimpleTagValidator implements TagValidator {
     private final int maxLength;
     private final int minLength;
     private final List disallowed;
+    private final Dictionary<String> dictionary;
 
     @Inject
     public SimpleTagValidator(@ConfigSetting("tag.max-length") int maxLength,
                               @ConfigSetting("tag.min-length") int minLength,
-                              @ConfigSetting("tag.disallowed") List<String> disallowed) {
+                              @ConfigSetting("tag.disallowed") List<String> disallowed, Dictionary<String> dictionary) {
         this.maxLength = maxLength;
         this.minLength = minLength;
         this.disallowed = disallowed;
+        this.dictionary = dictionary;
     }
 
     @Override
@@ -33,15 +36,15 @@ class SimpleTagValidator implements TagValidator {
         int length = tag.length();
 
         if (length > maxLength) {
-            return new ValidateResult("society.tag.too-long", false);
+            return new ValidateResult(dictionary.getTranslation("society.tag.too-long", maxLength), false);
         }
 
         if (length < minLength) {
-            return new ValidateResult("society.tag.too-short", false);
+            return new ValidateResult(dictionary.getTranslation("society.tag.too-short", minLength), false);
         }
 
         if (disallowed.contains(tag)) {
-            return new ValidateResult("society.tag.disallowed", false);
+            return new ValidateResult(dictionary.getTranslation("society.tag.disallowed", tag), false);
         }
 
         return new ValidateResult("society.tag.success", true);
