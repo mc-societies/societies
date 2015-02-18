@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Permissions - Societies Docs</title>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script>
+
+  <style>
+    body {font-size: 90%;}
+    pre, code {font-size: 100%;}
+    h3, h4, h5, h6 {color: #2980b9; font-weight: 300}
+  </style> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Societies Docs</a>
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+      <ul class="current">
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../install">Installation</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../mechanics">Mechanics</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 current">
+                <a class="current" href=".">Permissions</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../commands">Commands</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../economy">Economy</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../persistance">Persistance</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../translation">Translation</a>
+            </li>
+        
+
+    
+</ul>
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+        <a href=".."></a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    <li>Permissions</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="https://github.com/mc-societies/societies" class="icon icon-github"> Edit on GitHub</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              <h1 id="permissions">Permissions</h1>
+<p>Works with all common permissions managers.</p>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Action</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>societies.create</td>
+<td>/societies create [name] [tag] - Creates a new society</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.list</td>
+<td>/societies list [--verified] [--page] - Lists all societies</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.profile</td>
+<td>/societies profile [--society] - View your society' profile</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.lookup</td>
+<td>/societies lookup [--member] - Lookup your info</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.join</td>
+<td>/societies join [society] - Request to join a society</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.invite</td>
+<td>/societies invite [member] - Invite a player</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.coords</td>
+<td>/societies coords [--page] - View your member's coordinates</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.vitals</td>
+<td>/societies vitals [--page] - View your member's vitals</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.roster</td>
+<td>/societies roster [--page] - View your society's member list</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.trust</td>
+<td>/societies trust [--member] - Trust a society</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.distrust</td>
+<td>/societies distrust [--member] - Distrust a society</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.promote</td>
+<td>/societies promote [--member] - Promote a member</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.demote</td>
+<td>/societies demote [--member] - Demote a member</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.alliances</td>
+<td>/societies alliances - View all alliances</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rivalries</td>
+<td>/societies rivalries - View all rivalries</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.ff</td>
+<td>/societies ff - Toggle personal friendly fire</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.group-ff</td>
+<td>/societies groupff - Toggle your society' friendly fire</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.tag</td>
+<td>/societies tag [newTag] - Modify your society's tag</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.kick</td>
+<td>/societies kick [member] - Kick a society member</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.leave</td>
+<td>/societies leave - Leave a society</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.allies.add</td>
+<td>/societies allies add [society] - Initiate an alliance</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.allies.remove</td>
+<td>/societies allies remove [society] - Cancel an alliance</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.allies.list</td>
+<td>/societies allies [?] - Manage your alliances</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rivals.add</td>
+<td>/societies rivals create [society] - Initiate a rivalry</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rivals.remove</td>
+<td>/societies rivals remove [society] - Cancel a rivalry</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rivals.list</td>
+<td>/societies rivals [?] - Manage your rivalries</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.home.set</td>
+<td>/societies home set [--location] - Set your society's home</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.home.regroup</td>
+<td>/societies home regroup - Regroup your society</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.home.teleport</td>
+<td>/societies home [?] - Teleport to your society's home</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rank.create</td>
+<td>/societies rank create [name] [--priority] - Create a rank</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rank.remove</td>
+<td>/societies rank remove [name] - Remove a rank</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rank.list</td>
+<td>/societies rank list [--page] - List all ranks</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rank.assign</td>
+<td>/societies rank assign [member] [rank] - Assign a member to a rank</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rank.deassign</td>
+<td>/societies rank deassign [member] [rank] - De-assign a member from a rank</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rank.rules.assign</td>
+<td>/societies rank rules assign [rank] [rule] - Assign a rule to a rank</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rank.rules.remove</td>
+<td>/societies rank rules remove [rank] [rule] - Remove a rule from a rank</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.rank.rules.list</td>
+<td>/societies rank rules list [rank] - List all rules of a rank</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.balance</td>
+<td>/societies balance - View your society's balance</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.deposit</td>
+<td>/societies deposit [amount] - Deposit some money</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.withdraw</td>
+<td>/societies withdraw [amount] - Withdraw some money</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.vote.accept</td>
+<td>/societies accept - Vote to accept</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.vote.deny</td>
+<td>/societies deny - Vote to deny</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.vote.abstain</td>
+<td>/societies abstain - Vote to abstain</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.vote.cancel</td>
+<td>/societies cancel - Cancel an election</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.verify</td>
+<td>/societies verify [society] - Verify a society</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.disprove</td>
+<td>/societies disprove [society] - Disprove a society</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.reload</td>
+<td>/societies reload - Reload Societies</td>
+<td></td>
+</tr>
+<tr>
+<td>societies.backup</td>
+<td>/societies backup [file] - Backup Societies</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../commands" class="btn btn-neutral float-right" title="Commands"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../mechanics" class="btn btn-neutral" title="Mechanics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+    <!-- Copyright etc -->
+    </p>
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        
+            <a class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+        
+      <span><a href="../mechanics" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      <span style="margin-left: 15px"><a href="../commands" style="color: #fcfcfc">Next &raquo;</a></span>
+    </span>
+</div>
+</body>
+</html>

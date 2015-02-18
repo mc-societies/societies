@@ -43,6 +43,27 @@
     
         
             <li class="toctree-l1 ">
+                <a class="" href="install/">Installation</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="mechanics/">Mechanics</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="permissions/">Permissions</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
                 <a class="" href="commands/">Commands</a>
             </li>
         
@@ -50,7 +71,21 @@
     
         
             <li class="toctree-l1 ">
-                <a class="" href="README/">Readme</a>
+                <a class="" href="economy/">Economy</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="persistance/">Persistance</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="translation/">Translation</a>
             </li>
         
 
@@ -78,27 +113,42 @@
     <li>Home</li>
       <li class="wy-breadcrumbs-aside">
         
+          
+            <a href="https://github.com/mc-societies/societies" class="icon icon-github"> Edit on GitHub</a>
+          
+        
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main">
             <div class="section">
-              <h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="http://mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
+              <p><img alt="logo" src="https://raw.githubusercontent.com/mc-societies/societies/master/logo.png" /> <a href="https://crowdin.com/project/societies"><img alt="Crowdin" src="https://d322cqt584bo4o.cloudfront.net/societies/localized.png" /></a></p>
+<h2 id="motivation">Motivation</h2>
+<p>Societies is a revived version of the original <a href="http://dev.bukkit.org/bukkit-plugins/simpleclans/">SimpleClans</a> and is targeted to support a wide range of minecraft servers.
+At the moment Societies only supports Bukkit, but as new server implementations come up support will be added. (Sponge support is confirmed)</p>
+<p>“The ability to simplify means to eliminate the unnecessary so that the necessary may speak.”
+<em>—Hans Hofmann</em></p>
+<p>SimpleClans was borne out of the need for a self-sustaining drop-and-go system that could be easy to picked up by new players and required minimal attention from server staff. The system has been running over at the SacredLabyrinth where it has been enjoyed and refined by its community. I present it now for public consumption, enjoy.
+<em>—Phaed</em></p>
+<h2 id="found-a-bug-or-have-a-feature-request">Found a bug or have a feature request?</h2>
+<p>Add it to the bug <a href="https://github.com/Catharos/Societies/issues">tracker</a>.</p>
+<h2 id="developer-area">Developer area</h2>
+<h3 id="getting-started">Getting started</h3>
+<p>To get started, just contact me over at <a href="http://esper.net/publicirc.php">esper.net</a> @ #SimpleClans.</p>
+<h3 id="special-libraries">Special libraries</h3>
+<p>The backend library for grouping is <a href="https://github.com/Catharos/clib-groups">clib-group</a>, which provides a simple api to group members to groups. For basic actions and helpers <a href="https://github.com/Catharos/clib-core">clib-core</a> will be used. clib-core contains functionality like commands, futures or special collections.
+The glue for all components is <a href="https://code.google.com/p/google-guice/">google guice</a>, a lightweight dependency injection framework.</p>
+<h3 id="contributing">Contributing</h3>
+<p>Currently, me - p000ison (Max A.) - is the only person who's working on this project, but this will hopefully change after release. You can contact me over at irc.esper.net @ #SimpleClans</p>
+<h4 id="license">License</h4>
+<p>Societies is licenced under <a href="http://www.wtfpl.net/">WTFPL</a></p>
+<h3 id="compilation">Compilation</h3>
+<p>We use maven to handle our dependencies.</p>
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs help</code> - Print this help message.</li>
+<li>Install <a href="http://maven.apache.org/download.html">Maven 3</a></li>
+<li>Check out this repo and: <code>mvn clean install</code></li>
 </ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre>
 
             </div>
           </div>
@@ -106,7 +156,7 @@ docs/
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="commands/" class="btn btn-neutral float-right" title="Commands"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="install/" class="btn btn-neutral float-right" title="Installation"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
     </div>
@@ -133,8 +183,10 @@ docs/
 <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
         
+            <a class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+        
       <span><a href="" style="color: #fcfcfc;">&laquo; Previous</a></span>
-      <span style="margin-left: 15px"><a href="commands/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span style="margin-left: 15px"><a href="install/" style="color: #fcfcfc">Next &raquo;</a></span>
     </span>
 </div>
 </body>

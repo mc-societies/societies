@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Readme - Societies Docs</title>
+  <title>Mechanics - Societies Docs</title>
   
 
   
@@ -43,14 +43,49 @@
     
         
             <li class="toctree-l1 ">
-                <a class="" href="../commands">Commands</a>
+                <a class="" href="../install">Installation</a>
             </li>
         
 
     
         
             <li class="toctree-l1 current">
-                <a class="current" href=".">Readme</a>
+                <a class="current" href=".">Mechanics</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../permissions">Permissions</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../commands">Commands</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../economy">Economy</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../persistance">Persistance</a>
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../translation">Translation</a>
             </li>
         
 
@@ -75,8 +110,12 @@
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="..">Docs</a> &raquo;</li>
-    <li>Readme</li>
+    <li>Mechanics</li>
       <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="https://github.com/mc-societies/societies" class="icon icon-github"> Edit on GitHub</a>
+          
         
       </li>
   </ul>
@@ -84,19 +123,7 @@
 </div>
           <div role="main">
             <div class="section">
-              <p><img alt="logo" src="https://raw.githubusercontent.com/mc-societies/societies/master/logo.png" /> <a href="https://crowdin.com/project/societies"><img alt="Crowdin" src="https://d322cqt584bo4o.cloudfront.net/societies/localized.png" /></a></p>
-<h2 id="motivation">Motivation</h2>
-<p>Societies is a revived version of the original <a href="http://dev.bukkit.org/bukkit-plugins/simpleclans/">SimpleClans</a> and is targeted to support a wide range of minecraft servers.
-At the moment Societies only supports Bukkit, but as new server implementations come up support will be added. (Sponge support is confirmed)</p>
-<p>“The ability to simplify means to eliminate the unnecessary so that the necessary may speak.”
-<em>—Hans Hofmann</em></p>
-<p>SimpleClans was borne out of the need for a self-sustaining drop-and-go system that could be easy to picked up by new players and required minimal attention from server staff. The system has been running over at the SacredLabyrinth where it has been enjoyed and refined by its community. I present it now for public consumption, enjoy.
-<em>—Phaed</em></p>
-<h2 id="installation">Installation</h2>
-<p>If you're familiar with <a href="http://bukkit.org/">Bukkit</a>, you're probably also familiar with the installation of plugins.
-Look <a href="http://wiki.bukkit.org/Installing_Plugins">here</a> for some more information.</p>
-<p>The latest build can be downloaded <a href="http://build.frederik-schmitt.de/">here</a>.</p>
-<h2 id="mechanics">Mechanics</h2>
+              <h1 id="mechanics">Mechanics</h1>
 <h3 id="listing">Listing</h3>
 <p>You can view all the societies using the <strong>/society list</strong> command.</p>
 <h3 id="rosters">Rosters</h3>
@@ -151,7 +178,7 @@ then the teleport is canceled. Warm-up timer for teleport can be configured with
 <p>Those ranks have specific rights in a society. This means you have to claim the rank of a member before you can access
 various information.
 You can assign specific permission to a rank.</p>
-<h2 id="permissions">Permissions</h2>
+<h4 id="permissions">Permissions</h4>
 <ul>
 <li>vitals</li>
 <li>coords</li>
@@ -169,36 +196,6 @@ These members will not be able to view society vitals, coords, or stats.
 This is to prevent players form joining societies just to spy on other societies by writing down coordinates of bases
 or viewing vitals during battles.
  Once a player has gained the society's trust he can be upgraded to trusted status with <strong>/society trust</strong>.</p>
-<h3 id="economy-support">Economy Support</h3>
-<p>You will need Vault for economy plugin support.
-You can download it form <a href="http://dev.bukkit.org/server-mods/vault/">here</a>.</p>
-<h3 id="permissions_1">Permissions</h3>
-<p>Works with all common permissions managers.</p>
-<h3 id="translations">Translations</h3>
-<p>Societies can be completely localized by contributing to our <a href="https://crowdin.com/project/societies">crowdin.com project</a>.</p>
-<h3 id="persistence">Persistence</h3>
-<p>Societies supports <strong>one</strong> storage engines:</p>
-<ul>
-<li>A integrated engine is quiet fast and is perfectly for you if you're owning a small server (less than a few hundred players) or you just want to test Societies.</li>
-</ul>
-<h3 id="found-a-bug-or-have-a-feature-request">Found a bug or have a feature request?</h3>
-<p>Add it to the bug <a href="https://github.com/Catharos/Societies/issues">tracker</a>.</p>
-<h2 id="developer-area">Developer area</h2>
-<h3 id="getting-started">Getting started</h3>
-<p>To get started, just contact me over at <a href="http://esper.net/publicirc.php">esper.net</a> @ #SimpleClans.</p>
-<h3 id="special-libraries">Special libraries</h3>
-<p>The backend library for grouping is <a href="https://github.com/Catharos/clib-groups">clib-group</a>, which provides a simple api to group members to groups. For basic actions and helpers <a href="https://github.com/Catharos/clib-core">clib-core</a> will be used. clib-core contains functionality like commands, futures or special collections.
-The glue for all components is <a href="https://code.google.com/p/google-guice/">google guice</a>, a lightweight dependency injection framework.</p>
-<h3 id="contributing">Contributing</h3>
-<p>Currently, me - p000ison (Max A.) - is the only person who's working on this project, but this will hopefully change after release. You can contact me over at irc.esper.net @ #SimpleClans</p>
-<h4 id="license">License</h4>
-<p>Societies is licenced under <a href="http://www.wtfpl.net/">WTFPL</a></p>
-<h3 id="compilation">Compilation</h3>
-<p>We use maven to handle our dependencies.</p>
-<ul>
-<li>Install <a href="http://maven.apache.org/download.html">Maven 3</a></li>
-<li>Check out this repo and: <code>mvn clean install</code></li>
-</ul>
 
             </div>
           </div>
@@ -206,8 +203,10 @@ The glue for all components is <a href="https://code.google.com/p/google-guice/"
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="../permissions" class="btn btn-neutral float-right" title="Permissions"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
-        <a href="../commands" class="btn btn-neutral" title="Commands"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+        <a href="../install" class="btn btn-neutral" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -233,8 +232,10 @@ The glue for all components is <a href="https://code.google.com/p/google-guice/"
 <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
         
-      <span><a href="../commands" style="color: #fcfcfc;">&laquo; Previous</a></span>
-      <span style="margin-left: 15px"><a href="" style="color: #fcfcfc">Next &raquo;</a></span>
+            <a class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+        
+      <span><a href="../install" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      <span style="margin-left: 15px"><a href="../permissions" style="color: #fcfcfc">Next &raquo;</a></span>
     </span>
 </div>
 </body>
