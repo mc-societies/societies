@@ -5,6 +5,7 @@ pages:
         - [mechanics.md, Mechanics]
         - [permissions.md, Permissions]  
         - [commands.md, Commands]
+        - [chat.md, Chat]
         - [economy.md, Economy]
         - [persistance.md, Persistance]
         - [translation.md, Translation]

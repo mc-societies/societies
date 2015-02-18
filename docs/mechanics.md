@@ -76,15 +76,36 @@ various information.
 You can assign specific permission to a rank.
 
 #### Permissions
-
+- invite
+- join
+- leave
 - vitals
-- coords
-- home
-- home-set
-- home-regroup
-- alliances
-- rivalries
 - roster
+- kick
+- coords
+- trust
+- untrust
+- tag
+- home.teleport
+- home.regroup
+- home.set
+- rank.assign
+- rank.create
+- rank.list
+- rank.remove
+- rank.rules.assign
+- rank.rules.list
+- rank.rules.remove
+- allies.list
+- allies.add
+- allies.remove
+- rivals.list
+- rivals.add
+- rivals.remove
+- vote.join
+- vote.allies
+- vote.rivals
+- leader
 
 
 ### Inviting Members
