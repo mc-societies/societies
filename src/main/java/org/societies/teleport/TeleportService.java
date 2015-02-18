@@ -27,6 +27,6 @@ class TeleportService extends AbstractService {
     @Override
     public void start(LifecycleContext context) throws Exception {
         logger.info("Starting teleport task...");
-        scheduler.scheduleSyncRepeatingTask(controller, 20L, 20L);
+        scheduler.scheduleSyncRepeatingTask(controller, 20L);
     }
 }

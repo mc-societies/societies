@@ -1,3 +1,4 @@
+# Commands
 |Command|Description|
 |---|---|---|
 |/societies create [name] [tag]|Creates a new society|

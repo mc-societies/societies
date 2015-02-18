@@ -1,3 +1,6 @@
+# Permissions
+Works with all common permissions managers.
+
 |Permission|Action|
 |---|---|---|
 |societies.create|/societies create [name] [tag] - Creates a new society|

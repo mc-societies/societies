@@ -14,7 +14,6 @@ import com.googlecode.cqengine.resultset.ResultSet;
 import org.joda.time.DateTime;
 import org.societies.api.sieging.*;
 import org.societies.bridge.Location;
-import org.societies.groups.group.Group;
 import org.societies.sieging.wager.EmptyWager;
 
 import java.util.Set;
@@ -54,9 +53,13 @@ class MemorySiegeController implements SiegeController {
     }
 
     private final Provider<UUID> uuidProvider;
+    private final CityProvider cityProvider;
 
     @Inject
-    MemorySiegeController(Provider<UUID> uuidProvider) {this.uuidProvider = uuidProvider;}
+    MemorySiegeController(Provider<UUID> uuidProvider, CityProvider cityProvider) {
+        this.uuidProvider = uuidProvider;
+        this.cityProvider = cityProvider;
+    }
 
     @Override
 
@@ -75,6 +78,17 @@ class MemorySiegeController implements SiegeController {
     public Siege getSiege(UUID uuid) {
         ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_UUID, uuid));
         return Iterables.getOnlyElement(retrieve, null);
+    }
+
+    @Override
+    public Set<Siege> getSieges(Location location) {
+        City city = cityProvider.getCity(location);
+
+        if (city != null) {
+            return getSieges(city);
+        }
+
+        return null;
     }
 
     @Override

@@ -26,6 +26,7 @@ import org.societies.groups.member.Member;
 @Children({SiegeCommand.StartCommand.class,
         SiegeCommand.EndCommand.class,
         SiegeCommand.ListCommand.class})
+@Sender(Member.class)
 public class SiegeCommand {
 
     @Command(identifier = "command.siege.start")

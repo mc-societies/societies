@@ -26,6 +26,7 @@ import org.societies.groups.member.Member;
         BindstoneCommand.MoveLand.class,
         BindstoneCommand.ListCommand.class,
         BindstoneCommand.InfoCommand.class})
+@Sender(Member.class)
 public class BindstoneCommand {
 
     @Command(identifier = "command.bindstone.create")

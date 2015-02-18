@@ -3,7 +3,6 @@ package org.societies.database.json;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -94,7 +93,6 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
     private final MemberMapper mapper;
     private final UUIDStorage memberStorage;
     private final UUIDStorage groupStorage;
-    private final ListeningExecutorService service;
 
     private MemberPublisher memberPublisher;
 
@@ -109,11 +107,10 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
                         @Named("group-root") File groupRoot,
                         @Named("member-root") File memberRoot,
                         GroupMapper groupMapper,
-                        ListeningExecutorService service, MemberFactory memberFactory) {
+                        MemberFactory memberFactory) {
         this.playerResolver = playerResolver;
         this.mapper = mapper;
         this.groupMapper = groupMapper;
-        this.service = service;
         this.memberFactory = memberFactory;
         this.groupStorage = new UUIDStorage(groupRoot, "json");
         this.memberStorage = new UUIDStorage(memberRoot, "json");

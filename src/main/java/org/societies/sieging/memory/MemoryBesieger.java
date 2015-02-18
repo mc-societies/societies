@@ -37,6 +37,13 @@ class MemoryBesieger implements Besieger {
     }
 
     @Override
+    public void addCities(Iterable<City> cities) {
+        for (City city : cities) {
+            addCity(city);
+        }
+    }
+
+    @Override
     public void removeCity(String name) {
         cities.remove(name);
     }
