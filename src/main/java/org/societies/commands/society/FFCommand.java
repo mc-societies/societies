@@ -21,7 +21,7 @@ public class FFCommand implements Executor<Member> {
     private final Setting<Boolean> personalFF;
 
     @Inject
-    public FFCommand(@Named("personal-friendly-fire") Setting<Boolean> personalFF) {
+    public FFCommand(@Named("personal-ff") Setting<Boolean> personalFF) {
         this.personalFF = personalFF;
     }
 

@@ -63,7 +63,7 @@ public class AbstractMapper {
                 if (settingField.equals("target")) {
                     target = new SimpleTarget(UUID.fromString(parser.getText()));
                 } else if (settingField.equals("setting")) {
-                    setting = settingProvider.getSetting(parser.getIntValue());
+                    setting = settingProvider.getSetting(parser.getText());
                 } else if (settingField.equals("value")) {
                     value = parser.getText();
                 }
@@ -99,7 +99,7 @@ public class AbstractMapper {
 
             generator.writeStartObject();
             generator.writeStringField("target", target.getUUID().toString());
-            generator.writeNumberField("setting", setting.getID());
+            generator.writeStringField("setting", setting.getID());
             generator.writeStringField("value", result);
             generator.writeEndObject();
         }

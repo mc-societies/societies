@@ -22,7 +22,7 @@ public class GroupFFCommand implements Executor<Member> {
     private final Setting<Boolean> groupFF;
 
     @Inject
-    public GroupFFCommand(@Named("group-friendly-fire") Setting<Boolean> groupFF) {
+    public GroupFFCommand(@Named("group-ff") Setting<Boolean> groupFF) {
         this.groupFF = groupFF;
     }
 

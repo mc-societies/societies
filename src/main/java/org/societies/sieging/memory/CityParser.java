@@ -146,7 +146,6 @@ public class CityParser extends AbstractMapper {
                             lands.add(land);
                         }
                     }
-
                 }
 
             } else if (fieldName.equals("owner")) {

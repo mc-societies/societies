@@ -11,16 +11,15 @@ import javax.inject.Inject;
 /**
  * Represents a CityActionValidator
  */
-public class CityActionValidator extends AbstractActionValidator {
+public class ComplexActionValidator extends AbstractActionValidator {
 
     @Inject
-    public CityActionValidator(CityProvider cityProvider) {
+    public ComplexActionValidator(CityProvider cityProvider) {
         super(cityProvider);
     }
 
     @Override
-    public boolean can(Action action, @Nullable Besieger besieger, @Nullable City city) {
-
+    public boolean can(int action, @Nullable Besieger besieger, @Nullable City city) {
         return false;
     }
 }
