@@ -1,5 +1,6 @@
 package org.societies.sieging.memory;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -116,10 +117,10 @@ class MemorySiegeController implements SiegeController {
 
     @Override
     public Set<Siege> getSieges(Location location) {
-        City city = cityProvider.getCity(location);
+        Optional<City> city = cityProvider.getCity(location);
 
-        if (city != null) {
-            return getSieges(city);
+        if (!city.isPresent()) {
+            return getSieges(city.get());
         }
 
         return null;

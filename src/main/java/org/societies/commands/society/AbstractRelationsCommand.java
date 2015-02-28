@@ -1,5 +1,6 @@
 package org.societies.commands.society;
 
+import com.google.common.base.Optional;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.RowFactory;
@@ -62,16 +63,15 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
 
             for (Relation relation : relations) {
 
-                Group relationGroup = null;
-
                 UUID target = relation.getOpposite(group.getUUID());
-                relationGroup = groupProvider.getGroup(target);
 
-                if (relationGroup == null) {
+                Optional<Group> relationGroup = groupProvider.getGroup(target);
+
+                if (!relationGroup.isPresent()) {
                     continue;
                 }
 
-                relationsString.append(relationGroup.getTag()).append(" + ");
+                relationsString.append(relationGroup.get().getTag()).append(" + ");
             }
 
             int length = relationsString.length();

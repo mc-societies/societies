@@ -1,5 +1,6 @@
 package org.societies.sieging.commands;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -177,14 +178,14 @@ public class BindstoneCommand {
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
             Location location = sender.get(Player.class).getLocation();
-            City city = cityProvider.getCity(location);
+            Optional<City> city = cityProvider.getCity(location);
 
-            if (city == null) {
+            if (!city.isPresent()) {
                 sender.send("city.not-found");
                 return;
             }
 
-            sender.send("cities.list", city.getName());
+            sender.send("cities.list", city.get().getName());
         }
     }
 }

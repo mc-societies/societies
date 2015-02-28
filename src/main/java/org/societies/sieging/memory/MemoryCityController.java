@@ -2,6 +2,7 @@ package org.societies.sieging.memory;
 
 import algs.model.twod.TwoDPoint;
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -113,21 +114,21 @@ class MemoryCityController extends AbstractService implements CityProvider, City
     }
 
     @Override
-    public City getCity(UUID uuid) {
+    public Optional<City> getCity(UUID uuid) {
         ResultSet<City> retrieve = cities.retrieve(equal(CITY_UUID, uuid));
 
-        return Iterables.getOnlyElement(retrieve, null);
+        return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override
-    public City getCity(String name) {
+    public Optional<City> getCity(String name) {
         ResultSet<City> retrieve = cities.retrieve(startsWith(CITY_NAME, name));
 
-        return Iterables.getOnlyElement(retrieve, null);
+        return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override
-    public City getCity(Location location) {
+    public Optional<City> getCity(Location location) {
         return getCity(location, new Function<Integer, Double>() {
             @Nullable
             @Override
@@ -138,7 +139,7 @@ class MemoryCityController extends AbstractService implements CityProvider, City
     }
 
     @Override
-    public City getCity(Location location, final double distance) {
+    public Optional<City> getCity(Location location, final double distance) {
         return getCity(location, new Function<Integer, Double>() {
             @Nullable
             @Override
@@ -149,7 +150,7 @@ class MemoryCityController extends AbstractService implements CityProvider, City
     }
 
     @Override
-    public City getCity(Location location, Function<Integer, Double> function) {
+    public Optional<City> getCity(Location location, Function<Integer, Double> function) {
         ResultSet<City> retrieve = cities.retrieve(nearest(CITY_NEAREST, new TwoDPoint(location.getX(), location.getZ())));
 
         City city = Iterables.getOnlyElement(retrieve, null);
@@ -159,12 +160,12 @@ class MemoryCityController extends AbstractService implements CityProvider, City
 
             Location locationCity = city.getLocation();
             Double distance = function.apply(lands);
-            if (Math.floor(locationCity.distance2d(location)) > (distance == null ? 0 : distance)) {
-                return null;
+            if (Math.floor(locationCity.distance2d(location)) < (distance == null ? 0 : distance)) {
+                return Optional.of(city);
             }
         }
 
-        return city;
+        return Optional.absent();
     }
 
     @Override

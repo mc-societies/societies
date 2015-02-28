@@ -1,6 +1,7 @@
 package org.societies.database.json;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -161,11 +162,11 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
     }
 
     @Override
-    public Group getGroup(UUID uuid) {
+    public Optional<Group> getGroup(UUID uuid) {
         Query<Group> query = equal(GROUP_UUID, uuid);
         ResultSet<Group> retrieve = groups.retrieve(query);
 
-        return Iterables.getOnlyElement(retrieve, null);
+        return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override
@@ -203,14 +204,14 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
     }
 
     @Override
-    public Member getMember(String name) {
+    public Optional<Member> getMember(String name) {
         UUID player = playerResolver.getPlayer(name);
 
         if (player == null) {
-            return null;
+            return Optional.absent();
         }
 
-        return getMember(player);
+        return Optional.of(getMember(player));
     }
 
     @Override

@@ -23,6 +23,6 @@ public class CityParser implements ArgumentParser<City> {
     @Nullable
     @Override
     public City parse(String input, CommandContext<?> ctx) throws ParsingException {
-        return cityProvider.getCity(input);
+        return cityProvider.getCity(input).orNull(); //fixme Nullable
     }
 }

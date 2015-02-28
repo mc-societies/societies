@@ -1,5 +1,6 @@
 package org.societies.commands.society.relation;
 
+import com.google.common.base.Optional;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
@@ -52,9 +53,13 @@ abstract class ListCommand implements Executor<Member> {
         Table table = tableProvider.get();
 
         for (Relation relation : relations) {
-            Group target = groupProvider.getGroup(relation.getOpposite(group.getUUID()));
+            Optional<Group> target = groupProvider.getGroup(relation.getOpposite(group.getUUID()));
 
-            table.addForwardingRow(target);
+            if (!target.isPresent()) {
+                continue;
+            }
+
+            table.addForwardingRow(target.get());
         }
 
         sender.send(table.render(ctx.getName(), page));
