@@ -1,5 +1,6 @@
 package org.societies.sieging;
 
+import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 import com.typesafe.config.Config;
 import net.catharos.lib.core.uuid.UUIDStorage;
@@ -24,7 +25,8 @@ public class SiegeModule extends AbstractModule {
 
     public SiegeModule(Config config, File root) {
         this.config = config;
-        this.root = root;}
+        this.root = root;
+    }
 
     @Override
     protected void configure() {
@@ -37,6 +39,8 @@ public class SiegeModule extends AbstractModule {
         bind(ActionValidator.class).to(ComplexActionValidator.class);
 
         install(new SiegingConfigModule(config));
+
+        bindNamed("city-function", new TypeLiteral<Function<Integer, Double>>() {}).to(ConstantCityFunction.class);
 
         bindNamed("cities", UUIDStorage.class).toInstance(new UUIDStorage(new File(root, "cities"), "json"));
     }

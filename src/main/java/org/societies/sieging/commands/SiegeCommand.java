@@ -1,7 +1,9 @@
 package org.societies.sieging.commands;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
@@ -40,9 +42,12 @@ public class SiegeCommand {
 
         private final SiegeController siegeController;
 
+        private final double minSigeDistance;
+
         @Inject
-        public StartCommand(SiegeController siegeController) {
+        public StartCommand(SiegeController siegeController, @Named("sieging.min-distance") double minSigeDistance) {
             this.siegeController = siegeController;
+            this.minSigeDistance = minSigeDistance;
         }
 
         @Override
@@ -54,15 +59,26 @@ public class SiegeCommand {
                 return;
             }
 
+            //todo check if already sieging
+
             Besieger besieger = group.get(Besieger.class);
             Player player = sender.get(Player.class);
-            Location location = player.getLocation();
+            Location location = player.getLocation().floor();
 
             Siege siege = siegeController.start(besieger, target, location);
 
-            if (siege == null) {
+            if (target.distance(location) < minSigeDistance) {
+                sender.send("siege");
                 return;
             }
+
+            boolean applied = siege.getWager().apply(besieger.getGroup());
+
+            if (!applied) {
+                sender.send("wager.not-applied");
+                return;
+            }
+
 
             sender.send("siege.started", target.getName());
         }
@@ -116,8 +132,11 @@ public class SiegeCommand {
 
             table.addForwardingRow(rowFactory.translated(true, "besieger", "city"));
 
-            Siege initiatedSiege = siegeController.getSiegeByAttacker(besieger);
-            table.addRow(initiatedSiege.getBesieger().getGroup().getName(), initiatedSiege.getCity().getName());
+            Optional<Siege> initiatedSiege = siegeController.getSiegeByAttacker(besieger);
+
+            if (!initiatedSiege.isPresent()) {
+                table.addRow(initiatedSiege.get().getBesieger().getGroup().getName(), initiatedSiege.get().getCity().getName());
+            }
 
 
             for (City city : besieger.getCities()) {

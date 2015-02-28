@@ -8,6 +8,7 @@ import com.googlecode.cqengine.resultset.ResultSet;
 import org.joda.time.DateTime;
 import org.societies.api.sieging.City;
 import org.societies.bridge.Location;
+import org.societies.sieging.ConstantCityFunction;
 import org.societies.sieging.memory.index.KDTreeIndex;
 
 import java.util.Random;
@@ -34,12 +35,12 @@ public class Test {
         cities.addIndex(KDTreeIndex.onAttribute(2, CITY_NEAREST));
 
 
-        cities.add(new MemoryCity(null, "test", new Location(null, 10, 10, 10), null, DateTime.now(), null));
-        cities.add(new MemoryCity(null, "test1", new Location(null, 1, 1, 1), null, DateTime.now(), null));
+        cities.add(new MemoryCity(null, "test", new Location(null, 10, 10, 10), null, DateTime.now(), null, new ConstantCityFunction()));
+        cities.add(new MemoryCity(null, "test1", new Location(null, 1, 1, 1), null, DateTime.now(), null, new ConstantCityFunction()));
 
         for (int i = 0; i < 2000; i++) {
             cities.add(new MemoryCity(null, "test1", new Location(null, new Random().nextDouble() * 2000, new Random()
-                    .nextDouble() * 2000, new Random().nextDouble() * 2000), null, DateTime.now(), null));
+                    .nextDouble() * 2000, new Random().nextDouble() * 2000), null, DateTime.now(), null, new ConstantCityFunction()));
         }
 
         ResultSet<City> retrieve = cities.retrieve(nearest(CITY_NEAREST, new TwoDPoint(6, 6)));

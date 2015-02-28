@@ -1,5 +1,6 @@
 package org.societies.sieging.commands.parser;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ParsingException;
@@ -23,6 +24,11 @@ public class CityParser implements ArgumentParser<City> {
     @Nullable
     @Override
     public City parse(String input, CommandContext<?> ctx) throws ParsingException {
-        return cityProvider.getCity(input).orNull(); //fixme Nullable
+        Optional<City> city = cityProvider.getCity(input);
+        if (!city.isPresent()) {
+            throw new ParsingException("target-city.not-found", ctx);
+        }
+
+        return city.get();
     }
 }

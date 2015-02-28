@@ -7,6 +7,7 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.googlecode.cqengine.CQEngine;
 import com.googlecode.cqengine.IndexedCollection;
 import com.googlecode.cqengine.attribute.Attribute;
@@ -30,8 +31,8 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.googlecode.cqengine.query.QueryFactory.contains;
 import static com.googlecode.cqengine.query.QueryFactory.equal;
-import static com.googlecode.cqengine.query.QueryFactory.startsWith;
 import static org.societies.sieging.memory.index.Nearest.nearest;
 
 /**
@@ -88,16 +89,21 @@ class MemoryCityController extends AbstractService implements CityProvider, City
     private final CityWriter cityWriter;
     private final CityParser cityParser;
     private final GroupProvider groupProvider;
+    private final Function<Integer, Double> cityFunction;
 
     @InjectLogger
     private Logger logger;
 
     @Inject
-    MemoryCityController(Provider<UUID> uuidProvider, CityWriter cityWriter, CityParser cityParser, GroupProvider groupProvider) {
+    MemoryCityController(Provider<UUID> uuidProvider,
+                         CityWriter cityWriter, CityParser cityParser,
+                         GroupProvider groupProvider,
+                         @Named("city-function") Function<Integer, Double> cityFunction) {
         this.uuidProvider = uuidProvider;
         this.cityWriter = cityWriter;
         this.cityParser = cityParser;
         this.groupProvider = groupProvider;
+        this.cityFunction = cityFunction;
     }
 
     @Override
@@ -107,6 +113,7 @@ class MemoryCityController extends AbstractService implements CityProvider, City
             try {
                 Set<City> cities = cityParser.readCities(besieger);
                 besieger.addCities(cities);
+                this.cities.addAll(cities);
             } catch (Throwable e) {
                 logger.error("Failed loading city for group " + group + "!", e);
             }
@@ -122,20 +129,21 @@ class MemoryCityController extends AbstractService implements CityProvider, City
 
     @Override
     public Optional<City> getCity(String name) {
-        ResultSet<City> retrieve = cities.retrieve(startsWith(CITY_NAME, name));
+        ResultSet<City> retrieve = cities.retrieve(contains(CITY_NAME, name));
+
+        return Optional.fromNullable(Iterables.getFirst(retrieve, null));
+    }
+
+    @Override
+    public Optional<City> getNearestCity(Location location) {
+        ResultSet<City> retrieve = cities.retrieve(nearest(CITY_NEAREST, new TwoDPoint(location.getX(), location.getZ())));
 
         return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override
     public Optional<City> getCity(Location location) {
-        return getCity(location, new Function<Integer, Double>() {
-            @Nullable
-            @Override
-            public Double apply(Integer input) {
-                return input.doubleValue() * 2;
-            }
-        });
+        return getCity(location, cityFunction);
     }
 
     @Override
@@ -151,17 +159,15 @@ class MemoryCityController extends AbstractService implements CityProvider, City
 
     @Override
     public Optional<City> getCity(Location location, Function<Integer, Double> function) {
-        ResultSet<City> retrieve = cities.retrieve(nearest(CITY_NEAREST, new TwoDPoint(location.getX(), location.getZ())));
+        Optional<City> city = getNearestCity(location);
 
-        City city = Iterables.getOnlyElement(retrieve, null);
+        if (city.isPresent()) {
+            int lands = city.get().getLands().size();
 
-        if (city != null) {
-            int lands = city.getLands().size();
-
-            Location locationCity = city.getLocation();
+            Location locationCity = city.get().getLocation();
             Double distance = function.apply(lands);
             if (Math.floor(locationCity.distance2d(location)) < (distance == null ? 0 : distance)) {
-                return Optional.of(city);
+                return city;
             }
         }
 
@@ -170,7 +176,7 @@ class MemoryCityController extends AbstractService implements CityProvider, City
 
     @Override
     public City publish(String name, Location cityLocation, Besieger group) {
-        City published = publish(new MemoryCity(uuidProvider.get(), name, cityLocation, group, DateTime.now(), this));
+        City published = publish(new MemoryCity(uuidProvider.get(), name, cityLocation, group, DateTime.now(), this, cityFunction));
         group.addCity(published);
         published.link();
         return published;

@@ -1,5 +1,6 @@
 package org.societies.sieging.memory;
 
+import com.google.common.base.Function;
 import gnu.trove.map.hash.THashMap;
 import org.joda.time.DateTime;
 import org.societies.api.sieging.Besieger;
@@ -23,13 +24,19 @@ class MemoryCity extends DefaultSubject implements City {
     private final UUID uuid;
     private final String name;
     private final Location location;
-    private final Besieger owner;
+    private Besieger owner;
     private final DateTime founded;
     private final CityPublisher cityPublisher;
 
+    private final Function<Integer, Double> cityFunction;
+
     private boolean linked = false;
 
-    public MemoryCity(UUID uuid, String name, Location location, Besieger owner, DateTime founded, CityPublisher cityPublisher) {
+    public MemoryCity(UUID uuid, String name,
+                      Location location, Besieger owner,
+                      DateTime founded,
+                      CityPublisher cityPublisher,
+                      Function<Integer, Double> cityFunction) {
         super(uuid);
         this.uuid = uuid;
         this.name = name;
@@ -37,6 +44,7 @@ class MemoryCity extends DefaultSubject implements City {
         this.owner = owner;
         this.founded = founded;
         this.cityPublisher = cityPublisher;
+        this.cityFunction = cityFunction;
     }
 
     @Override
@@ -52,6 +60,11 @@ class MemoryCity extends DefaultSubject implements City {
     @Override
     public Besieger getOwner() {
         return owner;
+    }
+
+    @Override
+    public void setOwner(Besieger owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -80,6 +93,26 @@ class MemoryCity extends DefaultSubject implements City {
     @Override
     public Location getLocation() {
         return location;
+    }
+
+    @Override
+    public double getRadius() {
+        Double radius = cityFunction.apply(lands.size());
+        return radius == null ? 0 : radius;
+    }
+
+    @Override
+    public double distance(Location location) {
+        double distance = location.distance(getLocation());
+        double radius = getRadius();
+
+        if (distance >= radius) {
+            distance -= radius;
+        } else {
+            return 0;
+        }
+
+        return distance;
     }
 
     @Override

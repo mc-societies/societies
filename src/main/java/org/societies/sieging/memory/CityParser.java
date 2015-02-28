@@ -2,6 +2,7 @@ package org.societies.sieging.memory;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.google.common.base.Function;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.inject.Inject;
@@ -39,16 +40,20 @@ public class CityParser extends AbstractMapper {
     private final UUIDStorage cityStorage;
     private final CityPublisher cityPublisher;
 
+    private final Function<Integer, Double> cityFunction;
+
     @Inject
     public CityParser(Logger logger,
                       WorldResolver worldResolver,
                       @Named("cities") UUIDStorage cityStorage,
                       CityPublisher cityPublisher,
-                      SettingProvider settingProvider) {
+                      SettingProvider settingProvider,
+                      @Named("city-function") Function<Integer, Double> cityFunction) {
         super(logger, settingProvider);
         this.worldResolver = worldResolver;
         this.cityStorage = cityStorage;
         this.cityPublisher = cityPublisher;
+        this.cityFunction = cityFunction;
     }
 
     public Set<City> readCities(Besieger owner) throws IOException {
@@ -157,7 +162,7 @@ public class CityParser extends AbstractMapper {
             }
         }
 
-        MemoryCity city = new MemoryCity(uuid, name, location, owner, founded, cityPublisher);
+        MemoryCity city = new MemoryCity(uuid, name, location, owner, founded, cityPublisher, cityFunction);
 
         Setting.set(settings, city, logger);
 

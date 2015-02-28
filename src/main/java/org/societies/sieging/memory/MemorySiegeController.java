@@ -19,6 +19,7 @@ import org.societies.api.sieging.*;
 import org.societies.bridge.Location;
 import org.societies.sieging.wager.EmptyWager;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -64,16 +65,14 @@ class MemorySiegeController implements SiegeController {
     private final Provider<UUID> uuidProvider;
     private final CityProvider cityProvider;
     private final Duration startDuration;
-    private final double minSigeDistance;
+
 
     @Inject
     MemorySiegeController(Provider<UUID> uuidProvider, CityProvider cityProvider,
-                          @Named("sieging.start-duration") Duration startDuration,
-                          @Named("sieging.min-distance") double minSiegeDistance) {
+                          @Named("sieging.start-duration") Duration startDuration) {
         this.uuidProvider = uuidProvider;
         this.cityProvider = cityProvider;
         this.startDuration = startDuration;
-        this.minSigeDistance = minSiegeDistance;
     }
 
     @Override
@@ -85,17 +84,6 @@ class MemorySiegeController implements SiegeController {
     @Override
     public Siege start(Besieger besieger, City city, Location location, Wager wager) {
 
-        //fixme radius
-        if (city.getLocation().distance(location) + city.getLands().size() * 2 < minSigeDistance) {
-            return null;
-        }
-
-        boolean applied = wager.apply(besieger.getGroup());
-
-        if (!applied) {
-            return null;
-        }
-
         DateTime now = DateTime.now();
         MemorySiege siege = new MemorySiege(uuidProvider.get(), besieger, city, wager, location, now, now.plus(startDuration));
         sieges.add(siege);
@@ -103,17 +91,16 @@ class MemorySiegeController implements SiegeController {
     }
 
     @Override
-    public Siege getSiege(UUID uuid) {
+    public Optional<Siege> getSiege(UUID uuid) {
         ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_UUID, uuid));
-        return Iterables.getOnlyElement(retrieve, null);
+        return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override
-    public Siege getSiege(Location location) {
+    public Optional<Siege> getSiege(Location location) {
         ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_INITIATED_LOCATION, location));
-        return Iterables.getOnlyElement(retrieve, null);
+        return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
     }
-
 
     @Override
     public Set<Siege> getSieges(Location location) {
@@ -123,7 +110,7 @@ class MemorySiegeController implements SiegeController {
             return getSieges(city.get());
         }
 
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -137,9 +124,9 @@ class MemorySiegeController implements SiegeController {
      * @return
      */
     @Override
-    public Siege getSiegeByAttacker(Besieger besieger) {
+    public Optional<Siege> getSiegeByAttacker(Besieger besieger) {
         ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_BESIEGER, besieger));
-        return Iterables.getOnlyElement(retrieve);
+        return Optional.fromNullable(Iterables.getOnlyElement(retrieve));
     }
 
     @Override
@@ -154,6 +141,8 @@ class MemorySiegeController implements SiegeController {
 
             wager.fulfill(owner.getGroup());
 
+            System.out.println(winner.getGroup().getName() + " won!");
+
             removeSiege(siege);
         } else if (attacker.equals(winner)) {
             //City was conquered -> besieger get wager back and city
@@ -161,6 +150,7 @@ class MemorySiegeController implements SiegeController {
             wager.fulfill(attacker.getGroup());
             owner.removeCity(city);
             attacker.addCity(city);
+            city.setOwner(attacker);
 
             removeSiege(siege);
         } else {

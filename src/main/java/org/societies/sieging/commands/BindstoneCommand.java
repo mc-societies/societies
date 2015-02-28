@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
@@ -17,6 +18,8 @@ import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
+
+import java.util.UUID;
 
 /**
  * Represents a BindstoneCommand
@@ -39,11 +42,16 @@ public class BindstoneCommand {
         @Argument
         String name;
 
+        private final CityProvider cityProvider;
         private final CityPublisher cityPublisher;
 
+        private final double minDistance;
+
         @Inject
-        public CreateCommand(CityPublisher cityPublisher) {
+        public CreateCommand(CityProvider cityProvider, CityPublisher cityPublisher, @Named("city.min-distance") double minDistance) {
+            this.cityProvider = cityProvider;
             this.cityPublisher = cityPublisher;
+            this.minDistance = minDistance;
         }
 
         @Override
@@ -57,9 +65,25 @@ public class BindstoneCommand {
 
             Besieger besieger = group.get(Besieger.class);
             Player player = sender.get(Player.class);
-            Location location = player.getLocation();
+            Location location = player.getLocation().floor();
 
-            cityPublisher.publish(name, location, besieger);
+            Optional<City> city = cityProvider.getNearestCity(location);
+
+            if (city.isPresent()) {
+                double distance = city.get().distance(location);
+
+                if (distance < minDistance) {
+                    sender.send("city.too-close");
+                    return;
+                }
+            }
+
+
+            City published = cityPublisher.publish(name, location, besieger);
+
+            for (int i = 0; i < 5; i++) {
+                published.addLand(new SimpleLand(UUID.randomUUID(), published));
+            }
 
             sender.send("city.created", name);
         }
@@ -177,7 +201,7 @@ public class BindstoneCommand {
 
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
-            Location location = sender.get(Player.class).getLocation();
+            Location location = sender.get(Player.class).getLocation().floor();
             Optional<City> city = cityProvider.getCity(location);
 
             if (!city.isPresent()) {
