@@ -1,10 +1,10 @@
 package org.societies.sieging;
 
 import com.google.inject.TypeLiteral;
+import com.typesafe.config.Config;
 import net.catharos.lib.core.uuid.UUIDStorage;
 import org.shank.AbstractModule;
 import org.societies.api.sieging.ActionValidator;
-import org.societies.api.sieging.SimpleActionValidator;
 import org.societies.api.sieging.Wager;
 import org.societies.sieging.commands.SiegeCommandModule;
 import org.societies.sieging.memory.SiegeMemoryModule;
@@ -19,9 +19,12 @@ import java.util.UUID;
  */
 public class SiegeModule extends AbstractModule {
 
+    private final Config config;
     private final File root;
 
-    public SiegeModule(File root) {this.root = root;}
+    public SiegeModule(Config config, File root) {
+        this.config = config;
+        this.root = root;}
 
     @Override
     protected void configure() {
@@ -31,7 +34,9 @@ public class SiegeModule extends AbstractModule {
 
         install(new SiegeCommandModule());
 
-        bind(ActionValidator.class).to(SimpleActionValidator.class);
+        bind(ActionValidator.class).to(ComplexActionValidator.class);
+
+        install(new SiegingConfigModule(config));
 
         bindNamed("cities", UUIDStorage.class).toInstance(new UUIDStorage(new File(root, "cities"), "json"));
     }

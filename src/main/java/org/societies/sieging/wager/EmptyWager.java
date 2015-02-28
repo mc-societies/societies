@@ -15,7 +15,12 @@ public class EmptyWager implements Wager {
     }
 
     @Override
-    public void apply(Group group) {
+    public boolean apply(Group group) {
+        return true;
+    }
 
+    @Override
+    public boolean fulfill(Group group) {
+        return true;
     }
 }

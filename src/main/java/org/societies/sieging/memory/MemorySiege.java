@@ -1,6 +1,7 @@
 package org.societies.sieging.memory;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.societies.api.sieging.Besieger;
 import org.societies.api.sieging.City;
 import org.societies.api.sieging.Siege;
@@ -19,18 +20,20 @@ class MemorySiege implements Siege {
     private final City city;
     private final Wager wager;
     private final Location location;
-    private final DateTime time;
+    private final DateTime initiateTime;
+    private final DateTime startTime;
 
     public MemorySiege(UUID uuid,
                        Besieger besieger, City city,
                        Wager wager,
-                       Location location, DateTime time) {
+                       Location location, DateTime initiateTime, DateTime startTime) {
         this.uuid = uuid;
         this.besieger = besieger;
         this.city = city;
         this.wager = wager;
         this.location = location;
-        this.time = time;
+        this.initiateTime = initiateTime;
+        this.startTime = startTime;
     }
 
     @Override
@@ -60,6 +63,21 @@ class MemorySiege implements Siege {
 
     @Override
     public DateTime getTimeInitiated() {
-        return time;
+        return initiateTime;
+    }
+
+    @Override
+    public DateTime getStartTime() {
+        return startTime;
+    }
+
+    @Override
+    public Duration getDurationUntilStart() {
+        return new Duration(initiateTime, startTime);
+    }
+
+    @Override
+    public boolean isStarted() {
+        return DateTime.now().isAfter(getStartTime());
     }
 }

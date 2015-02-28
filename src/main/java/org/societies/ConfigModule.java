@@ -1,23 +1,16 @@
 package org.societies;
 
-import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
-import com.google.inject.name.Names;
 import com.typesafe.config.Config;
-import net.catharos.lib.core.util.CastSafe;
-import org.shank.AbstractModule;
-import org.shank.config.Settings;
 
 import java.util.List;
 
 /**
  * Represents a ConfigModule
  */
-public class ConfigModule extends AbstractModule {
+public class ConfigModule extends AbstractConfigModule {
 
-    private final Config config;
-
-    public ConfigModule(Config config) {this.config = config;}
+    public ConfigModule(Config config) {super(config);}
 
     @Override
     protected void configure() {
@@ -63,19 +56,4 @@ public class ConfigModule extends AbstractModule {
         bindNamed("translate-identifiers", "translate-identifiers", boolean.class);
     }
 
-    public void bindNamed(String key, String setting, Class clazz) {
-        bind(Key.get(clazz, Names.named(key)), setting);
-    }
-
-    public void bind(Key key, String setting) {
-        bind(CastSafe.<Key<Object>>toGeneric(key)).toInstance(config.getAnyRef(setting));
-    }
-
-    public void bind(String key, String setting, Class clazz) {
-        bind(Key.get(clazz, Settings.create(key)), setting);
-    }
-
-    public void bind(String key, String setting, TypeLiteral clazz) {
-        bind(Key.get(clazz, Settings.create(key)), setting);
-    }
 }

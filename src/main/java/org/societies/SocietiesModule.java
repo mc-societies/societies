@@ -33,6 +33,7 @@ import org.societies.member.MemberModule;
 import org.societies.member.locale.LocaleModule;
 import org.societies.request.RequestModule;
 import org.societies.setting.SettingModule;
+import org.societies.sieging.SiegeModule;
 import org.societies.teleport.TeleportModule;
 
 import java.io.File;
@@ -172,7 +173,7 @@ public class SocietiesModule extends AbstractServiceModule {
         newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Member>>() {});
         newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
 
-//        install(new SiegeModule(dataDirectory));
+        install(new SiegeModule(config, dataDirectory));
     }
 
     @Singleton

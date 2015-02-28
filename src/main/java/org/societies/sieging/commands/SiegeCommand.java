@@ -24,7 +24,7 @@ import org.societies.groups.member.Member;
  */
 @Command(identifier = "command.siege")
 @Children({SiegeCommand.StartCommand.class,
-        SiegeCommand.EndCommand.class,
+//        SiegeCommand.EndCommand.class,
         SiegeCommand.ListCommand.class})
 @Sender(Member.class)
 public class SiegeCommand {
@@ -58,22 +58,27 @@ public class SiegeCommand {
             Player player = sender.get(Player.class);
             Location location = player.getLocation();
 
-            siegeController.start(besieger, target, location);
+            Siege siege = siegeController.start(besieger, target, location);
+
+            if (siege == null) {
+                return;
+            }
+
             sender.send("siege.started", target.getName());
         }
     }
 
-    @Command(identifier = "command.siege.end")
-    @Permission("societies.siege.end")
-    @Meta(@Entry(key = RuleStep.RULE, value = "sieging"))
-    @Sender(Member.class)
-    public static class EndCommand implements Executor<Member> {
-
-        @Override
-        public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
-            //todo
-        }
-    }
+//    @Command(identifier = "command.siege.end")
+//    @Permission("societies.siege.end")
+//    @Meta(@Entry(key = RuleStep.RULE, value = "sieging"))
+//    @Sender(Member.class)
+//    public static class EndCommand implements Executor<Member> {
+//
+//        @Override
+//        public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
+//            //todo
+//        }
+//    }
 
     @Command(identifier = "command.siege.list")
     @Permission("societies.siege.list")
@@ -111,9 +116,9 @@ public class SiegeCommand {
 
             table.addForwardingRow(rowFactory.translated(true, "besieger", "city"));
 
-            for (Siege siege : siegeController.getSieges(besieger)) {
-                table.addRow(siege.getBesieger().getGroup().getName(), siege.getCity().getName());
-            }
+            Siege initiatedSiege = siegeController.getSiegeByAttacker(besieger);
+            table.addRow(initiatedSiege.getBesieger().getGroup().getName(), initiatedSiege.getCity().getName());
+
 
             for (City city : besieger.getCities()) {
                 for (Siege siege : siegeController.getSieges(city)) {
