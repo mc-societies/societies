@@ -20,7 +20,7 @@ public class SiegeCommandModule extends AbstractModule {
     private final Class[] commands = {
             BindstoneCommand.class,
 
-            SiegeCommand.class,
+            SiegestoneCommand.class,
     };
 
     @Override

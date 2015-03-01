@@ -24,18 +24,18 @@ import org.societies.groups.member.Member;
 /**
  * Represents a SiegeCommand
  */
-@Command(identifier = "command.siege")
-@Children({SiegeCommand.StartCommand.class,
+@Command(identifier = "command.siegestone")
+@Children({SiegestoneCommand.CreateCommand.class,
 //        SiegeCommand.EndCommand.class,
-        SiegeCommand.ListCommand.class})
+        SiegestoneCommand.ListCommand.class})
 @Sender(Member.class)
-public class SiegeCommand {
+public class SiegestoneCommand {
 
-    @Command(identifier = "command.siege.start")
-    @Permission("societies.siege.start")
+    @Command(identifier = "command.siegestone.start")
+    @Permission("societies.siegestone.start")
     @Meta(@Entry(key = RuleStep.RULE, value = "sieging"))
     @Sender(Member.class)
-    public static class StartCommand implements Executor<Member> {
+    public static class CreateCommand implements Executor<Member> {
 
         @Argument(name = "argument.target.city")
         City target;
@@ -45,7 +45,7 @@ public class SiegeCommand {
         private final double minSigeDistance;
 
         @Inject
-        public StartCommand(SiegeController siegeController, @Named("sieging.min-distance") double minSigeDistance) {
+        public CreateCommand(SiegeController siegeController, @Named("sieging.min-distance") double minSigeDistance) {
             this.siegeController = siegeController;
             this.minSigeDistance = minSigeDistance;
         }
@@ -80,7 +80,8 @@ public class SiegeCommand {
             }
 
 
-            sender.send("siege.started", target.getName());
+            sender.send("siege.started", group.getName(), target.getName());
+            target.getOwner().getGroup().send("siege.started", group.getName(), target.getName());
         }
     }
 
@@ -96,8 +97,8 @@ public class SiegeCommand {
 //        }
 //    }
 
-    @Command(identifier = "command.siege.list")
-    @Permission("societies.siege.list")
+    @Command(identifier = "command.siegestone.list")
+    @Permission("societies.siegestone.list")
     @Meta(@Entry(key = RuleStep.RULE, value = "sieging"))
     @Sender(Member.class)
     public static class ListCommand implements Executor<Member> {

@@ -55,6 +55,7 @@ public class CityWriter extends AbstractMapper {
 
         Location location = city.getLocation();
         writer.writeObjectFieldStart("location");
+        writer.writeStringField("world", location.getWorld().getName());
         writer.writeNumberField("x", location.getX());
         writer.writeNumberField("y", location.getY());
         writer.writeNumberField("z", location.getZ());

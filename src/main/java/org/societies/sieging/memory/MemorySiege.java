@@ -80,4 +80,16 @@ class MemorySiege implements Siege {
     public boolean isStarted() {
         return DateTime.now().isAfter(getStartTime());
     }
+
+    @Override
+    public void send(String message) {
+        getBesieger().getGroup().send(message);
+        getCity().getOwner().getGroup().send(message);
+    }
+
+    @Override
+    public void send(String message, Object... obj) {
+        getBesieger().getGroup().send(message, obj);
+        getCity().getOwner().getGroup().send(message, obj);
+    }
 }

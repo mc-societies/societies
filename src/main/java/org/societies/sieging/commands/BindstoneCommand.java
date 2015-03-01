@@ -14,6 +14,8 @@ import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
 import org.societies.api.sieging.*;
 import org.societies.bridge.Location;
+import org.societies.bridge.Material;
+import org.societies.bridge.Materials;
 import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;
@@ -29,7 +31,8 @@ import java.util.UUID;
         BindstoneCommand.RemoveCommand.class,
         BindstoneCommand.MoveLand.class,
         BindstoneCommand.ListCommand.class,
-        BindstoneCommand.InfoCommand.class})
+        BindstoneCommand.InfoCommand.class,
+        BindstoneCommand.Visualize.class})
 @Sender(Member.class)
 public class BindstoneCommand {
 
@@ -147,6 +150,47 @@ public class BindstoneCommand {
             to.addLand(land);
 
             sender.send("city.lands.moved", from.getName(), to.getName());
+        }
+    }
+
+    @Command(identifier = "command.bindstone.visualize")
+    @Permission("societies.bindstones.visualize")
+    @Meta(@Entry(key = RuleStep.RULE, value = "visualize"))
+    @Sender(Member.class)
+    public static class Visualize implements Executor<Member> {
+
+        private static final double STEPS = 6;
+        private static final double DEGREES = 2 * Math.PI / STEPS;
+
+        @Argument(name = "argument.target.city")
+        City target;
+
+        private final Materials materials;
+
+        @Inject
+        public Visualize(Materials materials) {this.materials = materials;}
+
+        @Override
+        public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
+
+            Player player = sender.get(Player.class);
+            Location location = target.getLocation();
+
+            double current = 0;
+
+            for (int i = 0; i < STEPS; i++) {
+
+                Location vector3d = new Location(location.getWorld(), location.getX() + Math.cos(current) * target.getRadius(), 0, location
+                        .getZ() + Math.sin(current) * target.getRadius());
+
+                Material material = materials.getMaterial(20);
+
+                for (int j = 0; j < 255; j++) {
+                    player.sendBlockChange(vector3d = vector3d.add(0,1,0).floor(), material, (byte) 0);
+                }
+
+                current += DEGREES;
+            }
         }
     }
 

@@ -150,6 +150,7 @@ class MemorySiegeController implements SiegeController {
             wager.fulfill(attacker.getGroup());
             owner.removeCity(city);
             attacker.addCity(city);
+            //fixme lands do not get moved
             city.setOwner(attacker);
 
             removeSiege(siege);
