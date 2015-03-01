@@ -126,7 +126,7 @@ class MemorySiegeController implements SiegeController {
     @Override
     public Optional<Siege> getSiegeByAttacker(Besieger besieger) {
         ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_BESIEGER, besieger));
-        return Optional.fromNullable(Iterables.getOnlyElement(retrieve));
+        return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override
@@ -136,12 +136,12 @@ class MemorySiegeController implements SiegeController {
         Besieger attacker = siege.getBesieger();
         Wager wager = siege.getWager();
 
+        System.out.println(winner.getGroup().getName() + " won!");
+
         if (owner.equals(winner)) {
             //City wasn't conquered -> wager to city's owner
 
             wager.fulfill(owner.getGroup());
-
-            System.out.println(winner.getGroup().getName() + " won!");
 
             removeSiege(siege);
         } else if (attacker.equals(winner)) {
@@ -150,14 +150,36 @@ class MemorySiegeController implements SiegeController {
             wager.fulfill(attacker.getGroup());
             owner.removeCity(city);
             attacker.addCity(city);
-            //fixme lands do not get moved
+
+            //fixme
+            owner.addUnallocatedLands(city.getLands());
+            city.clearLands();
+
             city.setOwner(attacker);
+
+            for (City ownerCity : owner.getCities()) {
+                for (Land land : ownerCity.getLands()) {
+                    if (land.getOrigin().equals(city)) {
+                        //remove land
+                    }
+                }
+            }
+
+            for (Land land : owner.getUnallocatedLands()) {
+                if (land.getOrigin().equals(city)) {
+                    //remove land
+                }
+            }
+
+
 
             removeSiege(siege);
         } else {
             throw new IllegalArgumentException("Winner can't be a winner!");
         }
     }
+
+
 
     private void removeSiege(Siege siege) {
         sieges.remove(siege);

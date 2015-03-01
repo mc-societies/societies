@@ -12,10 +12,7 @@ import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.lib.core.uuid.UUIDStorage;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
-import org.societies.api.sieging.Besieger;
-import org.societies.api.sieging.City;
-import org.societies.api.sieging.CityPublisher;
-import org.societies.api.sieging.SimpleLand;
+import org.societies.api.sieging.*;
 import org.societies.bridge.Location;
 import org.societies.bridge.World;
 import org.societies.bridge.WorldResolver;
@@ -39,6 +36,7 @@ public class CityParser extends AbstractMapper {
     private final WorldResolver worldResolver;
     private final UUIDStorage cityStorage;
     private final CityPublisher cityPublisher;
+    private final BesiegerProvider besiegerProvider;
 
     private final Function<Integer, Double> cityFunction;
 
@@ -48,15 +46,16 @@ public class CityParser extends AbstractMapper {
                       @Named("cities") UUIDStorage cityStorage,
                       CityPublisher cityPublisher,
                       SettingProvider settingProvider,
-                      @Named("city-function") Function<Integer, Double> cityFunction) {
+                      BesiegerProvider besiegerProvider, @Named("city-function") Function<Integer, Double> cityFunction) {
         super(logger, settingProvider);
         this.worldResolver = worldResolver;
         this.cityStorage = cityStorage;
         this.cityPublisher = cityPublisher;
+        this.besiegerProvider = besiegerProvider;
         this.cityFunction = cityFunction;
     }
 
-    public Set<City> readCities(Besieger owner) throws IOException {
+    public Set<City> readBesieger(Besieger owner) throws IOException {
         File file = cityStorage.getFile(owner.getUUID());
 
         if (!file.exists()) {
@@ -65,14 +64,39 @@ public class CityParser extends AbstractMapper {
 
         JsonParser parser = createParser(file);
         parser.nextToken();
-        Set<City> cities = readCities(parser, owner);
+        Set<City> cities = readBesieger(parser, owner);
 
         parser.close();
 
         return cities;
     }
 
-    public Set<City> readCities(JsonParser parser, Besieger owner) throws IOException {
+    public Set<City> readBesieger(JsonParser parser, Besieger empty) throws IOException {
+        validateObject(parser);
+
+
+        Set<City> cites = Collections.emptySet();
+
+        while (parser.nextToken() != JsonToken.END_OBJECT) {
+            String fieldName = parser.getCurrentName();
+
+            parser.nextToken();
+
+            if (fieldName.equals("unallocated")) {
+                Set<UUID> uuids = parseLands(parser);
+                for (UUID uuid : uuids) {
+                    empty.addUnallocatedLand(new SpareLand(uuid));
+                }
+            } else if (fieldName.equals("cities")) {
+                cites = readCities(parser, empty);
+            }
+        }
+
+
+        return cites;
+    }
+
+    public Set<City> readCities(JsonParser parser, Besieger empty) throws IOException {
         if (parser.getCurrentToken() == null) {
             return Collections.emptySet();
         }
@@ -82,7 +106,7 @@ public class CityParser extends AbstractMapper {
         validateArray(parser);
 
         while (parser.nextToken() != JsonToken.END_ARRAY) {
-            City city = readCity(parser, owner);
+            City city = readCity(parser, empty);
             city.link();
 
             cities.add(city);
@@ -100,7 +124,7 @@ public class CityParser extends AbstractMapper {
         DateTime founded = null;
         Table<Setting, Target, String> settings = HashBasedTable.create();
 
-        THashSet<UUID> lands = new THashSet<UUID>();
+        Set<UUID> lands = Collections.emptySet();
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String fieldName = parser.getCurrentName();
@@ -135,26 +159,13 @@ public class CityParser extends AbstractMapper {
                 }
 
             } else if (fieldName.equals("lands")) {
-                validateArray(parser);
-
-                while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    validateObject(parser);
-
-                    while (parser.nextToken() != JsonToken.END_OBJECT) {
-                        fieldName = parser.getCurrentName();
-
-                        parser.nextToken();
-
-                        if (fieldName.equals("uuid")) {
-                            UUID land = UUIDGen.toUUID(Base64.decode(parser.getText()));
-
-                            lands.add(land);
-                        }
-                    }
-                }
-
+                lands = parseLands(parser);
             } else if (fieldName.equals("owner")) {
-                //todo
+                UUID ownerUUID = UUIDGen.toUUID(Base64.decode(parser.getText()));
+
+                if (!ownerUUID.equals(owner.getUUID())) {
+                    throw new RuntimeException("Invalid owner!");
+                }
             } else if (fieldName.equals("founded")) {
                 founded = new DateTime(parser.getLongValue());
             } else if (fieldName.equals("settings")) {
@@ -171,5 +182,30 @@ public class CityParser extends AbstractMapper {
         }
 
         return city;
+    }
+
+    private Set<UUID> parseLands(JsonParser parser) throws IOException {
+        THashSet<UUID> lands = new THashSet<UUID>();
+
+        String fieldName;
+        validateArray(parser);
+
+        while (parser.nextToken() != JsonToken.END_ARRAY) {
+            validateObject(parser);
+
+            while (parser.nextToken() != JsonToken.END_OBJECT) {
+                fieldName = parser.getCurrentName();
+
+                parser.nextToken();
+
+                if (fieldName.equals("uuid")) {
+                    UUID land = UUIDGen.toUUID(Base64.decode(parser.getText()));
+
+                    lands.add(land);
+                }
+            }
+        }
+
+        return lands;
     }
 }

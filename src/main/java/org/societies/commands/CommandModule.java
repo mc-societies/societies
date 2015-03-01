@@ -204,7 +204,7 @@ public class CommandModule extends AbstractModule {
     @Named("commands")
     public Set<Command<Sender>> provideCommand(GroupBuilder<Sender> builder, @Named("custom-commands") Set<Class> classes, CommandAnalyser<Sender> analyser) {
 
-        GroupCommand<Sender> group = builder.identifier("societies").name("Societies").build();
+        GroupCommand<Sender> group = builder.identifier("s").name("Societies").build();
 
         group.addOption(new Argument<Integer>("page", "page", "page", true, new IntegerParser()));
 

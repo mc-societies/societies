@@ -91,6 +91,15 @@ class MemoryCity extends DefaultSubject implements City {
     }
 
     @Override
+    public void clearLands() {
+        lands.clear();
+
+        if (linked()) {
+            cityPublisher.publish(this);
+        }
+    }
+
+    @Override
     public Location getLocation() {
         return location;
     }

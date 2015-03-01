@@ -21,6 +21,7 @@ import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -76,7 +77,7 @@ public class BindstoneCommand {
                 double distance = city.get().distance(location);
 
                 if (distance < minDistance) {
-                    sender.send("city.too-close");
+                    sender.send("city.too-close", distance, minDistance);
                     return;
                 }
             }
@@ -154,7 +155,7 @@ public class BindstoneCommand {
     }
 
     @Command(identifier = "command.bindstone.visualize")
-    @Permission("societies.bindstones.visualize")
+    @Permission("societies.bindstone.visualize")
     @Meta(@Entry(key = RuleStep.RULE, value = "visualize"))
     @Sender(Member.class)
     public static class Visualize implements Executor<Member> {
@@ -180,13 +181,14 @@ public class BindstoneCommand {
 
             for (int i = 0; i < STEPS; i++) {
 
-                Location vector3d = new Location(location.getWorld(), location.getX() + Math.cos(current) * target.getRadius(), 0, location
-                        .getZ() + Math.sin(current) * target.getRadius());
+                double x = location.getX() + Math.cos(current) * target.getRadius();
+                double z = location.getZ() + Math.sin(current) * target.getRadius();
+                Location vector3d = new Location(location.getWorld(), x, 0, z);
 
                 Material material = materials.getMaterial(20);
 
                 for (int j = 0; j < 255; j++) {
-                    player.sendBlockChange(vector3d = vector3d.add(0,1,0).floor(), material, (byte) 0);
+                    player.sendBlockChange(vector3d = vector3d.add(0, 1, 0).floor(), material, (byte) 0);
                 }
 
                 current += DEGREES;
@@ -220,12 +222,18 @@ public class BindstoneCommand {
                 return;
             }
             Besieger besieger = group.get(Besieger.class);
+            Set<City> cities = besieger.getCities();
+
+            if (cities.isEmpty()) {
+                sender.send("city.none-found");
+                return;
+            }
 
             Table table = tableProvider.get();
 
             table.addForwardingRow(rowFactory.translated(true, "city", "lands"));
 
-            for (City city : besieger.getCities()) {
+            for (City city : cities) {
                 table.addRow(city.getName(), Integer.toString(city.getLands().size()));
             }
 
@@ -246,14 +254,18 @@ public class BindstoneCommand {
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
             Location location = sender.get(Player.class).getLocation().floor();
-            Optional<City> city = cityProvider.getCity(location);
+            Optional<City> optional = cityProvider.getCity(location);
 
-            if (!city.isPresent()) {
-                sender.send("city.not-found");
+            if (!optional.isPresent()) {
+                sender.send("city.not-found-here");
                 return;
             }
 
-            sender.send("cities.list", city.get().getName());
+            City city = optional.get();
+            sender.send("cities.info", city.getName());
+            sender.send("cities.lands", city.getLands());
+            sender.send("cities.radius", city.getRadius());
+            sender.send("cities.owner", city.getOwner().getGroup().getName());
         }
     }
 }

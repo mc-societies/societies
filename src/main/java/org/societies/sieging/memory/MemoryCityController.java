@@ -111,7 +111,7 @@ class MemoryCityController extends AbstractService implements CityProvider, City
         for (Group group : groupProvider.getGroups()) {
             Besieger besieger = group.get(Besieger.class);
             try {
-                Set<City> cities = cityParser.readCities(besieger);
+                Set<City> cities = cityParser.readBesieger(besieger);
                 besieger.addCities(cities);
                 this.cities.addAll(cities);
             } catch (Throwable e) {
@@ -186,7 +186,7 @@ class MemoryCityController extends AbstractService implements CityProvider, City
     public City publish(City city) {
         cities.add(city);
         try {
-            cityWriter.writeCities(city.getOwner());
+            cityWriter.writeBesieger(city.getOwner());
         } catch (IOException e) {
             e.printStackTrace();
         }

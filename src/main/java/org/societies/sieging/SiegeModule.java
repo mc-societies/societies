@@ -42,6 +42,6 @@ public class SiegeModule extends AbstractModule {
 
         bindNamed("city-function", new TypeLiteral<Function<Integer, Double>>() {}).to(ConstantCityFunction.class);
 
-        bindNamed("cities", UUIDStorage.class).toInstance(new UUIDStorage(new File(root, "cities"), "json"));
+        bindNamed("cities", UUIDStorage.class).toInstance(new UUIDStorage(new File(root, "data/cities"), "json"));
     }
 }

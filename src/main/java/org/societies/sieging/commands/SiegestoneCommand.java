@@ -26,13 +26,12 @@ import org.societies.groups.member.Member;
  */
 @Command(identifier = "command.siegestone")
 @Children({SiegestoneCommand.CreateCommand.class,
-//        SiegeCommand.EndCommand.class,
         SiegestoneCommand.ListCommand.class})
 @Sender(Member.class)
 public class SiegestoneCommand {
 
-    @Command(identifier = "command.siegestone.start")
-    @Permission("societies.siegestone.start")
+    @Command(identifier = "command.siegestone.create")
+    @Permission("societies.siegestone.create")
     @Meta(@Entry(key = RuleStep.RULE, value = "sieging"))
     @Sender(Member.class)
     public static class CreateCommand implements Executor<Member> {
@@ -42,12 +41,12 @@ public class SiegestoneCommand {
 
         private final SiegeController siegeController;
 
-        private final double minSigeDistance;
+        private final double minSiegeDistance;
 
         @Inject
         public CreateCommand(SiegeController siegeController, @Named("sieging.min-distance") double minSigeDistance) {
             this.siegeController = siegeController;
-            this.minSigeDistance = minSigeDistance;
+            this.minSiegeDistance = minSigeDistance;
         }
 
         @Override
@@ -59,43 +58,41 @@ public class SiegestoneCommand {
                 return;
             }
 
-            //todo check if already sieging
-
             Besieger besieger = group.get(Besieger.class);
+
+            if (siegeController.getSiegeByAttacker(besieger).isPresent()) {
+                sender.send("siege.already-sieging");
+                return;
+            }
+
+            if (besieger.getCities().contains(target)) {
+                sender.send("siege.sieging-own-city");
+                return;
+            }
+
             Player player = sender.get(Player.class);
             Location location = player.getLocation().floor();
 
             Siege siege = siegeController.start(besieger, target, location);
 
-            if (target.distance(location) < minSigeDistance) {
-                sender.send("siege");
+            double distance = target.distance(location);
+            if (distance < minSiegeDistance) {
+                sender.send("siege.siegestone-too-close", distance, minSiegeDistance);
                 return;
             }
 
             boolean applied = siege.getWager().apply(besieger.getGroup());
 
             if (!applied) {
+                //fixme
                 sender.send("wager.not-applied");
                 return;
             }
-
 
             sender.send("siege.started", group.getName(), target.getName());
             target.getOwner().getGroup().send("siege.started", group.getName(), target.getName());
         }
     }
-
-//    @Command(identifier = "command.siege.end")
-//    @Permission("societies.siege.end")
-//    @Meta(@Entry(key = RuleStep.RULE, value = "sieging"))
-//    @Sender(Member.class)
-//    public static class EndCommand implements Executor<Member> {
-//
-//        @Override
-//        public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
-//            //todo
-//        }
-//    }
 
     @Command(identifier = "command.siegestone.list")
     @Permission("societies.siegestone.list")
@@ -135,7 +132,7 @@ public class SiegestoneCommand {
 
             Optional<Siege> initiatedSiege = siegeController.getSiegeByAttacker(besieger);
 
-            if (!initiatedSiege.isPresent()) {
+            if (initiatedSiege.isPresent()) {
                 table.addRow(initiatedSiege.get().getBesieger().getGroup().getName(), initiatedSiege.get().getCity().getName());
             }
 

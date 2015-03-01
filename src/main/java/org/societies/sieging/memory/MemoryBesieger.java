@@ -2,10 +2,13 @@ package org.societies.sieging.memory;
 
 import com.google.common.collect.ImmutableSet;
 import gnu.trove.map.hash.THashMap;
+import gnu.trove.set.hash.THashSet;
 import org.societies.api.sieging.Besieger;
 import org.societies.api.sieging.City;
+import org.societies.api.sieging.Land;
 import org.societies.groups.group.Group;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,6 +18,7 @@ import java.util.UUID;
 class MemoryBesieger implements Besieger {
 
     private final THashMap<String, City> cities = new THashMap<String, City>();
+    private final Set<Land> lands = new THashSet<Land>();
     private final Group group;
 
     public MemoryBesieger(Group group) {
@@ -46,6 +50,21 @@ class MemoryBesieger implements Besieger {
     @Override
     public void removeCity(String name) {
         cities.remove(name);
+    }
+
+    @Override
+    public Set<Land> getUnallocatedLands() {
+        return lands;
+    }
+
+    @Override
+    public void addUnallocatedLand(Land land) {
+        lands.add(land);
+    }
+
+    @Override
+    public void addUnallocatedLands(Collection<Land> lands) {
+        this.lands.addAll(lands);
     }
 
     @Override

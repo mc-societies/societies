@@ -29,22 +29,33 @@ public class CityWriter extends AbstractMapper {
         this.cityStorage = cityStorage;
     }
 
-    public void writeCities(Besieger besieger) throws IOException {
+
+    public void writeBesieger(Besieger besieger) throws IOException {
         JsonGenerator generator = createGenerator(cityStorage.getFile(besieger.getUUID()));
-        writeCities(generator, besieger);
+        writeBesieger(generator, besieger);
 
         generator.flush();
         generator.close();
     }
 
-    public void writeCities(JsonGenerator writer, Besieger besieger) throws IOException {
-        writer.writeStartArray();
+    public void writeBesieger(JsonGenerator writer, Besieger besieger) throws IOException {
+        writer.writeStartObject();
 
+        writer.writeArrayFieldStart("cities");
+        writeCities(writer, besieger);
+        writer.writeEndArray();
+
+        writer.writeArrayFieldStart("unallocated");
+        writeLands(writer, besieger.getUnallocatedLands());
+        writer.writeEndArray();
+
+        writer.writeEndObject();
+    }
+
+    public void writeCities(JsonGenerator writer, Besieger besieger) throws IOException {
         for (City city : besieger.getCities()) {
             writeCity(writer, city);
         }
-
-        writer.writeEndArray();
     }
 
     public void writeCity(JsonGenerator writer, City city) throws IOException {
@@ -62,11 +73,7 @@ public class CityWriter extends AbstractMapper {
         writer.writeEndObject();
 
         writer.writeArrayFieldStart("lands");
-        for (Land land : city.getLands()) {
-            writer.writeStartObject();
-            writer.writeStringField("uuid", Base64.encodeToString(UUIDGen.toByteArray(land.getUUID()), false));
-            writer.writeEndObject();
-        }
+        writeLands(writer, city.getLands());
         writer.writeEndArray();
 
         writer.writeStringField("owner", Base64.encodeToString(UUIDGen.toByteArray(city.getOwner().getUUID()), false));
@@ -75,5 +82,13 @@ public class CityWriter extends AbstractMapper {
         writeSettings(city, writer, city.getSettings());
 
         writer.writeEndObject();
+    }
+
+    private void writeLands(JsonGenerator writer, Iterable<Land> lands) throws IOException {
+        for (Land land : lands) {
+            writer.writeStartObject();
+            writer.writeStringField("uuid", Base64.encodeToString(UUIDGen.toByteArray(land.getUUID()), false));
+            writer.writeEndObject();
+        }
     }
 }

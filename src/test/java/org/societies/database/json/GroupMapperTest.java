@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @RunWith(JukitoRunner.class)
-@Ignore //todo
+@Ignore //todo remove ignore
 public class GroupMapperTest {
 
     public static class Module extends JukitoModule {
