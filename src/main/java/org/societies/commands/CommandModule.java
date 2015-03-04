@@ -114,7 +114,8 @@ public class CommandModule extends AbstractModule {
             DisproveCommand.class,
 
             ReloadCommand.class,
-            BackupCommand.class
+            BackupCommand.class,
+            DebugCommand.class
     };
 
     private static final TypeLiteral<Executor<Sender>> EXECUTOR_TYPE = new TypeLiteral<Executor<Sender>>() {};

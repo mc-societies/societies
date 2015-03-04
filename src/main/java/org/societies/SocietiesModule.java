@@ -32,6 +32,8 @@ import org.societies.groups.member.Member;
 import org.societies.member.MemberModule;
 import org.societies.member.locale.LocaleModule;
 import org.societies.request.RequestModule;
+import org.societies.script.NaughtyScriptModule;
+import org.societies.script.ScriptModule;
 import org.societies.setting.SettingModule;
 import org.societies.sieging.SiegeModule;
 import org.societies.teleport.TeleportModule;
@@ -174,6 +176,12 @@ public class SocietiesModule extends AbstractServiceModule {
         newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
 
         install(new SiegeModule(config, dataDirectory));
+
+        if (config.getBoolean("enable-scripting")) {
+            install(new ScriptModule());
+        } else {
+            install(new NaughtyScriptModule());
+        }
     }
 
     @Singleton
