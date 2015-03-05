@@ -26,7 +26,10 @@ public class JavaScriptCompiler extends AbstractService {
         logger.info("Compiling JavaScript helpers...");
         scriptEngine.eval(
                 "function get(name) {return injector.getInstance(Java.type('java.lang.Class').forName(name));}" +
-                "function getMember(name) {return get('org.societies.groups.member.MemberProvider').getMember(name).orNull();}"
+                        "function getMember(name) {return members.getMember(name).orNull();}" +
+                        "function getMemberByUUID(uuid) {return members.getMember(new java.util.UUID(uuid));}" +
+                        "function getGroups(name) {return groups.getGroup(name).orNull();}" +
+                        "function getGroupByUUID(uuid) {return groups.getGroup(new java.util.UUID(uuid)).orNull();}"
         );
     }
 }
