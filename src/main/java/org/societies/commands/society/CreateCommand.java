@@ -89,7 +89,7 @@ public class CreateCommand implements Executor<Member> {
             return;
         }
 
-        if (sender.has(EconomyParticipant.class)) {
+        if (sender.has(EconomyParticipant.class) && price > 0) {
             if (!sender.get(EconomyParticipant.class).withdraw(price).transactionSuccess()) {
                 sender.send("economy.not-enough-money");
                 return;
