@@ -19,7 +19,6 @@ import com.googlecode.cqengine.resultset.ResultSet;
 import gnu.trove.map.hash.THashMap;
 import net.catharos.lib.core.util.CastSafe;
 import net.catharos.lib.core.uuid.UUIDStorage;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.shank.logging.InjectLogger;
 import org.shank.service.AbstractService;
@@ -34,8 +33,11 @@ import org.societies.groups.member.MemberProvider;
 import org.societies.groups.member.MemberPublisher;
 
 import javax.annotation.Nullable;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
@@ -223,8 +225,14 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
     public Member publish(final Member member) {
 
         try {
-            members.add(member);//beautify cast?
-            mapper.writeMember(member, memberStorage.getFile(member.getUUID()));
+            members.add(member);
+
+            File file = memberStorage.getFile(member.getUUID());
+            FileOutputStream stream = new FileOutputStream(file);
+            FileChannel channel = stream.getChannel();
+            channel.lock();
+
+            mapper.writeMember(member, new BufferedOutputStream(stream));
         } catch (Exception e) {
             logger.catching(e);
         }
@@ -237,8 +245,7 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
         members.remove(member);
 
         try {
-            File file = memberStorage.getFile(member.getUUID());
-            FileUtils.forceDelete(file);
+            memberStorage.delete(member.getUUID());
         } catch (IOException e) {
             e.printStackTrace();      //fixme
             return null;

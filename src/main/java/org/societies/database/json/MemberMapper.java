@@ -14,12 +14,12 @@ import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberFactory;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.setting.Setting;
-import org.societies.groups.setting.SettingException;
 import org.societies.groups.setting.SettingProvider;
 import org.societies.groups.setting.target.Target;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
@@ -77,7 +77,8 @@ public class MemberMapper extends AbstractMapper {
                     ranks.add(UUID.fromString(parser.getText()));
                 }
             } else if (fieldName.equals("settings")) {
-                readSettings(parser, settings);
+                //todo uuid can be null
+                readSettings(uuid, parser, settings);
             }
         }
 
@@ -90,18 +91,7 @@ public class MemberMapper extends AbstractMapper {
         member.setLastActive(lastActive);
         member.setGroup(group);
 
-        //beautify
-        for (Table.Cell<Setting, Target, String> cell : settings.cellSet()) {
-            Setting setting = cell.getRowKey();
-            Target target = cell.getColumnKey();
-            String value = cell.getValue();
-
-            try {
-                member.set(setting, target, setting.convertFromString(group, target, value));
-            } catch (SettingException ignored) {
-                logger.warn("Failed to convert setting %s! Subject: %s Target: %s Value: %s", setting, group, target, value);
-            }
-        }
+        Setting.set(settings, member, logger);
 
         if (group != null) {
             for (UUID rank : ranks) {
@@ -143,6 +133,12 @@ public class MemberMapper extends AbstractMapper {
         Member output = readMember(parser, groupSupplier);
         parser.close();
         return output;
+    }
+
+    public void writeMember(Member member, OutputStream stream) throws IOException {
+        JsonGenerator jg = createGenerator(stream);
+        writeMember(jg, member);
+        jg.close();
     }
 
     public void writeMember(Member member, File file) throws IOException {

@@ -13,6 +13,7 @@ import org.societies.groups.setting.target.Target;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.util.UUID;
 
@@ -42,11 +43,15 @@ public class AbstractMapper {
         return factory.createGenerator(file, JsonEncoding.UTF8);
     }
 
+    protected JsonGenerator createGenerator(OutputStream stream) throws IOException {
+        return factory.createGenerator(stream, JsonEncoding.UTF8);
+    }
+
     protected JsonGenerator createGenerator(Writer writer) throws IOException {
         return factory.createGenerator(writer);
     }
 
-    public void readSettings(JsonParser parser, Table<Setting, Target, String> settings) throws IOException {
+    public void readSettings(UUID subject, JsonParser parser, Table<Setting, Target, String> settings) throws IOException {
         validateArray(parser);
 
         while (parser.nextToken() != JsonToken.END_ARRAY) {
@@ -69,7 +74,11 @@ public class AbstractMapper {
                 }
             }
 
-            if (target == null || setting == null || value == null) {
+            if (target == null) {
+                target = new SimpleTarget(subject);
+            }
+
+            if (setting == null || value == null) {
                 continue;
             }
 
@@ -98,7 +107,10 @@ public class AbstractMapper {
             }
 
             generator.writeStartObject();
-            generator.writeStringField("target", target.getUUID().toString());
+            UUID targetUUID = target.getUUID();
+            if (!targetUUID.equals(subject.getUUID())) {
+                generator.writeStringField("target", targetUUID.toString());
+            }
             generator.writeStringField("setting", setting.getID());
             generator.writeStringField("value", result);
             generator.writeEndObject();

@@ -169,7 +169,8 @@ public class CityParser extends AbstractMapper {
             } else if (fieldName.equals("founded")) {
                 founded = new DateTime(parser.getLongValue());
             } else if (fieldName.equals("settings")) {
-                readSettings(parser, settings);
+                //todo uuid can be null
+                readSettings(uuid, parser, settings);
             }
         }
 

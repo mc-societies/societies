@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.googlecode.cqengine.query.Query;
 import net.catharos.lib.core.uuid.UUIDStorage;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.shank.logging.InjectLogger;
@@ -13,8 +12,11 @@ import org.societies.groups.group.GroupFactory;
 import org.societies.groups.group.GroupPublisher;
 
 import javax.inject.Provider;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.UUID;
 
 import static com.googlecode.cqengine.query.QueryFactory.contains;
@@ -67,7 +69,13 @@ final class JSONGroupPublisher implements GroupPublisher {
     private void publish0(Group group) {
         try {
             provider.groups.add(group);
-            mapper.writeGroup(group, uuidStorage.getFile(group.getUUID()));
+            File file = uuidStorage.getFile(group.getUUID());
+
+            FileOutputStream stream = new FileOutputStream(file);
+            FileChannel channel = stream.getChannel();
+            channel.lock();
+
+            mapper.writeGroup(group, new BufferedOutputStream(stream));
         } catch (Exception e) {
             logger.catching(e);
         }
@@ -89,8 +97,7 @@ final class JSONGroupPublisher implements GroupPublisher {
         provider.groups.remove(group);
 
         try {
-            File file = uuidStorage.getFile(group.getUUID());
-            FileUtils.forceDelete(file);
+            uuidStorage.delete(group.getUUID());
         } catch (IOException e) {
             e.printStackTrace();  //fixme
             return null;

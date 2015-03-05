@@ -22,6 +22,7 @@ import org.societies.groups.setting.target.Target;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.List;
@@ -78,7 +79,8 @@ public class GroupMapper extends AbstractMapper {
             } else if (groupField.equals("created")) {
                 builder.setCreated(new DateTime(parser.getLongValue()));
             } else if (groupField.equals("settings")) {
-                readSettings(parser, builder.getSettings());
+                //todo builder.getUUID() can be null
+                readSettings(builder.getUUID(), parser, builder.getSettings());
             } else if (groupField.equals("ranks")) {
                 validateArray(parser);
 
@@ -156,7 +158,8 @@ public class GroupMapper extends AbstractMapper {
             } else if (fieldName.equals("priority")) {
                 priority = parser.getIntValue();
             } else if (fieldName.equals("settings")) {
-                readSettings(parser, settings);
+                //todo uuid can be null
+                readSettings(uuid, parser, settings);
             }
         }
 
@@ -203,6 +206,13 @@ public class GroupMapper extends AbstractMapper {
         Set<Group> output = readGroups(parser);
         parser.close();
         return output;
+    }
+
+    public void writeGroup(Group group, OutputStream stream) throws IOException {
+        JsonGenerator jg = createGenerator(stream);
+        writeGroup(jg, group);
+
+        jg.close();
     }
 
     public void writeGroup(Group group, File file) throws IOException {
