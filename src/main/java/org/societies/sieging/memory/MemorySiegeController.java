@@ -14,6 +14,8 @@ import com.googlecode.cqengine.attribute.Attribute;
 import com.googlecode.cqengine.attribute.SimpleAttribute;
 import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.resultset.ResultSet;
+import net.catharos.lib.core.uuid.UUIDGen;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.societies.api.sieging.*;
@@ -21,6 +23,7 @@ import org.societies.bridge.Location;
 import org.societies.sieging.memory.index.KDTreeIndex;
 import org.societies.sieging.wager.EmptyWager;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
@@ -77,14 +80,20 @@ class MemorySiegeController implements SiegeController {
     private final Provider<UUID> uuidProvider;
     private final CityProvider cityProvider;
     private final Duration startDuration;
+    private final int startLands;
+    private final Logger logger;
 
 
     @Inject
     MemorySiegeController(Provider<UUID> uuidProvider, CityProvider cityProvider,
-                          @Named("sieging.start-duration") Duration startDuration) {
+                          @Named("sieging.start-duration") Duration startDuration,
+                          @Named("city.start-lands") int startLands,
+                          Logger logger) {
         this.uuidProvider = uuidProvider;
         this.cityProvider = cityProvider;
         this.startDuration = startDuration;
+        this.startLands = startLands;
+        this.logger = logger;
     }
 
     @Override
@@ -162,43 +171,57 @@ class MemorySiegeController implements SiegeController {
 
             wager.fulfill(owner.getGroup());
 
-            removeSiege(siege);
+            cancel(siege);
         } else if (attacker.equals(winner)) {
             //City was conquered -> besieger get wager back and city
 
             wager.fulfill(attacker.getGroup());
             owner.removeCity(city);
             attacker.addCity(city);
+            city.setOwner(attacker);
 
-            //fixme
-            owner.addUnallocatedLands(city.getLands());
+            Collection<Land> lands = city.getLands();
+
+            int toRemove = lands.size();
+
+            owner.addUnallocatedLands(lands);
             city.clearLands();
 
-            city.setOwner(attacker);
+            int removed = 0;
 
             for (City ownerCity : owner.getCities()) {
                 for (Land land : ownerCity.getLands()) {
-                    if (land.getOrigin().equals(city)) {
-                        //remove land
+                    if (land.getOrigin().equals(city.getUUID())) {
+                        removed++;
+                        ownerCity.removeLand(land.getUUID());
                     }
                 }
             }
 
             for (Land land : owner.getUnallocatedLands()) {
-                if (land.getOrigin().equals(city)) {
-                    //remove land
+                if (land.getOrigin().equals(city.getUUID())) {
+                    removed++;
+                    owner.removeUnallocatedLand(land);
                 }
             }
 
+            if (toRemove != removed) {
+                logger.warn("Failed to remove lands for " + owner.getGroup().getName());
+            }
 
-            removeSiege(siege);
+
+            for (int i = 0; i < startLands; i++) {
+                city.addLand(new SimpleLand(UUIDGen.generateType1UUID(), city.getUUID()));
+            }
+
+            cancel(siege);
         } else {
             throw new IllegalArgumentException("Winner can't be a winner!");
         }
     }
 
-
-    private void removeSiege(Siege siege) {
+    @Override
+    public void cancel(Siege siege) {
         sieges.remove(siege);
     }
 }

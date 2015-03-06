@@ -83,9 +83,9 @@ public class CityParser extends AbstractMapper {
             parser.nextToken();
 
             if (fieldName.equals("unallocated")) {
-                Set<UUID> uuids = parseLands(parser);
-                for (UUID uuid : uuids) {
-                    empty.addUnallocatedLand(new SpareLand(uuid));
+                Set<Land> lands = parseLands(parser);
+                for (Land land : lands) {
+                    empty.addUnallocatedLand(land);
                 }
             } else if (fieldName.equals("cities")) {
                 cites = readCities(parser, empty);
@@ -124,7 +124,7 @@ public class CityParser extends AbstractMapper {
         DateTime founded = null;
         Table<Setting, Target, String> settings = HashBasedTable.create();
 
-        Set<UUID> lands = Collections.emptySet();
+        Set<Land> lands = Collections.emptySet();
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String fieldName = parser.getCurrentName();
@@ -178,15 +178,15 @@ public class CityParser extends AbstractMapper {
 
         Setting.set(settings, city, logger);
 
-        for (UUID land : lands) {
-            city.addLand(new SimpleLand(land, city));
+        for (Land land : lands) {
+            city.addLand(land);
         }
 
         return city;
     }
 
-    private Set<UUID> parseLands(JsonParser parser) throws IOException {
-        THashSet<UUID> lands = new THashSet<UUID>();
+    private Set<Land> parseLands(JsonParser parser) throws IOException {
+        THashSet<Land> lands = new THashSet<Land>();
 
         String fieldName;
         validateArray(parser);
@@ -199,11 +199,15 @@ public class CityParser extends AbstractMapper {
 
                 parser.nextToken();
 
-                if (fieldName.equals("uuid")) {
-                    UUID land = UUIDGen.toUUID(Base64.decode(parser.getText()));
+                UUID uuid = null, origin = null;
 
-                    lands.add(land);
+                if (fieldName.equals("uuid")) {
+                    uuid = UUIDGen.toUUID(Base64.decode(parser.getText()));
+                } else if (fieldName.equals("origin")) {
+                    origin = UUIDGen.toUUID(Base64.decode(parser.getText()));
                 }
+
+                lands.add(new SimpleLand(uuid, origin));
             }
         }
 

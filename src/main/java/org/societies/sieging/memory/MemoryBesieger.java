@@ -63,6 +63,11 @@ class MemoryBesieger implements Besieger {
     }
 
     @Override
+    public void removeUnallocatedLand(Land land) {
+        lands.remove(land);
+    }
+
+    @Override
     public void addUnallocatedLands(Collection<Land> lands) {
         this.lands.addAll(lands);
     }

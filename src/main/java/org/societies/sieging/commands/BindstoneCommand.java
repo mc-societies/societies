@@ -12,6 +12,7 @@ import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
+import net.catharos.lib.core.uuid.UUIDGen;
 import org.societies.api.sieging.*;
 import org.societies.bridge.Location;
 import org.societies.bridge.Material;
@@ -22,7 +23,6 @@ import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Represents a BindstoneCommand
@@ -50,12 +50,16 @@ public class BindstoneCommand {
         private final CityPublisher cityPublisher;
 
         private final double minDistance;
+        private final int startLands;
 
         @Inject
-        public CreateCommand(CityProvider cityProvider, CityPublisher cityPublisher, @Named("city.min-distance") double minDistance) {
+        public CreateCommand(CityProvider cityProvider, CityPublisher cityPublisher,
+                             @Named("city.min-distance") double minDistance,
+                             @Named("city.start-lands") int startLands) {
             this.cityProvider = cityProvider;
             this.cityPublisher = cityPublisher;
             this.minDistance = minDistance;
+            this.startLands = startLands;
         }
 
         @Override
@@ -82,11 +86,10 @@ public class BindstoneCommand {
                 }
             }
 
-
             City published = cityPublisher.publish(name, location, besieger);
 
-            for (int i = 0; i < 5; i++) {
-                published.addLand(new SimpleLand(UUID.randomUUID(), published));
+            for (int i = 0; i < startLands; i++) {
+                published.addLand(new SimpleLand(UUIDGen.generateType1UUID(), published.getUUID()));
             }
 
             sender.send("city.created", name);
