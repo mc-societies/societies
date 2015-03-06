@@ -1,5 +1,6 @@
 package org.societies.sieging.memory;
 
+import algs.model.twod.TwoDPoint;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -17,6 +18,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.societies.api.sieging.*;
 import org.societies.bridge.Location;
+import org.societies.sieging.memory.index.KDTreeIndex;
 import org.societies.sieging.wager.EmptyWager;
 
 import java.util.Collections;
@@ -24,6 +26,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static com.googlecode.cqengine.query.QueryFactory.equal;
+import static org.societies.sieging.memory.index.Nearest.nearest;
 
 /**
  * Represents a MemorySiegeController
@@ -48,9 +51,17 @@ class MemorySiegeController implements SiegeController {
         public City getValue(Siege siege) { return siege.getCity(); }
     };
 
-    public static final Attribute<Siege, Location> SIEGE_INITIATED_LOCATION = new SimpleAttribute<Siege, Location>("siege_city") {
+    public static final Attribute<Siege, Location> SIEGE_INITIATED_LOCATION_HASH = new SimpleAttribute<Siege, Location>("siege_initiated") {
         @Override
         public Location getValue(Siege siege) { return siege.getLocationInitiated(); }
+    };
+
+    public static final SimpleAttribute<Siege, TwoDPoint> SIEGE_INITIATED_LOCATION = new SimpleAttribute<Siege, TwoDPoint>("siege_") {
+        @Override
+        public TwoDPoint getValue(Siege siege) {
+            Location location = siege.getLocationInitiated();
+            return new TwoDPoint(location.getX(), location.getZ());
+        }
     };
 
 
@@ -59,7 +70,8 @@ class MemorySiegeController implements SiegeController {
 
         sieges.addIndex(HashIndex.onAttribute(SIEGE_BESIEGER));
         sieges.addIndex(HashIndex.onAttribute(SIEGE_CITY));
-        sieges.addIndex(HashIndex.onAttribute(SIEGE_INITIATED_LOCATION));
+        sieges.addIndex(HashIndex.onAttribute(SIEGE_INITIATED_LOCATION_HASH));
+        sieges.addIndex(KDTreeIndex.onAttribute(2, SIEGE_INITIATED_LOCATION));
     }
 
     private final Provider<UUID> uuidProvider;
@@ -98,7 +110,14 @@ class MemorySiegeController implements SiegeController {
 
     @Override
     public Optional<Siege> getSiege(Location location) {
-        ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_INITIATED_LOCATION, location));
+        ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_INITIATED_LOCATION_HASH, location));
+        return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
+    }
+
+    @Override
+    public Optional<Siege> getSiegeByInitiatedLocation(Location location) {
+        ResultSet<Siege> retrieve = sieges.retrieve(nearest(SIEGE_INITIATED_LOCATION, new TwoDPoint(location.getX(), location.getZ())));
+
         return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
     }
 
@@ -172,13 +191,11 @@ class MemorySiegeController implements SiegeController {
             }
 
 
-
             removeSiege(siege);
         } else {
             throw new IllegalArgumentException("Winner can't be a winner!");
         }
     }
-
 
 
     private void removeSiege(Siege siege) {

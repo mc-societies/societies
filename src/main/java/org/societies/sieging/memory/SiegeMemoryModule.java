@@ -7,8 +7,8 @@ import org.shank.service.AbstractServiceModule;
 import org.societies.api.sieging.*;
 import org.societies.groups.ExtensionRoller;
 import org.societies.groups.group.Group;
-import org.societies.sieging.DefaultBesiegerProvider;
-import org.societies.sieging.DefaultBesiegerPublisher;
+import org.societies.api.sieging.ForwardingBesiegerProvider;
+import org.societies.api.sieging.ForwardingBesiegerPublisher;
 
 /**
  * Represents a SiegeMemoryModule
@@ -16,8 +16,8 @@ import org.societies.sieging.DefaultBesiegerPublisher;
 public class SiegeMemoryModule extends AbstractServiceModule {
     @Override
     protected void configure() {
-        bind(BesiegerProvider.class).to(DefaultBesiegerProvider.class);
-        bind(BesiegerPublisher.class).to(DefaultBesiegerPublisher.class);
+        bind(BesiegerProvider.class).to(ForwardingBesiegerProvider.class);
+        bind(BesiegerPublisher.class).to(ForwardingBesiegerPublisher.class);
         bind(SiegeController.class).to(MemorySiegeController.class);
 
 
