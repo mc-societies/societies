@@ -15,6 +15,7 @@ import org.shank.service.lifecycle.LifecycleContext;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipInputStream;
@@ -48,9 +49,32 @@ class DictionaryService extends AbstractService {
         if (localTranslations.exists()) {
             in = new FileInputStream(localTranslations);
         } else {
-            in = translationsURL.openStream();
+            try {
+                in = translationsURL.openStream();
+            } catch (IOException e) {
+                File cached = getCachedTranslations();
+
+                if (cached.exists()) {
+                    logger.info("Loading cached translations!");
+                    in = new FileInputStream(cached);
+                } else {
+                    logger.warn("Failed to download translations!");
+                    return;
+                }
+            }
         }
 
+        in = new ByteArrayInputStream(ByteStreams.toByteArray(in));
+        ZipInputStream zip = new ZipInputStream(in);
+
+        final List<String> loaded = loadZip(zip);
+
+        logger.info("Loaded the following languages: " + loaded.toString());
+
+        zip.close();
+    }
+
+    public List<String> loadZip(InputStream in) throws IOException {
         in = new ByteArrayInputStream(ByteStreams.toByteArray(in));
 
         ZipInputStream zip = new ZipInputStream(in);
@@ -63,6 +87,7 @@ class DictionaryService extends AbstractService {
                 if (!name.endsWith("general.properties")) {
                     return;
                 }
+
                 try {
                     stream = new ByteArrayInputStream(ByteStreams.toByteArray(stream));
 
@@ -90,18 +115,22 @@ class DictionaryService extends AbstractService {
                 } catch (IOException e) {
                     logger.catching(e);
                 }
-
             }
         });
 
-        File cache = new File(directory, ".cache-translations.zip");
         in.reset();
 
-        IOUtils.copy(in, FileUtils.openOutputStream(cache));
+        if (in.available() > 0) {
+            FileOutputStream cached = FileUtils.openOutputStream(getCachedTranslations());
+            IOUtils.copy(in, cached);
+            cached.close();
+        }
+        
+        return loaded;
+    }
 
-        logger.info("Loaded the following languages: " + loaded.toString());
-
-        zip.close();
+    private File getCachedTranslations() {
+        return new File(directory, ".cache-translations.zip");
     }
 
 }

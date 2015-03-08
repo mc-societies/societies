@@ -54,6 +54,8 @@ public class ConfigModule extends AbstractConfigModule {
         bindNamed("server-identity", "server-identity", short.class);
 
         bindNamed("translate-identifiers", "translate-identifiers", boolean.class);
+
+        bindNamed("city.enable", "city.enable", boolean.class);
     }
 
 }

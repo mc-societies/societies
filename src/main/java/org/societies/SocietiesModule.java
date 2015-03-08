@@ -8,10 +8,9 @@ import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
-import com.typesafe.config.*;
+import com.typesafe.config.Config;
 import net.catharos.lib.core.i18n.Dictionary;
 import net.catharos.lib.core.uuid.TimeUUIDProvider;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.LocaleUtils;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.format.DateTimeFormat;
@@ -39,7 +38,6 @@ import org.societies.sieging.SiegeModule;
 import org.societies.teleport.TeleportModule;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
@@ -57,10 +55,12 @@ public class SocietiesModule extends AbstractServiceModule {
     private final Logger logger;
     public static final Key<ListeningExecutorService> WORKER_EXECUTOR = Key
             .get(ListeningExecutorService.class, Names.named("worker-executor"));
+    private final Config config;
 
-    public SocietiesModule(File dataDirectory, Logger logger) {
+    public SocietiesModule(File dataDirectory, Logger logger, Config config) {
         this.dataDirectory = dataDirectory;
         this.logger = logger;
+        this.config = config;
     }
 
     @Override
@@ -72,43 +72,6 @@ public class SocietiesModule extends AbstractServiceModule {
                 e.printStackTrace(System.out);
             }
         });
-
-
-//        binder().disableCircularProxies();
-
-        ConfigParseOptions parseOptions = ConfigParseOptions.defaults()
-                .setAllowMissing(false)
-                .setSyntax(ConfigSyntax.CONF);
-
-        Config defaultConfig = ConfigFactory
-                .parseResources(SocietiesModule.class.getClassLoader(), "config.conf", parseOptions);
-
-        File file = new File(dataDirectory, "config.conf");
-
-        Config config;
-        if (file.exists()) {
-            config = ConfigFactory.parseFile(file, parseOptions).withFallback(defaultConfig);
-        } else {
-            config = ConfigFactory.empty().withFallback(defaultConfig);
-        }
-
-
-        ConfigRenderOptions renderOptions = ConfigRenderOptions
-                .defaults()
-                .setOriginComments(false)
-                .setJson(false)
-                .setFormatted(true);
-
-        String rendered = config.root().render(renderOptions);
-
-
-        config = config.resolve();
-
-        try {
-            FileUtils.writeStringToFile(file, rendered);
-        } catch (IOException e) {
-            logger.catching(e);
-        }
 
         bind(Config.class).toInstance(config);
 
@@ -136,6 +99,8 @@ public class SocietiesModule extends AbstractServiceModule {
 
         // Societies
         install(new SocietyModule(config));
+
+        bindNamed("lifecycle-info", boolean.class).toInstance(false);
 
         // Dictionary
         install(new DictionaryModule(dataDirectory));
@@ -175,7 +140,9 @@ public class SocietiesModule extends AbstractServiceModule {
         newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Member>>() {});
         newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
 
-        install(new SiegeModule(config, dataDirectory));
+        if (config.getBoolean("city.enable")) {
+            install(new SiegeModule(config, dataDirectory));
+        }
 
         if (config.getBoolean("enable-scripting")) {
             install(new ScriptModule());

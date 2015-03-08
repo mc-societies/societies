@@ -18,9 +18,9 @@ class SiegingConfigModule extends AbstractConfigModule {
 
     @Override
     protected void configure() {
-        bindNamed("sieging.min-distance", "sieging.min-distance", double.class);
+        bindNamed("sieging.min-distance", "city.sieging.min-distance", double.class);
         bindNamed("sieging.start-duration", Duration.class).toInstance(new Duration(config
-                .getDuration("sieging.start-duration", TimeUnit.MILLISECONDS)));
+                .getDuration("city.sieging.start-duration", TimeUnit.MILLISECONDS)));
 
         bindNamed("city.min-distance", "city.min-distance", double.class);
         bindNamed("city.start-lands", "city.start-lands", int.class);
