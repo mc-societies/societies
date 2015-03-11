@@ -14,6 +14,7 @@ import org.shank.service.lifecycle.LifecycleContext;
 
 import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,32 +52,44 @@ class DictionaryService extends AbstractService {
         } else {
             try {
                 in = translationsURL.openStream();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
                 File cached = getCachedTranslations();
 
                 if (cached.exists()) {
                     logger.info("Loading cached translations!");
                     in = new FileInputStream(cached);
                 } else {
-                    logger.warn("Failed to download translations!");
-                    return;
+                    try {
+                        logger.info("Loading translations from crowdin!");
+                        URLConnection conn = new URL("http://crowdin.com/download/project/societies.zip").openConnection();
+
+                        String redirect = conn.getHeaderField("Location");
+
+                        if (redirect != null){
+                            conn = new URL(redirect).openConnection();
+                        }
+
+                        in = conn.getInputStream();
+                    } catch (IOException e) {
+                        logger.warn("Failed to download translations!");
+                        return;
+                    }
                 }
             }
         }
 
-        in = new ByteArrayInputStream(ByteStreams.toByteArray(in));
-        ZipInputStream zip = new ZipInputStream(in);
 
-        final List<String> loaded = loadZip(zip);
+
+        final List<String> loaded = loadZip(in);
 
         logger.info("Loaded the following languages: " + loaded.toString());
 
-        zip.close();
+        in.close();
     }
 
     public List<String> loadZip(InputStream in) throws IOException {
-        in = new ByteArrayInputStream(ByteStreams.toByteArray(in));
-
+        byte[] buffer = ByteStreams.toByteArray(in);
+        in = new ByteArrayInputStream(buffer);
         ZipInputStream zip = new ZipInputStream(in);
 
         final ArrayList<String> loaded = new ArrayList<String>();
@@ -120,12 +133,12 @@ class DictionaryService extends AbstractService {
 
         in.reset();
 
-        if (in.available() > 0) {
+//        if (in.available() > 0) {
             FileOutputStream cached = FileUtils.openOutputStream(getCachedTranslations());
             IOUtils.copy(in, cached);
             cached.close();
-        }
-        
+//        }
+
         return loaded;
     }
 
