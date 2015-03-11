@@ -32,6 +32,8 @@ public class FormatModule extends AbstractModule {
         bindNamedInstance("column-spacing", double.class, 24.0D);
         bindNamedInstance("max-line-length", double.class, 318.0D);
 
+        bindNamed("default-color", String.class).toInstance(ChatColor.GRAY.toString());
+
         // Paginator
         bindNamedInstance("table-header", String.class, "");
         bindNamedInstance("padding", int.class, 2);

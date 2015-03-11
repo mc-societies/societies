@@ -12,16 +12,18 @@ import java.util.Locale;
  */
 public class StringDictionary extends DefaultDictionary<String> {
 
+    private final String defaultColor;
+
     @Inject
-    public StringDictionary(@Named("default-locale") Locale defaultLocale) {
+    public StringDictionary(@Named("default-locale") Locale defaultLocale, @Named("default-color") String defaultColor) {
         super(defaultLocale);
+        this.defaultColor = defaultColor;
     }
 
     @Override
     public String getTranslation(String key, String locale, Object... args) {
         translateArguments(args);
-        ChatColor.argumentColorReset(args);
-        return super.getTranslation(key, locale, args);
+        return defaultColor + super.getTranslation(key, locale, args);
     }
 
     private void translateArguments(Object... args) {
@@ -33,7 +35,7 @@ public class StringDictionary extends DefaultDictionary<String> {
                     args[i] = getTranslation(((String) arg).substring(1));
                 }
 
-                args[i] = args[i] + ChatColor.RESET.toString();
+                args[i] = ChatColor.RESET.toString() + args[i] + defaultColor;
             }
         }
     }
