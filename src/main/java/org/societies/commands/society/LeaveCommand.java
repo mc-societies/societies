@@ -47,6 +47,6 @@ public class LeaveCommand implements Executor<Member> {
             return;
         }
 
-        sender.send("society.not.found");
+        sender.send("society.not-found");
     }
 }
