@@ -69,7 +69,7 @@ public class CoordsCommand implements Executor<Member> {
                     "X: " + memberLocation.getRoundedX()
                             + " Y: " + memberLocation.getRoundedY()
                             + " Z: " + memberLocation.getRoundedZ(),
-                    memberLocation.getWorld()
+                    memberLocation.getWorld().getName()
             );
         }
 

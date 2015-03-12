@@ -27,7 +27,7 @@ import org.societies.request.ChoiceRequestMessenger;
 
 import javax.annotation.Nullable;
 import javax.inject.Provider;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
@@ -202,7 +202,7 @@ public class RivalsCommand extends ListCommand {
 
         @Inject
         public AddCommand(@ConfigSetting("relations.min-size-to-set-rival") int minSize,
-                          @ConfigSetting("relations.unrivable-societies") ArrayList unrivable,
+                          @ConfigSetting("relations.unrivable-societies") List<String> unrivable,
                           @ConfigSetting("relations.rival-limit-percent") int rivalsLimit,
                           GroupProvider groupProvider,
                           RelationFactory factory) {

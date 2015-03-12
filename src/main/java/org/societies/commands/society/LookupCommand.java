@@ -51,10 +51,10 @@ public class LookupCommand implements Executor<Sender> {
         Period inactive = new Interval(target.getLastActive(), DateTime.now()).toPeriod();
 
         sender.send("lookup.name", target.getName());
-        if (group != null) {
-            sender.send("lookup.society", group.getName());
-            sender.send("lookup.society-tag", group.getTag());
-        }
+
+        sender.send("lookup.society", group == null ? ":none" : group.getName());
+        sender.send("lookup.society-tag", group == null ? ":none" : group.getTag());
+
         Rank defaultRank = target.getRank();
         if (defaultRank != null) {
             sender.send("lookup.rank", defaultRank.getName());

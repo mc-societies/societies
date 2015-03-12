@@ -24,6 +24,6 @@ public class RivalriesCommand extends AbstractRelationsCommand {
 
     @Override
     protected Relation.Type getType() {
-        return Relation.Type.ALLIED;
+        return Relation.Type.RIVALED;
     }
 }

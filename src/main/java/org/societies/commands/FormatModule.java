@@ -35,7 +35,7 @@ public class FormatModule extends AbstractModule {
         bindNamed("default-color", String.class).toInstance(ChatColor.GRAY.toString());
 
         // Paginator
-        bindNamedInstance("table-header", String.class, "");
+        bindNamedInstance("table-header", String.class, ChatColor.GRAY + "  Page {0} of {1}");
         bindNamedInstance("padding", int.class, 2);
         bind(Paginator.class).to(DefaultPaginator.class);
 

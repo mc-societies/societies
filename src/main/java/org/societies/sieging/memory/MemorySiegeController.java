@@ -39,10 +39,10 @@ class MemorySiegeController implements SiegeController {
 
     IndexedCollection<Siege> sieges = CQEngine.newInstance();
 
-    public static final Attribute<Siege, UUID> SIEGE_UUID = new SimpleAttribute<Siege, UUID>("siege_uuid") {
-        @Override
-        public UUID getValue(Siege siege) { return siege.getUUID(); }
-    };
+//    public static final Attribute<Siege, UUID> SIEGE_UUID = new SimpleAttribute<Siege, UUID>("siege_uuid") {
+//        @Override
+//        public UUID getValue(Siege siege) { return siege.getUUID(); }
+//    };
 
     public static final Attribute<Siege, Besieger> SIEGE_BESIEGER = new SimpleAttribute<Siege, Besieger>("siege_besieger") {
         @Override
@@ -69,7 +69,7 @@ class MemorySiegeController implements SiegeController {
 
 
     {
-        sieges.addIndex(HashIndex.onAttribute(SIEGE_UUID));
+//        sieges.addIndex(HashIndex.onAttribute(SIEGE_UUID));
 
         sieges.addIndex(HashIndex.onAttribute(SIEGE_BESIEGER));
         sieges.addIndex(HashIndex.onAttribute(SIEGE_CITY));
@@ -111,27 +111,27 @@ class MemorySiegeController implements SiegeController {
         return siege;
     }
 
-    @Override
-    public Optional<Siege> getSiege(UUID uuid) {
-        ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_UUID, uuid));
-        return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
-    }
+//    @Override
+//    public Optional<Siege> getSiege(UUID uuid) {
+//        ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_UUID, uuid));
+//        return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
+//    }
 
     @Override
-    public Optional<Siege> getSiege(Location location) {
+    public Optional<Siege> getSiegeInitiatedAt(Location location) {
         ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_INITIATED_LOCATION_HASH, location));
         return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override
-    public Optional<Siege> getSiegeByInitiatedLocation(Location location) {
+    public Optional<Siege> getSiegeInitiatedNear(Location location) {
         ResultSet<Siege> retrieve = sieges.retrieve(nearest(SIEGE_INITIATED_LOCATION, new TwoDPoint(location.getX(), location.getZ())));
 
         return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
     }
 
     @Override
-    public Set<Siege> getSieges(Location location) {
+    public Set<Siege> getSiegeNear(Location location) {
         Optional<City> city = cityProvider.getCity(location);
 
         if (!city.isPresent()) {

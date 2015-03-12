@@ -80,7 +80,7 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
                 relationsString.delete(length - 3, length);
             }
 
-            table.addRow(group.getName(), relationsString);
+            table.addRow(group.getTag(), relationsString);
         }
 
         sender.send(table.render(ctx.getName(), page));

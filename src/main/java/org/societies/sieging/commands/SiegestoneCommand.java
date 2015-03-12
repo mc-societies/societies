@@ -18,8 +18,11 @@ import org.societies.api.sieging.SiegeController;
 import org.societies.bridge.Location;
 import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
+import org.societies.groups.Relation;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
+
+import java.util.Set;
 
 /**
  * Represents a SiegeCommand
@@ -58,6 +61,13 @@ public class SiegestoneCommand {
                 return;
             }
 
+            Group targetGroup = target.getOwner().getGroup();
+
+            if (group.getRelation(targetGroup).getType() != Relation.Type.RIVALED) {
+                sender.send("siege.no-rivals", targetGroup.getName());
+                return;
+            }
+
             Besieger besieger = group.get(Besieger.class);
 
             if (siegeController.getSiegeByAttacker(besieger).isPresent()) {
@@ -73,13 +83,13 @@ public class SiegestoneCommand {
             Player player = sender.get(Player.class);
             Location location = player.getLocation().floor();
 
-            Siege siege = siegeController.start(besieger, target, location);
-
             double distance = target.distance(location);
-            if (distance < minSiegeDistance) {
+            if (distance < minSiegeDistance) { //todo max distance
                 sender.send("siege.siegestone-too-close", distance, minSiegeDistance);
                 return;
             }
+
+            Siege siege = siegeController.start(besieger, target, location);
 
             boolean applied = siege.getWager().apply(besieger.getGroup());
 
@@ -90,7 +100,7 @@ public class SiegestoneCommand {
             }
 
             sender.send("siege.started", group.getName(), target.getName());
-            target.getOwner().getGroup().send("siege.started", group.getName(), target.getName());
+            targetGroup.send("siege.started", group.getName(), target.getName());
         }
     }
 
@@ -126,18 +136,27 @@ public class SiegestoneCommand {
 
             Besieger besieger = group.get(Besieger.class);
 
+            Optional<Siege> initiatedSiege = siegeController.getSiegeByAttacker(besieger);
+
+            Set<City> cities = besieger.getCities();
+
+            if (cities.isEmpty() && !initiatedSiege.isPresent()) {
+                sender.send("siege.no-sieges");
+                return;
+            }
+
             Table table = tableProvider.get();
 
             table.addForwardingRow(rowFactory.translated(true, "besieger", "city"));
 
-            Optional<Siege> initiatedSiege = siegeController.getSiegeByAttacker(besieger);
 
             if (initiatedSiege.isPresent()) {
                 table.addRow(initiatedSiege.get().getBesieger().getGroup().getName(), initiatedSiege.get().getCity().getName());
             }
 
 
-            for (City city : besieger.getCities()) {
+
+            for (City city : cities) {
                 for (Siege siege : siegeController.getSieges(city)) {
                     table.addRow(siege.getBesieger().getGroup().getName(), siege.getCity().getName());
                 }

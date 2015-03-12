@@ -43,7 +43,7 @@ public class BindstoneCommand {
     @Sender(Member.class)
     public static class CreateCommand implements Executor<Member> {
 
-        @Argument
+        @Argument(name = "argument.city.name")
         String name;
 
         private final CityProvider cityProvider;
@@ -102,7 +102,7 @@ public class BindstoneCommand {
     @Sender(Member.class)
     public static class RemoveCommand implements Executor<Member> {
 
-        @Argument
+        @Argument(name = "argument.target.city")
         String name;
 
         @Override
@@ -266,7 +266,7 @@ public class BindstoneCommand {
 
             City city = optional.get();
             sender.send("cities.info", city.getName());
-            sender.send("cities.lands", city.getLands());
+            sender.send("cities.lands", city.getLands().size());
             sender.send("cities.radius", city.getRadius());
             sender.send("cities.owner", city.getOwner().getGroup().getName());
         }
