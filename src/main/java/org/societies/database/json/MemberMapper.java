@@ -7,6 +7,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.inject.Inject;
+import com.migcomponents.migbase64.Base64;
+import net.catharos.lib.core.uuid.UUIDGen;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.societies.groups.group.Group;
@@ -54,7 +56,7 @@ public class MemberMapper extends AbstractMapper {
 
             parser.nextToken();
             if (fieldName.equals("uuid")) {
-                uuid = UUID.fromString(parser.getText());
+                uuid = UUIDGen.toUUID(Base64.decode(parser.getText()));
             } else if (fieldName.equals("created")) {
                 created = new DateTime(parser.getLongValue());
             } else if (fieldName.equals("society")) {
@@ -63,7 +65,7 @@ public class MemberMapper extends AbstractMapper {
                     continue;
                 }
 
-                group = groupSupplier.apply(UUID.fromString(parser.getText()));
+                group = groupSupplier.apply(UUIDGen.toUUID(Base64.decode(parser.getText())));
 
                 if (group == null) {
                     throw new RuntimeException("Could not find group with the uuid " + parser.getText());
@@ -106,7 +108,7 @@ public class MemberMapper extends AbstractMapper {
     public void writeMember(JsonGenerator generator, Member member) throws IOException {
         generator.writeStartObject();
 
-        generator.writeStringField("uuid", member.getUUID().toString());
+        generator.writeStringField("uuid", Base64.encodeToString(UUIDGen.toByteArray(member.getUUID()), false));
         generator.writeNumberField("created", member.getCreated().getMillis());
 
         Group group = member.getGroup();
@@ -120,7 +122,7 @@ public class MemberMapper extends AbstractMapper {
         if (!ranks.isEmpty()) {
             generator.writeArrayFieldStart("ranks");
             for (Rank rank : ranks) {
-                generator.writeString(rank.getUUID().toString());
+                generator.writeString(Base64.encodeToString(UUIDGen.toByteArray(rank.getUUID()), false));
             }
             generator.writeEndArray();
         }

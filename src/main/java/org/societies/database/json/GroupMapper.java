@@ -8,7 +8,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.migcomponents.migbase64.Base64;
 import gnu.trove.set.hash.THashSet;
+import net.catharos.lib.core.uuid.UUIDGen;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.societies.groups.group.Group;
@@ -71,7 +73,7 @@ public class GroupMapper extends AbstractMapper {
 
             parser.nextToken();
             if (groupField.equals("uuid")) {
-                builder.setUUID(UUID.fromString(parser.getText()));
+                builder.setUUID(UUIDGen.toUUID(Base64.decode(parser.getText())));
             } else if (groupField.equals("name")) {
                 builder.setName(parser.getText());
             } else if (groupField.equals("tag")) {
@@ -108,7 +110,7 @@ public class GroupMapper extends AbstractMapper {
     public void writeGroup(JsonGenerator generator, Group group) throws IOException {
         generator.writeStartObject();
 
-        generator.writeStringField("uuid", group.getUUID().toString());
+        generator.writeStringField("uuid", Base64.encodeToString(UUIDGen.toByteArray(group.getUUID()), false));
         generator.writeStringField("name", group.getName());
         generator.writeStringField("tag", group.getTag());
         generator.writeNumberField("created", group.getCreated().getMillis());
@@ -152,7 +154,7 @@ public class GroupMapper extends AbstractMapper {
 
             parser.nextToken();
             if (fieldName.equals("uuid")) {
-                uuid = UUID.fromString(parser.getText());
+                uuid = UUIDGen.toUUID(Base64.decode(parser.getText()));
             } else if (fieldName.equals("name")) {
                 name = parser.getText();
             } else if (fieldName.equals("priority")) {
@@ -179,7 +181,7 @@ public class GroupMapper extends AbstractMapper {
 
         generator.writeStartObject();
 
-        generator.writeStringField("uuid", rank.getUUID().toString());
+        generator.writeStringField("uuid", Base64.encodeToString(UUIDGen.toByteArray(rank.getUUID()), false));
         generator.writeStringField("name", rank.getName());
         writeSettings(rank, generator, rank.getSettings());
 

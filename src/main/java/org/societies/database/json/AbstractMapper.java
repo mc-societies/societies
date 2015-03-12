@@ -2,7 +2,9 @@ package org.societies.database.json;
 
 import com.fasterxml.jackson.core.*;
 import com.google.common.collect.Table;
+import com.migcomponents.migbase64.Base64;
 import net.catharos.lib.core.util.CastSafe;
+import net.catharos.lib.core.uuid.UUIDGen;
 import org.apache.logging.log4j.Logger;
 import org.societies.groups.setting.Setting;
 import org.societies.groups.setting.SettingException;
@@ -66,7 +68,7 @@ public class AbstractMapper {
 
                 parser.nextToken();
                 if (settingField.equals("target")) {
-                    target = new SimpleTarget(UUID.fromString(parser.getText()));
+                    target = new SimpleTarget(UUIDGen.toUUID(Base64.decode(parser.getText())));
                 } else if (settingField.equals("setting")) {
                     setting = settingProvider.getSetting(parser.getText());
                 } else if (settingField.equals("value")) {
@@ -109,7 +111,7 @@ public class AbstractMapper {
             generator.writeStartObject();
             UUID targetUUID = target.getUUID();
             if (!targetUUID.equals(subject.getUUID())) {
-                generator.writeStringField("target", targetUUID.toString());
+                generator.writeStringField("target", Base64.encodeToString(UUIDGen.toByteArray(target.getUUID()), false));
             }
             generator.writeStringField("setting", setting.getID());
             generator.writeStringField("value", result);

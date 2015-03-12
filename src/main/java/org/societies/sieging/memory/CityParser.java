@@ -36,7 +36,6 @@ public class CityParser extends AbstractMapper {
     private final WorldResolver worldResolver;
     private final UUIDStorage cityStorage;
     private final CityPublisher cityPublisher;
-    private final BesiegerProvider besiegerProvider;
 
     private final Function<Integer, Double> cityFunction;
 
@@ -46,12 +45,11 @@ public class CityParser extends AbstractMapper {
                       @Named("cities") UUIDStorage cityStorage,
                       CityPublisher cityPublisher,
                       SettingProvider settingProvider,
-                      BesiegerProvider besiegerProvider, @Named("city-function") Function<Integer, Double> cityFunction) {
+                      @Named("city-function") Function<Integer, Double> cityFunction) {
         super(logger, settingProvider);
         this.worldResolver = worldResolver;
         this.cityStorage = cityStorage;
         this.cityPublisher = cityPublisher;
-        this.besiegerProvider = besiegerProvider;
         this.cityFunction = cityFunction;
     }
 
