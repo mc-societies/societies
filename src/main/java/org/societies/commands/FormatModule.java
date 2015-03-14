@@ -30,7 +30,7 @@ public class FormatModule extends AbstractModule {
                 .build(RowFactory.class));
 
         bindNamedInstance("column-spacing", double.class, 24.0D);
-        bindNamedInstance("max-line-length", double.class, 318.0D);
+        bindNamedInstance("max-line-length", double.class, 310.0D);
 
         bindNamed("default-color", String.class).toInstance(ChatColor.GRAY.toString());
 

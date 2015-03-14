@@ -54,7 +54,7 @@ public class CoordsCommand implements Executor<Member> {
 
         Table table = tableProvider.get();
 
-        table.addForwardingRow(rowFactory.translated(true, "name", "distance", "coordinates", "world"));
+        table.addForwardingRow(rowFactory.translated(true, "name", "distance", "X", "Y", "Z", "world"));
 
         for (Member member : group.getMembers()) {
             Location memberLocation = member.get(Player.class).getLocation();
@@ -66,9 +66,9 @@ public class CoordsCommand implements Executor<Member> {
             table.addRow(
                     member.getName(),
                     numberFormat.format(location.distance(memberLocation)),
-                    "X: " + memberLocation.getRoundedX()
-                            + " Y: " + memberLocation.getRoundedY()
-                            + " Z: " + memberLocation.getRoundedZ(),
+                    memberLocation.getRoundedX(),
+                    memberLocation.getRoundedY(),
+                    memberLocation.getRoundedZ(),
                     memberLocation.getWorld().getName()
             );
         }

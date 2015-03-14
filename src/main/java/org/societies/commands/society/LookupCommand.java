@@ -53,16 +53,23 @@ public class LookupCommand implements Executor<Sender> {
         sender.send("lookup.name", target.getName());
 
         sender.send("lookup.society", group == null ? ":none" : group.getName());
-        sender.send("lookup.society-tag", group == null ? ":none" : group.getTag());
+
+        if (group != null) {
+            sender.send("lookup.society-tag", group.getTag());
+        }
 
         Rank defaultRank = target.getRank();
         if (defaultRank != null) {
             sender.send("lookup.rank", defaultRank.getName());
         }
-        sender.send("lookup.uuid", target.getUUID());
+
         sender.send("lookup.join-date", target.getCreated().toString(dateTimeFormatter));
-        sender.send("lookup.last-seen", target.getLastActive().toString(dateTimeFormatter));
-        sender.send("lookup.inactive", target.get(Player.class)
-                .isAvailable() ? ":lookup.online" : periodFormatter.print(inactive));
+
+        boolean available = target.get(Player.class).isAvailable();
+        sender.send("lookup.last-seen", available ? ":lookup.online" : target.getLastActive().toString(dateTimeFormatter));
+
+        if (!available) {
+            sender.send("lookup.inactive",  periodFormatter.print(inactive));
+        }
     }
 }

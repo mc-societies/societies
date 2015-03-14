@@ -75,8 +75,8 @@ public class JoinCommand implements Executor<Member> {
         if (target.size() == 0) {
             target.addMember(sender);
 
-            target.addRank(superRank);
-            target.addRank(normalDefaultRank);
+            sender.addRank(superRank);
+            sender.addRank(normalDefaultRank);
             return;
         }
 

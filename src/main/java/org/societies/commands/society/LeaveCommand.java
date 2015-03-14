@@ -31,17 +31,16 @@ public class LeaveCommand implements Executor<Member> {
 
         if (group != null) {
 
-            if (KickCommand.isCritical(sender, sender, group)) {
+            if (group.size() == 1) {
+                group.removeMember(sender);
+                dropGroup.destruct(group);
+            } else if (KickCommand.isCritical(sender, sender, group)) {
                 return;
+            } else {
+                group.removeMember(sender);
             }
-
-            group.removeMember(sender);
 
             String name = group.getName();
-
-            if (group.size() == 0) {
-                dropGroup.destruct(group);
-            }
 
             sender.send("you.society-left", name);
             return;

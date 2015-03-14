@@ -51,7 +51,6 @@ public class ProfileCommand implements Executor<Sender> {
 
         sender.send("profile.name", target.getName());
         sender.send("profile.tag", target.getTag());
-        sender.send("profile.uuid", target.getUUID());
         sender.send("profile.last-active", target.getLastActive().toString(dateTimeFormatter));
         sender.send("profile.inactive", Groups.isActive(target.getMembers()) ? ":profile.active" : periodFormatter
                 .print(inactivePeriod));

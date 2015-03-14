@@ -61,6 +61,8 @@ public class KickCommand implements Executor<Member> {
                 sender.send("you.assign-first", leaderRanksString);
                 return true;
             }
+
+            return true;
         }
 
         return false;

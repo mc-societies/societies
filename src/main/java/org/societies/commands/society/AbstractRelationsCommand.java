@@ -48,6 +48,8 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
             return;
         }
 
+        boolean anyRelations = false;
+
         Table table = tableProvider.get();
 
         table.addForwardingRow(rowFactory.translated(true, "society", getType().getName()));
@@ -58,6 +60,8 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
             if (relations.isEmpty()) {
                 continue;
             }
+
+            anyRelations = true;
 
             StringBuilder relationsString = new StringBuilder();
 
@@ -83,7 +87,11 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
             table.addRow(group.getTag(), relationsString);
         }
 
-        sender.send(table.render(ctx.getName(), page));
+        if (anyRelations) {
+            sender.send(table.render(ctx.getName(), page));
+        }
+
+        sender.send("relations.not-found");
     }
 
     protected abstract Relation.Type getType();
