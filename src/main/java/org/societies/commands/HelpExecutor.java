@@ -5,8 +5,10 @@ import com.google.inject.name.Named;
 import net.catharos.lib.core.command.*;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.sender.Sender;
+import org.societies.bridge.ChatColor;
 
 import javax.inject.Provider;
+import java.util.LinkedList;
 
 /**
  * Represents a DefaultHelpExecutor
@@ -25,31 +27,25 @@ class HelpExecutor<S extends Sender> implements Executor<S> {
     }
 
     private void displayHelp(CommandContext<S> ctx, S sender, ExecutableCommand<S> command) {
-        StringBuilder help = new StringBuilder();
+        final StringBuilder help = new StringBuilder();
 
-        StringBuilder commandFormat = new StringBuilder();
-
-        //beautify create iterator
-        for (Command<S> cmd = command; cmd != null; cmd = cmd.getParent()) {
-            if (cmd.getIdentifier() == null || cmd.getIdentifier().isEmpty()) {
-                continue;
+        new FormatCommandIterator<S>("/", " - ", " [?]") {
+            @Override
+            public void iterate(Command<S> command, String format) {
+                help.append(ChatColor.GRAY).append(format);
             }
-            commandFormat.insert(0, cmd.getIdentifier() + " ");
-        }
+        }.iterate(ctx.getCommand(), new LinkedList<Command<S>>());
 
-        commandFormat.insert(0, '/');
-
-        help.append(commandFormat.toString());
-        help.append("[OPTIONS] [ARGUMENTS]\n");
-
-        if (!command.getOptions().isEmpty()) {
-            help.append("Options:\n");
-            help.append(options(command).render("options", ctx.getPage()));
-        }
+        help.append('\n');
 
         if (!command.getArguments().isEmpty()) {
             help.append("\nArguments:\n");
             help.append(arguments(command).render("arguments", ctx.getPage()));
+        }
+
+        if (!command.getOptions().isEmpty()) {
+            help.append("Options:\n");
+            help.append(options(command).render("options", ctx.getPage()));
         }
 
         sender.send(help);
@@ -59,7 +55,7 @@ class HelpExecutor<S extends Sender> implements Executor<S> {
         Table table = tableProvider.get();
 
         for (Argument argument : command.getArguments()) {
-            table.addRow(argument.getName(), argument.getDescription());
+            table.addRow(ChatColor.GRAY + argument.getName(), ChatColor.DARK_GRAY + argument.getDescription());
         }
 
         return table;
@@ -69,7 +65,7 @@ class HelpExecutor<S extends Sender> implements Executor<S> {
         Table table = tableProvider.get();
 
         for (Argument argument : command.getOptions().values()) {
-            table.addRow(argument.getName(), argument.getDescription());
+            table.addRow(ChatColor.GRAY + argument.getName(), ChatColor.DARK_GRAY + argument.getDescription());
         }
 
         return table;
