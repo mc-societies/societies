@@ -76,7 +76,7 @@ public class MemberMapper extends AbstractMapper {
                 validateArray(parser);
 
                 while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    ranks.add(UUID.fromString(parser.getText()));
+                    ranks.add(UUIDGen.toUUID(Base64.decode(parser.getText())));
                 }
             } else if (fieldName.equals("settings")) {
                 //todo uuid can be null
