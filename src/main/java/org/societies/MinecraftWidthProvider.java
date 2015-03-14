@@ -51,7 +51,8 @@ public class MinecraftWidthProvider implements WidthProvider {
 
     @Override
     public double widthOf(char c) {
-        return widths.get(c);
+        int width = widths.get(c);
+        return width == 0 ? 6 : width;
     }
 
     {
@@ -61,7 +62,7 @@ public class MinecraftWidthProvider implements WidthProvider {
         addWidths("fk{}<>\"*()", 5);
         addWidths("abcdeghjmnopqrsuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ1234567890\\/#?$%-=_+&^", 6);
         addWidths("@~", 7);
-        addWidths(" ", 7);
+        addWidths(" ", 4);
     }
 
     public void addWidths(String characters, int width) {
