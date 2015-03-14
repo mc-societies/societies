@@ -21,6 +21,16 @@ public class StringDictionary extends DefaultDictionary<String> {
     }
 
     @Override
+    public String getTranslation(String key) {
+        return defaultColor + getCleanTranslation(key);
+    }
+
+    @Override
+    public String getTranslation(String key, String locale) {
+        return defaultColor + getCleanTranslation(key, locale);
+    }
+
+    @Override
     public String getTranslation(String key, String locale, Object... args) {
         translateArguments(args);
         return defaultColor + super.getTranslation(key, locale, args);
