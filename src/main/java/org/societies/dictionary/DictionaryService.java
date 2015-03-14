@@ -34,7 +34,9 @@ class DictionaryService extends AbstractService {
     private Logger logger;
 
     @Inject
-    public DictionaryService(@Named("translations-url") URL translationsURL, MutableDictionary<String> dictionary, @Named("dictionary-directory") File directory) {
+    public DictionaryService(@Named("translations-url") URL translationsURL,
+                             MutableDictionary<String> dictionary,
+                             @Named("dictionary-directory") File directory) {
         this.translationsURL = translationsURL;
         this.dictionary = dictionary;
         this.directory = directory;
@@ -133,11 +135,11 @@ class DictionaryService extends AbstractService {
 
         in.reset();
 
-//        if (in.available() > 0) {
+        if (in.available() > 0) {
             FileOutputStream cached = FileUtils.openOutputStream(getCachedTranslations());
             IOUtils.copy(in, cached);
             cached.close();
-//        }
+        }
 
         return loaded;
     }

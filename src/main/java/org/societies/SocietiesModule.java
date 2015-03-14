@@ -19,6 +19,7 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.shank.service.AbstractServiceModule;
 import org.societies.api.NameProvider;
+import org.societies.api.Saveguard;
 import org.societies.commands.CommandModule;
 import org.societies.commands.FormatModule;
 import org.societies.database.DatabaseModule;
@@ -136,6 +137,8 @@ public class SocietiesModule extends AbstractServiceModule {
 
         bind(EventController.class).to(DefaultEventController.class);
 
+        bindNamed("data-directory", File.class).toInstance(dataDirectory);
+
 
         newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Member>>() {});
         newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
@@ -149,6 +152,10 @@ public class SocietiesModule extends AbstractServiceModule {
         } else {
             install(new NaughtyScriptModule());
         }
+
+        bind(Saveguard.class).to(DefaultSaveguard.class);
+
+        bindService().to(SaveguardService.class);
     }
 
     @Singleton
