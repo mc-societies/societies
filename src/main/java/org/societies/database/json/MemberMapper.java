@@ -113,7 +113,7 @@ public class MemberMapper extends AbstractMapper {
 
         Group group = member.getGroup();
         if (group != null) {
-            generator.writeStringField("society", group.getUUID().toString());
+            generator.writeStringField("society", Base64.encodeToString(UUIDGen.toByteArray(group.getUUID()), false));
         }
         generator.writeNumberField("lastActive", member.getLastActive().getMillis());
 
