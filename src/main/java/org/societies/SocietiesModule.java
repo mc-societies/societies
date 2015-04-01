@@ -35,7 +35,6 @@ import org.societies.request.RequestModule;
 import org.societies.script.NaughtyScriptModule;
 import org.societies.script.ScriptModule;
 import org.societies.setting.SettingModule;
-import org.societies.sieging.SiegeModule;
 import org.societies.teleport.TeleportModule;
 
 import java.io.File;
@@ -145,9 +144,10 @@ public class SocietiesModule extends AbstractServiceModule {
         newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {
         });
 
-        if (config.getBoolean("city.enable")) {
-            install(new SiegeModule(config, dataDirectory));
-        }
+//        Disabled for now!
+//        if (config.getBoolean("city.enable")) {
+//            install(new SiegeModule(config, dataDirectory));
+//        }
 
         if (config.getBoolean("enable-scripting")) {
             install(new ScriptModule());
