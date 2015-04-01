@@ -11,7 +11,6 @@ import net.catharos.lib.core.command.reflect.instance.Children;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.shank.config.ConfigSetting;
-import org.shank.logging.InjectLogger;
 import org.societies.api.Members;
 import org.societies.bridge.ChatColor;
 import org.societies.commands.RuleStep;
@@ -76,11 +75,13 @@ public class RivalsCommand extends ListCommand {
 
         private final RequestFactory<Choices> requests;
 
-        @InjectLogger
-        private Logger logger;
+        private final Logger logger;
 
         @Inject
-        public RemoveCommand(RequestFactory<Choices> requests) {this.requests = requests;}
+        public RemoveCommand(RequestFactory<Choices> requests, Logger logger) {
+            this.requests = requests;
+            this.logger = logger;
+        }
 
         @Override
         public void execute(CommandContext<Member> ctx, final Member sender) {
@@ -196,9 +197,6 @@ public class RivalsCommand extends ListCommand {
         private final GroupProvider groupProvider;
         private final Set<String> unrivable;
         private final RelationFactory factory;
-
-        @InjectLogger
-        private Logger logger;
 
         @Inject
         public AddCommand(@ConfigSetting("relations.min-size-to-set-rival") int minSize,

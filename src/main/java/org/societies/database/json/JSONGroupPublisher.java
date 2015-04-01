@@ -6,7 +6,6 @@ import com.googlecode.cqengine.query.Query;
 import net.catharos.lib.core.uuid.UUIDStorage;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
-import org.shank.logging.InjectLogger;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupFactory;
 import org.societies.groups.group.GroupPublisher;
@@ -33,17 +32,17 @@ final class JSONGroupPublisher implements GroupPublisher {
     private final JSONProvider provider;
     private final GroupFactory groupFactory;
 
-    @InjectLogger
-    private Logger logger;
+    private final Logger logger;
 
     @Inject
     public JSONGroupPublisher(@Named("group-root") File groupRoot,
                               Provider<UUID> uuid, GroupMapper mapper,
                               JSONProvider provider,
-                              GroupFactory groupFactory) {
+                              GroupFactory groupFactory, Logger logger) {
         this.uuid = uuid;
         this.provider = provider;
         this.groupFactory = groupFactory;
+        this.logger = logger;
         this.uuidStorage = new UUIDStorage(groupRoot, "json");
         this.mapper = mapper;
     }

@@ -12,7 +12,6 @@ import net.catharos.lib.core.command.reflect.Sender;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.shank.config.ConfigSetting;
-import org.shank.logging.InjectLogger;
 import org.societies.api.Members;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
@@ -43,20 +42,19 @@ public class JoinCommand implements Executor<Member> {
     private final RequestFactory<Choices> requests;
     private final int maxSize;
 
-    @InjectLogger
-    private Logger logger;
-
+    private final Logger logger;
 
     @Inject
     public JoinCommand(@ConfigSetting("trust.trust-members-by-default") boolean trustDefault,
                        @Named("normal-default-rank") Rank normalDefaultRank,
                        @Named("super-default-rank") Rank superRank,
-                       RequestFactory<Choices> requests, @ConfigSetting("society.max-size") int maxSize) {
+                       RequestFactory<Choices> requests, @ConfigSetting("society.max-size") int maxSize, Logger logger) {
         this.trustDefault = trustDefault;
         this.normalDefaultRank = normalDefaultRank;
         this.superRank = superRank;
         this.requests = requests;
         this.maxSize = maxSize;
+        this.logger = logger;
     }
 
     @Override

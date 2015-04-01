@@ -8,9 +8,7 @@ import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
-import org.apache.logging.log4j.Logger;
 import org.shank.config.ConfigSetting;
-import org.shank.logging.InjectLogger;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;
 
@@ -27,9 +25,6 @@ public class ListCommand implements Executor<Sender> {
     private final boolean showUnverified;
     private final GroupProvider groupProvider;
     private final Provider<Table> tableProvider;
-
-    @InjectLogger
-    private Logger logger;
 
     @Inject
     public ListCommand(@ConfigSetting("verification.show-unverified") boolean showUnverified, GroupProvider groupProvider, Provider<Table> tableProvider) {

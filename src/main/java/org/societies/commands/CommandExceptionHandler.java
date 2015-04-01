@@ -1,20 +1,24 @@
 package org.societies.commands;
 
+import com.google.inject.Inject;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.CommandException;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.ParsingException;
 import net.catharos.lib.core.command.sender.Sender;
 import org.apache.logging.log4j.Logger;
-import org.shank.logging.InjectLogger;
 
 /**
  * Represents a CommandExceptionHandler
  */
 class CommandExceptionHandler implements Thread.UncaughtExceptionHandler {
 
-    @InjectLogger
-    private Logger logger;
+    private final Logger logger;
+
+    @Inject
+    CommandExceptionHandler(Logger logger) {
+        this.logger = logger;
+    }
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {

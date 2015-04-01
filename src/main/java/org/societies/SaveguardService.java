@@ -5,7 +5,6 @@ import com.google.inject.name.Named;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Logger;
-import org.shank.logging.InjectLogger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
 import org.societies.api.Saveguard;
@@ -21,16 +20,16 @@ public class SaveguardService extends AbstractService {
     private final File dataDirectory;
     private final String version;
 
-    @InjectLogger
-    private Logger logger;
+    private final Logger logger;
 
     @Inject
     public SaveguardService(Saveguard saveguard,
                             @Named("data-directory") File dataDirectory,
-                            @Named("version") String version) {
+                            @Named("version") String version, Logger logger) {
         this.saveguard = saveguard;
         this.dataDirectory = dataDirectory;
         this.version = version;
+        this.logger = logger;
     }
 
     @Override

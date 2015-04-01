@@ -8,7 +8,6 @@ import net.catharos.lib.core.util.ZipUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Logger;
-import org.shank.logging.InjectLogger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
 
@@ -30,16 +29,16 @@ class DictionaryService extends AbstractService {
     private final MutableDictionary<String> dictionary;
     private final File directory;
 
-    @InjectLogger
     private Logger logger;
 
     @Inject
     public DictionaryService(@Named("translations-url") URL translationsURL,
                              MutableDictionary<String> dictionary,
-                             @Named("dictionary-directory") File directory) {
+                             @Named("dictionary-directory") File directory, Logger logger) {
         this.translationsURL = translationsURL;
         this.dictionary = dictionary;
         this.directory = directory;
+        this.logger = logger;
     }
 
     @Override
@@ -67,7 +66,7 @@ class DictionaryService extends AbstractService {
 
                         String redirect = conn.getHeaderField("Location");
 
-                        if (redirect != null){
+                        if (redirect != null) {
                             conn = new URL(redirect).openConnection();
                         }
 
@@ -79,7 +78,6 @@ class DictionaryService extends AbstractService {
                 }
             }
         }
-
 
 
         final List<String> loaded = loadZip(in);

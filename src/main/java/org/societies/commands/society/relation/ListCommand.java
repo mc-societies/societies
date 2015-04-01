@@ -5,8 +5,6 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Option;
-import org.apache.logging.log4j.Logger;
-import org.shank.logging.InjectLogger;
 import org.societies.groups.Relation;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;
@@ -25,9 +23,6 @@ abstract class ListCommand implements Executor<Member> {
 
     @Option(name = "argument.page")
     int page;
-
-    @InjectLogger
-    private Logger logger;
 
     public ListCommand(Provider<Table> tableProvider, GroupProvider groupProvider) {
         this.tableProvider = tableProvider;

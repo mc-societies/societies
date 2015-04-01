@@ -10,7 +10,6 @@ import net.catharos.lib.core.command.reflect.instance.Children;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.shank.config.ConfigSetting;
-import org.shank.logging.InjectLogger;
 import org.societies.api.Members;
 import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;
@@ -111,16 +110,17 @@ public class AlliesCommand extends ListCommand {
         private final RelationFactory factory;
         private final RequestFactory<Choices> requests;
 
-        @InjectLogger
-        private Logger logger;
+
+        private final Logger logger;
 
         @Inject
         public AddCommand(@ConfigSetting("relations.min-size-to-set-ally") int minSize,
                           RelationFactory factory,
-                          RequestFactory<Choices> requests) {
+                          RequestFactory<Choices> requests, Logger logger) {
             this.minSize = minSize;
             this.factory = factory;
             this.requests = requests;
+            this.logger = logger;
         }
 
         @Override

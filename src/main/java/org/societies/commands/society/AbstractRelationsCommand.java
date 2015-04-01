@@ -7,8 +7,6 @@ import net.catharos.lib.core.command.format.table.RowFactory;
 import net.catharos.lib.core.command.format.table.Table;
 import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.sender.Sender;
-import org.apache.logging.log4j.Logger;
-import org.shank.logging.InjectLogger;
 import org.societies.groups.Relation;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;
@@ -26,9 +24,6 @@ public abstract class AbstractRelationsCommand implements Executor<Sender> {
     private final GroupProvider groupProvider;
     private final Provider<Table> tableProvider;
     private final RowFactory rowFactory;
-
-    @InjectLogger
-    private Logger logger;
 
     public AbstractRelationsCommand(GroupProvider groupProvider, Provider<Table> tableProvider, RowFactory rowFactory) {
         this.groupProvider = groupProvider;

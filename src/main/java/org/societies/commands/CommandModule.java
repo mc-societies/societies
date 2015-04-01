@@ -140,7 +140,7 @@ public class CommandModule extends AbstractModule {
 
 
         // Exception handler
-        bindNamedInstance("command-exception-handler", Thread.UncaughtExceptionHandler.class, new CommandExceptionHandler());
+        bindNamed("command-exception-handler", Thread.UncaughtExceptionHandler.class).to(CommandExceptionHandler.class);
 
         // Help executor
         bindNamed("help-executor", EXECUTOR_TYPE)

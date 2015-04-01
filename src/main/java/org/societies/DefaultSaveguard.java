@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import net.catharos.lib.core.uuid.UUIDStorage;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Logger;
-import org.shank.logging.InjectLogger;
 import org.societies.api.Saveguard;
 import org.societies.database.json.GroupMapper;
 import org.societies.database.json.MemberMapper;
@@ -30,18 +29,18 @@ public class DefaultSaveguard implements Saveguard {
     private final MemberProvider memberProvider;
     private final GroupProvider groupProvider;
 
-    @InjectLogger
-    private Logger logger;
+    private final Logger logger;
 
     @Inject
     public DefaultSaveguard(GroupMapper groupMapper,
                             MemberMapper memberMapper,
                             MemberProvider memberProvider,
-                            GroupProvider groupProvider) {
+                            GroupProvider groupProvider, Logger logger) {
         this.groupMapper = groupMapper;
         this.memberMapper = memberMapper;
         this.memberProvider = memberProvider;
         this.groupProvider = groupProvider;
+        this.logger = logger;
     }
 
 

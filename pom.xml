@@ -98,6 +98,20 @@
             <artifactId>jukito</artifactId>
             <version>1.3</version>
         </dependency>
+
+        <!--converter stuff-->
+
+        <dependency>
+            <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>2.4.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.p000ison.dev.simpleclans2</groupId>
+            <artifactId>SimpleClans2</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>
@@ -122,6 +136,12 @@
         <repository>
             <id>frederik-schmitt-snapshots</id>
             <url>http://repo.frederik-schmitt.de/content/repositories/oss-snapshots</url>
+        </repository>
+
+
+        <repository>
+            <id>local-repo</id>
+            <url>file://${basedir}/libs</url>
         </repository>
     </repositories>
 

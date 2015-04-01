@@ -20,7 +20,6 @@ import gnu.trove.map.hash.THashMap;
 import net.catharos.lib.core.util.CastSafe;
 import net.catharos.lib.core.uuid.UUIDStorage;
 import org.apache.logging.log4j.Logger;
-import org.shank.logging.InjectLogger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
 import org.societies.api.PlayerResolver;
@@ -101,7 +100,6 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
 
     private final MemberFactory memberFactory;
 
-    @InjectLogger
     private Logger logger;
 
     @Inject
@@ -110,11 +108,12 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
                         @Named("group-root") File groupRoot,
                         @Named("member-root") File memberRoot,
                         GroupMapper groupMapper,
-                        MemberFactory memberFactory) {
+                        MemberFactory memberFactory, Logger logger) {
         this.playerResolver = playerResolver;
         this.mapper = mapper;
         this.groupMapper = groupMapper;
         this.memberFactory = memberFactory;
+        this.logger = logger;
         this.groupStorage = new UUIDStorage(groupRoot, "json");
         this.memberStorage = new UUIDStorage(memberRoot, "json");
     }

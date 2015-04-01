@@ -9,9 +9,7 @@ import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
-import org.apache.logging.log4j.Logger;
 import org.shank.config.ConfigSetting;
-import org.shank.logging.InjectLogger;
 import org.societies.api.economy.EconomyParticipant;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupPublisher;
@@ -45,10 +43,6 @@ public class CreateCommand implements Executor<Member> {
     private final Rank superRank;
     private final Rank defaultRank;
     private final boolean verificationRequired;
-
-
-    @InjectLogger
-    private Logger logger;
 
     @Inject
     public CreateCommand(GroupPublisher publisher,

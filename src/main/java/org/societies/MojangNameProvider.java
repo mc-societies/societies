@@ -10,7 +10,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.name.Named;
 import gnu.trove.map.hash.THashMap;
 import org.apache.logging.log4j.Logger;
-import org.shank.logging.InjectLogger;
 import org.societies.api.NameProvider;
 
 import javax.inject.Inject;
@@ -32,11 +31,12 @@ public class MojangNameProvider implements NameProvider {
 
     private final Map<UUID, String> names = Collections.synchronizedMap(new THashMap<UUID, String>());
 
-    @InjectLogger
-    private Logger logger;
+    private final Logger logger;
 
     @Inject
-    public MojangNameProvider(@Named("worker-executor") ListeningExecutorService service) {this.service = service;}
+    public MojangNameProvider(@Named("worker-executor") ListeningExecutorService service, Logger logger) {this.service = service;
+        this.logger = logger;
+    }
 
     public ListenableFuture<String> findName(final UUID uuid) {
         return service.submit(new Callable<String>() {

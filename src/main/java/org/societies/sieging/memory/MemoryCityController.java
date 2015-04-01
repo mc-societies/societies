@@ -17,7 +17,6 @@ import com.googlecode.cqengine.index.suffix.SuffixTreeIndex;
 import com.googlecode.cqengine.resultset.ResultSet;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
-import org.shank.logging.InjectLogger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
 import org.societies.api.sieging.*;
@@ -91,19 +90,19 @@ class MemoryCityController extends AbstractService implements CityProvider, City
     private final GroupProvider groupProvider;
     private final Function<Integer, Double> cityFunction;
 
-    @InjectLogger
-    private Logger logger;
+    private final Logger logger;
 
     @Inject
     MemoryCityController(Provider<UUID> uuidProvider,
                          CityWriter cityWriter, CityParser cityParser,
                          GroupProvider groupProvider,
-                         @Named("city-function") Function<Integer, Double> cityFunction) {
+                         @Named("city-function") Function<Integer, Double> cityFunction, Logger logger) {
         this.uuidProvider = uuidProvider;
         this.cityWriter = cityWriter;
         this.cityParser = cityParser;
         this.groupProvider = groupProvider;
         this.cityFunction = cityFunction;
+        this.logger = logger;
     }
 
     @Override
