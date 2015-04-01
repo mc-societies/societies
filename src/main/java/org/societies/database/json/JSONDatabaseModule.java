@@ -7,10 +7,6 @@ import org.shank.service.AbstractServiceModule;
 import org.societies.api.lock.DummyLocker;
 import org.societies.api.lock.Locker;
 import org.societies.groups.ExtensionFactory;
-import org.societies.groups.cache.GroupCache;
-import org.societies.groups.cache.MemberCache;
-import org.societies.groups.cache.NaughtyGroupCache;
-import org.societies.groups.cache.NaughtyMemberCache;
 import org.societies.groups.group.*;
 import org.societies.groups.group.memory.MemoryGroupFactory;
 import org.societies.groups.group.memory.MemoryGroupHeart;
@@ -31,9 +27,6 @@ public class JSONDatabaseModule extends AbstractServiceModule {
         });
 
         bindService().to(provider);
-
-        bind(MemberCache.class).to(NaughtyMemberCache.class);
-        bind(GroupCache.class).to(NaughtyGroupCache.class);
 
 
         bind(MemberMapper.class);
