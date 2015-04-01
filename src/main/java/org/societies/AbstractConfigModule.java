@@ -14,7 +14,9 @@ import org.shank.config.Settings;
 public abstract class AbstractConfigModule extends AbstractModule {
     protected final Config config;
 
-    public AbstractConfigModule(Config config) {this.config = config;}
+    public AbstractConfigModule(Config config) {
+        this.config = config;
+    }
 
     public void bindNamed(String key, String setting, Class clazz) {
         bind(Key.get(clazz, Names.named(key)), setting);

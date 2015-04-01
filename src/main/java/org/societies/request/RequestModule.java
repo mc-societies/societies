@@ -16,7 +16,9 @@ public class RequestModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(new TypeLiteral<Request<Choices>>() {}, SimpleRequest.class)
-                .build(new TypeLiteral<RequestFactory<Choices>>() {}));
+                .implement(new TypeLiteral<Request<Choices>>() {
+                }, SimpleRequest.class)
+                .build(new TypeLiteral<RequestFactory<Choices>>() {
+                }));
     }
 }

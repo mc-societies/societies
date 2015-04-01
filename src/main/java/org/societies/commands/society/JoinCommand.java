@@ -121,7 +121,9 @@ public class JoinCommand implements Executor<Member> {
 
         private final Group group;
 
-        private JoinRequestMessenger(Group group) {this.group = group;}
+        private JoinRequestMessenger(Group group) {
+            this.group = group;
+        }
 
 
         @Override

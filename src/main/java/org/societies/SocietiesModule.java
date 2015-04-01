@@ -140,8 +140,10 @@ public class SocietiesModule extends AbstractServiceModule {
         bindNamed("data-directory", File.class).toInstance(dataDirectory);
 
 
-        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Member>>() {});
-        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
+        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Member>>() {
+        });
+        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {
+        });
 
         if (config.getBoolean("city.enable")) {
             install(new SiegeModule(config, dataDirectory));

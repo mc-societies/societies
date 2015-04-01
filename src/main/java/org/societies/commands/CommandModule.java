@@ -65,7 +65,8 @@ import static com.google.inject.name.Names.named;
  */
 public class CommandModule extends AbstractModule {
 
-    public static final TypeLiteral<DefaultCommandPipeline<Sender>> PIPELINE_IMPL = new TypeLiteral<DefaultCommandPipeline<Sender>>() {};
+    public static final TypeLiteral<DefaultCommandPipeline<Sender>> PIPELINE_IMPL = new TypeLiteral<DefaultCommandPipeline<Sender>>() {
+    };
 
     private final Class[] commands = new Class[]{
             CreateCommand.class,
@@ -118,7 +119,8 @@ public class CommandModule extends AbstractModule {
             DebugCommand.class
     };
 
-    private static final TypeLiteral<Executor<Sender>> EXECUTOR_TYPE = new TypeLiteral<Executor<Sender>>() {};
+    private static final TypeLiteral<Executor<Sender>> EXECUTOR_TYPE = new TypeLiteral<Executor<Sender>>() {
+    };
 
     @Override
     protected void configure() {
@@ -129,14 +131,17 @@ public class CommandModule extends AbstractModule {
         install(new DefaultParserModule());
 
         // Group parser
-        bind(new TypeLiteral<ArgumentParser<Group>>() {}).to(GroupParser.class);
+        bind(new TypeLiteral<ArgumentParser<Group>>() {
+        }).to(GroupParser.class);
         parsers().addBinding(Group.class).to(GroupParser.class);
         parsers().addBinding(Location.class).to(LocationParser.class);
 
         // Member parser
         parsers().addBinding(Sender.class).to(TargetParser.class);
-        parsers().addBinding(Member.class).to(new TypeLiteral<MemberParser>() {});
-        parsers().addBinding(Player.class).to(new TypeLiteral<MemberParser>() {});
+        parsers().addBinding(Member.class).to(new TypeLiteral<MemberParser>() {
+        });
+        parsers().addBinding(Player.class).to(new TypeLiteral<MemberParser>() {
+        });
 
 
         // Exception handler
@@ -144,9 +149,11 @@ public class CommandModule extends AbstractModule {
 
         // Help executor
         bindNamed("help-executor", EXECUTOR_TYPE)
-                .to(new TypeLiteral<HelpExecutor<Sender>>() {});
+                .to(new TypeLiteral<HelpExecutor<Sender>>() {
+                });
         bindNamed("group-help-executor", EXECUTOR_TYPE)
-                .to(new TypeLiteral<GroupHelpExecutor<Sender>>() {});
+                .to(new TypeLiteral<GroupHelpExecutor<Sender>>() {
+                });
 
         // Tokenizer
         bind(Tokenizer.class).to(DelimiterTokenizer.class);
@@ -160,13 +167,15 @@ public class CommandModule extends AbstractModule {
         bindNamed("async-executor", ListeningExecutorService.class).to(SocietiesModule.WORKER_EXECUTOR);
 //        bindNamedInstance("async-executor", ListeningExecutorService.class, sameThreadExecutor());
 
-        bindNamed("provided", new TypeLiteral<CommandPipeline<Sender>>() {}).to(PIPELINE_IMPL);
+        bindNamed("provided", new TypeLiteral<CommandPipeline<Sender>>() {
+        }).to(PIPELINE_IMPL);
 
         bindNamed("system-sender", Sender.class).to(SystemSender.class);
 
         newSetBinder(
                 binder(),
-                new TypeLiteral<Class>() {},
+                new TypeLiteral<Class>() {
+                },
                 named("custom-commands")
         );
     }
@@ -222,19 +231,23 @@ public class CommandModule extends AbstractModule {
 
     public MapBinder<Class<?>, ArgumentParser<?>> parsers() {
         return newMapBinder(binder(),
-                new TypeLiteral<Class<?>>() {},
-                new TypeLiteral<ArgumentParser<?>>() {},
+                new TypeLiteral<Class<?>>() {
+                },
+                new TypeLiteral<ArgumentParser<?>>() {
+                },
                 named("parsers")
         );
     }
 
     public Multibinder<Executor<Sender>> afterPipeline(Binder binder) {
-        return newSetBinder(binder, new TypeLiteral<Executor<Sender>>() {}, named("pipeline-after"))
+        return newSetBinder(binder, new TypeLiteral<Executor<Sender>>() {
+        }, named("pipeline-after"))
                 .permitDuplicates();
     }
 
     public Multibinder<Executor<Sender>> beforePipeline(Binder binder) {
-        return newSetBinder(binder, new TypeLiteral<Executor<Sender>>() {}, named("pipeline-before"))
+        return newSetBinder(binder, new TypeLiteral<Executor<Sender>>() {
+        }, named("pipeline-before"))
                 .permitDuplicates();
     }
 }

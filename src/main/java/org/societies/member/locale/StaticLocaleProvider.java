@@ -14,7 +14,9 @@ class StaticLocaleProvider implements LocaleProvider {
     private final Locale locale;
 
     @Inject
-    public StaticLocaleProvider(@Named("default-locale") Locale locale) {this.locale = locale;}
+    public StaticLocaleProvider(@Named("default-locale") Locale locale) {
+        this.locale = locale;
+    }
 
     @Override
     public Locale provide(Player member) {

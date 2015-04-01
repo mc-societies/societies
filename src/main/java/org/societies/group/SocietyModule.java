@@ -29,7 +29,9 @@ public class SocietyModule extends AbstractModule {
 
     private final Config config;
 
-    public SocietyModule(Config config) {this.config = config;}
+    public SocietyModule(Config config) {
+        this.config = config;
+    }
 
     @Override
     protected void configure() {

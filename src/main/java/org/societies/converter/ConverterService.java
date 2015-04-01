@@ -13,7 +13,9 @@ public class ConverterService extends AbstractService {
     private final Converter converter;
 
     @Inject
-    public ConverterService(Converter converter) {this.converter = converter;}
+    public ConverterService(Converter converter) {
+        this.converter = converter;
+    }
 
     @Override
     public void init(LifecycleContext context) throws Exception {

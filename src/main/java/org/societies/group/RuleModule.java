@@ -58,6 +58,8 @@ public class RuleModule extends AbstractModule {
     }
 
     public MapBinder<String, Setting<Boolean>> rules() {
-        return MapBinder.newMapBinder(binder(), new TypeLiteral<String>() {}, new TypeLiteral<Setting<Boolean>>() {});
+        return MapBinder.newMapBinder(binder(), new TypeLiteral<String>() {
+        }, new TypeLiteral<Setting<Boolean>>() {
+        });
     }
 }

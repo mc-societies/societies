@@ -7,8 +7,6 @@ import org.shank.service.AbstractServiceModule;
 import org.societies.api.sieging.*;
 import org.societies.groups.ExtensionRoller;
 import org.societies.groups.group.Group;
-import org.societies.api.sieging.ForwardingBesiegerProvider;
-import org.societies.api.sieging.ForwardingBesiegerPublisher;
 
 /**
  * Represents a SiegeMemoryModule
@@ -29,7 +27,8 @@ public class SiegeMemoryModule extends AbstractServiceModule {
         bindService().to(city);
 
         Multibinder<ExtensionRoller<Group>> extensions = Multibinder
-                .newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
+                .newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {
+                });
 
 
         extensions.addBinding().to(MemorySiegeRoller.class);

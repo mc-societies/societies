@@ -17,7 +17,9 @@ public class LoggerWrapper extends AbstractLogger {
 
     private transient final Logger logger;
 
-    public LoggerWrapper(Logger logger) {this.logger = logger;}
+    public LoggerWrapper(Logger logger) {
+        this.logger = logger;
+    }
 
     @Override
     public boolean isEnabled(Level level, Marker marker, Message message, Throwable t) {

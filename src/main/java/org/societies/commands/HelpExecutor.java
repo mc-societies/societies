@@ -18,7 +18,9 @@ class HelpExecutor<S extends Sender> implements Executor<S> {
     private final Provider<Table> tableProvider;
 
     @Inject
-    HelpExecutor(@Named("clean") Provider<Table> tableProvider) {this.tableProvider = tableProvider;}
+    HelpExecutor(@Named("clean") Provider<Table> tableProvider) {
+        this.tableProvider = tableProvider;
+    }
 
     private void displayHelp(CommandContext<S> ctx, S sender, GroupCommand<S> command) {
         for (Command<S> child : command.getChildren()) {

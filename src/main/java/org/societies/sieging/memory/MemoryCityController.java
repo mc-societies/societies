@@ -44,7 +44,9 @@ class MemoryCityController extends AbstractService implements CityProvider, City
 
     public static final Attribute<City, UUID> CITY_UUID = new SimpleAttribute<City, UUID>("city_uuid") {
         @Override
-        public UUID getValue(City city) { return city.getUUID(); }
+        public UUID getValue(City city) {
+            return city.getUUID();
+        }
     };
 
     public static final Attribute<City, String> CITY_NAME = new SimpleAttribute<City, String>("city_name") {

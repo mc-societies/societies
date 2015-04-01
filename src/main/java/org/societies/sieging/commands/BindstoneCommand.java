@@ -172,7 +172,9 @@ public class BindstoneCommand {
         private final Materials materials;
 
         @Inject
-        public Visualize(Materials materials) {this.materials = materials;}
+        public Visualize(Materials materials) {
+            this.materials = materials;
+        }
 
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
@@ -252,7 +254,9 @@ public class BindstoneCommand {
         private final CityProvider cityProvider;
 
         @Inject
-        public InfoCommand(CityProvider cityProvider) {this.cityProvider = cityProvider;}
+        public InfoCommand(CityProvider cityProvider) {
+            this.cityProvider = cityProvider;
+        }
 
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {

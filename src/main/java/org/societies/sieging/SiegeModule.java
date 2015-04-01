@@ -30,7 +30,8 @@ public class SiegeModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(new TypeLiteral<Map<UUID, Wager>>() {}).toInstance(Collections.<UUID, Wager>emptyMap());
+        bind(new TypeLiteral<Map<UUID, Wager>>() {
+        }).toInstance(Collections.<UUID, Wager>emptyMap());
 
         install(new SiegeMemoryModule());
 
@@ -40,7 +41,8 @@ public class SiegeModule extends AbstractModule {
 
         install(new SiegingConfigModule(config));
 
-        bindNamed("city-function", new TypeLiteral<Function<Integer, Double>>() {}).to(ConstantCityFunction.class);
+        bindNamed("city-function", new TypeLiteral<Function<Integer, Double>>() {
+        }).to(ConstantCityFunction.class);
 
         bindNamed("cities", UUIDStorage.class).toInstance(new UUIDStorage(new File(root, "data/cities"), "json"));
     }

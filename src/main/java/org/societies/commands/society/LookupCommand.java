@@ -69,7 +69,7 @@ public class LookupCommand implements Executor<Sender> {
         sender.send("lookup.last-seen", available ? ":lookup.online" : target.getLastActive().toString(dateTimeFormatter));
 
         if (!available) {
-            sender.send("lookup.inactive",  periodFormatter.print(inactive));
+            sender.send("lookup.inactive", periodFormatter.print(inactive));
         }
     }
 }

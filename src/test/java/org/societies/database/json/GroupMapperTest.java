@@ -40,7 +40,8 @@ public class GroupMapperTest {
                     .implement(Rank.class, Names.named("static"), StaticRank.class)
                     .build(RankFactory.class));
 
-            bindNamed(new TypeLiteral<Set<Rank>>() {}, "predefined-ranks").toInstance(new THashSet<Rank>());
+            bindNamed(new TypeLiteral<Set<Rank>>() {
+            }, "predefined-ranks").toInstance(new THashSet<Rank>());
         }
     }
 

@@ -16,7 +16,9 @@ class SenderAdapter implements SenderProvider {
     private final MemberProvider memberProvider;
 
     @Inject
-    public SenderAdapter(MemberProvider memberProvider) {this.memberProvider = memberProvider;}
+    public SenderAdapter(MemberProvider memberProvider) {
+        this.memberProvider = memberProvider;
+    }
 
     @Nullable
     @Override

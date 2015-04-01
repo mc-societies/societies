@@ -26,17 +26,21 @@ public class SiegeCommandModule extends AbstractModule {
     @Override
     protected void configure() {
         MapBinder<Class<?>, ArgumentParser<?>> parsers = MapBinder
-                .newMapBinder(binder(), new TypeLiteral<Class<?>>() {}, new TypeLiteral<ArgumentParser<?>>() {}, Names
+                .newMapBinder(binder(), new TypeLiteral<Class<?>>() {
+                }, new TypeLiteral<ArgumentParser<?>>() {
+                }, Names
                         .named("parsers"));
 
 
-        bind(new TypeLiteral<ArgumentParser<City>>() {}).to(CityParser.class);
+        bind(new TypeLiteral<ArgumentParser<City>>() {
+        }).to(CityParser.class);
         parsers.addBinding(City.class).to(CityParser.class);
 
 
         Multibinder<Class> cmds = newSetBinder(
                 binder(),
-                new TypeLiteral<Class>() {},
+                new TypeLiteral<Class>() {
+                },
                 named("custom-commands")
         );
 

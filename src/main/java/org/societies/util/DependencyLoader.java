@@ -22,7 +22,9 @@ public class DependencyLoader {
 
     private final Logger logger;
 
-    public DependencyLoader(Logger logger) {this.logger = logger;}
+    public DependencyLoader(Logger logger) {
+        this.logger = logger;
+    }
 
     public void loadDependencies(URL url, File destination) throws InvocationTargetException, IllegalAccessException, IOException {
         FileUtils.forceMkdir(destination);

@@ -34,7 +34,8 @@ public class MojangNameProvider implements NameProvider {
     private final Logger logger;
 
     @Inject
-    public MojangNameProvider(@Named("worker-executor") ListeningExecutorService service, Logger logger) {this.service = service;
+    public MojangNameProvider(@Named("worker-executor") ListeningExecutorService service, Logger logger) {
+        this.service = service;
         this.logger = logger;
     }
 

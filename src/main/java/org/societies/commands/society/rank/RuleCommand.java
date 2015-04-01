@@ -89,7 +89,9 @@ public class RuleCommand {
         private final Map<String, Setting> rules;
 
         @Inject
-        public AssignCommand(Map<String, Setting> rules) {this.rules = rules;}
+        public AssignCommand(Map<String, Setting> rules) {
+            this.rules = rules;
+        }
 
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) {
@@ -138,7 +140,9 @@ public class RuleCommand {
         private final Map<String, Setting> rules;
 
         @Inject
-        public RemoveCommand(Map<String, Setting> rules) {this.rules = rules;}
+        public RemoveCommand(Map<String, Setting> rules) {
+            this.rules = rules;
+        }
 
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) {

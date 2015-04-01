@@ -18,7 +18,9 @@ public class ReloadCommand implements Executor<Sender> {
     private final ReloadAction reloadAction;
 
     @Inject
-    public ReloadCommand(ReloadAction reloadAction) {this.reloadAction = reloadAction;}
+    public ReloadCommand(ReloadAction reloadAction) {
+        this.reloadAction = reloadAction;
+    }
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {

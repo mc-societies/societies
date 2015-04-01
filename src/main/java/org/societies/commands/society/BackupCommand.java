@@ -26,7 +26,9 @@ public class BackupCommand implements Executor<Sender> {
     private final Saveguard saveguard;
 
     @Inject
-    public BackupCommand(Saveguard saveguard) {this.saveguard = saveguard;}
+    public BackupCommand(Saveguard saveguard) {
+        this.saveguard = saveguard;
+    }
 
 
     @Override

@@ -9,7 +9,9 @@ public class TeleportModule extends AbstractServiceModule {
 
     private final boolean enabled;
 
-    public TeleportModule(boolean enabled) {this.enabled = enabled;}
+    public TeleportModule(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     @Override
     protected void configure() {

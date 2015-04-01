@@ -53,7 +53,9 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
 
     public static final Attribute<Group, UUID> GROUP_UUID = new SimpleAttribute<Group, UUID>("group_uuid") {
         @Override
-        public UUID getValue(Group group) { return group.getUUID(); }
+        public UUID getValue(Group group) {
+            return group.getUUID();
+        }
     };
 
     public static final Attribute<Group, String> GROUP_TAG = new SimpleAttribute<Group, String>("group_tag") {
@@ -65,7 +67,9 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
 
     public static final Attribute<Group, String> GROUP_CLEAN_TAG = new SimpleAttribute<Group, String>("group_tag") {
         @Override
-        public String getValue(Group group) { return ChatColor.stripColor(group.getTag()); }
+        public String getValue(Group group) {
+            return ChatColor.stripColor(group.getTag());
+        }
     };
 
 
@@ -82,7 +86,9 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
 
     public final Attribute<Member, UUID> MEMBER_UUID = new SimpleAttribute<Member, UUID>("group_uuid") {
         @Override
-        public UUID getValue(Member member) { return member.getUUID(); }
+        public UUID getValue(Member member) {
+            return member.getUUID();
+        }
     };
 
 

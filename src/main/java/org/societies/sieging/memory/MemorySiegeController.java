@@ -46,17 +46,23 @@ class MemorySiegeController implements SiegeController {
 
     public static final Attribute<Siege, Besieger> SIEGE_BESIEGER = new SimpleAttribute<Siege, Besieger>("siege_besieger") {
         @Override
-        public Besieger getValue(Siege siege) { return siege.getBesieger(); }
+        public Besieger getValue(Siege siege) {
+            return siege.getBesieger();
+        }
     };
 
     public static final Attribute<Siege, City> SIEGE_CITY = new SimpleAttribute<Siege, City>("siege_city") {
         @Override
-        public City getValue(Siege siege) { return siege.getCity(); }
+        public City getValue(Siege siege) {
+            return siege.getCity();
+        }
     };
 
     public static final Attribute<Siege, Location> SIEGE_INITIATED_LOCATION_HASH = new SimpleAttribute<Siege, Location>("siege_initiated") {
         @Override
-        public Location getValue(Siege siege) { return siege.getLocationInitiated(); }
+        public Location getValue(Siege siege) {
+            return siege.getLocationInitiated();
+        }
     };
 
     public static final SimpleAttribute<Siege, TwoDPoint> SIEGE_INITIATED_LOCATION = new SimpleAttribute<Siege, TwoDPoint>("siege_") {
