@@ -28,12 +28,9 @@ public class DictionaryModule extends AbstractServiceModule {
 
         bindNamedInstance("dictionary-directory", File.class, new File(dataDirectory, "translations"));
 
-        Key<MutableDictionary<String>> dictionaryKey = Key.get(new TypeLiteral<MutableDictionary<String>>() {
-        });
-        bind(dictionaryKey).to(new TypeLiteral<StringDictionary>() {
-        })
+        Key<MutableDictionary<String>> dictionaryKey = Key.get(new TypeLiteral<MutableDictionary<String>>() {});
+        bind(dictionaryKey).to(new TypeLiteral<StringDictionary>() {})
                 .in(Singleton.class);
-        bind(new TypeLiteral<Dictionary<String>>() {
-        }).to(dictionaryKey);
+        bind(new TypeLiteral<Dictionary<String>>() {}).to(dictionaryKey);
     }
 }

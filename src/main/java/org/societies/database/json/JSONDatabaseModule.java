@@ -47,24 +47,20 @@ public class JSONDatabaseModule extends AbstractServiceModule {
 
         install(new FactoryModuleBuilder()
                 .implement(MemoryMemberHeart.class, MemoryMemberHeart.class)
-                .build(new TypeLiteral<ExtensionFactory<MemoryMemberHeart, Member>>() {
-                }));
+                .build(new TypeLiteral<ExtensionFactory<MemoryMemberHeart, Member>>() {}));
 
         install(new FactoryModuleBuilder()
                 .implement(MemoryGroupHeart.class, MemoryGroupHeart.class)
-                .build(new TypeLiteral<ExtensionFactory<MemoryGroupHeart, Group>>() {
-                }));
+                .build(new TypeLiteral<ExtensionFactory<MemoryGroupHeart, Group>>() {}));
 
 
         install(new FactoryModuleBuilder()
                 .implement(GroupHeart.class, MemoryGroupHeart.class)
-                .build(new TypeLiteral<ExtensionFactory<GroupHeart, Group>>() {
-                }));
+                .build(new TypeLiteral<ExtensionFactory<GroupHeart, Group>>() {}));
 
         install(new FactoryModuleBuilder()
                 .implement(MemberHeart.class, MemoryMemberHeart.class)
-                .build(new TypeLiteral<ExtensionFactory<MemberHeart, Member>>() {
-                }));
+                .build(new TypeLiteral<ExtensionFactory<MemberHeart, Member>>() {}));
 
         // Group provider
         bind(GroupProvider.class).to(provider);

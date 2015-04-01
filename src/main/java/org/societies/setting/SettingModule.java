@@ -20,18 +20,12 @@ public class SettingModule extends AbstractModule {
     protected void configure() {
         bind(SettingProvider.class).to(CollectiveSettingProvider.class);
 
-        bind(LocationSetting.ID, "home", new TypeLiteral<Setting<Location>>() {
-        }, LocationSetting.class);
-        bind(RelationSetting.ID, new TypeLiteral<Setting<Relation>>() {
-        }, new RelationSetting());
-        bindNamed(VerifiedSetting.ID, "verify", new TypeLiteral<Setting<Boolean>>() {
-        }, new VerifiedSetting());
-        bindNamed("personal-ff", new TypeLiteral<Setting<Boolean>>() {
-        }, new BooleanSetting("personal-ff"));
-        bindNamed("group-ff", new TypeLiteral<Setting<Boolean>>() {
-        }, new BooleanSetting("group-ff"));
-        bindNamed("balance", "group-balance", new TypeLiteral<Setting<Double>>() {
-        }, new DoubleSetting("balance"));
+        bind(LocationSetting.ID, "home", new TypeLiteral<Setting<Location>>() {}, LocationSetting.class);
+        bind(RelationSetting.ID, new TypeLiteral<Setting<Relation>>() {}, new RelationSetting());
+        bindNamed(VerifiedSetting.ID, "verify", new TypeLiteral<Setting<Boolean>>() {}, new VerifiedSetting());
+        bindNamed("personal-ff", new TypeLiteral<Setting<Boolean>>() {}, new BooleanSetting("personal-ff"));
+        bindNamed("group-ff", new TypeLiteral<Setting<Boolean>>() {}, new BooleanSetting("group-ff"));
+        bindNamed("balance", "group-balance", new TypeLiteral<Setting<Double>>() {}, new DoubleSetting("balance"));
     }
 
     public <T> void bindNamed(String id, TypeLiteral<Setting<T>> type, Setting<T> setting) {

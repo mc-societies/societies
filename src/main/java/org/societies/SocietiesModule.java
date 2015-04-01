@@ -139,10 +139,8 @@ public class SocietiesModule extends AbstractServiceModule {
         bindNamed("data-directory", File.class).toInstance(dataDirectory);
 
 
-        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Member>>() {
-        });
-        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {
-        });
+        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Member>>() {});
+        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
 
 //        Disabled for now!
 //        if (config.getBoolean("city.enable")) {

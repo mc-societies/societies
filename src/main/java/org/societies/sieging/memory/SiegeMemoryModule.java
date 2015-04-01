@@ -27,8 +27,7 @@ public class SiegeMemoryModule extends AbstractServiceModule {
         bindService().to(city);
 
         Multibinder<ExtensionRoller<Group>> extensions = Multibinder
-                .newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {
-                });
+                .newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
 
 
         extensions.addBinding().to(MemorySiegeRoller.class);
