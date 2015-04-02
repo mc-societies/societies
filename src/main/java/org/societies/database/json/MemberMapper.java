@@ -58,7 +58,7 @@ public class MemberMapper extends AbstractMapper {
         return member;
     }
 
-    public JsonNode writeMember( Member member) throws IOException {
+    public JsonNode writeMember(Member member) throws IOException {
         ObjectNode node = mapper.createObjectNode();
 
         node.put("uuid", toText(member.getUUID()));

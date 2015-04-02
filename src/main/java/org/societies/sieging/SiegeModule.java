@@ -3,12 +3,12 @@ package org.societies.sieging;
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
 import com.typesafe.config.Config;
-import net.catharos.lib.core.uuid.UUIDStorage;
 import org.shank.AbstractModule;
 import org.societies.api.sieging.ActionValidator;
 import org.societies.api.sieging.Wager;
 import org.societies.sieging.commands.SiegeCommandModule;
 import org.societies.sieging.memory.SiegeMemoryModule;
+import org.societies.util.uuid.UUIDStorage;
 
 import java.io.File;
 import java.util.Collections;

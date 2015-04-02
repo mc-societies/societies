@@ -2,9 +2,9 @@ package org.societies.commands;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import net.catharos.lib.core.command.*;
-import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.sender.Sender;
+import order.*;
+import order.format.table.Table;
+import order.sender.Sender;
 import org.societies.bridge.ChatColor;
 
 import javax.inject.Provider;

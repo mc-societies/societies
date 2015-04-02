@@ -2,11 +2,11 @@ package org.societies.commands.society;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.format.table.RowFactory;
-import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.*;
+import order.CommandContext;
+import order.Executor;
+import order.format.table.RowFactory;
+import order.format.table.Table;
+import order.reflect.*;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;

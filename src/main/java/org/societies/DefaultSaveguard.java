@@ -2,7 +2,6 @@ package org.societies;
 
 import com.google.common.io.Files;
 import com.google.inject.Inject;
-import net.catharos.lib.core.uuid.UUIDStorage;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Logger;
 import org.societies.api.Saveguard;
@@ -12,6 +11,7 @@ import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;
 import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberProvider;
+import org.societies.util.uuid.UUIDStorage;
 
 import java.io.*;
 import java.util.Set;

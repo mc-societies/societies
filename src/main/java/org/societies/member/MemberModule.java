@@ -2,7 +2,7 @@ package org.societies.member;
 
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
-import net.catharos.lib.core.command.sender.SenderProvider;
+import order.sender.SenderProvider;
 import org.shank.AbstractModule;
 import org.societies.groups.ExtensionRoller;
 import org.societies.groups.member.Member;

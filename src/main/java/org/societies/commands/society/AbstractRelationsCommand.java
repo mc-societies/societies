@@ -1,12 +1,12 @@
 package org.societies.commands.society;
 
 import com.google.common.base.Optional;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.format.table.RowFactory;
-import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.Option;
-import net.catharos.lib.core.command.sender.Sender;
+import order.CommandContext;
+import order.Executor;
+import order.format.table.RowFactory;
+import order.format.table.Table;
+import order.reflect.Option;
+import order.sender.Sender;
 import org.societies.groups.Relation;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;

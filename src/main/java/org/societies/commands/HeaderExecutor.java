@@ -1,12 +1,12 @@
 package org.societies.commands;
 
 import com.google.inject.Inject;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.ExecuteException;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.format.Formatter;
-import net.catharos.lib.core.command.format.WidthProvider;
-import net.catharos.lib.core.command.sender.Sender;
+import order.CommandContext;
+import order.ExecuteException;
+import order.Executor;
+import order.format.Formatter;
+import order.format.WidthProvider;
+import order.sender.Sender;
 import org.societies.bridge.ChatColor;
 
 /**

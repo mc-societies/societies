@@ -1,10 +1,10 @@
 package org.societies;
 
 import com.google.inject.Inject;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.ParsingException;
-import net.catharos.lib.core.command.parser.ArgumentParser;
-import net.catharos.lib.core.command.sender.Sender;
+import order.CommandContext;
+import order.ParsingException;
+import order.parser.ArgumentParser;
+import order.sender.Sender;
 import org.societies.bridge.Location;
 import org.societies.bridge.Player;
 import org.societies.bridge.World;

@@ -1,13 +1,12 @@
 package org.societies.commands;
 
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.name.Names;
-import net.catharos.lib.core.command.format.DefaultFormatter;
-import net.catharos.lib.core.command.format.Formatter;
-import net.catharos.lib.core.command.format.WidthProvider;
-import net.catharos.lib.core.command.format.pagination.DefaultPaginator;
-import net.catharos.lib.core.command.format.pagination.Paginator;
-import net.catharos.lib.core.command.format.table.*;
+import order.Translate;
+import order.format.DefaultFormatter;
+import order.format.Formatter;
+import order.format.WidthProvider;
+import order.format.pagination.DefaultPaginator;
+import order.format.pagination.Paginator;
+import order.format.table.*;
 import org.shank.AbstractModule;
 import org.societies.MinecraftWidthProvider;
 import org.societies.bridge.ChatColor;
@@ -23,11 +22,7 @@ public class FormatModule extends AbstractModule {
         bindNamed("clean", Table.class).to(DefaultTable.class);
         bindNamedString("append", ChatColor.RESET.toString());
 
-        install(new FactoryModuleBuilder()
-                .implement(Row.class, Names.named("default"), DefaultRow.class)
-                .implement(Row.class, Names.named("forward"), ForwardingRow.class)
-                .implement(Row.class, Names.named("dictionary"), DictionaryRow.class)
-                .build(RowFactory.class));
+        bind(RowFactory.class).to(DefaultRowFactory.class);
 
         bindNamedInstance("column-spacing", double.class, 24.0D);
         bindNamedInstance("max-line-length", double.class, 310.0D);
@@ -42,5 +37,7 @@ public class FormatModule extends AbstractModule {
         bind(Formatter.class).to(DefaultFormatter.class);
 
         bind(WidthProvider.class).to(MinecraftWidthProvider.class);
+
+        bind(Translate.class).to(DictionaryTranslate.class);
     }
 }

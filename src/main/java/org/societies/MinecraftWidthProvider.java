@@ -2,7 +2,7 @@ package org.societies;
 
 import com.google.inject.Singleton;
 import gnu.trove.map.hash.TCharIntHashMap;
-import net.catharos.lib.core.command.format.WidthProvider;
+import order.format.WidthProvider;
 import org.societies.bridge.ChatColor;
 
 /**

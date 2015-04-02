@@ -3,14 +3,14 @@ package org.societies.sieging.memory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.google.inject.Inject;
 import com.migcomponents.migbase64.Base64;
-import net.catharos.lib.core.uuid.UUIDGen;
-import net.catharos.lib.core.uuid.UUIDStorage;
 import org.societies.api.sieging.Besieger;
 import org.societies.api.sieging.City;
 import org.societies.api.sieging.Land;
 import org.societies.bridge.Location;
 import org.societies.bridge.WorldResolver;
 import org.societies.database.json.AbstractMapper;
+import org.societies.util.uuid.UUIDGen;
+import org.societies.util.uuid.UUIDStorage;
 
 import javax.inject.Named;
 import java.io.IOException;

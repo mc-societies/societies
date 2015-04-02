@@ -2,12 +2,12 @@ package org.societies.commands.society.rank;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import net.catharos.lib.core.collections.IterableUtils;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.*;
-import net.catharos.lib.core.command.reflect.instance.Children;
+import order.CommandContext;
+import order.Executor;
+import order.format.table.Table;
+import order.reflect.*;
+import order.reflect.instance.Children;
+import org.societies.IterableUtils;
 import org.societies.bridge.ChatColor;
 import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;

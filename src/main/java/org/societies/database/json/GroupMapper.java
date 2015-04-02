@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.migcomponents.migbase64.Base64;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.joda.time.DateTime;
 import org.societies.api.group.Society;
 import org.societies.bridge.WorldResolver;
@@ -17,6 +16,7 @@ import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupBuilder;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.rank.RankFactory;
+import org.societies.util.uuid.UUIDGen;
 
 import java.io.File;
 import java.io.IOException;

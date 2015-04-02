@@ -4,9 +4,9 @@ import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.typesafe.config.Config;
-import net.catharos.lib.core.util.CastSafe;
 import org.shank.AbstractModule;
 import org.shank.config.Settings;
+import org.societies.groups.CastSafe;
 
 /**
  * Represents a AbstractConfigModule

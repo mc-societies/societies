@@ -2,11 +2,11 @@ package org.societies.commands.society.relation;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.inject.Inject;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.*;
-import net.catharos.lib.core.command.reflect.instance.Children;
+import order.CommandContext;
+import order.Executor;
+import order.format.table.Table;
+import order.reflect.*;
+import order.reflect.instance.Children;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.shank.config.ConfigSetting;

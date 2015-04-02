@@ -3,10 +3,10 @@ package org.societies.dictionary;
 import com.google.inject.Key;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
-import net.catharos.lib.core.i18n.Dictionary;
-import net.catharos.lib.core.i18n.MutableDictionary;
 import org.shank.service.AbstractServiceModule;
 import org.societies.StringDictionary;
+import org.societies.groups.dictionary.Dictionary;
+import org.societies.groups.dictionary.MutableDictionary;
 
 import java.io.File;
 

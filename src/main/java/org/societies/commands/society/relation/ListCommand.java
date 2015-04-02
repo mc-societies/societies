@@ -1,10 +1,10 @@
 package org.societies.commands.society.relation;
 
 import com.google.common.base.Optional;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.Option;
+import order.CommandContext;
+import order.Executor;
+import order.format.table.Table;
+import order.reflect.Option;
 import org.societies.groups.Relation;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;

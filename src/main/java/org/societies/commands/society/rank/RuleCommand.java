@@ -1,11 +1,11 @@
 package org.societies.commands.society.rank;
 
 import com.google.inject.Inject;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.ExecuteException;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.reflect.*;
-import net.catharos.lib.core.command.reflect.instance.Children;
+import order.CommandContext;
+import order.ExecuteException;
+import order.Executor;
+import order.reflect.*;
+import order.reflect.instance.Children;
 import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;
 import org.societies.groups.group.Group;

@@ -1,9 +1,9 @@
 package org.societies.commands;
 
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.ExecuteException;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.sender.Sender;
+import order.CommandContext;
+import order.ExecuteException;
+import order.Executor;
+import order.sender.Sender;
 import org.societies.api.group.Society;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;

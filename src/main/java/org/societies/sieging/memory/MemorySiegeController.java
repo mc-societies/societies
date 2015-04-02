@@ -14,7 +14,6 @@ import com.googlecode.cqengine.attribute.Attribute;
 import com.googlecode.cqengine.attribute.SimpleAttribute;
 import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.resultset.ResultSet;
-import net.catharos.lib.core.uuid.UUIDGen;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -22,6 +21,7 @@ import org.societies.api.sieging.*;
 import org.societies.bridge.Location;
 import org.societies.sieging.memory.index.KDTreeIndex;
 import org.societies.sieging.wager.EmptyWager;
+import org.societies.util.uuid.UUIDGen;
 
 import java.util.Collection;
 import java.util.Collections;

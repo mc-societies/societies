@@ -1,10 +1,10 @@
 package org.societies.commands;
 
 import com.google.inject.Inject;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.ExecuteException;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.sender.Sender;
+import order.CommandContext;
+import order.ExecuteException;
+import order.Executor;
+import order.sender.Sender;
 import org.shank.config.ConfigSetting;
 import org.societies.bridge.Player;
 import org.societies.groups.member.Member;

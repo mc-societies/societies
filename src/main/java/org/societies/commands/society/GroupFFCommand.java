@@ -1,10 +1,10 @@
 package org.societies.commands.society;
 
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.reflect.*;
-import org.societies.commands.RuleStep;
+import order.CommandContext;
+import order.Executor;
+import order.reflect.*;
 import org.societies.api.group.Society;
+import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 

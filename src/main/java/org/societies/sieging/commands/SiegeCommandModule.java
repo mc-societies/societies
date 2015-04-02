@@ -4,7 +4,7 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
-import net.catharos.lib.core.command.parser.ArgumentParser;
+import order.parser.ArgumentParser;
 import org.shank.AbstractModule;
 import org.societies.api.sieging.City;
 import org.societies.sieging.commands.parser.CityParser;

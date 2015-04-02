@@ -1,12 +1,12 @@
 package org.societies.commands.society;
 
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Permission;
-import net.catharos.lib.core.command.reflect.Sender;
-import org.societies.groups.member.Member;
+import order.CommandContext;
+import order.Executor;
+import order.reflect.Command;
+import order.reflect.Permission;
+import order.reflect.Sender;
 import org.societies.api.member.SocietyMember;
+import org.societies.groups.member.Member;
 
 /**
  * Represents a RelationListCommand

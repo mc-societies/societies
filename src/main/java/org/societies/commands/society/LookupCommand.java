@@ -1,12 +1,12 @@
 package org.societies.commands.society;
 
 import com.google.inject.Inject;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Option;
-import net.catharos.lib.core.command.reflect.Permission;
-import net.catharos.lib.core.command.sender.Sender;
+import order.CommandContext;
+import order.Executor;
+import order.reflect.Command;
+import order.reflect.Option;
+import order.reflect.Permission;
+import order.sender.Sender;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;

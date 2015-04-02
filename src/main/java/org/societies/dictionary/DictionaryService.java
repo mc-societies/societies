@@ -3,13 +3,13 @@ package org.societies.dictionary;
 import com.google.common.io.ByteStreams;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import net.catharos.lib.core.i18n.MutableDictionary;
-import net.catharos.lib.core.util.ZipUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Logger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
+import org.societies.groups.dictionary.MutableDictionary;
+import org.societies.util.ZipUtils;
 
 import java.io.*;
 import java.net.URL;

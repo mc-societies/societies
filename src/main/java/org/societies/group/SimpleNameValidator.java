@@ -1,8 +1,8 @@
 package org.societies.group;
 
 import com.google.inject.Inject;
-import net.catharos.lib.core.i18n.Dictionary;
 import org.shank.config.ConfigSetting;
+import org.societies.groups.dictionary.Dictionary;
 import org.societies.groups.validate.NameValidator;
 import org.societies.groups.validate.ValidateResult;
 

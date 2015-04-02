@@ -1,9 +1,9 @@
 package org.societies.commands.society;
 
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.ExecuteException;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.reflect.*;
+import order.CommandContext;
+import order.ExecuteException;
+import order.Executor;
+import order.reflect.*;
 import org.societies.bridge.ChatColor;
 import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;

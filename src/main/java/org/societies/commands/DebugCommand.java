@@ -1,14 +1,14 @@
 package org.societies.commands;
 
 import com.google.inject.Inject;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.ExecuteException;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.reflect.Argument;
-import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Permission;
-import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.lib.core.command.sender.SenderWriter;
+import order.CommandContext;
+import order.ExecuteException;
+import order.Executor;
+import order.reflect.Argument;
+import order.reflect.Command;
+import order.reflect.Permission;
+import order.sender.Sender;
+import order.sender.SenderWriter;
 
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;

@@ -3,12 +3,12 @@ package org.societies.database.json;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.googlecode.cqengine.query.Query;
-import net.catharos.lib.core.uuid.UUIDStorage;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupFactory;
 import org.societies.groups.group.GroupPublisher;
+import org.societies.util.uuid.UUIDStorage;
 
 import javax.inject.Provider;
 import java.io.BufferedOutputStream;

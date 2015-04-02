@@ -11,14 +11,11 @@ import com.googlecode.cqengine.CQEngine;
 import com.googlecode.cqengine.IndexedCollection;
 import com.googlecode.cqengine.attribute.Attribute;
 import com.googlecode.cqengine.attribute.SimpleAttribute;
-import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.suffix.SuffixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.resultset.ResultSet;
 import gnu.trove.map.hash.THashMap;
-import net.catharos.lib.core.util.CastSafe;
-import net.catharos.lib.core.uuid.UUIDStorage;
 import org.apache.logging.log4j.Logger;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
@@ -30,6 +27,7 @@ import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberFactory;
 import org.societies.groups.member.MemberProvider;
 import org.societies.groups.member.MemberPublisher;
+import org.societies.util.uuid.UUIDStorage;
 
 import javax.annotation.Nullable;
 import java.io.BufferedOutputStream;
@@ -93,7 +91,7 @@ class JSONProvider extends AbstractService implements MemberProvider, GroupProvi
 
 
     {
-        members.addIndex(CastSafe.<Index<Member>>toGeneric(HashIndex.onAttribute(MEMBER_UUID)));
+        members.addIndex(HashIndex.onAttribute(MEMBER_UUID));
     }
 
     private final PlayerResolver playerResolver;

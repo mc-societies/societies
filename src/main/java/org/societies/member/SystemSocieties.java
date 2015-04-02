@@ -1,13 +1,13 @@
 package org.societies.member;
 
 import com.google.inject.Inject;
-import net.catharos.lib.core.command.Command;
-import net.catharos.lib.core.command.sender.Sender;
-import net.catharos.lib.core.i18n.Dictionary;
+import order.Command;
+import order.sender.Sender;
 import org.jetbrains.annotations.Nullable;
 import org.societies.api.economy.EconomyParticipant;
 import org.societies.api.economy.EconomyResponse;
 import org.societies.bridge.*;
+import org.societies.groups.dictionary.Dictionary;
 import org.societies.member.locale.LocaleProvider;
 
 import java.text.MessageFormat;

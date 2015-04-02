@@ -1,9 +1,9 @@
 package org.societies.group;
 
 import com.google.inject.Inject;
-import net.catharos.lib.core.i18n.Dictionary;
 import org.shank.config.ConfigSetting;
 import org.societies.bridge.ChatColor;
+import org.societies.groups.dictionary.Dictionary;
 import org.societies.groups.validate.TagValidator;
 import org.societies.groups.validate.ValidateResult;
 

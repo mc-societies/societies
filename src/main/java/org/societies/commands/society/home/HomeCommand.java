@@ -2,11 +2,11 @@ package org.societies.commands.society.home;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.ExecuteException;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.reflect.*;
-import net.catharos.lib.core.command.reflect.instance.Children;
+import order.CommandContext;
+import order.ExecuteException;
+import order.Executor;
+import order.reflect.*;
+import order.reflect.instance.Children;
 import org.societies.api.group.Society;
 import org.societies.bridge.Location;
 import org.societies.bridge.Player;
@@ -35,7 +35,7 @@ public class HomeCommand implements Executor<Member> {
     private final TeleportController teleportController;
 
     @Inject
-    public HomeCommand( TeleportController teleportController) {
+    public HomeCommand(TeleportController teleportController) {
         this.teleportController = teleportController;
     }
 

@@ -2,9 +2,9 @@ package org.societies.commands.society.promote;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import net.catharos.lib.core.command.CommandContext;
-import net.catharos.lib.core.command.Executor;
-import net.catharos.lib.core.command.reflect.*;
+import order.CommandContext;
+import order.Executor;
+import order.reflect.*;
 import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;

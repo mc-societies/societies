@@ -1,10 +1,10 @@
 package org.societies.commands.society;
 
 import com.google.inject.Inject;
-import net.catharos.lib.core.command.format.table.RowFactory;
-import net.catharos.lib.core.command.format.table.Table;
-import net.catharos.lib.core.command.reflect.Command;
-import net.catharos.lib.core.command.reflect.Permission;
+import order.format.table.RowFactory;
+import order.format.table.Table;
+import order.reflect.Command;
+import order.reflect.Permission;
 import org.societies.groups.Relation;
 import org.societies.groups.group.GroupProvider;
 
