@@ -1,11 +1,11 @@
 package org.societies.group;
 
+import com.google.common.base.Optional;
 import org.societies.api.group.Society;
 import org.societies.bridge.Location;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupPublisher;
 
-import java.util.Optional;
 
 /**
  * Represents a MemorySociety
@@ -88,6 +88,6 @@ public class MemorySociety implements Society {
 
     @Override
     public Optional<Location> getHome() {
-        return Optional.ofNullable(home);
+        return Optional.fromNullable(home);
     }
 }
