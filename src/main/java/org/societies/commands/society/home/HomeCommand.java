@@ -1,7 +1,6 @@
 package org.societies.commands.society.home;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
@@ -11,11 +10,12 @@ import org.societies.bridge.Location;
 import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;
+import org.societies.api.group.Society;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
-import org.societies.groups.setting.Setting;
 import org.societies.teleport.TeleportController;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -32,13 +32,10 @@ import java.util.Set;
 @Sender(Member.class)
 public class HomeCommand implements Executor<Member> {
 
-    private final Setting<Location> homeSetting;
-
     private final TeleportController teleportController;
 
     @Inject
-    public HomeCommand(@Named("home") Setting<Location> homeSetting, TeleportController teleportController) {
-        this.homeSetting = homeSetting;
+    public HomeCommand( TeleportController teleportController) {
         this.teleportController = teleportController;
     }
 
@@ -51,14 +48,16 @@ public class HomeCommand implements Executor<Member> {
             return;
         }
 
-        Location location = group.get(homeSetting);
+        Society society = group.get(Society.class);
 
-        if (location == null) {
+        Optional<Location> location = society.getHome();
+
+        if (!location.isPresent()) {
             sender.send("home.not-set");
             return;
         }
 
-        teleportController.teleport(sender, location);
+        teleportController.teleport(sender, location.get());
         sender.send("home.teleporting");
     }
 
@@ -69,13 +68,6 @@ public class HomeCommand implements Executor<Member> {
     @Sender(Member.class)
     public static class RemoveHomeCommand implements Executor<Member> {
 
-        private final Setting<Location> homeSetting;
-
-        @Inject
-        public RemoveHomeCommand(@Named("home") Setting<Location> homeSetting) {
-            this.homeSetting = homeSetting;
-        }
-
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
             Group group = sender.getGroup();
@@ -85,7 +77,9 @@ public class HomeCommand implements Executor<Member> {
                 return;
             }
 
-            group.remove(homeSetting);
+            Society society = group.get(Society.class);
+
+            society.removeHome();
             sender.send("home.removed");
         }
     }
@@ -98,13 +92,6 @@ public class HomeCommand implements Executor<Member> {
 
         @Option(name = "argument.location")
         Location location;
-
-        private final Setting<Location> homeSetting;
-
-        @Inject
-        public SetHomeCommand(@Named("home") Setting<Location> homeSetting) {
-            this.homeSetting = homeSetting;
-        }
 
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
@@ -119,14 +106,16 @@ public class HomeCommand implements Executor<Member> {
                 location = sender.get(Player.class).getLocation();
             }
 
-            Location currentHome = group.get(homeSetting);
+            Society society = group.get(Society.class);
 
-            if (currentHome != null) {
+            Optional<Location> currentHome = society.getHome();
+
+            if (currentHome.isPresent()) {
                 sender.send("home.already-set");
                 return;
             }
 
-            group.set(homeSetting, location);
+            society.setHome(location);
             sender.send("home.set", location.getX(), location.getY(), location.getZ());
         }
     }
@@ -138,13 +127,6 @@ public class HomeCommand implements Executor<Member> {
     @Sender(Member.class)
     public static class RegroupCommand implements Executor<Member> {
 
-        private final Setting<Location> homeSetting;
-
-        @Inject
-        public RegroupCommand(@Named("home") Setting<Location> homeSetting) {
-            this.homeSetting = homeSetting;
-        }
-
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
             Group group = sender.getGroup();
@@ -154,12 +136,16 @@ public class HomeCommand implements Executor<Member> {
                 return;
             }
 
-            Location location = group.get(homeSetting);
+            Society society = group.get(Society.class);
 
-            if (location == null) {
+            Optional<Location> optional = society.getHome();
+
+            if (!optional.isPresent()) {
                 sender.send("home.not-set");
                 return;
             }
+
+            Location location = optional.get();
 
             if (location instanceof Location.InvalidLocation) {
                 sender.send("home.not-valid");

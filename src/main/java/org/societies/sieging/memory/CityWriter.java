@@ -5,13 +5,12 @@ import com.google.inject.Inject;
 import com.migcomponents.migbase64.Base64;
 import net.catharos.lib.core.uuid.UUIDGen;
 import net.catharos.lib.core.uuid.UUIDStorage;
-import org.apache.logging.log4j.Logger;
 import org.societies.api.sieging.Besieger;
 import org.societies.api.sieging.City;
 import org.societies.api.sieging.Land;
 import org.societies.bridge.Location;
+import org.societies.bridge.WorldResolver;
 import org.societies.database.json.AbstractMapper;
-import org.societies.groups.setting.SettingProvider;
 
 import javax.inject.Named;
 import java.io.IOException;
@@ -24,8 +23,8 @@ public class CityWriter extends AbstractMapper {
     private final UUIDStorage cityStorage;
 
     @Inject
-    public CityWriter(@Named("cities") UUIDStorage cityStorage, Logger logger, SettingProvider settingProvider) {
-        super(logger, settingProvider);
+    public CityWriter(@Named("cities") UUIDStorage cityStorage, WorldResolver worldResolver) {
+        super(worldResolver);
         this.cityStorage = cityStorage;
     }
 
@@ -78,8 +77,6 @@ public class CityWriter extends AbstractMapper {
 
         writer.writeStringField("owner", Base64.encodeToString(UUIDGen.toByteArray(city.getOwner().getUUID()), false));
         writer.writeNumberField("founded", city.getFounded().getMillis());
-
-        writeSettings(city, writer, city.getSettings());
 
         writer.writeEndObject();
     }

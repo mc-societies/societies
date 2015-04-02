@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.google.inject.Provider;
 import org.societies.api.converter.Converter;
-import org.societies.bridge.Location;
 import org.societies.groups.RelationFactory;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupBuilder;
@@ -14,7 +13,6 @@ import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberFactory;
 import org.societies.groups.member.MemberPublisher;
 import org.societies.groups.rank.Rank;
-import org.societies.groups.setting.Setting;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,8 +29,6 @@ public abstract class AbstractConverter implements Converter {
     private final MemberFactory memberFactory;
     private final Provider<GroupBuilder> groupBuilder;
     private final RelationFactory relationFactory;
-    private final Setting<Double> balanceSetting;
-    private final Setting<Location> homeSetting;
     private final Rank superDefaultRank;
 
     private final MemberPublisher memberPublisher;
@@ -41,16 +37,12 @@ public abstract class AbstractConverter implements Converter {
     public AbstractConverter(MemberFactory memberFactory,
                              Provider<GroupBuilder> groupBuilder,
                              RelationFactory relationFactory,
-                             Setting<Double> balanceSetting,
-                             Setting<Location> homeSetting,
                              Rank superDefaultRank,
                              MemberPublisher memberPublisher,
                              GroupPublisher groupPublisher) {
         this.memberFactory = memberFactory;
         this.groupBuilder = groupBuilder;
         this.relationFactory = relationFactory;
-        this.balanceSetting = balanceSetting;
-        this.homeSetting = homeSetting;
         this.superDefaultRank = superDefaultRank;
         this.memberPublisher = memberPublisher;
         this.groupPublisher = groupPublisher;
@@ -66,14 +58,6 @@ public abstract class AbstractConverter implements Converter {
 
     public RelationFactory getRelationFactory() {
         return relationFactory;
-    }
-
-    public Setting<Double> getBalanceSetting() {
-        return balanceSetting;
-    }
-
-    public Setting<Location> getHomeSetting() {
-        return homeSetting;
     }
 
     public Rank getSuperDefaultRank() {

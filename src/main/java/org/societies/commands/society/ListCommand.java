@@ -9,6 +9,7 @@ import net.catharos.lib.core.command.reflect.Option;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
 import org.shank.config.ConfigSetting;
+import org.societies.api.group.Society;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;
 
@@ -55,7 +56,8 @@ public class ListCommand implements Executor<Sender> {
         table.addRow("Society", "Tag", "Members");
 
         for (Group group : groups) {
-            if ((!verified && showUnverified) || group.isVerified()) {
+            Society society = group.get(Society.class);
+            if ((!verified && showUnverified) || society.isVerified()) {
                 table.addRow(group.getName(), group.getTag(), Integer.toString(group.getMembers().size()));
             }
         }

@@ -1,17 +1,15 @@
 package org.societies.database.json;
 
-import com.fasterxml.jackson.core.*;
-import com.google.common.collect.Table;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.migcomponents.migbase64.Base64;
-import net.catharos.lib.core.util.CastSafe;
 import net.catharos.lib.core.uuid.UUIDGen;
-import org.apache.logging.log4j.Logger;
-import org.societies.groups.setting.Setting;
-import org.societies.groups.setting.SettingException;
-import org.societies.groups.setting.SettingProvider;
-import org.societies.groups.setting.subject.Subject;
-import org.societies.groups.setting.target.SimpleTarget;
-import org.societies.groups.setting.target.Target;
+import org.societies.bridge.Location;
+import org.societies.bridge.WorldResolver;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,24 +22,27 @@ import java.util.UUID;
  */
 public class AbstractMapper {
 
-    private final JsonFactory factory = new JsonFactory();
-    protected final Logger logger;
-    private final SettingProvider settingProvider;
+    ObjectMapper mapper = new ObjectMapper();
+    private JsonFactory factory;
 
-    public AbstractMapper(Logger logger, SettingProvider settingProvider) {
-        this.logger = logger;
-        this.settingProvider = settingProvider;
+    private final WorldResolver worldResolver;
+
+    public AbstractMapper(WorldResolver worldResolver) {
+        this.worldResolver = worldResolver;
+        factory = mapper.getFactory();
     }
 
-    protected JsonParser createParser(String data) throws IOException {
-        return factory.createParser(data);
+    protected JsonNode createNode(String data) throws IOException {
+        return mapper.readTree(data);
     }
 
-    protected JsonParser createParser(File file) throws IOException {
-        return factory.createParser(file);
+    protected JsonNode createNode(File file) throws IOException {
+        return mapper.readTree(file);
     }
+
 
     protected JsonGenerator createGenerator(File file) throws IOException {
+
         return factory.createGenerator(file, JsonEncoding.UTF8);
     }
 
@@ -53,83 +54,35 @@ public class AbstractMapper {
         return factory.createGenerator(writer);
     }
 
-    public void readSettings(UUID subject, JsonParser parser, Table<Setting, Target, String> settings) throws IOException {
-        validateArray(parser);
 
-        while (parser.nextToken() != JsonToken.END_ARRAY) {
-            validateObject(parser);
-
-            Target target = null;
-            Setting setting = null;
-            String value = null;
-
-            while (parser.nextToken() != JsonToken.END_OBJECT) {
-                String settingField = parser.getCurrentName();
-
-                parser.nextToken();
-                if (settingField.equals("target")) {
-                    target = new SimpleTarget(UUIDGen.toUUID(Base64.decode(parser.getText())));
-                } else if (settingField.equals("setting")) {
-                    setting = settingProvider.getSetting(parser.getText());
-                } else if (settingField.equals("value")) {
-                    value = parser.getText();
-                }
-            }
-
-            if (target == null) {
-                target = new SimpleTarget(subject);
-            }
-
-            if (setting == null || value == null) {
-                continue;
-            }
-
-            settings.put(setting, target, value);
-        }
+    public UUID toUUID(JsonNode node) {
+        return UUIDGen.toUUID(Base64.decode(node.asText()));
     }
 
-    public void writeSettings(Subject subject, JsonGenerator generator, Table<Setting, Target, Object> settings) throws IOException {
-        if (settings.isEmpty()) {
-            return;
-        }
-
-        generator.writeArrayFieldStart("settings");
-        for (Table.Cell<Setting, Target, Object> cell : settings.cellSet()) {
-            Target target = cell.getColumnKey();
-            Setting<Object> setting = CastSafe.toGeneric(cell.getRowKey());
-            Object value = cell.getValue();
-
-            String result;
-
-            try {
-                result = setting.convertToString(subject, target, value);
-            } catch (SettingException ignored) {
-                logger.warn("Failed to result setting %s! Subject: %s Target: %s Value: %s", setting, subject, target, value);
-                continue;
-            }
-
-            generator.writeStartObject();
-            UUID targetUUID = target.getUUID();
-            if (!targetUUID.equals(subject.getUUID())) {
-                generator.writeStringField("target", Base64.encodeToString(UUIDGen.toByteArray(target.getUUID()), false));
-            }
-            generator.writeStringField("setting", setting.getID());
-            generator.writeStringField("value", result);
-            generator.writeEndObject();
-        }
-        generator.writeEndArray();
+    public String toText(UUID uuid) {
+        return Base64.encodeToString(UUIDGen.toByteArray(uuid), false);
     }
 
-    public void validateObject(JsonParser parser) throws IOException {
-        if (parser.getCurrentToken() != JsonToken.START_OBJECT) {
-            throw new IOException("Expected data to start with an Object, but was " + parser.getCurrentToken());
-        }
+    public Location toLocation(JsonNode node) {
+        return new Location(worldResolver.getWorld(node.path("world").asText()),
+                node.path("x").asDouble(),
+                node.path("y").asDouble(),
+                node.path("z").asDouble(),
+                (float) node.path("pitch").asDouble(),
+                (float) node.path("yaw").asDouble(),
+                (float) node.path("roll").asDouble());
     }
 
-    public void validateArray(JsonParser parser) throws IOException {
-        if (parser.getCurrentToken() != JsonToken.START_ARRAY) {
-            throw new IOException("Expected data to start with an Array, but was " + parser.getCurrentToken());
-        }
-    }
+    public JsonNode toNode(Location location) {
+        ObjectNode node = mapper.createObjectNode();
 
+        node.put("world", location.getWorld().getName());
+        node.put("x", location.getX());
+        node.put("y", location.getY());
+        node.put("z", location.getZ());
+        node.put("pitch", location.getPitch());
+        node.put("yaw", location.getYaw());
+        node.put("roll", location.getRoll());
+        return node;
+    }
 }

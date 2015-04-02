@@ -1,7 +1,6 @@
 package org.societies.commands.society.balance;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.Argument;
@@ -11,9 +10,9 @@ import net.catharos.lib.core.command.reflect.Sender;
 import org.societies.api.economy.EconomyParticipant;
 import org.societies.api.economy.EconomyResponse;
 import org.societies.api.lock.Locker;
+import org.societies.api.group.Society;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
-import org.societies.groups.setting.Setting;
 
 /**
  * Represents a RelationListCommand
@@ -27,12 +26,10 @@ public class WithdrawCommand implements Executor<Member> {
     double withdraw;
 
     private final Locker locker;
-    private final Setting<Double> balanceSetting;
 
     @Inject
-    public WithdrawCommand(Locker locker, @Named("group-balance") Setting<Double> balanceSetting) {
+    public WithdrawCommand(Locker locker) {
         this.locker = locker;
-        this.balanceSetting = balanceSetting;
     }
 
     @Override
@@ -50,15 +47,16 @@ public class WithdrawCommand implements Executor<Member> {
             if (!locker.lock(0)) return;
 
             EconomyParticipant economy = sender.get(EconomyParticipant.class);
+            Society society = group.get(Society.class);
 
-            double balance = group.getDouble(balanceSetting);
+            double balance = society.getBalance();
 
             if (balance < withdraw) {
                 sender.send("withdraw-failed");
                 return;
             }
 
-            group.set(balanceSetting, balance - withdraw);
+            society.setBalance(balance - withdraw);
 
 
             EconomyResponse response = economy.deposit(withdraw);

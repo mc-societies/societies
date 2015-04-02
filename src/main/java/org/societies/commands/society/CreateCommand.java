@@ -11,6 +11,7 @@ import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.reflect.Sender;
 import org.shank.config.ConfigSetting;
 import org.societies.api.economy.EconomyParticipant;
+import org.societies.api.group.Society;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupPublisher;
 import org.societies.groups.member.Member;
@@ -101,7 +102,8 @@ public class CreateCommand implements Executor<Member> {
         }
 
         if (!verificationRequired) {
-            group.verify(true);
+            Society society = group.get(Society.class);
+            society.setVerified(true);
         }
 
 

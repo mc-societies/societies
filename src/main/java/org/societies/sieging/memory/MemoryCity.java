@@ -8,9 +8,6 @@ import org.societies.api.sieging.City;
 import org.societies.api.sieging.CityPublisher;
 import org.societies.api.sieging.Land;
 import org.societies.bridge.Location;
-import org.societies.groups.setting.Setting;
-import org.societies.groups.setting.subject.DefaultSubject;
-import org.societies.groups.setting.target.Target;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -18,7 +15,7 @@ import java.util.UUID;
 /**
  * Represents a MemoryCity
  */
-class MemoryCity extends DefaultSubject implements City {
+class MemoryCity implements City {
 
     private final THashMap<UUID, Land> lands = new THashMap<UUID, Land>();
     private final UUID uuid;
@@ -37,7 +34,6 @@ class MemoryCity extends DefaultSubject implements City {
                       DateTime founded,
                       CityPublisher cityPublisher,
                       Function<Integer, Double> cityFunction) {
-        super(uuid);
         this.uuid = uuid;
         this.name = name;
         this.location = location;
@@ -166,14 +162,5 @@ class MemoryCity extends DefaultSubject implements City {
     @Override
     public int hashCode() {
         return uuid.hashCode();
-    }
-
-    @Override
-    public <V> void set(Setting<V> setting, Target target, V value) {
-        super.set(setting, target, value);
-
-        if (linked()) {
-            cityPublisher.publish(this);
-        }
     }
 }

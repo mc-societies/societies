@@ -6,6 +6,7 @@ import net.catharos.lib.core.command.reflect.Argument;
 import net.catharos.lib.core.command.reflect.Command;
 import net.catharos.lib.core.command.reflect.Permission;
 import net.catharos.lib.core.command.sender.Sender;
+import org.societies.api.group.Society;
 import org.societies.groups.group.Group;
 
 /**
@@ -20,7 +21,8 @@ public class DisproveCommand implements Executor<Sender> {
 
     @Override
     public void execute(CommandContext<Sender> ctx, Sender sender) {
-        target.verify(false);
+        Society society = target.get(Society.class);
+        society.setVerified(false);
         sender.send("target-society.disproved", target.getTag());
     }
 }

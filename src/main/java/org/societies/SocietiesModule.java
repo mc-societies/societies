@@ -5,7 +5,6 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import com.google.inject.TypeLiteral;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.typesafe.config.Config;
@@ -25,16 +24,13 @@ import org.societies.commands.FormatModule;
 import org.societies.database.DatabaseModule;
 import org.societies.dictionary.DictionaryModule;
 import org.societies.group.SocietyModule;
-import org.societies.groups.ExtensionRoller;
+import org.societies.group.rule.RuleModule;
 import org.societies.groups.event.EventController;
-import org.societies.groups.group.Group;
-import org.societies.groups.member.Member;
 import org.societies.member.MemberModule;
 import org.societies.member.locale.LocaleModule;
 import org.societies.request.RequestModule;
 import org.societies.script.NaughtyScriptModule;
 import org.societies.script.ScriptModule;
-import org.societies.setting.SettingModule;
 import org.societies.teleport.TeleportModule;
 
 import java.io.File;
@@ -43,8 +39,6 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.Executors;
-
-import static com.google.inject.multibindings.Multibinder.newSetBinder;
 
 /**
  * Represents a SocietiesModule
@@ -77,8 +71,6 @@ public class SocietiesModule extends AbstractServiceModule {
 
         install(new ConfigModule(config));
 
-        install(new SettingModule());
-
         // Logging
         bindNamed("service-logger", Logger.class).toInstance(logger);
 
@@ -98,7 +90,8 @@ public class SocietiesModule extends AbstractServiceModule {
         install(new LocaleModule(LocaleUtils.toLocale(config.getString("language"))));
 
         // Societies
-        install(new SocietyModule(config));
+        install(new SocietyModule());
+        install(new RuleModule(config));
 
         bindNamed("lifecycle-info", boolean.class).toInstance(false);
 
@@ -137,10 +130,6 @@ public class SocietiesModule extends AbstractServiceModule {
         bind(EventController.class).to(DefaultEventController.class);
 
         bindNamed("data-directory", File.class).toInstance(dataDirectory);
-
-
-        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Member>>() {});
-        newSetBinder(binder(), new TypeLiteral<ExtensionRoller<Group>>() {});
 
 //        Disabled for now!
 //        if (config.getBoolean("city.enable")) {

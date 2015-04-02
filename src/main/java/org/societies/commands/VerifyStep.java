@@ -4,6 +4,7 @@ import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.sender.Sender;
+import org.societies.api.group.Society;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 
@@ -28,7 +29,9 @@ public class VerifyStep implements Executor<Sender> {
 
         String verify = ctx.getCommand().get(VERIFY);
 
-        if (verify != null && !group.isVerified()) {
+        Society society = group.get(Society.class);
+
+        if (verify != null && !society.isVerified()) {
             sender.send("not-verified");
             ctx.cancel();
         }

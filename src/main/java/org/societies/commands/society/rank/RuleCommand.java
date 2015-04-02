@@ -1,22 +1,19 @@
 package org.societies.commands.society.rank;
 
-import com.google.common.collect.Table;
 import com.google.inject.Inject;
 import net.catharos.lib.core.command.CommandContext;
 import net.catharos.lib.core.command.ExecuteException;
 import net.catharos.lib.core.command.Executor;
 import net.catharos.lib.core.command.reflect.*;
 import net.catharos.lib.core.command.reflect.instance.Children;
-import org.societies.api.setting.RulesSetting;
 import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 import org.societies.groups.rank.Rank;
-import org.societies.groups.setting.Setting;
-import org.societies.groups.setting.target.Target;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents a RankCommand
@@ -59,11 +56,8 @@ public class RuleCommand {
                 return;
             }
 
-            for (Table.Cell<Setting, Target, Object> cell : rank.getSettings().cellSet()) {
-                if (cell.getRowKey() instanceof RulesSetting) {
-                    RulesSetting ruleSetting = (RulesSetting) cell.getRowKey();
-                    sender.send("rank.rules.list-format", ruleSetting.getRule());
-                }
+            for (String r : rank.getAvailableRules()) {
+                sender.send("rank.rules.list-format", r);
             }
         }
 
@@ -86,10 +80,10 @@ public class RuleCommand {
         @Argument(name = "argument.rank.rule")
         String rule;
 
-        private final Map<String, Setting> rules;
+        private final Set<String> rules;
 
         @Inject
-        public AssignCommand(Map<String, Setting> rules) {
+        public AssignCommand(Set<String> rules) {
             this.rules = rules;
         }
 
@@ -109,13 +103,11 @@ public class RuleCommand {
                 return;
             }
 
-            Setting setting = rules.get(rule);
-
-            if (setting == null) {
+            if (!rules.contains(rule)) {
                 return;
             }
 
-            rank.set(setting, true);
+            rank.addRule(rule);
 
             sender.send("rank.rules.assigned", rule, rank.getName());
         }
@@ -137,10 +129,10 @@ public class RuleCommand {
         @Argument(name = "argument.rank.rule")
         String rule;
 
-        private final Map<String, Setting> rules;
+        private final Map<String, String> rules;
 
         @Inject
-        public RemoveCommand(Map<String, Setting> rules) {
+        public RemoveCommand(Map<String, String> rules) {
             this.rules = rules;
         }
 
@@ -161,13 +153,13 @@ public class RuleCommand {
             }
 
 
-            Setting setting = rules.get(rule);
+            String setting = rules.get(rule);
 
             if (setting == null) {
                 return;
             }
 
-            rank.remove(setting);
+            rank.removeRule(setting);
 
             sender.send("rank.rules.removed", rule, rank.getName());
 

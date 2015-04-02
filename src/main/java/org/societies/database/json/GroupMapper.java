@@ -1,34 +1,27 @@
 package org.societies.database.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Table;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.migcomponents.migbase64.Base64;
-import gnu.trove.set.hash.THashSet;
 import net.catharos.lib.core.uuid.UUIDGen;
-import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
+import org.societies.api.group.Society;
+import org.societies.bridge.WorldResolver;
+import org.societies.groups.DefaultRelation;
+import org.societies.groups.Relation;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupBuilder;
 import org.societies.groups.rank.Rank;
 import org.societies.groups.rank.RankFactory;
-import org.societies.groups.rank.memory.MemoryRank;
-import org.societies.groups.setting.Setting;
-import org.societies.groups.setting.SettingProvider;
-import org.societies.groups.setting.target.Target;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -40,66 +33,51 @@ public class GroupMapper extends AbstractMapper {
     private final RankFactory rankFactory;
 
     @Inject
-    public GroupMapper(Logger logger, Provider<GroupBuilder> builders, RankFactory rankFactory, SettingProvider settingProvider) {
-        super(logger, settingProvider);
+    public GroupMapper(Provider<GroupBuilder> builders, RankFactory rankFactory, WorldResolver worldResolver) {
+        super(worldResolver);
         this.builders = builders;
         this.rankFactory = rankFactory;
     }
 
-    public Set<Group> readGroups(JsonParser parser) throws IOException {
-        parser.nextToken();
-        validateObject(parser);
-
-        THashSet<Group> groups = new THashSet<Group>();
-
-        while (parser.nextToken() != JsonToken.END_ARRAY) {
-            groups.add(readGroup(parser));
-        }
-
-        return groups;
-    }
-
-    public Group readGroup(JsonParser parser) throws IOException {
-        parser.nextToken();
-        validateObject(parser);
+    public Group readGroup(JsonNode node) throws IOException {
 
         GroupBuilder builder = builders.get();
 
 
-        List<Rank> rawRanks = Lists.newArrayList();
-
-        while (parser.nextToken() != JsonToken.END_OBJECT) {
-            String groupField = parser.getCurrentName();
-
-            parser.nextToken();
-            if (groupField.equals("uuid")) {
-                builder.setUUID(UUIDGen.toUUID(Base64.decode(parser.getText())));
-            } else if (groupField.equals("name")) {
-                builder.setName(parser.getText());
-            } else if (groupField.equals("tag")) {
-                builder.setTag(parser.getText());
-            } else if (groupField.equals("created")) {
-                builder.setCreated(new DateTime(parser.getLongValue()));
-            } else if (groupField.equals("settings")) {
-                //todo builder.getUUID() can be null
-                readSettings(builder.getUUID(), parser, builder.getSettings());
-            } else if (groupField.equals("ranks")) {
-                validateArray(parser);
-
-                while (parser.nextToken() != JsonToken.END_ARRAY) {
-                    rawRanks.add(readRank(parser));
-                }
-            }
-        }
+        builder.setUUID(toUUID(node.path("uuid")));
+        builder.setName(node.path("name").asText());
+        builder.setTag(node.path("tag").asText());
+        builder.setCreated(new DateTime(node.path("created").asLong()));
 
 
-        //beatify
+        JsonNode relationsNode = node.path("relations");
+
+
         Group group = builder.build();
 
         group.unlink();
 
-        for (Rank rank : rawRanks) {
-            group.addRank(finalizeRank(group, rank));
+
+        for (JsonNode relationNode : relationsNode) {
+            UUID target = toUUID(relationNode.get("target"));
+            int type = relationNode.get("type").asInt();
+
+            group.setRawRelation(target, new DefaultRelation(group.getUUID(), target, Relation.Type.getType((byte) type)));
+        }
+
+        Society society = group.get(Society.class);
+        society.setBalance(node.path("balance").asDouble());
+        society.setFriendlyFire(node.path("ff").asBoolean());
+        society.setVerified(node.path("verified").asBoolean());
+
+        JsonNode home = node.path("home");
+
+        if (!home.isMissingNode()) {
+            society.setHome(toLocation(home));
+        }
+
+        for (JsonNode rankNode : node.path("ranks")) {
+            group.addRank(readRank(rankNode, group));
         }
 
         group.link();
@@ -107,33 +85,15 @@ public class GroupMapper extends AbstractMapper {
         return group;
     }
 
-    public void writeGroup(JsonGenerator generator, Group group) throws IOException {
-        generator.writeStartObject();
 
-        generator.writeStringField("uuid", Base64.encodeToString(UUIDGen.toByteArray(group.getUUID()), false));
-        generator.writeStringField("name", group.getName());
-        generator.writeStringField("tag", group.getTag());
-        generator.writeNumberField("created", group.getCreated().getMillis());
-        generator.writeBooleanField("verified", group.isVerified());
+    private Rank readRank(JsonNode node, Group owner) throws IOException {
+        UUID uuid = toUUID(node.path("uuid"));
+        String name = node.path("name").asText();
+        int priority = node.path("priority").asInt();
 
-
-        Collection<Rank> ranks = group.getRanks();
-        if (!ranks.isEmpty()) {
-            generator.writeArrayFieldStart("ranks");
-            for (Rank rank : ranks) {
-                writeRank(generator, rank);
-            }
-            generator.writeEndArray();
-        }
-
-        writeSettings(group, generator, group.getSettings());
-
-        generator.writeEndObject();
-    }
-
-    private Rank finalizeRank(Group group, Rank rank) {
-        if (rank instanceof MemoryRank) {
-            ((MemoryRank) rank).setGroup(group);
+        Rank rank = rankFactory.create(uuid, name, priority, owner);
+        for (JsonNode rule : node.path("rules")) {
+            rank.addRule(rule.asText());
         }
 
         rank.link();
@@ -141,96 +101,59 @@ public class GroupMapper extends AbstractMapper {
         return rank;
     }
 
-    private Rank readRank(JsonParser parser) throws IOException {
-        validateObject(parser);
+    public JsonNode createNode(Group group) throws IOException {
+        ObjectNode node = mapper.createObjectNode();
 
-        UUID uuid = null;
-        String name = null;
-        int priority = 0;
-        Table<Setting, Target, String> settings = HashBasedTable.create();
+        node.put("uuid", Base64.encodeToString(UUIDGen.toByteArray(group.getUUID()), false));
+        node.put("name", group.getName());
+        node.put("tag", group.getTag());
+        node.put("created", group.getCreated().getMillis());
 
-        while (parser.nextToken() != JsonToken.END_OBJECT) {
-            String fieldName = parser.getCurrentName();
+        Society society = group.get(Society.class);
 
-            parser.nextToken();
-            if (fieldName.equals("uuid")) {
-                uuid = UUIDGen.toUUID(Base64.decode(parser.getText()));
-            } else if (fieldName.equals("name")) {
-                name = parser.getText();
-            } else if (fieldName.equals("priority")) {
-                priority = parser.getIntValue();
-            } else if (fieldName.equals("settings")) {
-                //todo uuid can be null
-                readSettings(uuid, parser, settings);
+        node.put("verified", society.isVerified());
+
+
+        Collection<Rank> ranks = group.getRanks();
+        if (!ranks.isEmpty()) {
+            ArrayNode ranksNode = node.putArray("ranks");
+            for (Rank rank : ranks) {
+                if (rank.isStatic()) {
+                    continue;
+                }
+
+                ranksNode.add(createNode(rank));
             }
         }
 
-        Rank rank = rankFactory.create(uuid, name, priority, null);
-
-        for (Table.Cell<Setting, Target, String> cell : settings.cellSet()) {
-            rank.set(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
-        }
-
-        return rank;
+        return node;
     }
 
-    public void writeRank(JsonGenerator generator, Rank rank) throws IOException {
-        if (rank.isStatic()) {
-            return;
-        }
+    private JsonNode createNode(Rank rank) throws IOException {
+        ObjectNode node = mapper.createObjectNode();
 
-        generator.writeStartObject();
+        node.put("uuid", toText(rank.getUUID()));
+        node.put("name", rank.getName());
 
-        generator.writeStringField("uuid", Base64.encodeToString(UUIDGen.toByteArray(rank.getUUID()), false));
-        generator.writeStringField("name", rank.getName());
-        writeSettings(rank, generator, rank.getSettings());
-
-        generator.writeEndObject();
+        return node;
     }
-
 
     public Group readGroup(File file) throws IOException {
-        JsonParser parser = createParser(file);
-        Group output = readGroup(parser);
-        parser.close();
-        return output;
+        JsonNode node = createNode(file);
+        return readGroup(node);
     }
 
-    public Group readGroup(String data) throws IOException {
-        JsonParser parser = createParser(data);
-        Group output = readGroup(parser);
-        parser.close();
-        return output;
-    }
-
-    public Set<Group> readGroups(File file) throws IOException {
-        JsonParser parser = createParser(file);
-        Set<Group> output = readGroups(parser);
-        parser.close();
-        return output;
-    }
-
-    public void writeGroup(Group group, OutputStream stream) throws IOException {
+    public void createNode(Group group, OutputStream stream) throws IOException {
         JsonGenerator jg = createGenerator(stream);
-        writeGroup(jg, group);
-
+        JsonNode node = createNode(group);
+        mapper.writeTree(jg, node);
         jg.close();
     }
 
-    public void writeGroup(Group group, File file) throws IOException {
+    public void createNode(Group group, File file) throws IOException {
         JsonGenerator jg = createGenerator(file);
-        writeGroup(jg, group);
-
+        JsonNode node = createNode(group);
+        mapper.writeTree(jg, node);
         jg.close();
-    }
-
-    public String writeGroup(Group group) throws IOException {
-        StringWriter stringWriter = new StringWriter();
-        JsonGenerator jg = createGenerator(stringWriter);
-        writeGroup(jg, group);
-
-        jg.close();
-
-        return stringWriter.toString();
     }
 }

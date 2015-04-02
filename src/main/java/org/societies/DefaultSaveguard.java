@@ -64,7 +64,7 @@ public class DefaultSaveguard implements Saveguard {
 
         for (Group group : groups) {
             try {
-                groupMapper.writeGroup(group, groupStorage.getFile(group.getUUID()));
+                groupMapper.createNode(group, groupStorage.getFile(group.getUUID()));
             } catch (IOException e) {
                 logger.catching(e);
             }

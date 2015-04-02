@@ -74,7 +74,7 @@ final class JSONGroupPublisher implements GroupPublisher {
             FileChannel channel = stream.getChannel();
             channel.lock();
 
-            mapper.writeGroup(group, new BufferedOutputStream(stream));
+            mapper.createNode(group, new BufferedOutputStream(stream));
         } catch (Exception e) {
             logger.catching(e);
         }
