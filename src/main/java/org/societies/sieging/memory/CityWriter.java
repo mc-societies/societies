@@ -1,6 +1,8 @@
 package org.societies.sieging.memory;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.migcomponents.migbase64.Base64;
 import org.societies.api.sieging.Besieger;
@@ -28,64 +30,57 @@ public class CityWriter extends AbstractMapper {
         this.cityStorage = cityStorage;
     }
 
-
     public void writeBesieger(Besieger besieger) throws IOException {
         JsonGenerator generator = createGenerator(cityStorage.getFile(besieger.getUUID()));
-        writeBesieger(generator, besieger);
+
+        ObjectNode node = createBesiegerNode(besieger);
+
+        generator.writeTree(node);
 
         generator.flush();
         generator.close();
     }
 
-    public void writeBesieger(JsonGenerator writer, Besieger besieger) throws IOException {
-        writer.writeStartObject();
+    public ObjectNode createBesiegerNode(Besieger besieger) throws IOException {
+        ObjectNode node = mapper.createObjectNode();
 
-        writer.writeArrayFieldStart("cities");
-        writeCities(writer, besieger);
-        writer.writeEndArray();
+        ArrayNode citiesNode = node.putArray("cities");
 
-        writer.writeArrayFieldStart("unallocated");
-        writeLands(writer, besieger.getUnallocatedLands());
-        writer.writeEndArray();
-
-        writer.writeEndObject();
-    }
-
-    public void writeCities(JsonGenerator writer, Besieger besieger) throws IOException {
         for (City city : besieger.getCities()) {
-            writeCity(writer, city);
+            citiesNode.add(createCityNode(city));
         }
+
+        node.set("unallocated", createLandsNode(besieger.getUnallocatedLands()));
+
+        return node;
     }
 
-    public void writeCity(JsonGenerator writer, City city) throws IOException {
-        writer.writeStartObject();
+    public ObjectNode createCityNode(City city) throws IOException {
+        ObjectNode node = mapper.createObjectNode();
 
-        writer.writeStringField("uuid", Base64.encodeToString(UUIDGen.toByteArray(city.getUUID()), false));
-        writer.writeStringField("name", city.getName());
+
+        node.put("uuid", Base64.encodeToString(UUIDGen.toByteArray(city.getUUID()), false));
+        node.put("name", city.getName());
 
         Location location = city.getLocation();
-        writer.writeObjectFieldStart("location");
-        writer.writeStringField("world", location.getWorld().getName());
-        writer.writeNumberField("x", location.getX());
-        writer.writeNumberField("y", location.getY());
-        writer.writeNumberField("z", location.getZ());
-        writer.writeEndObject();
+        node.set("location", toNode(location));
 
-        writer.writeArrayFieldStart("lands");
-        writeLands(writer, city.getLands());
-        writer.writeEndArray();
+        node.set("lands", createLandsNode(city.getLands()));
 
-        writer.writeStringField("owner", Base64.encodeToString(UUIDGen.toByteArray(city.getOwner().getUUID()), false));
-        writer.writeNumberField("founded", city.getFounded().getMillis());
+        node.put("owner", toText(city.getOwner().getUUID()));
+        node.put("founded", city.getFounded().getMillis());
 
-        writer.writeEndObject();
+        return node;
     }
 
-    private void writeLands(JsonGenerator writer, Iterable<Land> lands) throws IOException {
+    private ArrayNode createLandsNode(Iterable<Land> lands) throws IOException {
+        ArrayNode landsNode = mapper.createArrayNode();
+
         for (Land land : lands) {
-            writer.writeStartObject();
-            writer.writeStringField("uuid", Base64.encodeToString(UUIDGen.toByteArray(land.getUUID()), false));
-            writer.writeEndObject();
+            ObjectNode landNode = landsNode.addObject();
+            landNode.put("uuif", toText(land.getUUID()));
         }
+
+        return landsNode;
     }
 }

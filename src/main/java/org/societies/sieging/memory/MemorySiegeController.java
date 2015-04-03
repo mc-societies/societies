@@ -1,6 +1,7 @@
 package org.societies.sieging.memory;
 
 import algs.model.twod.TwoDPoint;
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -24,7 +25,6 @@ import org.societies.sieging.wager.EmptyWager;
 import org.societies.util.uuid.UUIDGen;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -39,10 +39,6 @@ class MemorySiegeController implements SiegeController {
 
     IndexedCollection<Siege> sieges = CQEngine.newInstance();
 
-//    public static final Attribute<Siege, UUID> SIEGE_UUID = new SimpleAttribute<Siege, UUID>("siege_uuid") {
-//        @Override
-//        public UUID getValue(Siege siege) { return siege.getUUID(); }
-//    };
 
     public static final Attribute<Siege, Besieger> SIEGE_BESIEGER = new SimpleAttribute<Siege, Besieger>("siege_besieger") {
         @Override
@@ -75,8 +71,6 @@ class MemorySiegeController implements SiegeController {
 
 
     {
-//        sieges.addIndex(HashIndex.onAttribute(SIEGE_UUID));
-
         sieges.addIndex(HashIndex.onAttribute(SIEGE_BESIEGER));
         sieges.addIndex(HashIndex.onAttribute(SIEGE_CITY));
         sieges.addIndex(HashIndex.onAttribute(SIEGE_INITIATED_LOCATION_HASH));
@@ -88,18 +82,21 @@ class MemorySiegeController implements SiegeController {
     private final Duration startDuration;
     private final int startLands;
     private final Logger logger;
+    private final Function<Integer, Double> cityFunction;
 
 
     @Inject
     MemorySiegeController(Provider<UUID> uuidProvider, CityProvider cityProvider,
                           @Named("sieging.start-duration") Duration startDuration,
                           @Named("city.start-lands") int startLands,
-                          Logger logger) {
+                          Logger logger,
+                          @Named("city-function") Function<Integer, Double> cityFunction) {
         this.uuidProvider = uuidProvider;
         this.cityProvider = cityProvider;
         this.startDuration = startDuration;
         this.startLands = startLands;
         this.logger = logger;
+        this.cityFunction = cityFunction;
     }
 
     @Override
@@ -117,12 +114,6 @@ class MemorySiegeController implements SiegeController {
         return siege;
     }
 
-//    @Override
-//    public Optional<Siege> getSiege(UUID uuid) {
-//        ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_UUID, uuid));
-//        return Optional.fromNullable(Iterables.getOnlyElement(retrieve, null));
-//    }
-
     @Override
     public Optional<Siege> getSiegeInitiatedAt(Location location) {
         ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_INITIATED_LOCATION_HASH, location));
@@ -137,18 +128,35 @@ class MemorySiegeController implements SiegeController {
     }
 
     @Override
-    public Set<Siege> getSiegeNear(Location location) {
-        Optional<City> city = cityProvider.getCity(location);
+    public Optional<Siege> getSiegeByLocation(Location cityLocation) {
+        Optional<City> city = cityProvider.getCity(cityLocation);
 
         if (!city.isPresent()) {
-            return getSieges(city.get());
+            return Optional.absent();
         }
 
-        return Collections.emptySet();
+        Set<Siege> sieges = getSiegesByLocation(city.get());
+
+        if (sieges.isEmpty()) {
+            return Optional.absent();
+        }
+
+        for (Siege siege : sieges) {
+            City testCity = siege.getCity();
+
+            Location locationCity = testCity.getLocation();
+            Double distance = cityFunction.apply(testCity.getLands().size());
+
+            if (Math.floor(locationCity.distance2d(cityLocation)) < (distance == null ? 0 : distance)) {
+                return Optional.of(siege);
+            }
+        }
+
+        return Optional.absent();
     }
 
     @Override
-    public Set<Siege> getSieges(City city) {
+    public Set<Siege> getSiegesByLocation(City city) {
         ResultSet<Siege> retrieve = sieges.retrieve(equal(SIEGE_CITY, city));
         return ImmutableSet.copyOf(retrieve);
     }

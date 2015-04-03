@@ -156,7 +156,7 @@ public class SiegestoneCommand {
 
 
             for (City city : cities) {
-                for (Siege siege : siegeController.getSieges(city)) {
+                for (Siege siege : siegeController.getSiegesByLocation(city)) {
                     table.addRow(siege.getBesieger().getGroup().getName(), siege.getCity().getName());
                 }
             }

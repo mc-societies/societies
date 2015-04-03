@@ -22,7 +22,7 @@ import java.util.UUID;
  */
 public class AbstractMapper {
 
-    ObjectMapper mapper = new ObjectMapper();
+    protected ObjectMapper mapper = new ObjectMapper();
     private JsonFactory factory;
 
     private final WorldResolver worldResolver;
