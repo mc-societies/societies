@@ -13,7 +13,6 @@ import org.societies.groups.rank.RankFactory;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Represents a RuleModule
@@ -83,10 +82,9 @@ public class RuleModule extends AbstractModule {
         for (Config object : objectList) {
             String name = object.getString("name");
             int priority = object.getInt("priority");
-            UUID uuid = UUID.fromString(object.getString("uuid"));
             List<String> rules = object.getStringList("rules");
 
-            Rank rank = rankFactory.createStatic(uuid, name, priority, rules);
+            Rank rank = rankFactory.createStatic(name, priority, rules);
 
             ranks.add(rank);
         }

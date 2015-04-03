@@ -87,11 +87,10 @@ public class GroupMapper extends AbstractMapper {
 
 
     private Rank readRank(JsonNode node, Group owner) throws IOException {
-        UUID uuid = toUUID(node.path("uuid"));
         String name = node.path("name").asText();
         int priority = node.path("priority").asInt();
 
-        Rank rank = rankFactory.create(uuid, name, priority, owner);
+        Rank rank = rankFactory.create(name, priority, owner);
         for (JsonNode rule : node.path("rules")) {
             rank.addRule(rule.asText());
         }
@@ -132,7 +131,6 @@ public class GroupMapper extends AbstractMapper {
     private JsonNode createNode(Rank rank) throws IOException {
         ObjectNode node = mapper.createObjectNode();
 
-        node.put("uuid", toText(rank.getUUID()));
         node.put("name", rank.getName());
 
         return node;

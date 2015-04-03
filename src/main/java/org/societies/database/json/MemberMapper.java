@@ -50,7 +50,7 @@ public class MemberMapper extends AbstractMapper {
 
         if (group != null) {
             for (JsonNode rank : node.path("ranks")) {
-                member.addRank(group.getRank(toUUID(rank)));
+                member.addRank(group.getRank(rank.asText()));
             }
         }
 
@@ -75,7 +75,7 @@ public class MemberMapper extends AbstractMapper {
         if (!ranks.isEmpty()) {
             ArrayNode ranksNode = node.putArray("ranks");
             for (Rank rank : ranks) {
-                ranksNode.add(toText(rank.getUUID()));
+                ranksNode.add(rank.getName());
             }
         }
 

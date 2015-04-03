@@ -53,8 +53,6 @@ public class ConfigModule extends AbstractConfigModule {
         bind("society.max-size", "society.max-size", int.class);
         bind("verification.show-unverified", "verification.show-unverified", boolean.class);
 
-        bindNamed("server-identity", "server-identity", short.class);
-
         bindNamed("translate-identifiers", "translate-identifiers", boolean.class);
 
         bindNamed("city.enable", "city.enable", boolean.class);
