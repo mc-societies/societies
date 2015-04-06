@@ -133,6 +133,16 @@ public class JoinCommand implements Executor<Member> {
         }
 
         @Override
+        public void voted(Request<Choices> request, Choices choice, Participant participant) {
+            //do nothing
+        }
+
+        @Override
+        public void cancelled(Request<Choices> request) {
+            //do noting
+        }
+
+        @Override
         public void start(Request<Choices> request, Participant participant) {
             participant.send("join.member-requests", participant.getName());
         }
@@ -140,9 +150,9 @@ public class JoinCommand implements Executor<Member> {
         @Override
         public void end(Request<Choices> request, Choices choice) {
             if (choice.success()) {
-                request.getSupplier().send("you-joined");
+                request.getSupplier().send("you-joined", group.getTag());
             } else {
-                request.getSupplier().send("you-failed");
+                request.getSupplier().send("you-failed", group.getTag());
             }
 
             super.end(request, choice);

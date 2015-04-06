@@ -28,8 +28,8 @@ public class DenyCommand implements Executor<Member> {
         }
 
         try {
-            activeRequest.vote(sender, Choices.DENY);
             sender.send("request.voted.deny");
+            activeRequest.vote(sender, Choices.DENY);
         } catch (ClassCastException ignored) {
         }
     }

@@ -25,7 +25,7 @@ public class CancelCommand implements Executor<Member> {
             return;
         }
 
-        supplied.cancel();
         sender.send("request.cancelled-by-you");
+        supplied.cancel();
     }
 }

@@ -60,6 +60,9 @@ public class AbstractMapper {
 
 
     public UUID toUUID(JsonNode node) {
+        if (node.isMissingNode()) {
+            return null;
+        }
         return UUIDGen.toUUID(Base64.decode(node.asText()));
     }
 

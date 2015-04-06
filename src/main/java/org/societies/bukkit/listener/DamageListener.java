@@ -100,7 +100,7 @@ class DamageListener implements Listener {
             // group ff enabled, allow damage
 
             Society victimSociety = victimGroup.get(Society.class);
-            SocietyMember victimSocietyMember = victimGroup.get(SocietyMember.class);
+            SocietyMember victimSocietyMember = victim.get(SocietyMember.class);
 
 
             boolean personalFF = victimSocietyMember.isFriendlyFire();

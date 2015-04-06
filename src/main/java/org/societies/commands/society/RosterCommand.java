@@ -1,6 +1,5 @@
 package org.societies.commands.society;
 
-import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import order.CommandContext;
 import order.Executor;
@@ -56,7 +55,7 @@ public class RosterCommand implements Executor<Member> {
         table.addRow("Name", "Rank", "Seen");
 
         for (Member member : group.getMembers()) {
-            Rank rank = Iterables.getFirst(member.getRanks(), null);
+            Rank rank = member.getRank();
             Period inactive = new Interval(member.getLastActive(), DateTime.now()).toPeriod();
 
             boolean available = member.get(Player.class).isOnline();

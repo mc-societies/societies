@@ -28,8 +28,8 @@ public class AbstainCommand implements Executor<Member> {
         }
 
         try {
-            activeRequest.vote(sender, Choices.ABSTAIN);
             sender.send("request.voted.abstain");
+            activeRequest.vote(sender, Choices.ABSTAIN);
         } catch (ClassCastException ignored) {
         }
     }

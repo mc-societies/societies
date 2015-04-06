@@ -4,11 +4,9 @@ import net.engio.mbassy.listener.Handler;
 import net.engio.mbassy.listener.Invoke;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-import org.societies.bukkit.BukkitSocietiesMember;
 import org.societies.groups.event.GroupTagEvent;
 import org.societies.groups.event.MemberJoinEvent;
 import org.societies.groups.event.MemberLeaveEvent;
@@ -42,7 +40,6 @@ class TeamListener {
 
     public void setupMember(Member member) {
         Player extension = member.get(Player.class);
-        OfflinePlayer player = ((BukkitSocietiesMember) extension).toOfflinePlayer();
 
         Group group = member.getGroup();
 
@@ -51,15 +48,14 @@ class TeamListener {
         }
 
         Team team = getTeam(group);
-        team.addPlayer(player);
+        team.addPlayer(extension);
     }
 
     public void removeMember(Member member, Group group) {
         Player extension = member.get(Player.class);
-        OfflinePlayer player = ((BukkitSocietiesMember) extension).toOfflinePlayer();
 
         Team team = getTeam(group);
-        team.removePlayer(player);
+        team.removePlayer(extension);
     }
 
     public Team getTeam(Group group) {

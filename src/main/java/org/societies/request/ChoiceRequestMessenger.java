@@ -47,6 +47,8 @@ public class ChoiceRequestMessenger implements RequestMessenger<Choices> {
         participant.send(msg, participant.getName(), choice, request);
     }
 
+
+
     public void end(Participant participant, Request<Choices> request, Choices choice) {
         request.getSupplier().send("request.finished");
         participant.send("request.finished");

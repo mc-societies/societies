@@ -27,10 +27,10 @@ public class AcceptCommand implements Executor<Member> {
             return;
         }
 
+        sender.send("request.voted.accept");
 
         try {
             activeRequest.vote(sender, Choices.ACCEPT);
-            sender.send("request.voted.accept");
         } catch (ClassCastException ignored) {
         }
     }
