@@ -12,11 +12,10 @@ import order.format.table.RowFactory;
 import order.format.table.Table;
 import order.reflect.*;
 import order.reflect.instance.Children;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.societies.api.math.Location;
 import org.societies.api.sieging.*;
-import org.societies.bridge.Location;
-import org.societies.bridge.Material;
-import org.societies.bridge.Materials;
-import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
@@ -73,7 +72,7 @@ public class BindstoneCommand {
 
             Besieger besieger = group.get(Besieger.class);
             Player player = sender.get(Player.class);
-            Location location = player.getLocation().floor();
+            Location location = new Location(player.getLocation()).floor();
 
             Optional<City> city = cityProvider.getNearestCity(location);
 
@@ -169,13 +168,6 @@ public class BindstoneCommand {
         @Argument(name = "argument.target.city")
         City target;
 
-        private final Materials materials;
-
-        @Inject
-        public Visualize(Materials materials) {
-            this.materials = materials;
-        }
-
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
 
@@ -190,10 +182,10 @@ public class BindstoneCommand {
                 double z = location.getZ() + Math.sin(current) * target.getRadius();
                 Location vector3d = new Location(location.getWorld(), x, 0, z);
 
-                Material material = materials.getMaterial(20);
+                Material material = Material.getMaterial(20);
 
                 for (int j = 0; j < 255; j++) {
-                    player.sendBlockChange(vector3d = vector3d.add(0, 1, 0).floor(), material, (byte) 0);
+                    player.sendBlockChange((vector3d = vector3d.add(0, 1, 0).floor()).toBukkit(), material, (byte) 0);
                 }
 
                 current += DEGREES;
@@ -260,7 +252,7 @@ public class BindstoneCommand {
 
         @Override
         public void execute(CommandContext<Member> ctx, Member sender) throws ExecuteException {
-            Location location = sender.get(Player.class).getLocation().floor();
+            Location location = new Location(sender.get(Player.class).getLocation()).floor();
             Optional<City> optional = cityProvider.getCity(location);
 
             if (!optional.isPresent()) {

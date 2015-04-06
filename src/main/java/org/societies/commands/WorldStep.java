@@ -5,8 +5,8 @@ import order.CommandContext;
 import order.ExecuteException;
 import order.Executor;
 import order.sender.Sender;
+import org.bukkit.entity.Player;
 import org.shank.config.ConfigSetting;
-import org.societies.bridge.Player;
 import org.societies.groups.member.Member;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class WorldStep implements Executor<Sender> {
             Member member = ((Member) sender);
 
             Player player = member.get(Player.class);
-            if (player.isAvailable()) {
+            if (player.isOnline()) {
                 return;
             }
 

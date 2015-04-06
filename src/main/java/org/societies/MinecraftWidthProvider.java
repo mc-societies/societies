@@ -3,7 +3,7 @@ package org.societies;
 import com.google.inject.Singleton;
 import gnu.trove.map.hash.TCharIntHashMap;
 import order.format.WidthProvider;
-import org.societies.bridge.ChatColor;
+import org.bukkit.ChatColor;
 
 /**
  * Represents a MinecraftWidthProvider

@@ -5,7 +5,7 @@ import com.google.inject.name.Named;
 import order.*;
 import order.format.table.Table;
 import order.sender.Sender;
-import org.societies.bridge.ChatColor;
+import org.bukkit.ChatColor;
 
 import javax.inject.Provider;
 import java.util.LinkedList;

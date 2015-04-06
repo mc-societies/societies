@@ -2,11 +2,11 @@ package org.societies.sieging.memory;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.societies.api.math.Location;
 import org.societies.api.sieging.Besieger;
 import org.societies.api.sieging.City;
 import org.societies.api.sieging.Siege;
 import org.societies.api.sieging.Wager;
-import org.societies.bridge.Location;
 
 import java.util.UUID;
 

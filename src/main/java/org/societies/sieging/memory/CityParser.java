@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 import gnu.trove.set.hash.THashSet;
+import org.bukkit.Server;
 import org.joda.time.DateTime;
+import org.societies.api.math.Location;
 import org.societies.api.sieging.*;
-import org.societies.bridge.Location;
-import org.societies.bridge.WorldResolver;
 import org.societies.database.json.AbstractMapper;
 import org.societies.util.uuid.UUIDStorage;
 
@@ -29,7 +29,7 @@ public class CityParser extends AbstractMapper {
     private final Function<Integer, Double> cityFunction;
 
     @Inject
-    public CityParser(WorldResolver worldResolver,
+    public CityParser(Server worldResolver,
                       @Named("cities") UUIDStorage cityStorage,
                       CityPublisher cityPublisher,
                       @Named("city-function") Function<Integer, Double> cityFunction) {

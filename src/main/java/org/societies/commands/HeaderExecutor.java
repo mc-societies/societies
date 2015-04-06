@@ -7,7 +7,7 @@ import order.Executor;
 import order.format.Formatter;
 import order.format.WidthProvider;
 import order.sender.Sender;
-import org.societies.bridge.ChatColor;
+import org.bukkit.ChatColor;
 
 /**
  * Represents a PreCommandStep

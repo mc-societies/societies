@@ -7,11 +7,11 @@ import order.Executor;
 import order.format.table.RowFactory;
 import order.format.table.Table;
 import order.reflect.*;
+import org.bukkit.entity.Player;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
-import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
@@ -59,7 +59,7 @@ public class RosterCommand implements Executor<Member> {
             Rank rank = Iterables.getFirst(member.getRanks(), null);
             Period inactive = new Interval(member.getLastActive(), DateTime.now()).toPeriod();
 
-            boolean available = member.get(Player.class).isAvailable();
+            boolean available = member.get(Player.class).isOnline();
 
             table.addForwardingRow(rowFactory.translated(true, member.getName(),
                     rank == null ? "None" : rank.getName(),

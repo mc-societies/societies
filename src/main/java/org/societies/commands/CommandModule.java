@@ -26,8 +26,7 @@ import order.token.Tokenizer;
 import org.shank.AbstractModule;
 import org.societies.LocationParser;
 import org.societies.SocietiesModule;
-import org.societies.bridge.Location;
-import org.societies.bridge.Player;
+import org.societies.api.math.Location;
 import org.societies.commands.society.*;
 import org.societies.commands.society.balance.BalanceCommand;
 import org.societies.commands.society.balance.DepositCommand;
@@ -137,7 +136,6 @@ public class CommandModule extends AbstractModule {
         // Member parser
         parsers().addBinding(Sender.class).to(TargetParser.class);
         parsers().addBinding(Member.class).to(new TypeLiteral<MemberParser>() {});
-        parsers().addBinding(Player.class).to(new TypeLiteral<MemberParser>() {});
 
 
         // Exception handler

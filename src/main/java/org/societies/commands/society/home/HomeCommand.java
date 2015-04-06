@@ -7,9 +7,9 @@ import order.ExecuteException;
 import order.Executor;
 import order.reflect.*;
 import order.reflect.instance.Children;
+import org.bukkit.entity.Player;
+import org.societies.api.math.Location;
 import org.societies.api.group.Society;
-import org.societies.bridge.Location;
-import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;
 import org.societies.groups.group.Group;
@@ -103,7 +103,7 @@ public class HomeCommand implements Executor<Member> {
             }
 
             if (location == null) {
-                location = sender.get(Player.class).getLocation();
+                location = new Location(sender.get(Player.class).getLocation());
             }
 
             Society society = group.get(Society.class);
@@ -155,7 +155,7 @@ public class HomeCommand implements Executor<Member> {
             Set<Member> members = group.getMembers();
 
             for (Member member : members) {
-                member.get(Player.class).teleport(location);
+                member.get(Player.class).teleport(location.toBukkit());
                 sender.send("home.regrouped");
             }
         }

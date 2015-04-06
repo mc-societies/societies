@@ -5,7 +5,7 @@ import order.*;
 import order.format.table.Table;
 import order.reflect.Option;
 import order.sender.Sender;
-import org.societies.bridge.ChatColor;
+import org.bukkit.ChatColor;
 
 import javax.inject.Provider;
 

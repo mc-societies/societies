@@ -11,12 +11,12 @@ import order.format.table.RowFactory;
 import order.format.table.Table;
 import order.reflect.*;
 import order.reflect.instance.Children;
+import org.bukkit.entity.Player;
+import org.societies.api.math.Location;
 import org.societies.api.sieging.Besieger;
 import org.societies.api.sieging.City;
 import org.societies.api.sieging.Siege;
 import org.societies.api.sieging.SiegeController;
-import org.societies.bridge.Location;
-import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
 import org.societies.groups.Relation;
 import org.societies.groups.group.Group;
@@ -81,7 +81,7 @@ public class SiegestoneCommand {
             }
 
             Player player = sender.get(Player.class);
-            Location location = player.getLocation().floor();
+            Location location = new Location(player.getLocation()).floor();
 
             double distance = target.distance(location);
             if (distance < minSiegeDistance) { //todo max distance

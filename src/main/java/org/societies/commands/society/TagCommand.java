@@ -4,10 +4,11 @@ import order.CommandContext;
 import order.ExecuteException;
 import order.Executor;
 import order.reflect.*;
-import org.societies.bridge.ChatColor;
+import org.bukkit.ChatColor;
 import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
+import org.societies.util.ChatUtil;
 
 /**
  * Represents a AbandonCommand
@@ -31,7 +32,7 @@ public class TagCommand implements Executor<Member> {
         }
 
         String sourceTag = ChatColor.stripColor(group.getTag());
-        String targetTag = ChatColor.stripUserColor(newTag);
+        String targetTag = ChatUtil.stripUserColor(newTag);
 
 
         if (!sourceTag.equals(targetTag)) {
@@ -40,7 +41,7 @@ public class TagCommand implements Executor<Member> {
         }
 
 
-        group.setTag(ChatColor.translateString(newTag));
+        group.setTag(ChatColor.translateAlternateColorCodes('&', newTag));
         sender.send("target-society.tag-modified");
     }
 }

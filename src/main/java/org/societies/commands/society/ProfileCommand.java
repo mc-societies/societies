@@ -7,13 +7,13 @@ import order.reflect.Command;
 import order.reflect.Option;
 import order.reflect.Permission;
 import order.sender.Sender;
+import org.bukkit.entity.Player;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.PeriodFormatter;
 import org.societies.api.Groups;
-import org.societies.bridge.Player;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 
@@ -58,7 +58,7 @@ public class ProfileCommand implements Executor<Sender> {
         sender.send("profile.members");
 
         for (Member member : target.getMembers()) {
-            if (member.get(Player.class).isAvailable()) {
+            if (member.get(Player.class).isOnline()) {
                 sender.send("profile.member-format", member.getName());
             }
         }

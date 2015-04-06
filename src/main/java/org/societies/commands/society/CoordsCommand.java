@@ -6,8 +6,8 @@ import order.Executor;
 import order.format.table.RowFactory;
 import order.format.table.Table;
 import order.reflect.*;
-import org.societies.bridge.Location;
-import org.societies.bridge.Player;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.societies.commands.RuleStep;
 import org.societies.commands.VerifyStep;
 import org.societies.groups.group.Group;
@@ -66,9 +66,9 @@ public class CoordsCommand implements Executor<Member> {
             table.addRow(
                     member.getName(),
                     numberFormat.format(location.distance(memberLocation)),
-                    memberLocation.getRoundedX(),
-                    memberLocation.getRoundedY(),
-                    memberLocation.getRoundedZ(),
+                    memberLocation.getBlockX(),
+                    memberLocation.getBlockY(),
+                    memberLocation.getBlockZ(),
                     memberLocation.getWorld().getName()
             );
         }

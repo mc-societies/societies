@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.migcomponents.migbase64.Base64;
+import org.bukkit.Server;
 import org.joda.time.DateTime;
 import org.societies.api.group.Society;
-import org.societies.bridge.WorldResolver;
 import org.societies.groups.DefaultRelation;
 import org.societies.groups.Relation;
 import org.societies.groups.group.Group;
@@ -33,7 +33,7 @@ public class GroupMapper extends AbstractMapper {
     private final RankFactory rankFactory;
 
     @Inject
-    public GroupMapper(Provider<GroupBuilder> builders, RankFactory rankFactory, WorldResolver worldResolver) {
+    public GroupMapper(Provider<GroupBuilder> builders, RankFactory rankFactory, Server worldResolver) {
         super(worldResolver);
         this.builders = builders;
         this.rankFactory = rankFactory;

@@ -1,14 +1,15 @@
 package org.societies;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import order.CommandContext;
 import order.ParsingException;
 import order.parser.ArgumentParser;
 import order.sender.Sender;
-import org.societies.bridge.Location;
-import org.societies.bridge.Player;
-import org.societies.bridge.World;
-import org.societies.bridge.WorldResolver;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.societies.api.math.Location;
 import org.societies.groups.member.Member;
 
 /**
@@ -16,11 +17,13 @@ import org.societies.groups.member.Member;
  */
 public class LocationParser implements ArgumentParser<Location> {
 
-    private final WorldResolver worldResolver;
+    private final Server worldResolver;
+    private final World defaultWorld;
 
     @Inject
-    public LocationParser(WorldResolver worldResolver) {
+    public LocationParser(Server worldResolver, @Named("default-world") World defaultWorld) {
         this.worldResolver = worldResolver;
+        this.defaultWorld = defaultWorld;
     }
 
     @Override
@@ -69,11 +72,11 @@ public class LocationParser implements ArgumentParser<Location> {
 
                 Player player = member.get(Player.class);
 
-                if (player.isAvailable()) {
+                if (player.isOnline()) {
                     world = player.getWorld();
                 }
             } else {
-                world = worldResolver.getDefaultWorld();
+                world = this.defaultWorld;
             }
         }
 

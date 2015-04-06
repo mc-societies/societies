@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.migcomponents.migbase64.Base64;
+import org.bukkit.Server;
+import org.societies.api.math.Location;
 import org.societies.api.sieging.Besieger;
 import org.societies.api.sieging.City;
 import org.societies.api.sieging.Land;
-import org.societies.bridge.Location;
-import org.societies.bridge.WorldResolver;
 import org.societies.database.json.AbstractMapper;
 import org.societies.util.uuid.UUIDGen;
 import org.societies.util.uuid.UUIDStorage;
@@ -25,7 +25,7 @@ public class CityWriter extends AbstractMapper {
     private final UUIDStorage cityStorage;
 
     @Inject
-    public CityWriter(@Named("cities") UUIDStorage cityStorage, WorldResolver worldResolver) {
+    public CityWriter(@Named("cities") UUIDStorage cityStorage, Server worldResolver) {
         super(worldResolver);
         this.cityStorage = cityStorage;
     }

@@ -1,6 +1,7 @@
 package org.societies.member.locale;
 
-import org.societies.bridge.Player;
+
+import org.bukkit.entity.Player;
 
 import java.util.Locale;
 

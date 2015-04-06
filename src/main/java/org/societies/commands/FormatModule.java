@@ -7,9 +7,9 @@ import order.format.WidthProvider;
 import order.format.pagination.DefaultPaginator;
 import order.format.pagination.Paginator;
 import order.format.table.*;
+import org.bukkit.ChatColor;
 import org.shank.AbstractModule;
 import org.societies.MinecraftWidthProvider;
-import org.societies.bridge.ChatColor;
 
 /**
  * Represents a FormatModule

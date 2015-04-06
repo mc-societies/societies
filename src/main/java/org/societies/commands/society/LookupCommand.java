@@ -7,12 +7,12 @@ import order.reflect.Command;
 import order.reflect.Option;
 import order.reflect.Permission;
 import order.sender.Sender;
+import org.bukkit.entity.Player;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.PeriodFormatter;
-import org.societies.bridge.Player;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 import org.societies.groups.rank.Rank;
@@ -65,7 +65,7 @@ public class LookupCommand implements Executor<Sender> {
 
         sender.send("lookup.join-date", target.getCreated().toString(dateTimeFormatter));
 
-        boolean available = target.get(Player.class).isAvailable();
+        boolean available = target.get(Player.class).isOnline();
         sender.send("lookup.last-seen", available ? ":lookup.online" : target.getLastActive().toString(dateTimeFormatter));
 
         if (!available) {

@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
+import org.bukkit.Server;
 import org.joda.time.DateTime;
 import org.societies.api.member.SocietyMember;
-import org.societies.bridge.WorldResolver;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 import org.societies.groups.member.MemberFactory;
@@ -29,7 +29,7 @@ public class MemberMapper extends AbstractMapper {
     private final MemberFactory memberFactory;
 
     @Inject
-    public MemberMapper(MemberFactory memberFactory, WorldResolver worldResolver) {
+    public MemberMapper(MemberFactory memberFactory, Server worldResolver) {
         super(worldResolver);
         this.memberFactory = memberFactory;
     }

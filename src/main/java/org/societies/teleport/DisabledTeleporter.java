@@ -1,6 +1,6 @@
 package org.societies.teleport;
 
-import org.societies.bridge.Location;
+import org.societies.api.math.Location;
 import org.societies.groups.member.Member;
 
 

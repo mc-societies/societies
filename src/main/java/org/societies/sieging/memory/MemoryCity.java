@@ -3,11 +3,11 @@ package org.societies.sieging.memory;
 import com.google.common.base.Function;
 import gnu.trove.map.hash.THashMap;
 import org.joda.time.DateTime;
+import org.societies.api.math.Location;
 import org.societies.api.sieging.Besieger;
 import org.societies.api.sieging.City;
 import org.societies.api.sieging.CityPublisher;
 import org.societies.api.sieging.Land;
-import org.societies.bridge.Location;
 
 import java.util.Collection;
 import java.util.UUID;

@@ -7,9 +7,9 @@ import order.CommandContext;
 import order.Executor;
 import order.reflect.*;
 import org.apache.logging.log4j.Logger;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.shank.config.ConfigSetting;
-import org.societies.bridge.Player;
 import org.societies.commands.RuleStep;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
@@ -72,7 +72,7 @@ public class InviteCommand implements Executor<Member> {
             return;
         }
 
-        if (!target.get(Player.class).isAvailable()) {
+        if (!target.get(Player.class).isOnline()) {
             sender.send("target-member.not-available");
             return;
         }

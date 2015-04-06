@@ -2,10 +2,10 @@ package org.societies.group;
 
 import com.google.inject.Inject;
 import org.shank.config.ConfigSetting;
-import org.societies.bridge.ChatColor;
 import org.societies.groups.dictionary.Dictionary;
 import org.societies.groups.validate.TagValidator;
 import org.societies.groups.validate.ValidateResult;
+import org.societies.util.ChatUtil;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ class SimpleTagValidator implements TagValidator {
 
     @Override
     public ValidateResult validateTag(String tag) {
-        tag = ChatColor.stripUserColor(tag.trim());
+        tag = ChatUtil.stripUserColor(tag.trim());
 
         int length = tag.length();
 

@@ -1,0 +1,165 @@
+main: org.societies.bukkit.SocietiesPlugin
+name: Societies
+version: 0.7
+softdepend: [ Vault, SimpleClans, SimpleClans2 ]
+authors:
+  - p000ison
+commands:
+  s:
+    aliases: [ society, societies ]
+    description: Society main command
+    permission: societies.member
+permissions:
+  societies.member:
+    default: true
+    children:
+      societies.create: true
+      societies.tag: true
+      societies.profile: true
+      societies.lookup: true
+      societies.coords: true
+      societies.vitals: true
+      societies.roster: true
+      societies.list: true
+      societies.trust: true
+      societies.distrust: true
+      societies.promote: true
+      societies.demote: true
+      societies.join: true
+      societies.invite: true
+      societies.kick: true
+      societies.alliances: true
+      societies.rivalries: true
+      societies.leave: true
+      societies.vote.accept: true
+      societies.vote.deny: true
+      societies.vote.abstain: true
+      societies.vote.cancel: true
+      societies.home.set: true
+      societies.home.regroup: true
+      societies.home.remove: true
+      societies.home.teleport: true
+      societies.rank.create: true
+      societies.rank.remove: true
+      societies.rank.list: true
+      societies.rank.assign: true
+      societies.rank.deassign: true
+      societies.rank.rules.assign: true
+      societies.rank.rules.remove: true
+      societies.rank.rules.list: true
+      societies.allies.add: true
+      societies.allies.remove: true
+      societies.allies.list: true
+      societies.rivals.add: true
+      societies.rivals.remove: true
+      societies.rivals.list: true
+      societies.ff: true
+      societies.group-ff: true
+  societies.moderator:
+    default: false
+    children:
+      societies.member: true
+      societies.verify: true
+      societies.disprove: true
+  societies.admin:
+    default: op
+    children:
+      societies.moderator: true
+      societies.reload: true
+      societies.backup: true
+  societies.create:
+    description: "Allows you to use the command '/societies create [name] [tag] - Creates a new society'"
+  societies.list:
+    description: "Allows you to use the command '/societies list [--verified] [--page] - Lists all societies'"
+  societies.profile:
+    description: "Allows you to use the command '/societies profile [--society] - View your society' profile'"
+  societies.lookup:
+    description: "Allows you to use the command '/societies lookup [--member] - Lookup your info'"
+  societies.join:
+    description: "Allows you to use the command '/societies join [society] - Request to join a society'"
+  societies.invite:
+    description: "Allows you to use the command '/societies invite [member] - Invite a player'"
+  societies.coords:
+    description: "Allows you to use the command '/societies coords [--page] - View your member's coordinates'"
+  societies.vitals:
+    description: "Allows you to use the command '/societies vitals [--page] - View your member's vitals'"
+  societies.roster:
+    description: "Allows you to use the command '/societies roster [--page] - View your society's member list'"
+  societies.trust:
+    description: "Allows you to use the command '/societies trust [--member] - Trust a society'"
+  societies.distrust:
+    description: "Allows you to use the command '/societies distrust [--member] - Distrust a society'"
+  societies.promote:
+    description: "Allows you to use the command '/societies promote [--member] - Promote a member'"
+  societies.demote:
+    description: "Allows you to use the command '/societies demote [--member] - Demote a member'"
+  societies.alliances:
+    description: "Allows you to use the command '/societies alliances - View all alliances'"
+  societies.rivalries:
+    description: "Allows you to use the command '/societies rivalries - View all rivalries'"
+  societies.ff:
+    description: "Allows you to use the command '/societies ff - Toggle personal friendly fire'"
+  societies.group-ff:
+    description: "Allows you to use the command '/societies groupff - Toggle your society' friendly fire'"
+  societies.tag:
+    description: "Allows you to use the command '/societies tag [newTag] - Modify your society's tag'"
+  societies.kick:
+    description: "Allows you to use the command '/societies kick [member] - Kick a society member'"
+  societies.leave:
+    description: "Allows you to use the command '/societies leave - Leave a society'"
+  societies.allies.add:
+    description: "Allows you to use the command '/societies allies add [society] - Initiate an alliance'"
+  societies.allies.remove:
+    description: "Allows you to use the command '/societies allies remove [society] - Cancel an alliance'"
+  societies.allies.list:
+    description: "Allows you to use the command '/societies allies [?] - Manage your alliances'"
+  societies.rivals.add:
+    description: "Allows you to use the command '/societies rivals create [society] - Initiate a rivalry'"
+  societies.rivals.remove:
+    description: "Allows you to use the command '/societies rivals remove [society] - Cancel a rivalry'"
+  societies.rivals.list:
+    description: "Allows you to use the command '/societies rivals [?] - Manage your rivalries'"
+  societies.home.set:
+    description: "Allows you to use the command '/societies home set [--location] - Set your society's home'"
+  societies.home.regroup:
+    description: "Allows you to use the command '/societies home regroup - Regroup your society'"
+  societies.home.teleport:
+    description: "Allows you to use the command '/societies home [?] - Teleport to your society's home'"
+  societies.rank.create:
+    description: "Allows you to use the command '/societies rank create [name] [--priority] - Create a rank'"
+  societies.rank.remove:
+    description: "Allows you to use the command '/societies rank remove [name] - Remove a rank'"
+  societies.rank.list:
+    description: "Allows you to use the command '/societies rank list [--page] - List all ranks'"
+  societies.rank.assign:
+    description: "Allows you to use the command '/societies rank assign [member] [rank] - Assign a member to a rank'"
+  societies.rank.deassign:
+    description: "Allows you to use the command '/societies rank deassign [member] [rank] - De-assign a member from a rank'"
+  societies.rank.rules.assign:
+    description: "Allows you to use the command '/societies rank rules assign [rank] [rule] - Assign a rule to a rank'"
+  societies.rank.rules.remove:
+    description: "Allows you to use the command '/societies rank rules remove [rank] [rule] - Remove a rule from a rank'"
+  societies.rank.rules.list:
+    description: "Allows you to use the command '/societies rank rules list [rank] - List all rules of a rank'"
+  societies.balance:
+    description: "Allows you to use the command '/societies balance - View your society's balance'"
+  societies.deposit:
+    description: "Allows you to use the command '/societies deposit [amount] - Deposit some money'"
+  societies.withdraw:
+    description: "Allows you to use the command '/societies withdraw [amount] - Withdraw some money'"
+  societies.vote.accept:
+    description: "Allows you to use the command '/societies accept - Vote to accept'"
+  societies.vote.deny:
+    description: "Allows you to use the command '/societies deny - Vote to deny'"
+  societies.vote.abstain:
+    description: "Allows you to use the command '/societies abstain - Vote to abstain'"
+  societies.vote.cancel:
+    description: "Allows you to use the command '/societies cancel - Cancel an election'"
+  societies.verify:
+    description: "Allows you to use the command '/societies verify [society] - Verify a society'"
+  societies.disprove:
+    description: "Allows you to use the command '/societies disprove [society] - Disprove a society'"
+  societies.reload:
+    description: "Allows you to use the command '/societies reload - Reload Societies'"
+  societies.backup:
+    description: "Allows you to use the command '/societies backup [file] - Backup Societies'"

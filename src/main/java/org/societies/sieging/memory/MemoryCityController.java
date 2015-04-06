@@ -19,8 +19,11 @@ import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.shank.service.AbstractService;
 import org.shank.service.lifecycle.LifecycleContext;
-import org.societies.api.sieging.*;
-import org.societies.bridge.Location;
+import org.societies.api.math.Location;
+import org.societies.api.sieging.Besieger;
+import org.societies.api.sieging.City;
+import org.societies.api.sieging.CityProvider;
+import org.societies.api.sieging.CityPublisher;
 import org.societies.groups.group.Group;
 import org.societies.groups.group.GroupProvider;
 import org.societies.sieging.memory.index.KDTreeIndex;
@@ -71,19 +74,6 @@ class MemoryCityController extends AbstractService implements CityProvider, City
         cities.addIndex(SuffixTreeIndex.onAttribute(CITY_NAME));
 
         cities.addIndex(KDTreeIndex.onAttribute(2, CITY_NEAREST));
-    }
-
-    IndexedCollection<Land> lands = CQEngine.newInstance();
-
-    public static final Attribute<Land, UUID> LAND_UUID = new SimpleAttribute<Land, UUID>("land_uuid") {
-        @Override
-        public UUID getValue(Land land) {
-            return land.getUUID();
-        }
-    };
-
-    {
-        lands.addIndex(HashIndex.onAttribute(LAND_UUID));
     }
 
     private final Provider<UUID> uuidProvider;

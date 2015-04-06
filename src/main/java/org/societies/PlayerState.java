@@ -1,13 +1,12 @@
 package org.societies;
 
-import org.societies.bridge.ChatColor;
-import org.societies.bridge.Inventory;
-import org.societies.bridge.ItemStack;
-import org.societies.bridge.Player;
+
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.text.DecimalFormat;
-
-import static org.societies.bridge.Materials.*;
 
 /**
  * Represents a PlayerState
@@ -27,7 +26,7 @@ public class PlayerState {
     public String getArmor(String helmetSign, String chestplateSign, String leggingsSign, String bootsSign) {
         StringBuilder armorString = new StringBuilder();
         ChatColor color = ChatColor.BLACK;
-        Inventory inventory = player.getInventory();
+        PlayerInventory inventory = player.getInventory();
 
         ItemStack helmet = inventory.getHelmet();
         ItemStack chestplate = inventory.getChestplate();
@@ -35,7 +34,7 @@ public class PlayerState {
         ItemStack boots = inventory.getBoots();
 
         if (helmet != null) {
-            switch (helmet.getType().getID()) {
+            switch (helmet.getType()) {
                 case LEATHER_HELMET:
                     color = ARMOR_ORDER[1];
                     break;
@@ -60,7 +59,7 @@ public class PlayerState {
         color = ChatColor.BLACK;
 
         if (chestplate != null) {
-            switch (chestplate.getType().getID()) {
+            switch (chestplate.getType()) {
                 case LEATHER_CHESTPLATE:
                     color = ARMOR_ORDER[1];
                     break;
@@ -85,7 +84,7 @@ public class PlayerState {
         color = ChatColor.BLACK;
 
         if (leggings != null) {
-            switch (leggings.getType().getID()) {
+            switch (leggings.getType()) {
                 case LEATHER_LEGGINGS:
                     color = ARMOR_ORDER[1];
                     break;
@@ -110,7 +109,7 @@ public class PlayerState {
         color = ChatColor.BLACK;
 
         if (boots != null) {
-            switch (boots.getType().getID()) {
+            switch (boots.getType()) {
                 case LEATHER_BOOTS:
                     color = ARMOR_ORDER[1];
                     break;
@@ -148,7 +147,7 @@ public class PlayerState {
             String type;
             ChatColor color;
 
-            switch (itemStack.getType().getID()) {
+            switch (itemStack.getType()) {
                 case WOOD_SWORD:
                     type = sword;
                     color = ChatColor.GOLD;
@@ -189,25 +188,26 @@ public class PlayerState {
         return weapons.length() == 0 ? ChatColor.BLACK + "Empty" : weapons.toString();
     }
 
-    public String getFood(String format) {
-        ItemStack[] contents = player.getInventory().getContents();
-
-        double food = 0;
-
-        for (ItemStack itemStack : contents) {
-            if (itemStack == null) {
-                continue;
-            }
-
-            int value = itemStack.getType().getFoodLevel();
-
-            food += value;
-        }
-
-        food /= 2;
-
-        return String.format(format, DECIMAL_FORMAT.format(food));
-    }
+    //todo
+//    public String getFood(String format) {
+//        ItemStack[] contents = player.getInventory().getContents();
+//
+//        double food = 0;
+//
+//        for (ItemStack itemStack : contents) {
+//            if (itemStack == null) {
+//                continue;
+//            }
+//
+//            int value = itemStack.getType().getFoodLevel();
+//
+//            food += value;
+//        }
+//
+//        food /= 2;
+//
+//        return String.format(format, DECIMAL_FORMAT.format(food));
+//    }
 
     public String getHealth() {
         double health = player.getHealth();

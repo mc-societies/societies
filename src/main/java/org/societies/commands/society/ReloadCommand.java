@@ -6,7 +6,7 @@ import order.Executor;
 import order.reflect.Command;
 import order.reflect.Permission;
 import order.sender.Sender;
-import org.societies.bridge.ReloadAction;
+import org.societies.api.ReloadAction;
 
 /**
  * Represents a RelationListCommand

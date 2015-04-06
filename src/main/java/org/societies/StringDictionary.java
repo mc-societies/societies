@@ -2,7 +2,7 @@ package org.societies;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import org.societies.bridge.ChatColor;
+import org.bukkit.ChatColor;
 import org.societies.groups.dictionary.DefaultDictionary;
 
 import java.util.Locale;

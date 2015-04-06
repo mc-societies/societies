@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.migcomponents.migbase64.Base64;
-import org.societies.bridge.Location;
-import org.societies.bridge.WorldResolver;
+import org.bukkit.Server;
+import org.societies.api.math.Location;
 import org.societies.util.uuid.UUIDGen;
 
 import java.io.File;
@@ -25,9 +25,9 @@ public class AbstractMapper {
     protected ObjectMapper mapper = new ObjectMapper();
     private JsonFactory factory;
 
-    private final WorldResolver worldResolver;
+    private final Server worldResolver;
 
-    public AbstractMapper(WorldResolver worldResolver) {
+    public AbstractMapper(Server worldResolver) {
         this.worldResolver = worldResolver;
         factory = mapper.getFactory();
     }

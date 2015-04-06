@@ -2,7 +2,7 @@ package org.societies.member.locale;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import org.societies.bridge.Player;
+import org.bukkit.entity.Player;
 
 import java.util.Locale;
 

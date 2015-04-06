@@ -20,8 +20,8 @@ import org.societies.groups.validate.NameValidator;
 import org.societies.groups.validate.TagValidator;
 import org.societies.groups.validate.ValidateResult;
 
-import static org.societies.bridge.ChatColor.stripColor;
-import static org.societies.bridge.ChatColor.translateString;
+import static org.bukkit.ChatColor.stripColor;
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 /**
  * Represents a CreateCommand
@@ -92,7 +92,7 @@ public class CreateCommand implements Executor<Member> {
         }
 
         name = stripColor(name).trim();
-        tag = translateString('&', tag);
+        tag = translateAlternateColorCodes('&', tag);
 
         Group group = publisher.publish(name, tag);
 

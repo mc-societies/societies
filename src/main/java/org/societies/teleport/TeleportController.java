@@ -3,8 +3,12 @@ package org.societies.teleport;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import gnu.trove.set.hash.THashSet;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.shank.config.ConfigSetting;
-import org.societies.bridge.*;
+import org.societies.api.math.Location;
 import org.societies.groups.group.Group;
 import org.societies.groups.member.Member;
 
@@ -23,7 +27,6 @@ public class TeleportController implements Runnable, Teleporter {
     private final THashSet<TeleportState> states = new THashSet<TeleportState>();
     private final int delay;
     private final boolean dropItems;
-    private final Materials materials;
     private final Set<Material> whitelisted;
     private final Set<Material> blacklisted;
 
@@ -32,11 +35,9 @@ public class TeleportController implements Runnable, Teleporter {
             @ConfigSetting("teleport.delay") int delay,
             @ConfigSetting("teleport.drop-items") boolean dropItems,
             @ConfigSetting("teleport.item-whitelist") List<String> whitelisted,
-            @ConfigSetting("teleport.item-blacklist") List<String> blacklisted,
-            Materials materials) {
+            @ConfigSetting("teleport.item-blacklist") List<String> blacklisted) {
         this.delay = delay;
         this.dropItems = dropItems;
-        this.materials = materials;
 
         this.whitelisted = toMaterialSet(whitelisted);
         this.blacklisted = toMaterialSet(blacklisted);
@@ -47,7 +48,7 @@ public class TeleportController implements Runnable, Teleporter {
         THashSet<Material> materials = new THashSet<Material>();
 
         for (String value : input) {
-            Material material = this.materials.getMaterial(value);
+            Material material = Material.getMaterial(value);
 
             if (material != null) {
                 materials.add(material);
@@ -81,11 +82,11 @@ public class TeleportController implements Runnable, Teleporter {
                 continue;
             }
 
-            if (!member.get(Player.class).isAvailable()) {
+            if (!member.get(Player.class).isOnline()) {
                 return;
             }
 
-            if (!isLocationEqual(member.get(Player.class).getLocation(), state.getStartLocation(), 0.5)) {
+            if (!isLocationEqual(new Location(member.get(Player.class).getLocation()), state.getStartLocation(), 0.5)) {
                 member.send("you.teleport-cancelled");
                 it.remove();
                 continue;
@@ -103,7 +104,7 @@ public class TeleportController implements Runnable, Teleporter {
                     dropItems(member.get(Player.class));
                 }
 
-                member.get(Player.class).teleport(target);
+                member.get(Player.class).teleport(target.toBukkit());
 
                 member.send("you.at-home", group.getName());
             }
@@ -142,6 +143,6 @@ public class TeleportController implements Runnable, Teleporter {
 
     @Override
     public void teleport(final Member member, final Location target) {
-        states.add(new TeleportState(member, target, member.get(Player.class).getLocation(), delay));
+        states.add(new TeleportState(member, target, new Location(member.get(Player.class).getLocation()), delay));
     }
 }

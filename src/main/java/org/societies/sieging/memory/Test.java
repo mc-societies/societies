@@ -6,8 +6,8 @@ import com.googlecode.cqengine.IndexedCollection;
 import com.googlecode.cqengine.attribute.SimpleAttribute;
 import com.googlecode.cqengine.resultset.ResultSet;
 import org.joda.time.DateTime;
+import org.societies.api.math.Location;
 import org.societies.api.sieging.City;
-import org.societies.bridge.Location;
 import org.societies.sieging.ConstantCityFunction;
 import org.societies.sieging.memory.index.KDTreeIndex;
 
