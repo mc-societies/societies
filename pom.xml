@@ -188,8 +188,8 @@
                                             <exclude>org.avaje:ebean</exclude>
                                             <exclude>com.googlecode.json-simple:json-simple</exclude>
                                             <exclude>javax.el:el-api:</exclude>
-                                            <exclude>com.fasterxml.jackson.core:jackson-annotations</exclude>
                                             <exclude>com.google.code.findbugs:annotations</exclude>
+                                            <exclude>org.apache.logging.log4j:log4j-api</exclude>
 
                                             <!--Tests-->
                                             <exclude>org.jukito:jukito</exclude>
@@ -214,10 +214,10 @@
                                             <pattern>com.google.common</pattern>
                                             <shadedPattern>org.societies.libs.guava</shadedPattern>
                                         </relocation>
-                                        <relocation>
-                                            <pattern>org.apache.logging.log4j</pattern>
-                                            <shadedPattern>org.societies.libs.log4j</shadedPattern>
-                                        </relocation>
+                                        <!--<relocation>-->
+                                            <!--<pattern>org.apache.logging.log4j</pattern>-->
+                                            <!--<shadedPattern>org.societies.libs.log4j</shadedPattern>-->
+                                        <!--</relocation>-->
                                     </relocations>
                                 </configuration>
                             </execution>
