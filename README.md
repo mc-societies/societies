@@ -2,6 +2,8 @@
 
 ## Motivation
 
+[![Join the chat at https://gitter.im/mc-societies/societies](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mc-societies/societies?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Societies is a revived version of the original [SimpleClans](http://dev.bukkit.org/bukkit-plugins/simpleclans/) and is targeted to support a wide range of minecraft servers.
 At the moment Societies only supports Bukkit, but as new server implementations come up support will be added. (Sponge support is confirmed)
 
