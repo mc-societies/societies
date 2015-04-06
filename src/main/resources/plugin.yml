@@ -1,6 +1,6 @@
 main: org.societies.bukkit.SocietiesPlugin
 name: Societies
-version: 0.7
+version: 0.8
 softdepend: [ Vault, SimpleClans, SimpleClans2 ]
 authors:
   - p000ison
