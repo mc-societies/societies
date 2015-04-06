@@ -2,7 +2,6 @@ package org.societies.bukkit;
 
 import com.google.inject.Inject;
 import order.sender.Sender;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.societies.api.economy.EconomyParticipant;
 import org.societies.groups.ExtensionFactory;
@@ -17,17 +16,15 @@ import java.util.UUID;
 class BukkitExtensionRoller implements ExtensionRoller<Member> {
 
     private final ExtensionFactory<BukkitSocietiesMember, UUID> bukkitFactory;
-    private final Server server;
 
     @Inject
-    private BukkitExtensionRoller(ExtensionFactory<BukkitSocietiesMember, UUID> bukkitFactory, Server server) {
+    private BukkitExtensionRoller(ExtensionFactory<BukkitSocietiesMember, UUID> bukkitFactory) {
         this.bukkitFactory = bukkitFactory;
-        this.server = server;
     }
 
     @Override
     public void roll(Member extensible) {
-        extensible.add(Player.class, server.getPlayer(extensible.getUUID()));
+        extensible.add(Player.class, new DelegatingPlayer(extensible.getUUID()));
 
         BukkitSocietiesMember bukkit = bukkitFactory.create(extensible.getUUID());
         extensible.add(EconomyParticipant.class, bukkit);

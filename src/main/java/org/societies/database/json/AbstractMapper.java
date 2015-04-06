@@ -3,6 +3,7 @@ package org.societies.database.json;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -40,6 +41,9 @@ public class AbstractMapper {
         return mapper.readTree(file);
     }
 
+    protected boolean isEmpty(TreeNode node) {
+        return node.isContainerNode() && node.size() == 0;
+    }
 
     protected JsonGenerator createGenerator(File file) throws IOException {
 

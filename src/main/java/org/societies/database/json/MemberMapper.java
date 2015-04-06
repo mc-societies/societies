@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Server;
 import org.joda.time.DateTime;
 import org.societies.api.member.SocietyMember;
@@ -28,10 +29,13 @@ public class MemberMapper extends AbstractMapper {
 
     private final MemberFactory memberFactory;
 
+    private final Logger logger;
+
     @Inject
-    public MemberMapper(MemberFactory memberFactory, Server worldResolver) {
+    public MemberMapper(MemberFactory memberFactory, Server worldResolver, Logger logger) {
         super(worldResolver);
         this.memberFactory = memberFactory;
+        this.logger = logger;
     }
 
     public Member readMember(JsonNode node, Function<UUID, Group> groupSupplier) throws IOException, ExecutionException, InterruptedException {
@@ -90,6 +94,10 @@ public class MemberMapper extends AbstractMapper {
     public void writeMember(Member member, OutputStream stream) throws IOException {
         JsonGenerator jg = createGenerator(stream);
         JsonNode node = writeMember(member);
+        if (isEmpty(node)) {
+            logger.warn("Empty member node!");
+            return;
+        }
         mapper.writeTree(jg, node);
         jg.close();
     }
@@ -97,6 +105,10 @@ public class MemberMapper extends AbstractMapper {
     public void writeMember(Member member, File file) throws IOException {
         JsonGenerator jg = createGenerator(file);
         JsonNode node = writeMember(member);
+        if (isEmpty(node)) {
+            logger.warn("Empty member node!");
+            return;
+        }
         mapper.writeTree(jg, node);
         jg.close();
     }

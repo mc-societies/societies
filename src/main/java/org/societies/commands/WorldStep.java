@@ -29,7 +29,7 @@ public class WorldStep implements Executor<Sender> {
             Member member = ((Member) sender);
 
             Player player = member.get(Player.class);
-            if (player.isOnline()) {
+            if (!player.isOnline()) {
                 return;
             }
 

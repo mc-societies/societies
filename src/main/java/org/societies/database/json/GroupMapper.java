@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.migcomponents.migbase64.Base64;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Server;
 import org.joda.time.DateTime;
 import org.societies.api.group.Society;
@@ -32,11 +33,14 @@ public class GroupMapper extends AbstractMapper {
     private final Provider<GroupBuilder> builders;
     private final RankFactory rankFactory;
 
+    private final Logger logger;
+
     @Inject
-    public GroupMapper(Provider<GroupBuilder> builders, RankFactory rankFactory, Server worldResolver) {
+    public GroupMapper(Provider<GroupBuilder> builders, RankFactory rankFactory, Server worldResolver, Logger logger) {
         super(worldResolver);
         this.builders = builders;
         this.rankFactory = rankFactory;
+        this.logger = logger;
     }
 
     public Group readGroup(JsonNode node) throws IOException {
@@ -145,6 +149,10 @@ public class GroupMapper extends AbstractMapper {
         JsonGenerator jg = createGenerator(stream);
         JsonNode node = createNode(group);
         mapper.writeTree(jg, node);
+        if (isEmpty(node)) {
+            logger.warn("Empty group node!");
+            return;
+        }
         jg.close();
     }
 
@@ -152,6 +160,10 @@ public class GroupMapper extends AbstractMapper {
         JsonGenerator jg = createGenerator(file);
         JsonNode node = createNode(group);
         mapper.writeTree(jg, node);
+        if (isEmpty(node)) {
+            logger.warn("Empty group node!");
+            return;
+        }
         jg.close();
     }
 }

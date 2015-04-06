@@ -1,8 +1,5 @@
 package org.societies.bukkit;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -209,26 +206,17 @@ public class SocietiesPlugin extends JavaPlugin implements Listener {
 
         if (sender instanceof Player) {
 
-            ListenableFuture<?> future = service.submit(new Runnable() {
-                @Override
-                public void run() {
-                    Member member = memberProvider.getMember(((Player) sender).getUniqueId());
-                    commands.execute(member, command.getName(), args);
+//            ListenableFuture<?> future = service.submit(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Member member = memberProvider.getMember(((Player) sender).getUniqueId());
+//                    commands.execute(member, command.getName(), args);
+//
+//                }
+//            });
 
-                }
-            });
-
-            Futures.addCallback(future, new FutureCallback<Object>() {
-                @Override
-                public void onSuccess(Object o) {
-
-                }
-
-                @Override
-                public void onFailure(Throwable throwable) {
-                    logger.catching(throwable);
-                }
-            });
+            Member member = memberProvider.getMember(((Player) sender).getUniqueId());
+            commands.execute(member, command.getName(), args);
 
         } else {
             commands.execute(systemSender, command.getName(), args);

@@ -157,7 +157,6 @@ public class CommandModule extends AbstractModule {
         // Sync/Async command executors
         bindNamedInstance("sync-executor", ListeningExecutorService.class, listeningDecorator(newDirectExecutorService()));
         bindNamed("async-executor", ListeningExecutorService.class).to(SocietiesModule.WORKER_EXECUTOR);
-//        bindNamedInstance("async-executor", ListeningExecutorService.class, sameThreadExecutor());
 
         bindNamed("provided", new TypeLiteral<CommandPipeline<Sender>>() {
         }).to(PIPELINE_IMPL);

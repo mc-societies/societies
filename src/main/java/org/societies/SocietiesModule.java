@@ -2,6 +2,7 @@ package org.societies;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -107,7 +108,8 @@ public class SocietiesModule extends AbstractServiceModule {
         });
 
         // Executor service for heavy work
-        bind(WORKER_EXECUTOR).toInstance(MoreExecutors.listeningDecorator(Executors.newCachedThreadPool()));
+        bind(WORKER_EXECUTOR).toInstance(MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(new ThreadFactoryBuilder()
+                .setNameFormat("societies-%d").build())));
 
         bind(ListeningExecutorService.class).to(WORKER_EXECUTOR);
 
