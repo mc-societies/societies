@@ -78,7 +78,8 @@ public class CityWriter extends AbstractMapper {
 
         for (Land land : lands) {
             ObjectNode landNode = landsNode.addObject();
-            landNode.put("uuif", toText(land.getUUID()));
+            landNode.put("uuid", toText(land.getUUID()));
+            landNode.put("origin", toText(land.getOrigin()));
         }
 
         return landsNode;

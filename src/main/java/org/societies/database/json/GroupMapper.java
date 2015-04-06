@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.migcomponents.migbase64.Base64;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.bukkit.Server;
 import org.joda.time.DateTime;
 import org.societies.api.group.Society;
+import org.societies.api.math.Location;
 import org.societies.groups.DefaultRelation;
 import org.societies.groups.Relation;
 import org.societies.groups.group.Group;
@@ -23,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -115,6 +118,23 @@ public class GroupMapper extends AbstractMapper {
         Society society = group.get(Society.class);
 
         node.put("verified", society.isVerified());
+        node.put("balance", society.getBalance());
+        node.put("ff", society.isFriendlyFire());
+
+        Optional<Location> home = society.getHome();
+        if (home.isPresent()) {
+            node.set("home", toNode(home.get()));
+        }
+
+        Collection<Relation> relations = group.getRelations();
+
+        ArrayNode relationsNode = node.putArray("relations");
+
+        for (Relation relation : relations) {
+            ObjectNode relationNode = relationsNode.addObject();
+            relationNode.put("target", toText(relation.getOpposite(group.getUUID())));
+            relationNode.put("type", relation.getType().getID());
+        }
 
 
         Collection<Rank> ranks = group.getRanks();
@@ -136,6 +156,14 @@ public class GroupMapper extends AbstractMapper {
         ObjectNode node = mapper.createObjectNode();
 
         node.put("name", rank.getName());
+        node.put("priority", rank.getPriority());
+
+        Set<String> rules = rank.getRules();
+        ArrayNode rulesNode = node.putArray("rules");
+
+        for (String rule : rules) {
+            rulesNode.add(rule);
+        }
 
         return node;
     }

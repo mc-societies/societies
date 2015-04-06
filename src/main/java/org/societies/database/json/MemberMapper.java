@@ -74,6 +74,9 @@ public class MemberMapper extends AbstractMapper {
         }
         node.put("lastActive", member.getLastActive().getMillis());
 
+        SocietyMember society = member.get(SocietyMember.class);
+        node.put("ff", society.isFriendlyFire());
+
         Set<Rank> ranks = member.getRanks();
 
         if (!ranks.isEmpty()) {

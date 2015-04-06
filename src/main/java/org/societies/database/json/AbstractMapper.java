@@ -68,6 +68,9 @@ public class AbstractMapper {
     }
 
     public Location toLocation(JsonNode node) {
+        if (node.isMissingNode()) {
+            return null;
+        }
         return new Location(worldResolver.getWorld(node.path("world").asText()),
                 node.path("x").asDouble(),
                 node.path("y").asDouble(),

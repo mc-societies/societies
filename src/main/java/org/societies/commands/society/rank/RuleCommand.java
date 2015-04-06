@@ -56,7 +56,7 @@ public class RuleCommand {
                 return;
             }
 
-            for (String r : rank.getAvailableRules()) {
+            for (String r : rank.getRules()) {
                 sender.send("rank.rules.list-format", r);
             }
         }
